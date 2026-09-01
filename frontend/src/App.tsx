@@ -80,6 +80,8 @@ function routeFromHash(): Route {
     return "graph-dna";
   if (h.startsWith("explorations/ledger-dna") || h === "ledger-dna")
     return "ledger-dna";
+  if (h.startsWith("explorations/assertion-dna") || h === "assertion-dna")
+    return "assertion-dna";
   if (h.startsWith("explorations/arrangement") || h === "arrangement")
     return "arrangement";
   if (h.startsWith("explorations/notices") || h === "notices")

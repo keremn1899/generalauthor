@@ -22,6 +22,11 @@ const LINKS = [
     note: "Saved animated DNA specimen — drag, hover, gravity, orbit",
   },
   {
+    href: "#/explorations/assertion-dna",
+    label: "Assertion DNA",
+    note: "World IR's second mark — the relation chip, role spokes, unresolved, stale",
+  },
+  {
     href: "#/explorations/ledger-dna",
     label: "Ledger DNA workbench",
     note: "Tune operator attention, arc anatomy, stable inspection, and motion",

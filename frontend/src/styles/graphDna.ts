@@ -351,6 +351,143 @@ export const GRAPH_DNA_GEOMETRY = {
   dottedGap: 6.5,
 };
 
+/**
+ * The assertion chip — how a relation tuple is drawn.
+ *
+ * The map has two marks now. A **disc** is a referent: a thing the world can
+ * name. A **chip** is an assertion: one tuple of one named relation. Those are
+ * different kinds of claim and they must not share a shape, or a ternary
+ * `acceptable_replacement` reads as a fourth part.
+ *
+ * The chip is not new matter. It is the relation label that already appears on
+ * a lit filament, promoted to something that can stand on its own. A binary
+ * tuple keeps its chip on the line; a tuple with three or more roles cannot,
+ * so the chip steps off and each role becomes its own spoke. Same word, same
+ * plate, two positions — which is what makes "a binary edge is shorthand for an
+ * assertion" a thing the reader watches happen rather than a rule they are
+ * told. `chipPadding` therefore matches the edge label's, and moving one
+ * without the other is how the two stop being the same object.
+ *
+ * Construction origin is geometry here, not colour. The map is monochrome
+ * because weight and shape carry meaning on it; `GRAPH_DNA_STATUS` is spent on
+ * an operator queue, and a World has no queue. So:
+ *
+ *   MECHANICAL   knockout chip — the field colour, ink text, quiet
+ *   SEMANTIC     ink-filled chip, text knocked out — weight comes from fill,
+ *                and an authored assertion is the expensive one
+ *   DERIVED      a shelf under the chip: it visibly rests on its inputs, and
+ *                the shelf is the handle that opens them
+ *   UNRESOLVED   the chip's outline with nothing in it, and dotted spokes —
+ *                the shape of the assertion exists, the content does not
+ *
+ * Staleness is deliberately absent from this list. It is a property of a whole
+ * relation in TaskView (`is_stale(relation)`), not of one tuple, so a per-chip
+ * mark would claim a precision the store does not have. A stale relation's
+ * matter renders in `GRAPH_DNA_PROVISIONAL_THEME` instead — the palette that
+ * already means "present, legible, not to be treated as settled".
+ */
+export const GRAPH_DNA_CHIP = {
+  /** Chip plate height. Sized from the label, not the disc. */
+  chipHeight: 10,
+  /** Horizontal breathing room inside the plate, per side. */
+  chipPaddingX: 4,
+  /**
+   * Vertical padding — none.
+   *
+   * The plate's height is stated outright rather than grown from the label, so
+   * padding here would be counted twice. At this size the chip is a rule with a
+   * word in it, which is the register the map wants: quieter than the disc it
+   * names a bond between.
+   */
+  chipPaddingY: 0,
+  /**
+   * Corner radius — zero, and the zero is the point.
+   *
+   * Nothing on this map is rounded. The disc is a circle because a referent is
+   * a mass; every straight edge in the product, from the panel rules to the
+   * shell, is square. A chip with a radius reads as a *tag* — a decoration
+   * applied to something — where a square plate reads as a piece of the same
+   * drawing. The knob stays because a lab that cannot try the other answer is
+   * not a lab, but the answer is 0.
+   */
+  chipRadius: 0,
+  /**
+   * Relation name inside the chip.
+   *
+   * Below the edge label's 9, not above it. Relation names in this world are
+   * long — `acceptable_replacement` is 22 characters — and a plate wide enough
+   * to hold one at 10px starts competing with the discs for the field.
+   */
+  chipLabelSize: 7,
+  /**
+   * Label weight, matching the map's.
+   *
+   * The product canvas draws node labels at 400 — regular, not semibold — and
+   * Jost at 400 is already a sharp geometric face. A chip set heavier than the
+   * discs around it would claim the assertion is louder than the things it
+   * relates, which is exactly backwards: the referents are the matter.
+   */
+  chipLabelWeight: 400,
+  /** The plate's own outline, when it has one (mechanical, unresolved). */
+  chipLine: 1,
+  /**
+   * Optical centring for the word inside the plate, in pixels, added to the
+   * measured correction.
+   *
+   * The plate is centred on the glyphs' own ink box rather than on the font's
+   * em square — an underscore descends and a cap does not, so a relation name
+   * centred by the box sits high. `chipLabelNudge` is the residue a human can
+   * still see after that, and it should stay near zero; a large value here
+   * means the measurement is wrong, not the type.
+   */
+  chipLabelNudge: 0,
+  /**
+   * The shelf under a derived chip.
+   *
+   * Measured from the *word*, not from the plate: the shelf says "this rests on
+   * something", and it reads as support for the name rather than as a second
+   * edge of the box when it runs the length of the text plus a little air.
+   * `shelfOverhang` is that air, per side.
+   */
+  shelfGap: 2,
+  shelfLine: 0.5,
+  shelfOverhang: 2,
+  /**
+   * A role spoke: the filament from a referent to the assertion it fills a
+   * role in.
+   *
+   * Not the same class as `spokeRestOpacity`, which holds back structural
+   * noise at 0.05. A role spoke is the opposite of noise — it is the assertion's
+   * own anatomy, and an n-ary tuple drawn at 5% would be an unreadable claim.
+   * It is quieter than a filament at rest and no quieter than that.
+   */
+  roleSpokeWidth: 1,
+  roleSpokeOpacity: 0.5,
+  /** The role name on a focused spoke. */
+  roleLabelSize: 8,
+  /** Thinner than the relation name, which is how the two stay ordered. */
+  roleLabelWeight: 300,
+  /**
+   * Where the role name sits along its spoke, 0 at the referent and 1 at the
+   * chip.
+   *
+   * A role is a slot in the assertion, which argues for the chip end. Three
+   * names converging there collide, which argues for the middle. Left at the
+   * middle until a real neighborhood says otherwise — this is the kind of value
+   * that only a crowded canvas can settle.
+   */
+  roleLabelAt: 0.5,
+  /**
+   * Whether a collapsed binary chip is legible before you touch anything.
+   *
+   * The ambient map hides relation names until focus, which is what keeps it a
+   * field rather than a diagram. A schema view is a dozen chips and naming
+   * them is the entire point. So this is decided by zoom level, not by a
+   * preference: false at referent zoom, true at schema zoom.
+   */
+  namedAtRest: false,
+};
+
 /** Approved physical/interaction defaults shared by lab and product canvas. */
 export const GRAPH_DNA_INTERACTION = {
   hoverRadius: 140,

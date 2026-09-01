@@ -15,6 +15,13 @@ export default defineConfig({
         target: process.env.VITE_OPERATOR_TARGET ?? "http://127.0.0.1:8137",
         changeOrigin: true,
       },
+      // `/world` is the World IR read plane — a different server from the
+      // operator plane, on its own port, with no write path at all.
+      //   uv run --extra all python scripts/run_world_explorer.py
+      "/world": {
+        target: process.env.VITE_WORLD_TARGET ?? "http://127.0.0.1:8139",
+        changeOrigin: true,
+      },
       // `/graph` is the read-only map plane the ambient canvas reads.
       "/graph": {
         target: process.env.VITE_OPERATOR_TARGET ?? "http://127.0.0.1:8137",

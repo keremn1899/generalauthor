@@ -28,6 +28,7 @@ export type LabRoute =
   | "graph-dna"
   | "graph-dna-motion"
   | "ledger-dna"
+  | "assertion-dna"
   | "arrangement"
   | "notices"
   | "events";
@@ -92,6 +93,11 @@ const LedgerDnaWorkbenchPage = lazy(() =>
     default: module.LedgerDnaWorkbenchPage,
   })),
 );
+const AssertionDnaWorkbenchPage = lazy(() =>
+  import("./explorations/AssertionDnaWorkbenchPage").then((module) => ({
+    default: module.AssertionDnaWorkbenchPage,
+  })),
+);
 const PAGES: Record<LabRoute, ComponentType> = {
   explorations: ExplorationsIndex,
   "ledger-feed": LedgerFeedLabPage,
@@ -102,6 +108,7 @@ const PAGES: Record<LabRoute, ComponentType> = {
   "graph-dna": GraphDnaWorkbenchPage,
   "graph-dna-motion": GraphDnaMotionLabPage,
   "ledger-dna": LedgerDnaWorkbenchPage,
+  "assertion-dna": AssertionDnaWorkbenchPage,
   arrangement: ArrangementLabPage,
   notices: NoticeLabPage,
   events: EventLabPage,

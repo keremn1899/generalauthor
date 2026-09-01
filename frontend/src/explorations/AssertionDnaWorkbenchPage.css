@@ -1,0 +1,203 @@
+/**
+ * Chrome for the assertion board.
+ *
+ * Reads the shell's tokens rather than declaring greys of its own — the whole
+ * point of the page is that the marks on the field and the panel around them
+ * are the same ink one step apart, and a stylesheet that mixes its own would
+ * be judging the chip against the wrong room.
+ */
+
+/* Sharp everywhere: no element on this page carries a radius, because no
+   element in the product does. */
+.assertion-dna * {
+  border-radius: 0;
+}
+
+.assertion-dna {
+  min-height: 100vh;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-sans, system-ui, sans-serif);
+}
+
+.assertion-dna__header {
+  padding: 32px 32px 20px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.assertion-dna__header p {
+  margin: 0 0 6px;
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.assertion-dna__header h1 {
+  margin: 0 0 8px;
+  font-size: 1.4rem;
+  /* The product chrome runs at 400/500 and nothing on it is bolder. A lab that
+     sets its own headings heavier is already a second design system. */
+  font-weight: 500;
+}
+
+.assertion-dna__header span {
+  display: block;
+  max-width: 62ch;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--ink-muted);
+}
+
+.assertion-dna__header code {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.75rem;
+}
+
+.assertion-dna__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  align-items: start;
+}
+
+.assertion-dna__board {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 20px;
+  padding: 24px;
+}
+
+.assertion-dna__card {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* The stage carries the specimen's own field colour inline — a provisional
+   card is a different room, and that difference is the specimen. */
+.assertion-dna__stage {
+  height: 260px;
+  border: 1px solid var(--rule);
+  overflow: hidden;
+}
+
+.assertion-dna__card figcaption {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.assertion-dna__card figcaption b {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.assertion-dna__card figcaption span {
+  font-size: 0.7rem;
+  line-height: 1.5;
+  color: var(--ink-muted);
+}
+
+.assertion-dna__panel {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 24px 24px 40px;
+  border-left: 1px solid var(--rule);
+  background: var(--panel);
+  max-height: 100vh;
+  overflow-y: auto;
+}
+
+.assertion-dna__states {
+  display: flex;
+  gap: 6px;
+}
+
+.assertion-dna__states button,
+.assertion-dna__reset {
+  flex: 1;
+  padding: 6px 8px;
+  font: inherit;
+  font-size: 0.68rem;
+  color: var(--ink);
+  background: var(--canvas);
+  border: 1px solid var(--rule);
+  cursor: pointer;
+}
+
+.assertion-dna__states button[data-active="true"] {
+  background: var(--ink);
+  color: var(--panel);
+  border-color: var(--ink);
+}
+
+.assertion-dna__toggle {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  font-size: 0.68rem;
+  line-height: 1.4;
+}
+
+.assertion-dna__toggle em {
+  display: block;
+  font-style: normal;
+  color: var(--ink-muted);
+  font-size: 0.64rem;
+  margin-top: 2px;
+}
+
+.assertion-dna__panel fieldset {
+  border: none;
+  border-top: 1px solid var(--rule);
+  padding: 10px 0 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.assertion-dna__panel legend {
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  padding: 0;
+}
+
+.assertion-dna__knob {
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr) 34px;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.66rem;
+}
+
+.assertion-dna__knob input {
+  width: 100%;
+  accent-color: var(--ink);
+}
+
+.assertion-dna__knob b {
+  font-weight: 500;
+  text-align: right;
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.assertion-dna__block {
+  margin: 0;
+  padding: 10px;
+  border: 1px solid var(--rule);
+  background: var(--canvas);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.62rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  color: var(--ink-muted);
+}
