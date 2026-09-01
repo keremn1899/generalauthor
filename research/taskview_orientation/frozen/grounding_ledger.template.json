@@ -1,0 +1,284 @@
+{
+  "version": "taskview-orientation-grounding-v1",
+  "participant_visible_root": "source_initial",
+  "records": [
+    {
+      "relation": "component",
+      "tuple": {"component": "component:checkout-json"},
+      "taskview_role": "generic source fact",
+      "semantic_judgment": "checkout-json is a component in the pinned inventory",
+      "construction_category": "copied",
+      "raw_obtainable": true,
+      "explanation": "The component ID is explicit in the visible component inventory.",
+      "evidence": [{"path": "inventory/components.toml", "start_line": 3, "end_line": 6}],
+      "review_status": "PASS_TWO_METHODS"
+    },
+    {
+      "relation": "component",
+      "tuple": {"component": "component:reporting-json"},
+      "taskview_role": "generic source fact",
+      "semantic_judgment": "reporting-json is a component in the pinned inventory",
+      "construction_category": "copied",
+      "raw_obtainable": true,
+      "explanation": "The component ID is explicit in the visible component inventory.",
+      "evidence": [{"path": "inventory/components.toml", "start_line": 8, "end_line": 11}],
+      "review_status": "PASS_TWO_METHODS"
+    },
+    {
+      "relation": "component",
+      "tuple": {"component": "component:partner-json"},
+      "taskview_role": "generic source fact",
+      "semantic_judgment": "partner-json is a component in the pinned inventory",
+      "construction_category": "copied",
+      "raw_obtainable": true,
+      "explanation": "The component ID is explicit in the visible component inventory.",
+      "evidence": [{"path": "inventory/components.toml", "start_line": 13, "end_line": 16}],
+      "review_status": "PASS_TWO_METHODS"
+    },
+    {
+      "relation": "depends_on",
+      "tuple": {"component": "component:checkout-json", "dependency": "library:jsonlib-v2"},
+      "taskview_role": "generic source fact",
+      "semantic_judgment": "checkout-json is pinned to jsonlib v2",
+      "construction_category": "copied",
+      "raw_obtainable": true,
+      "explanation": "The visible lockfile names the component and the 2.x dependency.",
+      "evidence": [{"path": "lockfiles/checkout-json.lock", "start_line": 1, "end_line": 4}],
+      "review_status": "PASS_TWO_METHODS"
+    },
+    {
+      "relation": "depends_on",
+      "tuple": {"component": "component:reporting-json", "dependency": "library:jsonlib-v2"},
+      "taskview_role": "generic source fact",
+      "semantic_judgment": "reporting-json is pinned to jsonlib v2 through its compatibility path",
+      "construction_category": "copied",
+      "raw_obtainable": true,
+      "explanation": "The visible lockfile names the component, 2.x dependency, and adapter source.",
+      "evidence": [{"path": "lockfiles/reporting-json.lock", "start_line": 1, "end_line": 4}],
+      "review_status": "PASS_TWO_METHODS"
+    },
+    {
+      "relation": "depends_on",
+      "tuple": {"component": "component:partner-json", "dependency": "library:jsonlib-v2"},
+      "taskview_role": "generic source fact",
+      "semantic_judgment": "partner-json is pinned to jsonlib v2 for the wire protocol",
+      "construction_category": "copied",
+      "raw_obtainable": true,
+      "explanation": "The visible lockfile names the component, 2.x dependency, and protocol source.",
+      "evidence": [{"path": "lockfiles/partner-json.lock", "start_line": 1, "end_line": 4}],
+      "review_status": "PASS_TWO_METHODS"
+    },
+    {
+      "relation": "implements",
+      "tuple": {"service": "service:checkout", "component": "component:checkout-json"},
+      "taskview_role": "generic source fact",
+      "semantic_judgment": "checkout realizes checkout-json",
+      "construction_category": "copied",
+      "raw_obtainable": true,
+      "explanation": "The deployable map explicitly connects the stable IDs.",
+      "evidence": [{"path": "deploy/service-components.yaml", "start_line": 3, "end_line": 4}],
+      "review_status": "PASS_TWO_METHODS"
+    },
+    {
+      "relation": "implements",
+      "tuple": {"service": "service:reporting", "component": "component:reporting-json"},
+      "taskview_role": "generic source fact",
+      "semantic_judgment": "reporting realizes reporting-json",
+      "construction_category": "copied",
+      "raw_obtainable": true,
+      "explanation": "The deployable map explicitly connects the stable IDs.",
+      "evidence": [{"path": "deploy/service-components.yaml", "start_line": 5, "end_line": 6}],
+      "review_status": "PASS_TWO_METHODS"
+    },
+    {
+      "relation": "implements",
+      "tuple": {"service": "service:partner-gateway", "component": "component:partner-json"},
+      "taskview_role": "generic source fact",
+      "semantic_judgment": "partner-gateway realizes partner-json",
+      "construction_category": "copied",
+      "raw_obtainable": true,
+      "explanation": "The deployable map explicitly connects the stable IDs.",
+      "evidence": [{"path": "deploy/service-components.yaml", "start_line": 7, "end_line": 8}],
+      "review_status": "PASS_TWO_METHODS"
+    },
+    {
+      "relation": "production_service",
+      "tuple": {"service": "service:checkout"},
+      "taskview_role": "generic source fact",
+      "semantic_judgment": "checkout belongs to the pinned production universe",
+      "construction_category": "copied",
+      "raw_obtainable": true,
+      "explanation": "The production snapshot lists the service explicitly.",
+      "evidence": [{"path": "deploy/production-services.yaml", "start_line": 1, "end_line": 3}],
+      "review_status": "PASS_TWO_METHODS"
+    },
+    {
+      "relation": "production_service",
+      "tuple": {"service": "service:reporting"},
+      "taskview_role": "generic source fact",
+      "semantic_judgment": "reporting belongs to the pinned production universe",
+      "construction_category": "copied",
+      "raw_obtainable": true,
+      "explanation": "The production snapshot lists the service explicitly.",
+      "evidence": [{"path": "deploy/production-services.yaml", "start_line": 1, "end_line": 4}],
+      "review_status": "PASS_TWO_METHODS"
+    },
+    {
+      "relation": "production_service",
+      "tuple": {"service": "service:partner-gateway"},
+      "taskview_role": "generic source fact",
+      "semantic_judgment": "partner-gateway belongs to the pinned production universe",
+      "construction_category": "copied",
+      "raw_obtainable": true,
+      "explanation": "The production snapshot lists the service explicitly.",
+      "evidence": [{"path": "deploy/production-services.yaml", "start_line": 1, "end_line": 5}],
+      "review_status": "PASS_TWO_METHODS"
+    },
+    {
+      "relation": "in_scope",
+      "tuple": {"subject": "service:checkout"},
+      "taskview_role": "task-conditioned judgment",
+      "semantic_judgment": "checkout is commerce-owned, production, and realizes a pinned-v2 component",
+      "construction_category": "deterministic composition",
+      "raw_obtainable": true,
+      "explanation": "RAW can compose the visible scope rule, ownership, production membership, component map, and lockfile.",
+      "evidence": [
+        {"path": "tasks/migrate-jsonlib-v3.md", "start_line": 3, "end_line": 7},
+        {"path": "inventory/owners.yaml", "start_line": 1, "end_line": 3},
+        {"path": "deploy/production-services.yaml", "start_line": 1, "end_line": 3},
+        {"path": "deploy/service-components.yaml", "start_line": 3, "end_line": 4},
+        {"path": "lockfiles/checkout-json.lock", "start_line": 1, "end_line": 3}
+      ],
+      "review_status": "PASS_TWO_METHODS"
+    },
+    {
+      "relation": "in_scope",
+      "tuple": {"subject": "service:reporting"},
+      "taskview_role": "task-conditioned judgment",
+      "semantic_judgment": "reporting is commerce-owned, production, and realizes a pinned-v2 component",
+      "construction_category": "deterministic composition",
+      "raw_obtainable": true,
+      "explanation": "RAW can compose the visible scope rule, ownership, production membership, component map, and lockfile.",
+      "evidence": [
+        {"path": "tasks/migrate-jsonlib-v3.md", "start_line": 3, "end_line": 7},
+        {"path": "inventory/owners.yaml", "start_line": 1, "end_line": 3},
+        {"path": "deploy/production-services.yaml", "start_line": 1, "end_line": 4},
+        {"path": "deploy/service-components.yaml", "start_line": 5, "end_line": 6},
+        {"path": "lockfiles/reporting-json.lock", "start_line": 1, "end_line": 3}
+      ],
+      "review_status": "PASS_TWO_METHODS"
+    },
+    {
+      "relation": "boundary",
+      "tuple": {"subject": "service:partner-gateway"},
+      "taskview_role": "task-conditioned judgment",
+      "semantic_judgment": "partner-gateway is a relevant opaque migration boundary",
+      "construction_category": "reviewed task judgment",
+      "raw_obtainable": true,
+      "explanation": "The visible architecture record identifies the service, ownership, v2 contract, and opaque internals.",
+      "evidence": [{"path": "architecture/partner-gateway.md", "start_line": 3, "end_line": 10}],
+      "review_status": "PASS_TWO_METHODS"
+    },
+    {
+      "relation": "excluded",
+      "tuple": {"subject": "service:partner-gateway", "basis": "vendor-owned boundary remains on the supported v2 protocol"},
+      "taskview_role": "task-conditioned judgment",
+      "semantic_judgment": "partner-gateway is excluded from direct migration edits under the charter's vendor-boundary rule",
+      "construction_category": "reviewed task judgment",
+      "raw_obtainable": true,
+      "explanation": "RAW can combine the visible exclusion rule with ownership and the boundary contract.",
+      "evidence": [
+        {"path": "tasks/migrate-jsonlib-v3.md", "start_line": 12, "end_line": 13},
+        {"path": "inventory/owners.yaml", "start_line": 4, "end_line": 5},
+        {"path": "architecture/partner-gateway.md", "start_line": 3, "end_line": 10}
+      ],
+      "review_status": "PASS_TWO_METHODS"
+    },
+    {
+      "relation": "unresolved_scope",
+      "tuple": {"subject": "service:external-worker"},
+      "taskview_role": "task-conditioned judgment",
+      "semantic_judgment": "external-worker remains unresolved because the wildcard registry lacks a complete production component mapping",
+      "construction_category": "reviewed task judgment",
+      "raw_obtainable": true,
+      "explanation": "The visible charter supplies the closure rule and the runtime sources expose the wildcard and missing export.",
+      "evidence": [
+        {"path": "tasks/migrate-jsonlib-v3.md", "start_line": 15, "end_line": 16},
+        {"path": "runtime/dynamic-consumers.md", "start_line": 3, "end_line": 10},
+        {"path": "runtime/consumer_registry.py", "start_line": 1, "end_line": 10},
+        {"path": "services/external_worker/consumer.py", "start_line": 1, "end_line": 6}
+      ],
+      "review_status": "PASS_TWO_METHODS"
+    },
+    {
+      "relation": "protected_by",
+      "tuple": {"service": "service:reporting", "adapter": "adapter:reporting-json-v3"},
+      "taskview_role": "task-conditioned judgment",
+      "semantic_judgment": "the accepted reporting adapter protects reporting from a direct integration edit",
+      "construction_category": "reviewed task judgment",
+      "raw_obtainable": true,
+      "explanation": "RAW can apply the visible acceptance rule to the adapter translation, call site, and exact contract assertion.",
+      "evidence": [
+        {"path": "tasks/migrate-jsonlib-v3.md", "start_line": 9, "end_line": 10},
+        {"path": "services/reporting/json_adapter.py", "start_line": 4, "end_line": 13},
+        {"path": "services/reporting/report_builder.py", "start_line": 6, "end_line": 12},
+        {"path": "tests/reporting_contract.py", "start_line": 4, "end_line": 5}
+      ],
+      "review_status": "PASS_TWO_METHODS"
+    },
+    {
+      "relation": "compatible_via",
+      "tuple": {
+        "service": "service:reporting",
+        "old_library": "library:jsonlib-v2",
+        "new_library": "library:jsonlib-v3",
+        "adapter": "adapter:reporting-json-v3"
+      },
+      "taskview_role": "task-conditioned judgment",
+      "semantic_judgment": "reporting's v2-shaped call is accepted as v3-compatible through the reporting adapter",
+      "construction_category": "reviewed task judgment",
+      "raw_obtainable": true,
+      "explanation": "RAW can compare the migration reference, adapter behavior, reporting call, charter rule, and contract output.",
+      "evidence": [
+        {"path": "tasks/migrate-jsonlib-v3.md", "start_line": 9, "end_line": 10},
+        {"path": "vendor/jsonlib_v3_migration.md", "start_line": 12, "end_line": 13},
+        {"path": "services/reporting/json_adapter.py", "start_line": 4, "end_line": 13},
+        {"path": "services/reporting/report_builder.py", "start_line": 6, "end_line": 12},
+        {"path": "tests/reporting_contract.py", "start_line": 4, "end_line": 5}
+      ],
+      "review_status": "PASS_TWO_METHODS"
+    },
+    {
+      "relation": "verified_by",
+      "tuple": {"service": "service:checkout", "test": "test:checkout-contract"},
+      "taskview_role": "task-conditioned judgment",
+      "semantic_judgment": "the initial checkout contract verifies both migration-critical decoding behaviors",
+      "construction_category": "reviewed task judgment",
+      "raw_obtainable": true,
+      "explanation": "RAW can apply the task-relevance rule to the visible codec and assertions for comments and Decimal output.",
+      "evidence": [
+        {"path": "tasks/migrate-jsonlib-v3.md", "start_line": 18, "end_line": 19},
+        {"path": "services/checkout/json_codec.py", "start_line": 6, "end_line": 12},
+        {"path": "tests/checkout_contract.py", "start_line": 6, "end_line": 9}
+      ],
+      "review_status": "PASS_TWO_METHODS"
+    },
+    {
+      "relation": "verified_by",
+      "tuple": {"service": "service:reporting", "test": "test:reporting-contract"},
+      "taskview_role": "task-conditioned judgment",
+      "semantic_judgment": "the reporting contract verifies the accepted adapter's migration behavior",
+      "construction_category": "reviewed task judgment",
+      "raw_obtainable": true,
+      "explanation": "RAW can apply the task-relevance and adapter-acceptance rules to the exact contract output.",
+      "evidence": [
+        {"path": "tasks/migrate-jsonlib-v3.md", "start_line": 9, "end_line": 10},
+        {"path": "tasks/migrate-jsonlib-v3.md", "start_line": 18, "end_line": 19},
+        {"path": "services/reporting/json_adapter.py", "start_line": 4, "end_line": 13},
+        {"path": "tests/reporting_contract.py", "start_line": 4, "end_line": 5}
+      ],
+      "review_status": "PASS_TWO_METHODS"
+    }
+  ]
+}
+

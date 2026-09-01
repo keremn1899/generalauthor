@@ -1,0 +1,45 @@
+{
+  "answers": [
+    "affected"
+  ],
+  "derive": {
+    "affected": {
+      "inputs": [
+        "$services",
+        "$prod"
+      ],
+      "op": "intersection"
+    },
+    "legacy": {
+      "op": "resolve",
+      "references": "package:legacy-search"
+    },
+    "modules": {
+      "endpoint_kind": "module",
+      "from": "$legacy",
+      "max_depth": 2,
+      "op": "reverse_reachable",
+      "predicates": [
+        "depends_on"
+      ]
+    },
+    "prod": {
+      "endpoint_kind": "service",
+      "from": "deployment:production",
+      "max_depth": 1,
+      "op": "reverse_reachable",
+      "predicates": [
+        "deployed_to"
+      ]
+    },
+    "services": {
+      "endpoint_kind": "service",
+      "from": "$modules",
+      "max_depth": 1,
+      "op": "reverse_reachable",
+      "predicates": [
+        "implements"
+      ]
+    }
+  }
+}

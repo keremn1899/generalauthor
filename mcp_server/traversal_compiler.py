@@ -41,6 +41,10 @@ class CompiledTraversal:
     project: dict[str, Any] = field(default_factory=dict)
     #: Variables that carry the answer; empty means "the packet is the answer".
     answers: tuple[str, ...] = ()
+    #: Model-facing name -> executor variable.  ``answers`` remains the
+    #: compatibility-oriented flat form used for outcome calculation.
+    answer_sets: dict[str, str] = field(default_factory=dict)
+    result_mode: str = "full"
 
     @property
     def program_set_fingerprint(self) -> str:
@@ -147,6 +151,38 @@ def _normalize_project(raw: dict[str, Any] | None) -> dict[str, Any]:
     if unknown:
         raise TraversalCompileError(f"unknown project field(s): {unknown}")
     return canonical
+
+
+def _compile_answer_sets(raw: Any, assigned: set[str]) -> dict[str, str]:
+    """Normalise legacy answer lists and named compact answer sets.
+
+    The validation sits at compilation too because ephemeral programs are not
+    parsed by ``TraversalRecipeSpec`` before they reach this module.
+    """
+    if raw is None:
+        return {}
+    if isinstance(raw, list):
+        pairs = [(str(value).lstrip("$").strip(), str(value).lstrip("$").strip())
+                 for value in raw]
+    elif isinstance(raw, dict):
+        pairs = [
+            (str(name).strip(), str(variable).lstrip("$").strip())
+            for name, variable in raw.items()
+        ]
+    else:
+        raise TraversalCompileError("answers must be a list or mapping of named answer sets")
+    answer_sets: dict[str, str] = {}
+    for name, variable in pairs:
+        if not name or not variable:
+            raise TraversalCompileError("answers must name assigned variables")
+        if variable not in assigned:
+            raise TraversalCompileError(
+                f"traversal declares answer {variable!r} that no step assigns"
+            )
+        if name in answer_sets:
+            raise TraversalCompileError(f"duplicate named answer set {name!r}")
+        answer_sets[name] = variable
+    return answer_sets
 
 
 def _kind_filter_params(
@@ -288,19 +324,22 @@ def _compile_step(
         }
 
     if op in {"shortest_path", "find_paths"}:
-        edge_types, _ = _predicate_filters(bound, document)
+        edge_types, edge_labels = _predicate_filters(bound, document)
+        params: dict[str, Any] = {
+            "source_set": bound.get("from") or bound.get("source"),
+            "target_set": bound.get("to") or bound.get("target"),
+            "edge_types": edge_types,
+            "max_hops": int(bound.get("max_hops") or 4),
+            "direction": _direction(bound.get("direction") or "outgoing"),
+            "exclude_labels": [
+                str(v) for v in (bound.get("excluding") or []) if str(v)
+            ],
+        }
+        if edge_labels:
+            params["edge_labels"] = edge_labels
         return {
             "tool": "find_paths",
-            "params": {
-                "source_set": bound.get("from") or bound.get("source"),
-                "target_set": bound.get("to") or bound.get("target"),
-                "edge_types": edge_types,
-                "max_hops": int(bound.get("max_hops") or 4),
-                "direction": _direction(bound.get("direction") or "outgoing"),
-                "exclude_labels": [
-                    str(v) for v in (bound.get("excluding") or []) if str(v)
-                ],
-            },
+            "params": params,
             "assign_to": assign,
         }
 
@@ -560,6 +599,11 @@ def compile_named_traversal(
             if key in step and key not in recipe.project:
                 merged[key] = step[key]
         project = _normalize_project(merged)
+    assigned = {
+        str(step.get("assign") or "").lstrip("$")
+        for step in recipe.steps + recipe.then
+    }
+    answer_sets = _compile_answer_sets(recipe.answers, assigned)
     return CompiledTraversal(
         name=recipe_name,
         version=recipe.version,
@@ -568,7 +612,9 @@ def compile_named_traversal(
         parameters=canonical_parameters,
         program=program,
         project=project,
-        answers=tuple(name.lstrip("$") for name in recipe.answers),
+        answers=tuple(dict.fromkeys(answer_sets.values())),
+        answer_sets=answer_sets,
+        result_mode=recipe.result_mode,
     )
 
 
@@ -659,23 +705,14 @@ def compile_ephemeral_traversal(
     # EMPTY as a recipe and FOUND as a one-shot program, over an identical
     # six-node packet with no bridges in it.
     answers_raw = spec.get("answers") or []
-    if answers_raw and not isinstance(answers_raw, list):
-        raise TraversalCompileError("ephemeral answers must be a list of variables")
     assigned = {
         str(step.get("assign_to") or "").lstrip("$")
         for step in compiled_steps + fallback_steps
     }
-    answers: list[str] = []
-    for entry in answers_raw:
-        variable = str(entry or "").lstrip("$").strip()
-        if not variable:
-            raise TraversalCompileError("ephemeral answers must name variables")
-        if variable not in assigned:
-            raise TraversalCompileError(
-                f"ephemeral traversal declares answer {variable!r} that no step assigns"
-            )
-        if variable not in answers:
-            answers.append(variable)
+    answer_sets = _compile_answer_sets(answers_raw, assigned)
+    result_mode = str(spec.get("result_mode") or "full").strip().lower()
+    if result_mode not in {"full", "compact"}:
+        raise TraversalCompileError("result_mode must be full or compact")
     payload = {
         "format_fingerprint": document.fingerprint,
         "kind": "ephemeral",
@@ -690,7 +727,9 @@ def compile_ephemeral_traversal(
         parameters=canonical_parameters,
         program=retrieval_program,
         project=project,
-        answers=tuple(answers),
+        answers=tuple(dict.fromkeys(answer_sets.values())),
+        answer_sets=answer_sets,
+        result_mode=result_mode,
     )
 
 

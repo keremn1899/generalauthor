@@ -298,9 +298,15 @@ def execute_tool(
             exclude_labels = tuple(
                 str(v) for v in (params.get("exclude_labels") or ()) if str(v)
             )
+            edge_labels = params.get("edge_labels")
+            if isinstance(edge_labels, list):
+                edge_labels = [str(v) for v in edge_labels if str(v)] or None
+            else:
+                edge_labels = None
             results = find_paths(
                 conn, source_set, target_set, max_hops,
                 edge_types=edge_types, direction=direction,
+                edge_labels=edge_labels,
                 exclude_labels=exclude_labels,
             )
             path_nodes: list[dict] = []
@@ -312,6 +318,8 @@ def execute_tool(
                         "path_chain": path.get("node_chain", []),
                         "edge_chain": path.get("edge_chain", []),
                         "edge_label_chain": path.get("edge_label_chain", []),
+                        "edge_evidence_chain": path.get("edge_evidence_chain", []),
+                        "relation_id_chain": path.get("relation_id_chain", []),
                     })
             return path_nodes
 
@@ -616,6 +624,7 @@ def build_evidence_packet(
                         e.get("target_id", ""),
                         e.get("edge_type", ""),
                         e.get("edge_label", ""),
+                        e.get("relation_id", ""),
                     )
                     if key in seen_edge_keys:
                         continue
@@ -627,6 +636,8 @@ def build_evidence_packet(
                         "target_label": e.get("target_label", ""),
                         "edge_type": e.get("edge_type", ""),
                         "edge_label": e.get("edge_label", ""),
+                        "edge_evidence": e.get("edge_evidence", ""),
+                        "relation_id": e.get("relation_id", ""),
                         "origin": origin,
                         "from_tool": tool,
                     })
@@ -653,11 +664,15 @@ def build_evidence_packet(
                     seen_path_keys.add(key)
                     edge_chain = item.get("edge_chain", [])
                     edge_label_chain = item.get("edge_label_chain", [])
+                    edge_evidence_chain = item.get("edge_evidence_chain", [])
+                    relation_id_chain = item.get("relation_id_chain", [])
                     # v8 §9: normalise trail orientation to edge-native direction.
                     _directed = {"leadsto", "contains", "expresses"}
                     chain_l = list(path_chain)
                     echain_l = list(edge_chain) if isinstance(edge_chain, list) else []
                     elabels_l = list(edge_label_chain) if isinstance(edge_label_chain, list) else []
+                    evidence_l = list(edge_evidence_chain) if isinstance(edge_evidence_chain, list) else []
+                    relation_ids_l = list(relation_id_chain) if isinstance(relation_id_chain, list) else []
                     fwd = rev = 0
                     for i in range(len(chain_l) - 1):
                         if i >= len(echain_l):
@@ -682,10 +697,14 @@ def build_evidence_packet(
                         chain_l = list(reversed(chain_l))
                         echain_l = list(reversed(echain_l))
                         elabels_l = list(reversed(elabels_l))
+                        evidence_l = list(reversed(evidence_l))
+                        relation_ids_l = list(reversed(relation_ids_l))
                     path_records.append({
                         "node_chain": list(chain_l),
                         "edge_chain": list(echain_l),
                         "edge_label_chain": list(elabels_l),
+                        "edge_evidence_chain": list(evidence_l),
+                        "relation_id_chain": list(relation_ids_l),
                         "source": chain_l[0],
                         "target": chain_l[-1],
                         "origin": origin,
@@ -702,7 +721,13 @@ def build_evidence_packet(
                         el = ""
                         if i < len(elabels_l):
                             el = elabels_l[i] or ""
-                        ekey = (src, tgt, et, el)
+                        ee = ""
+                        if i < len(evidence_l):
+                            ee = evidence_l[i] or ""
+                        rid = ""
+                        if i < len(relation_ids_l):
+                            rid = relation_ids_l[i] or ""
+                        ekey = (src, tgt, et, el, rid)
                         if ekey in seen_edge_keys:
                             continue
                         seen_edge_keys.add(ekey)
@@ -713,6 +738,8 @@ def build_evidence_packet(
                             "target_label": "",
                             "edge_type": et,
                             "edge_label": el,
+                            "edge_evidence": ee,
+                            "relation_id": rid,
                             "origin": origin,
                             "from_tool": tool,
                             "from_path": True,

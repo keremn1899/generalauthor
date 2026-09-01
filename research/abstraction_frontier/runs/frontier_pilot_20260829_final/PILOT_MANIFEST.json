@@ -1,0 +1,1922 @@
+{
+  "arms": [
+    "T_SQL",
+    "T_GRAPH",
+    "U_GRAPH"
+  ],
+  "cases": [
+    {
+      "A": "A0",
+      "R": "R0",
+      "expected": {
+        "suites": [
+          "test:order-platform-api-contract"
+        ]
+      },
+      "id": "order-platform-verification-control",
+      "ledger": {
+        "cross_level_links": [],
+        "grouping": [],
+        "inclusion_policy": [
+          "exclude unrelated staging reporting path"
+        ],
+        "new_entities": [],
+        "new_predicates": [],
+        "projection": true,
+        "splitting": []
+      },
+      "metadata": {
+        "answer_cardinality": 1,
+        "distractor_size": 1,
+        "intermediate_reuse_count": 0,
+        "minimum_required_depth": 1,
+        "negative_case": false,
+        "predicate_classes": 1,
+        "set_composition_count": 0
+      },
+      "oracle_relation_ids": [
+        "rel:21fa31ef1a68bff74138"
+      ],
+      "prompt": "For the Orders production API, which verification suite should be reviewed before a release? Return stable IDs only.",
+      "query": {
+        "answers": [
+          "suites"
+        ],
+        "derive": {
+          "api": {
+            "op": "resolve",
+            "references": "service:order-api"
+          },
+          "suites": {
+            "endpoint_kind": "test",
+            "from": "$api",
+            "max_depth": 1,
+            "op": "reverse_reachable",
+            "predicates": [
+              "verifies"
+            ]
+          }
+        }
+      },
+      "semantic_level": "system/runtime",
+      "semantic_parity": {
+        "graph": "deferred_to_graph_validation",
+        "sql": true
+      },
+      "sql_schema": {
+        "entity_tables": [
+          "boundarys",
+          "deployments",
+          "modules",
+          "packages",
+          "resources",
+          "services",
+          "teams",
+          "tests"
+        ],
+        "relation_tables": [
+          "module_depends_on_module",
+          "module_depends_on_package",
+          "service_crosses_boundary",
+          "service_deployed_to_deployment",
+          "service_implements_module",
+          "service_owned_by_team",
+          "service_uses_resource",
+          "test_verifies_service"
+        ]
+      },
+      "world_id": "order-platform"
+    },
+    {
+      "A": "A1",
+      "R": "R2",
+      "expected": {
+        "affected": [
+          "service:fulfilment-worker",
+          "service:order-api"
+        ]
+      },
+      "id": "order-platform-production-impact",
+      "ledger": {
+        "cross_level_links": [
+          "module-to-service-to-deployment"
+        ],
+        "grouping": [],
+        "inclusion_policy": [
+          "production replacement-relevant module/service slice"
+        ],
+        "new_entities": [],
+        "new_predicates": [],
+        "projection": true,
+        "splitting": []
+      },
+      "metadata": {
+        "answer_cardinality": 2,
+        "distractor_size": 1,
+        "intermediate_reuse_count": 1,
+        "minimum_required_depth": 3,
+        "negative_case": false,
+        "predicate_classes": 3,
+        "set_composition_count": 1
+      },
+      "oracle_relation_ids": [
+        "rel:05e8f4aacf0c9596e71e",
+        "rel:1c446b82676dd163c6c5",
+        "rel:b3b938ed133d8d4b0aae",
+        "rel:c376847bf90fdfb40a72",
+        "rel:c8c142dab0b5f3bf2b27",
+        "rel:ffab9cf6fcf6c8a72c72"
+      ],
+      "prompt": "A replacement of legacy-money is planned. Which production services are affected through their implementation dependencies? Return stable IDs only.",
+      "query": {
+        "answers": [
+          "affected"
+        ],
+        "derive": {
+          "affected": {
+            "inputs": [
+              "$services",
+              "$prod"
+            ],
+            "op": "intersection"
+          },
+          "legacy": {
+            "op": "resolve",
+            "references": "package:legacy-money"
+          },
+          "modules": {
+            "endpoint_kind": "module",
+            "from": "$legacy",
+            "max_depth": 2,
+            "op": "reverse_reachable",
+            "predicates": [
+              "depends_on"
+            ]
+          },
+          "prod": {
+            "endpoint_kind": "service",
+            "from": "deployment:production",
+            "max_depth": 1,
+            "op": "reverse_reachable",
+            "predicates": [
+              "deployed_to"
+            ]
+          },
+          "services": {
+            "endpoint_kind": "service",
+            "from": "$modules",
+            "max_depth": 1,
+            "op": "reverse_reachable",
+            "predicates": [
+              "implements"
+            ]
+          }
+        }
+      },
+      "semantic_level": "system/runtime",
+      "semantic_parity": {
+        "graph": "deferred_to_graph_validation",
+        "sql": true
+      },
+      "sql_schema": {
+        "entity_tables": [
+          "boundarys",
+          "deployments",
+          "modules",
+          "packages",
+          "resources",
+          "services",
+          "teams",
+          "tests"
+        ],
+        "relation_tables": [
+          "module_depends_on_module",
+          "module_depends_on_package",
+          "service_crosses_boundary",
+          "service_deployed_to_deployment",
+          "service_implements_module",
+          "service_owned_by_team",
+          "service_uses_resource",
+          "test_verifies_service"
+        ]
+      },
+      "world_id": "order-platform"
+    },
+    {
+      "A": "A3",
+      "R": "R1",
+      "expected": {
+        "boundary": [
+          "boundary:order-platform-public"
+        ]
+      },
+      "id": "order-platform-cutover-boundary-control",
+      "ledger": {
+        "cross_level_links": [
+          "task-to-deployment-to-service-to-boundary"
+        ],
+        "grouping": [
+          "legacy retirement cutover as a task-scoped entity"
+        ],
+        "inclusion_policy": [
+          "cutover scope"
+        ],
+        "new_entities": [
+          "task:order-platform-legacy-cutover"
+        ],
+        "new_predicates": [
+          "retires",
+          "targets"
+        ],
+        "projection": true,
+        "splitting": []
+      },
+      "metadata": {
+        "answer_cardinality": 1,
+        "distractor_size": 1,
+        "intermediate_reuse_count": 1,
+        "minimum_required_depth": 3,
+        "negative_case": false,
+        "predicate_classes": 3,
+        "set_composition_count": 1
+      },
+      "oracle_relation_ids": [
+        "rel:05e8f4aacf0c9596e71e",
+        "rel:06e265dfbd46377725ee",
+        "rel:714a9cdde6e3c4d7fec8",
+        "rel:c376847bf90fdfb40a72"
+      ],
+      "prompt": "For the Orders legacy-retirement cutover, which boundary is crossed by the production API in scope? Return stable IDs only.",
+      "query": {
+        "answers": [
+          "boundary"
+        ],
+        "derive": {
+          "boundary": {
+            "endpoint_kind": "boundary",
+            "from": "$public_api",
+            "max_depth": 1,
+            "op": "traverse",
+            "predicates": [
+              "crosses"
+            ]
+          },
+          "cutover": {
+            "op": "resolve",
+            "references": "task:order-platform-legacy-cutover"
+          },
+          "production": {
+            "endpoint_kind": "deployment",
+            "from": "$cutover",
+            "max_depth": 1,
+            "op": "traverse",
+            "predicates": [
+              "targets"
+            ]
+          },
+          "public_api": {
+            "inputs": [
+              "$services",
+              [
+                "service:order-api"
+              ]
+            ],
+            "op": "intersection"
+          },
+          "services": {
+            "endpoint_kind": "service",
+            "from": "$production",
+            "max_depth": 1,
+            "op": "reverse_reachable",
+            "predicates": [
+              "deployed_to"
+            ]
+          }
+        }
+      },
+      "semantic_level": "task/project",
+      "semantic_parity": {
+        "graph": "deferred_to_graph_validation",
+        "sql": true
+      },
+      "sql_schema": {
+        "entity_tables": [
+          "boundarys",
+          "deployments",
+          "modules",
+          "packages",
+          "resources",
+          "services",
+          "tasks",
+          "teams",
+          "tests"
+        ],
+        "relation_tables": [
+          "module_depends_on_module",
+          "module_depends_on_package",
+          "service_crosses_boundary",
+          "service_deployed_to_deployment",
+          "service_implements_module",
+          "service_owned_by_team",
+          "service_uses_resource",
+          "task_retires_package",
+          "task_targets_deployment",
+          "test_verifies_service"
+        ]
+      },
+      "world_id": "order-platform"
+    },
+    {
+      "A": "A3",
+      "R": "R4",
+      "expected": {
+        "affected": [
+          "service:fulfilment-worker",
+          "service:order-api"
+        ],
+        "covered": [
+          "test:order-platform-api-contract",
+          "test:order-platform-worker-integration"
+        ]
+      },
+      "id": "order-platform-cutover-readiness",
+      "ledger": {
+        "cross_level_links": [
+          "task-to-package-to-module-to-service-to-test"
+        ],
+        "grouping": [
+          "legacy retirement cutover as a task-scoped entity"
+        ],
+        "inclusion_policy": [
+          "cutover scope"
+        ],
+        "new_entities": [
+          "task:order-platform-legacy-cutover"
+        ],
+        "new_predicates": [
+          "retires",
+          "targets"
+        ],
+        "projection": true,
+        "splitting": []
+      },
+      "metadata": {
+        "answer_cardinality": 4,
+        "distractor_size": 1,
+        "intermediate_reuse_count": 2,
+        "minimum_required_depth": 4,
+        "negative_case": false,
+        "predicate_classes": 5,
+        "set_composition_count": 1
+      },
+      "oracle_relation_ids": [
+        "rel:05e8f4aacf0c9596e71e",
+        "rel:1c446b82676dd163c6c5",
+        "rel:21fa31ef1a68bff74138",
+        "rel:7a90fde35e7918476dfb",
+        "rel:85825d0a3ab0a311c90d",
+        "rel:b3b938ed133d8d4b0aae",
+        "rel:c376847bf90fdfb40a72",
+        "rel:c8c142dab0b5f3bf2b27",
+        "rel:ffab9cf6fcf6c8a72c72"
+      ],
+      "prompt": "For the Orders legacy-retirement cutover, identify the production services affected by the retiring package and the verification suites that cover them. Return stable IDs only, separated by answer name.",
+      "query": {
+        "answers": [
+          "affected",
+          "covered"
+        ],
+        "derive": {
+          "affected": {
+            "inputs": [
+              "$services",
+              "$prod"
+            ],
+            "op": "intersection"
+          },
+          "covered": {
+            "endpoint_kind": "test",
+            "from": "$affected",
+            "max_depth": 1,
+            "op": "reverse_reachable",
+            "predicates": [
+              "verifies"
+            ]
+          },
+          "cutover": {
+            "op": "resolve",
+            "references": "task:order-platform-legacy-cutover"
+          },
+          "legacy": {
+            "endpoint_kind": "package",
+            "from": "$cutover",
+            "max_depth": 1,
+            "op": "traverse",
+            "predicates": [
+              "retires"
+            ]
+          },
+          "modules": {
+            "endpoint_kind": "module",
+            "from": "$legacy",
+            "max_depth": 2,
+            "op": "reverse_reachable",
+            "predicates": [
+              "depends_on"
+            ]
+          },
+          "prod": {
+            "endpoint_kind": "service",
+            "from": "deployment:production",
+            "max_depth": 1,
+            "op": "reverse_reachable",
+            "predicates": [
+              "deployed_to"
+            ]
+          },
+          "services": {
+            "endpoint_kind": "service",
+            "from": "$modules",
+            "max_depth": 1,
+            "op": "reverse_reachable",
+            "predicates": [
+              "implements"
+            ]
+          }
+        }
+      },
+      "semantic_level": "task/project",
+      "semantic_parity": {
+        "graph": "deferred_to_graph_validation",
+        "sql": true
+      },
+      "sql_schema": {
+        "entity_tables": [
+          "boundarys",
+          "deployments",
+          "modules",
+          "packages",
+          "resources",
+          "services",
+          "tasks",
+          "teams",
+          "tests"
+        ],
+        "relation_tables": [
+          "module_depends_on_module",
+          "module_depends_on_package",
+          "service_crosses_boundary",
+          "service_deployed_to_deployment",
+          "service_implements_module",
+          "service_owned_by_team",
+          "service_uses_resource",
+          "task_retires_package",
+          "task_targets_deployment",
+          "test_verifies_service"
+        ]
+      },
+      "world_id": "order-platform"
+    },
+    {
+      "A": "A0",
+      "R": "R0",
+      "expected": {
+        "suites": [
+          "test:identity-platform-api-contract"
+        ]
+      },
+      "id": "identity-platform-verification-control",
+      "ledger": {
+        "cross_level_links": [],
+        "grouping": [],
+        "inclusion_policy": [
+          "exclude unrelated staging reporting path"
+        ],
+        "new_entities": [],
+        "new_predicates": [],
+        "projection": true,
+        "splitting": []
+      },
+      "metadata": {
+        "answer_cardinality": 1,
+        "distractor_size": 1,
+        "intermediate_reuse_count": 0,
+        "minimum_required_depth": 1,
+        "negative_case": false,
+        "predicate_classes": 1,
+        "set_composition_count": 0
+      },
+      "oracle_relation_ids": [
+        "rel:f291982177918df90040"
+      ],
+      "prompt": "For the Identity production API, which verification suite should be reviewed before a release? Return stable IDs only.",
+      "query": {
+        "answers": [
+          "suites"
+        ],
+        "derive": {
+          "api": {
+            "op": "resolve",
+            "references": "service:identity-api"
+          },
+          "suites": {
+            "endpoint_kind": "test",
+            "from": "$api",
+            "max_depth": 1,
+            "op": "reverse_reachable",
+            "predicates": [
+              "verifies"
+            ]
+          }
+        }
+      },
+      "semantic_level": "system/runtime",
+      "semantic_parity": {
+        "graph": "deferred_to_graph_validation",
+        "sql": true
+      },
+      "sql_schema": {
+        "entity_tables": [
+          "boundarys",
+          "deployments",
+          "modules",
+          "packages",
+          "resources",
+          "services",
+          "teams",
+          "tests"
+        ],
+        "relation_tables": [
+          "module_depends_on_module",
+          "module_depends_on_package",
+          "service_crosses_boundary",
+          "service_deployed_to_deployment",
+          "service_implements_module",
+          "service_owned_by_team",
+          "service_uses_resource",
+          "test_verifies_service"
+        ]
+      },
+      "world_id": "identity-platform"
+    },
+    {
+      "A": "A1",
+      "R": "R2",
+      "expected": {
+        "affected": [
+          "service:identity-api",
+          "service:session-worker"
+        ]
+      },
+      "id": "identity-platform-production-impact",
+      "ledger": {
+        "cross_level_links": [
+          "module-to-service-to-deployment"
+        ],
+        "grouping": [],
+        "inclusion_policy": [
+          "production replacement-relevant module/service slice"
+        ],
+        "new_entities": [],
+        "new_predicates": [],
+        "projection": true,
+        "splitting": []
+      },
+      "metadata": {
+        "answer_cardinality": 2,
+        "distractor_size": 1,
+        "intermediate_reuse_count": 1,
+        "minimum_required_depth": 3,
+        "negative_case": false,
+        "predicate_classes": 3,
+        "set_composition_count": 1
+      },
+      "oracle_relation_ids": [
+        "rel:59a2811555885afdd3f8",
+        "rel:5cb07e61d6391688abb6",
+        "rel:6e62e7ecfbdd9370188c",
+        "rel:94e4007674bd92cd3bf7",
+        "rel:c8df9d78d592f2d9b170",
+        "rel:f46bb6e17da58c636b2d"
+      ],
+      "prompt": "A replacement of legacy-crypto is planned. Which production services are affected through their implementation dependencies? Return stable IDs only.",
+      "query": {
+        "answers": [
+          "affected"
+        ],
+        "derive": {
+          "affected": {
+            "inputs": [
+              "$services",
+              "$prod"
+            ],
+            "op": "intersection"
+          },
+          "legacy": {
+            "op": "resolve",
+            "references": "package:legacy-crypto"
+          },
+          "modules": {
+            "endpoint_kind": "module",
+            "from": "$legacy",
+            "max_depth": 2,
+            "op": "reverse_reachable",
+            "predicates": [
+              "depends_on"
+            ]
+          },
+          "prod": {
+            "endpoint_kind": "service",
+            "from": "deployment:production",
+            "max_depth": 1,
+            "op": "reverse_reachable",
+            "predicates": [
+              "deployed_to"
+            ]
+          },
+          "services": {
+            "endpoint_kind": "service",
+            "from": "$modules",
+            "max_depth": 1,
+            "op": "reverse_reachable",
+            "predicates": [
+              "implements"
+            ]
+          }
+        }
+      },
+      "semantic_level": "system/runtime",
+      "semantic_parity": {
+        "graph": "deferred_to_graph_validation",
+        "sql": true
+      },
+      "sql_schema": {
+        "entity_tables": [
+          "boundarys",
+          "deployments",
+          "modules",
+          "packages",
+          "resources",
+          "services",
+          "teams",
+          "tests"
+        ],
+        "relation_tables": [
+          "module_depends_on_module",
+          "module_depends_on_package",
+          "service_crosses_boundary",
+          "service_deployed_to_deployment",
+          "service_implements_module",
+          "service_owned_by_team",
+          "service_uses_resource",
+          "test_verifies_service"
+        ]
+      },
+      "world_id": "identity-platform"
+    },
+    {
+      "A": "A3",
+      "R": "R1",
+      "expected": {
+        "boundary": [
+          "boundary:identity-platform-public"
+        ]
+      },
+      "id": "identity-platform-cutover-boundary-control",
+      "ledger": {
+        "cross_level_links": [
+          "task-to-deployment-to-service-to-boundary"
+        ],
+        "grouping": [
+          "legacy retirement cutover as a task-scoped entity"
+        ],
+        "inclusion_policy": [
+          "cutover scope"
+        ],
+        "new_entities": [
+          "task:identity-platform-legacy-cutover"
+        ],
+        "new_predicates": [
+          "retires",
+          "targets"
+        ],
+        "projection": true,
+        "splitting": []
+      },
+      "metadata": {
+        "answer_cardinality": 1,
+        "distractor_size": 1,
+        "intermediate_reuse_count": 1,
+        "minimum_required_depth": 3,
+        "negative_case": false,
+        "predicate_classes": 3,
+        "set_composition_count": 1
+      },
+      "oracle_relation_ids": [
+        "rel:6e62e7ecfbdd9370188c",
+        "rel:8793da4b2c128a93fe0f",
+        "rel:e8e680d8a143be033263",
+        "rel:f46bb6e17da58c636b2d"
+      ],
+      "prompt": "For the Identity legacy-retirement cutover, which boundary is crossed by the production API in scope? Return stable IDs only.",
+      "query": {
+        "answers": [
+          "boundary"
+        ],
+        "derive": {
+          "boundary": {
+            "endpoint_kind": "boundary",
+            "from": "$public_api",
+            "max_depth": 1,
+            "op": "traverse",
+            "predicates": [
+              "crosses"
+            ]
+          },
+          "cutover": {
+            "op": "resolve",
+            "references": "task:identity-platform-legacy-cutover"
+          },
+          "production": {
+            "endpoint_kind": "deployment",
+            "from": "$cutover",
+            "max_depth": 1,
+            "op": "traverse",
+            "predicates": [
+              "targets"
+            ]
+          },
+          "public_api": {
+            "inputs": [
+              "$services",
+              [
+                "service:identity-api"
+              ]
+            ],
+            "op": "intersection"
+          },
+          "services": {
+            "endpoint_kind": "service",
+            "from": "$production",
+            "max_depth": 1,
+            "op": "reverse_reachable",
+            "predicates": [
+              "deployed_to"
+            ]
+          }
+        }
+      },
+      "semantic_level": "task/project",
+      "semantic_parity": {
+        "graph": "deferred_to_graph_validation",
+        "sql": true
+      },
+      "sql_schema": {
+        "entity_tables": [
+          "boundarys",
+          "deployments",
+          "modules",
+          "packages",
+          "resources",
+          "services",
+          "tasks",
+          "teams",
+          "tests"
+        ],
+        "relation_tables": [
+          "module_depends_on_module",
+          "module_depends_on_package",
+          "service_crosses_boundary",
+          "service_deployed_to_deployment",
+          "service_implements_module",
+          "service_owned_by_team",
+          "service_uses_resource",
+          "task_retires_package",
+          "task_targets_deployment",
+          "test_verifies_service"
+        ]
+      },
+      "world_id": "identity-platform"
+    },
+    {
+      "A": "A3",
+      "R": "R4",
+      "expected": {
+        "affected": [
+          "service:identity-api",
+          "service:session-worker"
+        ],
+        "covered": [
+          "test:identity-platform-api-contract",
+          "test:identity-platform-worker-integration"
+        ]
+      },
+      "id": "identity-platform-cutover-readiness",
+      "ledger": {
+        "cross_level_links": [
+          "task-to-package-to-module-to-service-to-test"
+        ],
+        "grouping": [
+          "legacy retirement cutover as a task-scoped entity"
+        ],
+        "inclusion_policy": [
+          "cutover scope"
+        ],
+        "new_entities": [
+          "task:identity-platform-legacy-cutover"
+        ],
+        "new_predicates": [
+          "retires",
+          "targets"
+        ],
+        "projection": true,
+        "splitting": []
+      },
+      "metadata": {
+        "answer_cardinality": 4,
+        "distractor_size": 1,
+        "intermediate_reuse_count": 2,
+        "minimum_required_depth": 4,
+        "negative_case": false,
+        "predicate_classes": 5,
+        "set_composition_count": 1
+      },
+      "oracle_relation_ids": [
+        "rel:0afc289dc9a7881596a4",
+        "rel:59a2811555885afdd3f8",
+        "rel:5cb07e61d6391688abb6",
+        "rel:6e62e7ecfbdd9370188c",
+        "rel:94e4007674bd92cd3bf7",
+        "rel:c26c9f69a467092a6ac9",
+        "rel:c8df9d78d592f2d9b170",
+        "rel:f291982177918df90040",
+        "rel:f46bb6e17da58c636b2d"
+      ],
+      "prompt": "For the Identity legacy-retirement cutover, identify the production services affected by the retiring package and the verification suites that cover them. Return stable IDs only, separated by answer name.",
+      "query": {
+        "answers": [
+          "affected",
+          "covered"
+        ],
+        "derive": {
+          "affected": {
+            "inputs": [
+              "$services",
+              "$prod"
+            ],
+            "op": "intersection"
+          },
+          "covered": {
+            "endpoint_kind": "test",
+            "from": "$affected",
+            "max_depth": 1,
+            "op": "reverse_reachable",
+            "predicates": [
+              "verifies"
+            ]
+          },
+          "cutover": {
+            "op": "resolve",
+            "references": "task:identity-platform-legacy-cutover"
+          },
+          "legacy": {
+            "endpoint_kind": "package",
+            "from": "$cutover",
+            "max_depth": 1,
+            "op": "traverse",
+            "predicates": [
+              "retires"
+            ]
+          },
+          "modules": {
+            "endpoint_kind": "module",
+            "from": "$legacy",
+            "max_depth": 2,
+            "op": "reverse_reachable",
+            "predicates": [
+              "depends_on"
+            ]
+          },
+          "prod": {
+            "endpoint_kind": "service",
+            "from": "deployment:production",
+            "max_depth": 1,
+            "op": "reverse_reachable",
+            "predicates": [
+              "deployed_to"
+            ]
+          },
+          "services": {
+            "endpoint_kind": "service",
+            "from": "$modules",
+            "max_depth": 1,
+            "op": "reverse_reachable",
+            "predicates": [
+              "implements"
+            ]
+          }
+        }
+      },
+      "semantic_level": "task/project",
+      "semantic_parity": {
+        "graph": "deferred_to_graph_validation",
+        "sql": true
+      },
+      "sql_schema": {
+        "entity_tables": [
+          "boundarys",
+          "deployments",
+          "modules",
+          "packages",
+          "resources",
+          "services",
+          "tasks",
+          "teams",
+          "tests"
+        ],
+        "relation_tables": [
+          "module_depends_on_module",
+          "module_depends_on_package",
+          "service_crosses_boundary",
+          "service_deployed_to_deployment",
+          "service_implements_module",
+          "service_owned_by_team",
+          "service_uses_resource",
+          "task_retires_package",
+          "task_targets_deployment",
+          "test_verifies_service"
+        ]
+      },
+      "world_id": "identity-platform"
+    },
+    {
+      "A": "A0",
+      "R": "R0",
+      "expected": {
+        "suites": [
+          "test:catalogue-platform-api-contract"
+        ]
+      },
+      "id": "catalogue-platform-verification-control",
+      "ledger": {
+        "cross_level_links": [],
+        "grouping": [],
+        "inclusion_policy": [
+          "exclude unrelated staging reporting path"
+        ],
+        "new_entities": [],
+        "new_predicates": [],
+        "projection": true,
+        "splitting": []
+      },
+      "metadata": {
+        "answer_cardinality": 1,
+        "distractor_size": 1,
+        "intermediate_reuse_count": 0,
+        "minimum_required_depth": 1,
+        "negative_case": false,
+        "predicate_classes": 1,
+        "set_composition_count": 0
+      },
+      "oracle_relation_ids": [
+        "rel:c11e33f9157ba699882e"
+      ],
+      "prompt": "For the Catalogue production API, which verification suite should be reviewed before a release? Return stable IDs only.",
+      "query": {
+        "answers": [
+          "suites"
+        ],
+        "derive": {
+          "api": {
+            "op": "resolve",
+            "references": "service:catalogue-api"
+          },
+          "suites": {
+            "endpoint_kind": "test",
+            "from": "$api",
+            "max_depth": 1,
+            "op": "reverse_reachable",
+            "predicates": [
+              "verifies"
+            ]
+          }
+        }
+      },
+      "semantic_level": "system/runtime",
+      "semantic_parity": {
+        "graph": "deferred_to_graph_validation",
+        "sql": true
+      },
+      "sql_schema": {
+        "entity_tables": [
+          "boundarys",
+          "deployments",
+          "modules",
+          "packages",
+          "resources",
+          "services",
+          "teams",
+          "tests"
+        ],
+        "relation_tables": [
+          "module_depends_on_module",
+          "module_depends_on_package",
+          "service_crosses_boundary",
+          "service_deployed_to_deployment",
+          "service_implements_module",
+          "service_owned_by_team",
+          "service_uses_resource",
+          "test_verifies_service"
+        ]
+      },
+      "world_id": "catalogue-platform"
+    },
+    {
+      "A": "A1",
+      "R": "R2",
+      "expected": {
+        "affected": [
+          "service:catalogue-api",
+          "service:index-worker"
+        ]
+      },
+      "id": "catalogue-platform-production-impact",
+      "ledger": {
+        "cross_level_links": [
+          "module-to-service-to-deployment"
+        ],
+        "grouping": [],
+        "inclusion_policy": [
+          "production replacement-relevant module/service slice"
+        ],
+        "new_entities": [],
+        "new_predicates": [],
+        "projection": true,
+        "splitting": []
+      },
+      "metadata": {
+        "answer_cardinality": 2,
+        "distractor_size": 1,
+        "intermediate_reuse_count": 1,
+        "minimum_required_depth": 3,
+        "negative_case": false,
+        "predicate_classes": 3,
+        "set_composition_count": 1
+      },
+      "oracle_relation_ids": [
+        "rel:1eb6116c3fe39e0ce3c1",
+        "rel:29f7ed0cd97c2e1ca9a2",
+        "rel:4f4baa6189b8477f6b01",
+        "rel:7693a5bd242381b2f79b",
+        "rel:b64aeb3bf07ef618822d",
+        "rel:f41eaac75dbaafb4d819"
+      ],
+      "prompt": "A replacement of legacy-search is planned. Which production services are affected through their implementation dependencies? Return stable IDs only.",
+      "query": {
+        "answers": [
+          "affected"
+        ],
+        "derive": {
+          "affected": {
+            "inputs": [
+              "$services",
+              "$prod"
+            ],
+            "op": "intersection"
+          },
+          "legacy": {
+            "op": "resolve",
+            "references": "package:legacy-search"
+          },
+          "modules": {
+            "endpoint_kind": "module",
+            "from": "$legacy",
+            "max_depth": 2,
+            "op": "reverse_reachable",
+            "predicates": [
+              "depends_on"
+            ]
+          },
+          "prod": {
+            "endpoint_kind": "service",
+            "from": "deployment:production",
+            "max_depth": 1,
+            "op": "reverse_reachable",
+            "predicates": [
+              "deployed_to"
+            ]
+          },
+          "services": {
+            "endpoint_kind": "service",
+            "from": "$modules",
+            "max_depth": 1,
+            "op": "reverse_reachable",
+            "predicates": [
+              "implements"
+            ]
+          }
+        }
+      },
+      "semantic_level": "system/runtime",
+      "semantic_parity": {
+        "graph": "deferred_to_graph_validation",
+        "sql": true
+      },
+      "sql_schema": {
+        "entity_tables": [
+          "boundarys",
+          "deployments",
+          "modules",
+          "packages",
+          "resources",
+          "services",
+          "teams",
+          "tests"
+        ],
+        "relation_tables": [
+          "module_depends_on_module",
+          "module_depends_on_package",
+          "service_crosses_boundary",
+          "service_deployed_to_deployment",
+          "service_implements_module",
+          "service_owned_by_team",
+          "service_uses_resource",
+          "test_verifies_service"
+        ]
+      },
+      "world_id": "catalogue-platform"
+    },
+    {
+      "A": "A3",
+      "R": "R1",
+      "expected": {
+        "boundary": [
+          "boundary:catalogue-platform-public"
+        ]
+      },
+      "id": "catalogue-platform-cutover-boundary-control",
+      "ledger": {
+        "cross_level_links": [
+          "task-to-deployment-to-service-to-boundary"
+        ],
+        "grouping": [
+          "legacy retirement cutover as a task-scoped entity"
+        ],
+        "inclusion_policy": [
+          "cutover scope"
+        ],
+        "new_entities": [
+          "task:catalogue-platform-legacy-cutover"
+        ],
+        "new_predicates": [
+          "retires",
+          "targets"
+        ],
+        "projection": true,
+        "splitting": []
+      },
+      "metadata": {
+        "answer_cardinality": 1,
+        "distractor_size": 1,
+        "intermediate_reuse_count": 1,
+        "minimum_required_depth": 3,
+        "negative_case": false,
+        "predicate_classes": 3,
+        "set_composition_count": 1
+      },
+      "oracle_relation_ids": [
+        "rel:29f7ed0cd97c2e1ca9a2",
+        "rel:e32bb76ea03a0f3759c4",
+        "rel:e883415133941661149f",
+        "rel:f41eaac75dbaafb4d819"
+      ],
+      "prompt": "For the Catalogue legacy-retirement cutover, which boundary is crossed by the production API in scope? Return stable IDs only.",
+      "query": {
+        "answers": [
+          "boundary"
+        ],
+        "derive": {
+          "boundary": {
+            "endpoint_kind": "boundary",
+            "from": "$public_api",
+            "max_depth": 1,
+            "op": "traverse",
+            "predicates": [
+              "crosses"
+            ]
+          },
+          "cutover": {
+            "op": "resolve",
+            "references": "task:catalogue-platform-legacy-cutover"
+          },
+          "production": {
+            "endpoint_kind": "deployment",
+            "from": "$cutover",
+            "max_depth": 1,
+            "op": "traverse",
+            "predicates": [
+              "targets"
+            ]
+          },
+          "public_api": {
+            "inputs": [
+              "$services",
+              [
+                "service:catalogue-api"
+              ]
+            ],
+            "op": "intersection"
+          },
+          "services": {
+            "endpoint_kind": "service",
+            "from": "$production",
+            "max_depth": 1,
+            "op": "reverse_reachable",
+            "predicates": [
+              "deployed_to"
+            ]
+          }
+        }
+      },
+      "semantic_level": "task/project",
+      "semantic_parity": {
+        "graph": "deferred_to_graph_validation",
+        "sql": true
+      },
+      "sql_schema": {
+        "entity_tables": [
+          "boundarys",
+          "deployments",
+          "modules",
+          "packages",
+          "resources",
+          "services",
+          "tasks",
+          "teams",
+          "tests"
+        ],
+        "relation_tables": [
+          "module_depends_on_module",
+          "module_depends_on_package",
+          "service_crosses_boundary",
+          "service_deployed_to_deployment",
+          "service_implements_module",
+          "service_owned_by_team",
+          "service_uses_resource",
+          "task_retires_package",
+          "task_targets_deployment",
+          "test_verifies_service"
+        ]
+      },
+      "world_id": "catalogue-platform"
+    },
+    {
+      "A": "A3",
+      "R": "R4",
+      "expected": {
+        "affected": [
+          "service:catalogue-api",
+          "service:index-worker"
+        ],
+        "covered": [
+          "test:catalogue-platform-api-contract",
+          "test:catalogue-platform-worker-integration"
+        ]
+      },
+      "id": "catalogue-platform-cutover-readiness",
+      "ledger": {
+        "cross_level_links": [
+          "task-to-package-to-module-to-service-to-test"
+        ],
+        "grouping": [
+          "legacy retirement cutover as a task-scoped entity"
+        ],
+        "inclusion_policy": [
+          "cutover scope"
+        ],
+        "new_entities": [
+          "task:catalogue-platform-legacy-cutover"
+        ],
+        "new_predicates": [
+          "retires",
+          "targets"
+        ],
+        "projection": true,
+        "splitting": []
+      },
+      "metadata": {
+        "answer_cardinality": 4,
+        "distractor_size": 1,
+        "intermediate_reuse_count": 2,
+        "minimum_required_depth": 4,
+        "negative_case": false,
+        "predicate_classes": 5,
+        "set_composition_count": 1
+      },
+      "oracle_relation_ids": [
+        "rel:1eb6116c3fe39e0ce3c1",
+        "rel:241fa78c7365ced85b02",
+        "rel:29f7ed0cd97c2e1ca9a2",
+        "rel:3780ade138013fa86234",
+        "rel:4f4baa6189b8477f6b01",
+        "rel:7693a5bd242381b2f79b",
+        "rel:b64aeb3bf07ef618822d",
+        "rel:c11e33f9157ba699882e",
+        "rel:f41eaac75dbaafb4d819"
+      ],
+      "prompt": "For the Catalogue legacy-retirement cutover, identify the production services affected by the retiring package and the verification suites that cover them. Return stable IDs only, separated by answer name.",
+      "query": {
+        "answers": [
+          "affected",
+          "covered"
+        ],
+        "derive": {
+          "affected": {
+            "inputs": [
+              "$services",
+              "$prod"
+            ],
+            "op": "intersection"
+          },
+          "covered": {
+            "endpoint_kind": "test",
+            "from": "$affected",
+            "max_depth": 1,
+            "op": "reverse_reachable",
+            "predicates": [
+              "verifies"
+            ]
+          },
+          "cutover": {
+            "op": "resolve",
+            "references": "task:catalogue-platform-legacy-cutover"
+          },
+          "legacy": {
+            "endpoint_kind": "package",
+            "from": "$cutover",
+            "max_depth": 1,
+            "op": "traverse",
+            "predicates": [
+              "retires"
+            ]
+          },
+          "modules": {
+            "endpoint_kind": "module",
+            "from": "$legacy",
+            "max_depth": 2,
+            "op": "reverse_reachable",
+            "predicates": [
+              "depends_on"
+            ]
+          },
+          "prod": {
+            "endpoint_kind": "service",
+            "from": "deployment:production",
+            "max_depth": 1,
+            "op": "reverse_reachable",
+            "predicates": [
+              "deployed_to"
+            ]
+          },
+          "services": {
+            "endpoint_kind": "service",
+            "from": "$modules",
+            "max_depth": 1,
+            "op": "reverse_reachable",
+            "predicates": [
+              "implements"
+            ]
+          }
+        }
+      },
+      "semantic_level": "task/project",
+      "semantic_parity": {
+        "graph": "deferred_to_graph_validation",
+        "sql": true
+      },
+      "sql_schema": {
+        "entity_tables": [
+          "boundarys",
+          "deployments",
+          "modules",
+          "packages",
+          "resources",
+          "services",
+          "tasks",
+          "teams",
+          "tests"
+        ],
+        "relation_tables": [
+          "module_depends_on_module",
+          "module_depends_on_package",
+          "service_crosses_boundary",
+          "service_deployed_to_deployment",
+          "service_implements_module",
+          "service_owned_by_team",
+          "service_uses_resource",
+          "task_retires_package",
+          "task_targets_deployment",
+          "test_verifies_service"
+        ]
+      },
+      "world_id": "catalogue-platform"
+    },
+    {
+      "A": "A0",
+      "R": "R0",
+      "expected": {
+        "suites": [
+          "test:telemetry-platform-api-contract"
+        ]
+      },
+      "id": "telemetry-platform-verification-control",
+      "ledger": {
+        "cross_level_links": [],
+        "grouping": [],
+        "inclusion_policy": [
+          "exclude unrelated staging reporting path"
+        ],
+        "new_entities": [],
+        "new_predicates": [],
+        "projection": true,
+        "splitting": []
+      },
+      "metadata": {
+        "answer_cardinality": 1,
+        "distractor_size": 1,
+        "intermediate_reuse_count": 0,
+        "minimum_required_depth": 1,
+        "negative_case": false,
+        "predicate_classes": 1,
+        "set_composition_count": 0
+      },
+      "oracle_relation_ids": [
+        "rel:9c4c8591453a86870658"
+      ],
+      "prompt": "For the Telemetry production API, which verification suite should be reviewed before a release? Return stable IDs only.",
+      "query": {
+        "answers": [
+          "suites"
+        ],
+        "derive": {
+          "api": {
+            "op": "resolve",
+            "references": "service:telemetry-api"
+          },
+          "suites": {
+            "endpoint_kind": "test",
+            "from": "$api",
+            "max_depth": 1,
+            "op": "reverse_reachable",
+            "predicates": [
+              "verifies"
+            ]
+          }
+        }
+      },
+      "semantic_level": "system/runtime",
+      "semantic_parity": {
+        "graph": "deferred_to_graph_validation",
+        "sql": true
+      },
+      "sql_schema": {
+        "entity_tables": [
+          "boundarys",
+          "deployments",
+          "modules",
+          "packages",
+          "resources",
+          "services",
+          "teams",
+          "tests"
+        ],
+        "relation_tables": [
+          "module_depends_on_module",
+          "module_depends_on_package",
+          "service_crosses_boundary",
+          "service_deployed_to_deployment",
+          "service_implements_module",
+          "service_owned_by_team",
+          "service_uses_resource",
+          "test_verifies_service"
+        ]
+      },
+      "world_id": "telemetry-platform"
+    },
+    {
+      "A": "A1",
+      "R": "R2",
+      "expected": {
+        "affected": [
+          "service:retention-worker",
+          "service:telemetry-api"
+        ]
+      },
+      "id": "telemetry-platform-production-impact",
+      "ledger": {
+        "cross_level_links": [
+          "module-to-service-to-deployment"
+        ],
+        "grouping": [],
+        "inclusion_policy": [
+          "production replacement-relevant module/service slice"
+        ],
+        "new_entities": [],
+        "new_predicates": [],
+        "projection": true,
+        "splitting": []
+      },
+      "metadata": {
+        "answer_cardinality": 2,
+        "distractor_size": 1,
+        "intermediate_reuse_count": 1,
+        "minimum_required_depth": 3,
+        "negative_case": false,
+        "predicate_classes": 3,
+        "set_composition_count": 1
+      },
+      "oracle_relation_ids": [
+        "rel:2c7242d2f733fac80b6b",
+        "rel:5d4ef9f223165ff7a16b",
+        "rel:9760af6c1950b7647ee2",
+        "rel:97fd3917d6aea8ed0e39",
+        "rel:ca23f5e2e0e641ecf687",
+        "rel:d0407f89c31f56b8173d"
+      ],
+      "prompt": "A replacement of legacy-collector is planned. Which production services are affected through their implementation dependencies? Return stable IDs only.",
+      "query": {
+        "answers": [
+          "affected"
+        ],
+        "derive": {
+          "affected": {
+            "inputs": [
+              "$services",
+              "$prod"
+            ],
+            "op": "intersection"
+          },
+          "legacy": {
+            "op": "resolve",
+            "references": "package:legacy-collector"
+          },
+          "modules": {
+            "endpoint_kind": "module",
+            "from": "$legacy",
+            "max_depth": 2,
+            "op": "reverse_reachable",
+            "predicates": [
+              "depends_on"
+            ]
+          },
+          "prod": {
+            "endpoint_kind": "service",
+            "from": "deployment:production",
+            "max_depth": 1,
+            "op": "reverse_reachable",
+            "predicates": [
+              "deployed_to"
+            ]
+          },
+          "services": {
+            "endpoint_kind": "service",
+            "from": "$modules",
+            "max_depth": 1,
+            "op": "reverse_reachable",
+            "predicates": [
+              "implements"
+            ]
+          }
+        }
+      },
+      "semantic_level": "system/runtime",
+      "semantic_parity": {
+        "graph": "deferred_to_graph_validation",
+        "sql": true
+      },
+      "sql_schema": {
+        "entity_tables": [
+          "boundarys",
+          "deployments",
+          "modules",
+          "packages",
+          "resources",
+          "services",
+          "teams",
+          "tests"
+        ],
+        "relation_tables": [
+          "module_depends_on_module",
+          "module_depends_on_package",
+          "service_crosses_boundary",
+          "service_deployed_to_deployment",
+          "service_implements_module",
+          "service_owned_by_team",
+          "service_uses_resource",
+          "test_verifies_service"
+        ]
+      },
+      "world_id": "telemetry-platform"
+    },
+    {
+      "A": "A3",
+      "R": "R1",
+      "expected": {
+        "boundary": [
+          "boundary:telemetry-platform-public"
+        ]
+      },
+      "id": "telemetry-platform-cutover-boundary-control",
+      "ledger": {
+        "cross_level_links": [
+          "task-to-deployment-to-service-to-boundary"
+        ],
+        "grouping": [
+          "legacy retirement cutover as a task-scoped entity"
+        ],
+        "inclusion_policy": [
+          "cutover scope"
+        ],
+        "new_entities": [
+          "task:telemetry-platform-legacy-cutover"
+        ],
+        "new_predicates": [
+          "retires",
+          "targets"
+        ],
+        "projection": true,
+        "splitting": []
+      },
+      "metadata": {
+        "answer_cardinality": 1,
+        "distractor_size": 1,
+        "intermediate_reuse_count": 1,
+        "minimum_required_depth": 3,
+        "negative_case": false,
+        "predicate_classes": 3,
+        "set_composition_count": 1
+      },
+      "oracle_relation_ids": [
+        "rel:4150e1daaa3f50622861",
+        "rel:9760af6c1950b7647ee2",
+        "rel:ca23f5e2e0e641ecf687",
+        "rel:efa88e634ee7f8c225a4"
+      ],
+      "prompt": "For the Telemetry legacy-retirement cutover, which boundary is crossed by the production API in scope? Return stable IDs only.",
+      "query": {
+        "answers": [
+          "boundary"
+        ],
+        "derive": {
+          "boundary": {
+            "endpoint_kind": "boundary",
+            "from": "$public_api",
+            "max_depth": 1,
+            "op": "traverse",
+            "predicates": [
+              "crosses"
+            ]
+          },
+          "cutover": {
+            "op": "resolve",
+            "references": "task:telemetry-platform-legacy-cutover"
+          },
+          "production": {
+            "endpoint_kind": "deployment",
+            "from": "$cutover",
+            "max_depth": 1,
+            "op": "traverse",
+            "predicates": [
+              "targets"
+            ]
+          },
+          "public_api": {
+            "inputs": [
+              "$services",
+              [
+                "service:telemetry-api"
+              ]
+            ],
+            "op": "intersection"
+          },
+          "services": {
+            "endpoint_kind": "service",
+            "from": "$production",
+            "max_depth": 1,
+            "op": "reverse_reachable",
+            "predicates": [
+              "deployed_to"
+            ]
+          }
+        }
+      },
+      "semantic_level": "task/project",
+      "semantic_parity": {
+        "graph": "deferred_to_graph_validation",
+        "sql": true
+      },
+      "sql_schema": {
+        "entity_tables": [
+          "boundarys",
+          "deployments",
+          "modules",
+          "packages",
+          "resources",
+          "services",
+          "tasks",
+          "teams",
+          "tests"
+        ],
+        "relation_tables": [
+          "module_depends_on_module",
+          "module_depends_on_package",
+          "service_crosses_boundary",
+          "service_deployed_to_deployment",
+          "service_implements_module",
+          "service_owned_by_team",
+          "service_uses_resource",
+          "task_retires_package",
+          "task_targets_deployment",
+          "test_verifies_service"
+        ]
+      },
+      "world_id": "telemetry-platform"
+    },
+    {
+      "A": "A3",
+      "R": "R4",
+      "expected": {
+        "affected": [
+          "service:retention-worker",
+          "service:telemetry-api"
+        ],
+        "covered": [
+          "test:telemetry-platform-api-contract",
+          "test:telemetry-platform-worker-integration"
+        ]
+      },
+      "id": "telemetry-platform-cutover-readiness",
+      "ledger": {
+        "cross_level_links": [
+          "task-to-package-to-module-to-service-to-test"
+        ],
+        "grouping": [
+          "legacy retirement cutover as a task-scoped entity"
+        ],
+        "inclusion_policy": [
+          "cutover scope"
+        ],
+        "new_entities": [
+          "task:telemetry-platform-legacy-cutover"
+        ],
+        "new_predicates": [
+          "retires",
+          "targets"
+        ],
+        "projection": true,
+        "splitting": []
+      },
+      "metadata": {
+        "answer_cardinality": 4,
+        "distractor_size": 1,
+        "intermediate_reuse_count": 2,
+        "minimum_required_depth": 4,
+        "negative_case": false,
+        "predicate_classes": 5,
+        "set_composition_count": 1
+      },
+      "oracle_relation_ids": [
+        "rel:2c7242d2f733fac80b6b",
+        "rel:5d4ef9f223165ff7a16b",
+        "rel:9760af6c1950b7647ee2",
+        "rel:97fd3917d6aea8ed0e39",
+        "rel:9c4c8591453a86870658",
+        "rel:a5316b39889352f76e52",
+        "rel:ca23f5e2e0e641ecf687",
+        "rel:d0407f89c31f56b8173d",
+        "rel:e7b4cc088506a33f521b"
+      ],
+      "prompt": "For the Telemetry legacy-retirement cutover, identify the production services affected by the retiring package and the verification suites that cover them. Return stable IDs only, separated by answer name.",
+      "query": {
+        "answers": [
+          "affected",
+          "covered"
+        ],
+        "derive": {
+          "affected": {
+            "inputs": [
+              "$services",
+              "$prod"
+            ],
+            "op": "intersection"
+          },
+          "covered": {
+            "endpoint_kind": "test",
+            "from": "$affected",
+            "max_depth": 1,
+            "op": "reverse_reachable",
+            "predicates": [
+              "verifies"
+            ]
+          },
+          "cutover": {
+            "op": "resolve",
+            "references": "task:telemetry-platform-legacy-cutover"
+          },
+          "legacy": {
+            "endpoint_kind": "package",
+            "from": "$cutover",
+            "max_depth": 1,
+            "op": "traverse",
+            "predicates": [
+              "retires"
+            ]
+          },
+          "modules": {
+            "endpoint_kind": "module",
+            "from": "$legacy",
+            "max_depth": 2,
+            "op": "reverse_reachable",
+            "predicates": [
+              "depends_on"
+            ]
+          },
+          "prod": {
+            "endpoint_kind": "service",
+            "from": "deployment:production",
+            "max_depth": 1,
+            "op": "reverse_reachable",
+            "predicates": [
+              "deployed_to"
+            ]
+          },
+          "services": {
+            "endpoint_kind": "service",
+            "from": "$modules",
+            "max_depth": 1,
+            "op": "reverse_reachable",
+            "predicates": [
+              "implements"
+            ]
+          }
+        }
+      },
+      "semantic_level": "task/project",
+      "semantic_parity": {
+        "graph": "deferred_to_graph_validation",
+        "sql": true
+      },
+      "sql_schema": {
+        "entity_tables": [
+          "boundarys",
+          "deployments",
+          "modules",
+          "packages",
+          "resources",
+          "services",
+          "tasks",
+          "teams",
+          "tests"
+        ],
+        "relation_tables": [
+          "module_depends_on_module",
+          "module_depends_on_package",
+          "service_crosses_boundary",
+          "service_deployed_to_deployment",
+          "service_implements_module",
+          "service_owned_by_team",
+          "service_uses_resource",
+          "task_retires_package",
+          "task_targets_deployment",
+          "test_verifies_service"
+        ]
+      },
+      "world_id": "telemetry-platform"
+    }
+  ],
+  "disabled_graph_surface": [
+    "graph.md",
+    "workbook traversal",
+    "named traversal",
+    "orient",
+    "search",
+    "Compass",
+    "landmarks",
+    "centrality",
+    "raw Cypher",
+    "inferred edges",
+    "raw source"
+  ],
+  "graph_surface": [
+    "describe",
+    "lookup",
+    "expand",
+    "path",
+    "run_ephemeral_traversal"
+  ],
+  "model": "Cursor Composer 2.5 via cursor-agent CLI",
+  "model_command": "cursor agent -p --output-format stream-json --model composer-2.5 --force",
+  "protocol_version": "abstraction-relational-frontier-v1",
+  "retry_policy": "no within-episode automatic retry",
+  "timeout_seconds": 240
+}

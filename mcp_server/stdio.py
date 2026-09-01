@@ -35,6 +35,22 @@ from mcp_server.surface import Surface
 
 TOOLS: list[types.Tool] = [
     types.Tool(
+        name="describe",
+        description=(
+            "Read the neutral executable schema of the materialized graph: node "
+            "kinds, logical predicates, physical relationship carriers, directions, "
+            "schema fingerprint, and deterministic read/program bounds. It contains "
+            "no landmarks, centrality, recommended traversal, task instructions, or "
+            "other interpretation. Use it to author a one-off ephemeral traversal on "
+            "a graph with no user-authored graph.md. Zero LLM."
+        ),
+        inputSchema={
+            "type": "object",
+            "properties": {},
+            "additionalProperties": False,
+        },
+    ),
+    types.Tool(
         name="orient",
         description=(
             "Orientation for agents: graph profile, counts, landmarks, capabilities, "
@@ -159,7 +175,7 @@ TOOLS: list[types.Tool] = [
         description=(
             "Find bounded existing paths between explicit source and target node IDs, "
             "deterministically with zero LLM and no fallback. Ad-hoc walks are "
-            "allowed: pass stable IDs, edge types, and hop bound. Named recipes do "
+            "allowed: pass stable IDs, logical edge labels or edge types, direction, and hop bound. Named recipes do "
             "not replace this for a one-off pair. UNRESOLVED_ENDPOINT is terminal. "
             "EMPTY means every endpoint resolved but no path exists within these "
             "bounds. Omitting edge_types searches all types; supply it when the "
@@ -180,7 +196,14 @@ TOOLS: list[types.Tool] = [
                     "type": "array",
                     "items": {"type": "string", "enum": ["leadsto", "contains", "expresses", "nearto"]},
                 },
-                "max_hops": {"type": "integer", "minimum": 1, "maximum": 64, "default": 4},
+                "max_hops": {"type": "integer", "minimum": 1, "maximum": 6, "default": 4},
+                "direction": {
+                    "type": "string", "enum": ["outgoing", "incoming", "both"],
+                    "default": "outgoing",
+                },
+                "edge_labels": {
+                    "type": "array", "items": {"type": "string"}, "maxItems": 20,
+                },
                 "include_content": {"type": "boolean", "default": False},
                 "context_ref": {"type": "string"},
                 "graph_version": {"type": "string"},
@@ -259,7 +282,8 @@ TOOLS: list[types.Tool] = [
         name="run_ephemeral_traversal",
         description=(
             "Run a one-shot traversal program in the graph.md recipe vocabulary "
-            "without declaring it. Same primitives, bounds, evidence packet and "
+            "without declaring it. With no graph.md it compiles against the neutral "
+            "machine-generated schema returned by describe. Same primitives, bounds, evidence packet and "
             "graph-bound receipt as run_traversal, but fingerprinted (tep_) not "
             "named: its receipt never satisfies a required traversal at propose, "
             "and it cannot take a declared recipe's name. Promote a recurring "
@@ -273,8 +297,11 @@ TOOLS: list[types.Tool] = [
                     "type": "object",
                     "description": (
                         "{name?, steps: [{op, assign, ...}], collect, optional "
-                        "when/then/then_collect, limits and project} using the "
-                        "same ops as a graph.md traversal."
+                        "when/then/then_collect, limits, project, answers, and "
+                        "result_mode}. answers may be a legacy variable list or a "
+                        "mapping such as {uncovered: $uncovered}; result_mode=compact "
+                        "returns only named answer IDs plus a receipt while retaining "
+                        "full evidence server-side for audit."
                     ),
                 },
                 "parameters": {
@@ -343,7 +370,8 @@ TOOLS: list[types.Tool] = [
             "commit. Schema: node table Concept(id, label, kind, claim_kind, "
             "semantic_anchor, text_content, source_unit_ids, centrality_score, "
             "is_metanode); rel tables LEADSTO, CONTAINS, EXPRESSES, NEARTO, "
-            "each (FROM Concept TO Concept, label). Embeddings are stripped "
+            "each (FROM Concept TO Concept, label, evidence, relation_id). "
+            "Embeddings are stripped "
             "from returned nodes. Rows, characters and wall-clock truncate "
             "visibly. Zero LLM. No rows means this query matched nothing on "
             "this graph version, never that the graph lacks the thing."
@@ -595,6 +623,8 @@ def build_server(
             }
         elif name == "orient":
             out = current.orient(context=args.get("context", "graph_card"))
+        elif name == "describe":
+            out = current.describe()
         elif name == "contract":
             out = current.contract(
                 include_markdown=bool(args.get("include_markdown", True))
@@ -623,6 +653,8 @@ def build_server(
                 args["target_ids"],
                 edge_types=args.get("edge_types"),
                 max_hops=args.get("max_hops", 4),
+                direction=args.get("direction", "outgoing"),
+                edge_labels=args.get("edge_labels"),
                 include_content=bool(args.get("include_content", False)),
                 context_ref=args.get("context_ref", ""),
                 graph_version=args.get("graph_version", ""),

@@ -1,0 +1,47 @@
+{
+  "answers": [
+    "boundary"
+  ],
+  "derive": {
+    "boundary": {
+      "endpoint_kind": "boundary",
+      "from": "$public_api",
+      "max_depth": 1,
+      "op": "traverse",
+      "predicates": [
+        "crosses"
+      ]
+    },
+    "cutover": {
+      "op": "resolve",
+      "references": "task:order-platform-legacy-cutover"
+    },
+    "production": {
+      "endpoint_kind": "deployment",
+      "from": "$cutover",
+      "max_depth": 1,
+      "op": "traverse",
+      "predicates": [
+        "targets"
+      ]
+    },
+    "public_api": {
+      "inputs": [
+        "$services",
+        [
+          "service:order-api"
+        ]
+      ],
+      "op": "intersection"
+    },
+    "services": {
+      "endpoint_kind": "service",
+      "from": "$production",
+      "max_depth": 1,
+      "op": "reverse_reachable",
+      "predicates": [
+        "deployed_to"
+      ]
+    }
+  }
+}

@@ -63,6 +63,30 @@ def test_path_preserves_path_records(surface):
     assert result["evidence"]["path_records"][0]["source"] == "order_controller"
 
 
+def test_path_accepts_direction_and_logical_edge_labels(surface):
+    ops = Retrieve(surface)
+    outgoing = ops.path(
+        ["order_controller"],
+        ["order_service"],
+        edge_types=["leadsto"],
+        edge_labels=["delegates_to"],
+        direction="outgoing",
+        max_hops=4,
+    )
+    wrong_label = ops.path(
+        ["order_controller"],
+        ["order_service"],
+        edge_types=["leadsto"],
+        edge_labels=["unrelated_predicate"],
+        direction="outgoing",
+        max_hops=4,
+    )
+
+    assert outgoing["outcome"] == "FOUND"
+    assert outgoing["evidence"]["path_records"]
+    assert wrong_label["outcome"] == "EMPTY"
+
+
 def test_path_distinguishes_unresolved_endpoints_from_no_path(surface):
     historical = Retrieve(
         surface, endpoint_resolution_feedback=False

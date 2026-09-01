@@ -108,6 +108,9 @@ def traversal_vocabulary() -> dict[str, Any]:
             "answers names the variables carrying the answer. Without it the "
             "outcome is decided on packet size, and a packet holding only the "
             "endpoints of a question with no answer reads as FOUND.",
+            "answers may instead map result names to variables, e.g. "
+            "{uncovered: $uncovered}. result_mode=compact returns those named "
+            "ID sets and a receipt without the intermediate evidence packet.",
         ],
         "cannot": list(_RECIPE_LIMITS),
     }
@@ -257,7 +260,14 @@ class TraversalRecipeSpec(BaseModel):
     #: Naming the answer lets an empty one be reported as empty even when the
     #: packet is full. Absent, the outcome falls back to packet size, which is
     #: right for traversals whose answer *is* the neighbourhood.
-    answers: list[str] = Field(default_factory=list)
+    # A list is the original spelling, retained for existing contracts.  A
+    # mapping gives the model-facing result a stable name that is independent
+    # of the executor variable carrying it, e.g. ``{uncovered: $uncovered}``.
+    answers: list[str] | dict[str, str] = Field(default_factory=list)
+    #: Full preserves the established evidence-packet return.  Compact returns
+    #: only named answer sets and a receipt; the server retains the full packet
+    #: for audit rather than making the model re-read intermediate state.
+    result_mode: Literal["full", "compact"] = "full"
     empty_means: str = "bounded_no_result"
     fixtures: list[RecipeFixtureSpec] = Field(default_factory=list)
 
@@ -268,14 +278,43 @@ class TraversalRecipeSpec(BaseModel):
             str(step.get("assign") or "").lstrip("$")
             for step in list(self.steps) + list(self.then)
         }
+        raw_answers = (
+            self.answers.values()
+            if isinstance(self.answers, dict)
+            else self.answers
+        )
         unknown = [
-            name for name in self.answers if name.lstrip("$") not in assigned
+            str(name) for name in raw_answers
+            if str(name).lstrip("$") not in assigned
         ]
         if unknown:
             raise ValueError(
                 f"traversal declares answers {unknown} that no step assigns"
             )
         return self
+
+    @field_validator("answers")
+    @classmethod
+    def _valid_answers(cls, value: list[str] | dict[str, str]) -> list[str] | dict[str, str]:
+        if isinstance(value, list):
+            cleaned = [str(item).lstrip("$").strip() for item in value]
+            if any(not item or not _SLUG.fullmatch(item) for item in cleaned):
+                raise ValueError("answers must name assigned variables")
+            if len(cleaned) != len(set(cleaned)):
+                raise ValueError("answers must not contain duplicates")
+            return cleaned
+        if isinstance(value, dict):
+            cleaned: dict[str, str] = {}
+            for name, variable in value.items():
+                result_name = str(name).strip()
+                variable_name = str(variable).lstrip("$").strip()
+                if not _SLUG.fullmatch(result_name) or not _SLUG.fullmatch(variable_name):
+                    raise ValueError(
+                        "answer-set names and variables must be stable slugs"
+                    )
+                cleaned[result_name] = variable_name
+            return cleaned
+        raise ValueError("answers must be a list or mapping of named answer sets")
 
     @field_validator("steps")
     @classmethod
@@ -493,8 +532,9 @@ class GraphFormatSpec(BaseModel):
     def _references_exist(self):
         if not self.node_kinds:
             raise ValueError("at least one node kind is required")
-        if not self.predicates:
-            raise ValueError("at least one predicate is required")
+        # A node-only task graph is still immediately programmable for exact
+        # lookup and set operations.  It simply cannot express a predicate
+        # constrained traversal until it contains a labelled relation.
         known_kinds = set(self.node_kinds)
         for name, predicate in self.predicates.items():
             unknown = (set(predicate.source_kinds) | set(predicate.target_kinds)) - known_kinds
@@ -767,6 +807,181 @@ def load_graph_contract(path: Path | str) -> GraphContractDocument:
     return parse_graph_contract(
         contract_path.read_text(encoding="utf-8"),
         path=contract_path,
+    )
+
+
+_NEUTRAL_SCHEMA_VERSION = "graph-schema-v1"
+_CARRIERS: tuple[tuple[str, str], ...] = (
+    ("LEADSTO", "leadsto"),
+    ("CONTAINS", "contains"),
+    ("EXPRESSES", "expresses"),
+    ("NEARTO", "nearto"),
+)
+
+
+def neutral_graph_schema(conn: Any) -> dict[str, Any]:
+    """Describe only the executable representation of the open graph.
+
+    This is deliberately not ``orient`` with fields removed.  It reads node
+    kinds and labelled relationship carriers from storage, then states the
+    deterministic bounds of the read surface.  It never computes landmarks,
+    centrality, recommendations, task instructions, or any other
+    interpretation of the graph.
+    """
+    node_kinds: set[str] = set()
+    try:
+        for row in conn.execute("MATCH (c:Concept) RETURN c.kind"):
+            kind = str(row[0] or "").strip()
+            if kind:
+                node_kinds.add(kind)
+    except Exception as exc:
+        raise GraphContractError(
+            f"could not inspect graph node kinds: {type(exc).__name__}"
+        ) from exc
+
+    predicate_rows: dict[str, dict[str, Any]] = {}
+    for carrier, carrier_id in _CARRIERS:
+        try:
+            rows = conn.execute(
+                f"MATCH (src:Concept)-[r:{carrier}]->(dst:Concept) "
+                "RETURN r.label, src.kind, dst.kind"
+            )
+        except Exception as exc:
+            raise GraphContractError(
+                f"could not inspect graph relationship carrier {carrier}: "
+                f"{type(exc).__name__}"
+            ) from exc
+        for row in rows:
+            predicate = str(row[0] or "").strip().lower()
+            # An unlabelled physical edge has no logical predicate to expose.
+            # It remains reachable through the explicit carrier/SST primitive,
+            # but no semantic name is invented for it here.
+            if not predicate:
+                continue
+            item = predicate_rows.setdefault(
+                predicate,
+                {
+                    "carrier": carrier,
+                    "carrier_id": carrier_id,
+                    "direction": "directed",
+                    "source_kinds": set(),
+                    "target_kinds": set(),
+                },
+            )
+            if item["carrier"] != carrier:
+                raise GraphContractError(
+                    f"logical predicate {predicate!r} spans multiple physical "
+                    f"carriers ({item['carrier']} and {carrier}); a minimal "
+                    "contract cannot safely choose one"
+                )
+            source_kind = str(row[1] or "").strip()
+            target_kind = str(row[2] or "").strip()
+            if source_kind:
+                item["source_kinds"].add(source_kind)
+            if target_kind:
+                item["target_kinds"].add(target_kind)
+
+    predicates = {
+        name: {
+            "carrier": item["carrier"],
+            "carrier_id": item["carrier_id"],
+            "direction": item["direction"],
+            "source_kinds": sorted(item["source_kinds"]),
+            "target_kinds": sorted(item["target_kinds"]),
+        }
+        for name, item in sorted(predicate_rows.items())
+    }
+    canonical = {
+        "schema_version": _NEUTRAL_SCHEMA_VERSION,
+        "node_kinds": sorted(node_kinds),
+        "predicates": predicates,
+    }
+    encoded = json.dumps(
+        canonical, sort_keys=True, separators=(",", ":"), ensure_ascii=False
+    ).encode("utf-8")
+    fingerprint = f"gschema_{hashlib.sha256(encoded).hexdigest()[:16]}"
+    return {
+        **canonical,
+        "schema_fingerprint": fingerprint,
+        "capabilities": {
+            "lookup": {"max_references": 20},
+            "expand": {
+                "max_depth": 3,
+                "max_nodes": 300,
+                "directions": ["outgoing", "incoming", "both"],
+                "predicate_filter": True,
+            },
+            "path": {
+                "max_hops": 6,
+                "directions": ["outgoing", "incoming", "both"],
+                "predicate_filter": True,
+            },
+            "ephemeral_program": {
+                "max_steps": 12,
+                "max_hops_per_step": 64,
+                "max_nodes_per_step": 3000,
+                "ops": sorted(_RECIPE_OPS),
+                "result_modes": ["full", "compact"],
+            },
+        },
+    }
+
+
+def generated_minimal_graph_contract(
+    conn: Any, *, path: Path | str = "generated://graph-schema"
+) -> GraphContractDocument:
+    """Make an in-memory contract from the neutral stored schema.
+
+    No file is created and no orientation/procedural content is added.  This
+    gives a newly materialized task graph the exact vocabulary needed by an
+    ephemeral program while keeping a user-authored ``graph.md`` distinct.
+    """
+    schema = neutral_graph_schema(conn)
+    node_kinds = {
+        kind: NodeKindSpec(id_pattern="<id>")
+        for kind in schema["node_kinds"]
+    }
+    # GraphFormatSpec needs at least one kind to describe a materialized graph
+    # consistently.  A legacy graph with blank kind fields is still readable;
+    # its neutral descriptor reports the absence rather than fabricating kinds.
+    if not node_kinds:
+        node_kinds = {"concept": NodeKindSpec(id_pattern="<id>")}
+    predicates = {
+        name: PredicateSpec(
+            sst=str(item["carrier"]),
+            directed=True,
+            source_kinds=list(item["source_kinds"]),
+            target_kinds=list(item["target_kinds"]),
+        )
+        for name, item in schema["predicates"].items()
+    }
+    specification = GraphFormatSpec(
+        format_id="generated-graph-schema",
+        format_version=1,
+        node_kinds=node_kinds,
+        predicates=predicates,
+    )
+    canonical = {
+        "schema": {
+            "node_kinds": schema["node_kinds"],
+            "predicates": schema["predicates"],
+        },
+        "specification": specification.model_dump(mode="json"),
+    }
+    encoded = json.dumps(
+        canonical, sort_keys=True, separators=(",", ":"), ensure_ascii=False
+    ).encode("utf-8")
+    digest = hashlib.sha256(encoded).hexdigest()
+    return GraphContractDocument(
+        path=str(path),
+        specification=specification,
+        markdown=(
+            "# Generated minimal graph schema\n\n"
+            "Machine-derived schema only; it carries no orientation, named "
+            "traversals, instructions, or semantic summaries.\n"
+        ),
+        fingerprint=schema["schema_fingerprint"],
+        content_sha256=digest,
     )
 
 

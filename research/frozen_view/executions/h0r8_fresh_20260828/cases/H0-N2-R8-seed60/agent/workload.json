@@ -1,0 +1,45 @@
+{
+  "cell": "H0-N2-R8",
+  "operations": [
+    {
+      "id": "op-01",
+      "prompt": "Which services depend directly on resource redis-west? Return service IDs.",
+      "relation": "services_for_resource"
+    },
+    {
+      "id": "op-02",
+      "prompt": "Which capabilities do the redis-west services provide? Return capability IDs.",
+      "relation": "capabilities_for_services"
+    },
+    {
+      "id": "op-03",
+      "prompt": "Which teams own the redis-west services? Return team IDs.",
+      "relation": "teams_for_services"
+    },
+    {
+      "id": "op-04",
+      "prompt": "Which integration tests cover the redis-west services? Return test IDs.",
+      "relation": "tests_for_services"
+    },
+    {
+      "id": "op-05",
+      "prompt": "Which capabilities of redis-west services lack a documented fallback runbook? Return capability IDs.",
+      "relation": "affected_capabilities_without_fallback"
+    },
+    {
+      "id": "op-06",
+      "prompt": "Which production environments contain redis-west services whose capability lacks a documented fallback? Return environment IDs.",
+      "relation": "production_environments_for_affected"
+    },
+    {
+      "id": "op-07",
+      "prompt": "Is there a path from redis-west to team:commerce through a dependent service? Return answer:yes or answer:no.",
+      "relation": "bounded_path_to_commerce"
+    },
+    {
+      "id": "op-08",
+      "prompt": "Return the complete set of teams requiring migration notification for redis-west because they own a service whose capability lacks a documented fallback. Return team IDs.",
+      "relation": "teams_requiring_migration_notification"
+    }
+  ]
+}

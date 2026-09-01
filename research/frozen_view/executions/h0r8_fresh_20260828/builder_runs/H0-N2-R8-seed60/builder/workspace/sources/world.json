@@ -1,0 +1,110 @@
+{
+  "resources": [
+    {
+      "environment": "prod",
+      "id": "resource:redis-west",
+      "name": "redis-west"
+    },
+    {
+      "environment": "prod",
+      "id": "resource:postgres-east",
+      "name": "postgres-east"
+    },
+    {
+      "environment": "prod",
+      "id": "resource:kafka-core",
+      "name": "kafka-core"
+    }
+  ],
+  "runbooks": [
+    {
+      "capability": "identity",
+      "fallback": "degraded-mode",
+      "id": "runbook:identity-degradation"
+    },
+    {
+      "capability": "reporting",
+      "fallback": "degraded-mode",
+      "id": "runbook:reporting-degradation"
+    }
+  ],
+  "seed": 60,
+  "services": [
+    {
+      "capability": "purchase",
+      "environment": "environment:prod",
+      "id": "service:purchase",
+      "name": "purchase-api",
+      "owner": "team:commerce",
+      "resource": "resource:redis-west"
+    },
+    {
+      "capability": "catalogue",
+      "environment": "environment:staging",
+      "id": "service:catalogue",
+      "name": "catalogue-api",
+      "owner": "team:commerce",
+      "resource": "resource:postgres-east"
+    },
+    {
+      "capability": "fulfilment",
+      "environment": "environment:prod",
+      "id": "service:fulfilment",
+      "name": "fulfilment-api",
+      "owner": "team:commerce",
+      "resource": "resource:kafka-core"
+    },
+    {
+      "capability": "notifications",
+      "environment": "environment:staging",
+      "id": "service:notifications",
+      "name": "notifications-api",
+      "owner": "team:platform",
+      "resource": "resource:redis-west"
+    },
+    {
+      "capability": "identity",
+      "environment": "environment:prod",
+      "id": "service:identity",
+      "name": "identity-api",
+      "owner": "team:platform",
+      "resource": "resource:postgres-east"
+    },
+    {
+      "capability": "reporting",
+      "environment": "environment:staging",
+      "id": "service:reporting",
+      "name": "reporting-api",
+      "owner": "team:platform",
+      "resource": "resource:kafka-core"
+    }
+  ],
+  "teams": [
+    {
+      "id": "team:commerce",
+      "name": "Commerce"
+    },
+    {
+      "id": "team:platform",
+      "name": "Platform"
+    }
+  ],
+  "tests": [
+    {
+      "id": "test:catalogue-failure",
+      "service": "service:catalogue"
+    },
+    {
+      "id": "test:fulfilment-failure",
+      "service": "service:fulfilment"
+    },
+    {
+      "id": "test:identity-failure",
+      "service": "service:identity"
+    },
+    {
+      "id": "test:reporting-failure",
+      "service": "service:reporting"
+    }
+  ]
+}

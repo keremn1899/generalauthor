@@ -1,0 +1,40 @@
+{
+  "absence_proof": false,
+  "answer_size": 4,
+  "branching_target": 7,
+  "case": "FX12",
+  "cycle": false,
+  "intermediate_reuse_outputs": 2,
+  "named_output_count": 2,
+  "neutral_program": {
+    "cycle_policy": "visited_nodes",
+    "difference": [
+      "qualified",
+      "verified"
+    ],
+    "direction": "incoming",
+    "intersection": [
+      "affected",
+      "boundary_sensitive"
+    ],
+    "max_depth": 6,
+    "op": "qualified_set_composition",
+    "outputs": [
+      "boundary_unverified_services",
+      "affected_deployments"
+    ],
+    "predicate": "depends_on",
+    "seed": "package:fx12-legacy"
+  },
+  "oracle_relevant_closure_size": 150,
+  "participant_requested_outputs": [
+    "boundary_unverified_services",
+    "affected_deployments"
+  ],
+  "platform": "release_safety",
+  "predicate_target": 5,
+  "prompt": "For task:fx12-cutover, which production services remain affected by retiring package:fx12-legacy? Return: affected production service IDs that both cross a regulated boundary and lack required integration verification; and their affected deployment IDs.",
+  "relevant_closure_target": 150,
+  "required_depth": 6,
+  "template": "Boundary-qualified impact"
+}

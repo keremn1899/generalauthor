@@ -1,0 +1,22 @@
+{
+  "version": "taskview-orientation-arms-v1",
+  "common": {
+    "source_mode": "read-only except harness phase-4 replacement",
+    "scratch_mode": "writable",
+    "context_policy": "one real session, five sequential turns, no reset, no summary injection",
+    "phase4_boundary": "after phase 3 answer commit and before phase 4 prompt",
+    "retry_policy": "no within-episode retry",
+    "native_tools": ["search_source", "read_source", "write_scratch"]
+  },
+  "RAW": {
+    "extra_tools": [],
+    "taskview_visible": false
+  },
+  "TASKVIEW": {
+    "extra_tools": ["describe", "query_sql", "assertion", "rerun"],
+    "taskview_visible": true,
+    "construction_cost_charged": false,
+    "tool_descriptions_and_outputs_charged": true
+  }
+}
+

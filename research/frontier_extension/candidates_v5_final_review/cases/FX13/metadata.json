@@ -1,0 +1,42 @@
+{
+  "absence_proof": false,
+  "answer_size": 16,
+  "branching_target": 7,
+  "case": "FX13",
+  "cycle": false,
+  "intermediate_reuse_outputs": 3,
+  "named_output_count": 4,
+  "neutral_program": {
+    "allowed_predicates": [
+      "depends_on",
+      "implements",
+      "deployed_to",
+      "crosses"
+    ],
+    "cycle_policy": "visited_nodes",
+    "direction": "incoming",
+    "max_depth": 7,
+    "op": "constrained_reachability",
+    "outputs": [
+      "affected_services",
+      "eligible_deployments",
+      "uncovered_services",
+      "regulated_services"
+    ],
+    "predicate": "depends_on",
+    "seed": "package:fx13-legacy"
+  },
+  "oracle_relevant_closure_size": 220,
+  "participant_requested_outputs": [
+    "affected_services",
+    "eligible_deployments",
+    "uncovered_services",
+    "regulated_services"
+  ],
+  "platform": "release_safety",
+  "predicate_target": 5,
+  "prompt": "For task:fx13-cutover, which production services remain affected by retiring package:fx13-legacy? Return: affected production service IDs; eligible deployment IDs; affected service IDs lacking required integration verification; and affected service IDs crossing a regulated boundary.",
+  "relevant_closure_target": 220,
+  "required_depth": 7,
+  "template": "Multi-output constrained rollout"
+}

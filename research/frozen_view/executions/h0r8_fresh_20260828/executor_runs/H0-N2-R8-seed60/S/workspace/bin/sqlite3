@@ -1,0 +1,8 @@
+#!/usr/bin/env python3
+import json, os, subprocess, sys, time
+from pathlib import Path
+proc = subprocess.run(['/home/kerem/miniconda3/bin/sqlite3', *sys.argv[1:]], text=True, capture_output=True)
+query = sys.argv[-1] if len(sys.argv) > 2 else ""
+event = {"event":"sql_cli", "order":time.time_ns(), "query_text":query, "returned_ids":[x for x in proc.stdout.split() if ":" in x]}
+with Path(os.environ["FROZEN_VIEW_SQL_AUDIT"]).open("a", encoding="utf-8") as h: h.write(json.dumps(event) + "\n")
+sys.stdout.write(proc.stdout); sys.stderr.write(proc.stderr); raise SystemExit(proc.returncode)

@@ -1,0 +1,160 @@
+{
+  "cell": "H0-N2-R8",
+  "operations": [
+    {
+      "answer_ids": [
+        "service:notifications",
+        "service:purchase"
+      ],
+      "id": "op-01",
+      "prompt": "Which services depend directly on resource redis-west? Return service IDs.",
+      "relation": "services_for_resource"
+    },
+    {
+      "answer_ids": [
+        "capability:notifications",
+        "capability:purchase"
+      ],
+      "id": "op-02",
+      "prompt": "Which capabilities do the redis-west services provide? Return capability IDs.",
+      "relation": "capabilities_for_services"
+    },
+    {
+      "answer_ids": [
+        "team:commerce",
+        "team:platform"
+      ],
+      "id": "op-03",
+      "prompt": "Which teams own the redis-west services? Return team IDs.",
+      "relation": "teams_for_services"
+    },
+    {
+      "answer_ids": [],
+      "id": "op-04",
+      "prompt": "Which integration tests cover the redis-west services? Return test IDs.",
+      "relation": "tests_for_services"
+    },
+    {
+      "answer_ids": [
+        "capability:notifications",
+        "capability:purchase"
+      ],
+      "id": "op-05",
+      "prompt": "Which capabilities of redis-west services lack a documented fallback runbook? Return capability IDs.",
+      "relation": "affected_capabilities_without_fallback"
+    },
+    {
+      "answer_ids": [
+        "environment:prod"
+      ],
+      "id": "op-06",
+      "prompt": "Which production environments contain redis-west services whose capability lacks a documented fallback? Return environment IDs.",
+      "relation": "production_environments_for_affected"
+    },
+    {
+      "answer_ids": [
+        "answer:yes"
+      ],
+      "id": "op-07",
+      "prompt": "Is there a path from redis-west to team:commerce through a dependent service? Return answer:yes or answer:no.",
+      "relation": "bounded_path_to_commerce"
+    },
+    {
+      "answer_ids": [
+        "team:commerce",
+        "team:platform"
+      ],
+      "id": "op-08",
+      "prompt": "Return the complete set of teams requiring migration notification for redis-west because they own a service whose capability lacks a documented fallback. Return team IDs.",
+      "relation": "teams_requiring_migration_notification"
+    }
+  ],
+  "oracle_relation_ids": [
+    "rel:0c3bc21ec82eb3d014f0",
+    "rel:25991174213b7c9d2e79",
+    "rel:28b19d2459303365f57c",
+    "rel:ba3402097b7f4df3de6d",
+    "rel:bbe5e319452d01e33820",
+    "rel:ef4ba9d5a612893bc04c",
+    "rel:f29e57a0cad7c74a769c",
+    "rel:f796f9fe53f7f9440b35"
+  ],
+  "oracle_relation_requirements": [
+    {
+      "operation_id": "op-01",
+      "relation_ids": [
+        "rel:0c3bc21ec82eb3d014f0",
+        "rel:ba3402097b7f4df3de6d"
+      ]
+    },
+    {
+      "operation_id": "op-02",
+      "relation_ids": [
+        "rel:0c3bc21ec82eb3d014f0",
+        "rel:25991174213b7c9d2e79",
+        "rel:28b19d2459303365f57c",
+        "rel:ba3402097b7f4df3de6d"
+      ]
+    },
+    {
+      "operation_id": "op-03",
+      "relation_ids": [
+        "rel:0c3bc21ec82eb3d014f0",
+        "rel:ba3402097b7f4df3de6d",
+        "rel:bbe5e319452d01e33820",
+        "rel:f796f9fe53f7f9440b35"
+      ]
+    },
+    {
+      "operation_id": "op-04",
+      "relation_ids": [
+        "rel:0c3bc21ec82eb3d014f0",
+        "rel:ba3402097b7f4df3de6d"
+      ]
+    },
+    {
+      "operation_id": "op-05",
+      "relation_ids": [
+        "rel:0c3bc21ec82eb3d014f0",
+        "rel:25991174213b7c9d2e79",
+        "rel:28b19d2459303365f57c",
+        "rel:ba3402097b7f4df3de6d"
+      ]
+    },
+    {
+      "operation_id": "op-06",
+      "relation_ids": [
+        "rel:0c3bc21ec82eb3d014f0",
+        "rel:25991174213b7c9d2e79",
+        "rel:28b19d2459303365f57c",
+        "rel:ba3402097b7f4df3de6d",
+        "rel:ef4ba9d5a612893bc04c",
+        "rel:f29e57a0cad7c74a769c"
+      ]
+    },
+    {
+      "operation_id": "op-07",
+      "relation_ids": [
+        "rel:0c3bc21ec82eb3d014f0",
+        "rel:ba3402097b7f4df3de6d",
+        "rel:bbe5e319452d01e33820",
+        "rel:f796f9fe53f7f9440b35"
+      ]
+    },
+    {
+      "operation_id": "op-08",
+      "relation_ids": [
+        "rel:0c3bc21ec82eb3d014f0",
+        "rel:25991174213b7c9d2e79",
+        "rel:28b19d2459303365f57c",
+        "rel:ba3402097b7f4df3de6d",
+        "rel:bbe5e319452d01e33820",
+        "rel:f796f9fe53f7f9440b35"
+      ]
+    }
+  ],
+  "seed": 60,
+  "source_files": [
+    "sources/world.json"
+  ]
+}

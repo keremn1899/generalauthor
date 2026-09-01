@@ -1,0 +1,368 @@
+{
+  "canonical_version": "frozen-relational-view-v2",
+  "entities": [
+    {
+      "evidence": "world.json",
+      "id": "capability:catalogue",
+      "kind": "capability",
+      "label": "catalogue"
+    },
+    {
+      "evidence": "world.json",
+      "id": "capability:fulfilment",
+      "kind": "capability",
+      "label": "fulfilment"
+    },
+    {
+      "evidence": "world.json",
+      "id": "capability:identity",
+      "kind": "capability",
+      "label": "identity"
+    },
+    {
+      "evidence": "world.json",
+      "id": "capability:notifications",
+      "kind": "capability",
+      "label": "notifications"
+    },
+    {
+      "evidence": "world.json",
+      "id": "capability:purchase",
+      "kind": "capability",
+      "label": "purchase"
+    },
+    {
+      "evidence": "world.json",
+      "id": "capability:reporting",
+      "kind": "capability",
+      "label": "reporting"
+    },
+    {
+      "evidence": "world.json",
+      "id": "environment:prod",
+      "kind": "environment",
+      "label": "prod"
+    },
+    {
+      "evidence": "world.json",
+      "id": "environment:staging",
+      "kind": "environment",
+      "label": "staging"
+    },
+    {
+      "evidence": "world.json",
+      "id": "resource:kafka-core",
+      "kind": "resource",
+      "label": "kafka-core"
+    },
+    {
+      "evidence": "world.json",
+      "id": "resource:postgres-east",
+      "kind": "resource",
+      "label": "postgres-east"
+    },
+    {
+      "evidence": "world.json",
+      "id": "resource:redis-west",
+      "kind": "resource",
+      "label": "redis-west"
+    },
+    {
+      "evidence": "world.json",
+      "id": "runbook:identity-degradation",
+      "kind": "runbook",
+      "label": "identity-degradation"
+    },
+    {
+      "evidence": "world.json",
+      "id": "runbook:reporting-degradation",
+      "kind": "runbook",
+      "label": "reporting-degradation"
+    },
+    {
+      "evidence": "world.json",
+      "id": "service:catalogue",
+      "kind": "service",
+      "label": "catalogue-api"
+    },
+    {
+      "evidence": "world.json",
+      "id": "service:fulfilment",
+      "kind": "service",
+      "label": "fulfilment-api"
+    },
+    {
+      "evidence": "world.json",
+      "id": "service:identity",
+      "kind": "service",
+      "label": "identity-api"
+    },
+    {
+      "evidence": "world.json",
+      "id": "service:notifications",
+      "kind": "service",
+      "label": "notifications-api"
+    },
+    {
+      "evidence": "world.json",
+      "id": "service:purchase",
+      "kind": "service",
+      "label": "purchase-api"
+    },
+    {
+      "evidence": "world.json",
+      "id": "service:reporting",
+      "kind": "service",
+      "label": "reporting-api"
+    },
+    {
+      "evidence": "world.json",
+      "id": "team:commerce",
+      "kind": "team",
+      "label": "Commerce"
+    },
+    {
+      "evidence": "world.json",
+      "id": "team:platform",
+      "kind": "team",
+      "label": "Platform"
+    },
+    {
+      "evidence": "world.json",
+      "id": "test:catalogue-failure",
+      "kind": "test",
+      "label": "catalogue-failure"
+    },
+    {
+      "evidence": "world.json",
+      "id": "test:fulfilment-failure",
+      "kind": "test",
+      "label": "fulfilment-failure"
+    },
+    {
+      "evidence": "world.json",
+      "id": "test:identity-failure",
+      "kind": "test",
+      "label": "identity-failure"
+    },
+    {
+      "evidence": "world.json",
+      "id": "test:reporting-failure",
+      "kind": "test",
+      "label": "reporting-failure"
+    }
+  ],
+  "facts": [
+    {
+      "evidence": "world.json",
+      "id": "rel:bf168063ec1f6dab3f36",
+      "object": "capability:identity",
+      "predicate": "covers_capability",
+      "subject": "runbook:identity-degradation"
+    },
+    {
+      "evidence": "world.json",
+      "id": "rel:5c94eab99784ceaa664f",
+      "object": "capability:reporting",
+      "predicate": "covers_capability",
+      "subject": "runbook:reporting-degradation"
+    },
+    {
+      "evidence": "world.json",
+      "id": "rel:fe6c867db4271d0eb2a5",
+      "object": "resource:postgres-east",
+      "predicate": "depends_on",
+      "subject": "service:catalogue"
+    },
+    {
+      "evidence": "world.json",
+      "id": "rel:0f1da54dc0a075fa0474",
+      "object": "environment:staging",
+      "predicate": "deployed_in",
+      "subject": "service:catalogue"
+    },
+    {
+      "evidence": "world.json",
+      "id": "rel:f9293f1e60f75f35c5cd",
+      "object": "team:commerce",
+      "predicate": "owned_by",
+      "subject": "service:catalogue"
+    },
+    {
+      "evidence": "world.json",
+      "id": "rel:518b8f9d29ebee1c6ccf",
+      "object": "capability:catalogue",
+      "predicate": "provides",
+      "subject": "service:catalogue"
+    },
+    {
+      "evidence": "world.json",
+      "id": "rel:543e09c645207d332d65",
+      "object": "resource:kafka-core",
+      "predicate": "depends_on",
+      "subject": "service:fulfilment"
+    },
+    {
+      "evidence": "world.json",
+      "id": "rel:460bae67fec21221f3d6",
+      "object": "environment:prod",
+      "predicate": "deployed_in",
+      "subject": "service:fulfilment"
+    },
+    {
+      "evidence": "world.json",
+      "id": "rel:748b0c483c2007f25f76",
+      "object": "team:commerce",
+      "predicate": "owned_by",
+      "subject": "service:fulfilment"
+    },
+    {
+      "evidence": "world.json",
+      "id": "rel:b1fd255bc54ed33b92d1",
+      "object": "capability:fulfilment",
+      "predicate": "provides",
+      "subject": "service:fulfilment"
+    },
+    {
+      "evidence": "world.json",
+      "id": "rel:1386b47a2e223d6aa9a4",
+      "object": "resource:postgres-east",
+      "predicate": "depends_on",
+      "subject": "service:identity"
+    },
+    {
+      "evidence": "world.json",
+      "id": "rel:e6a26caeb7ed79205db0",
+      "object": "environment:prod",
+      "predicate": "deployed_in",
+      "subject": "service:identity"
+    },
+    {
+      "evidence": "world.json",
+      "id": "rel:3c698b7754f17eaef26c",
+      "object": "team:platform",
+      "predicate": "owned_by",
+      "subject": "service:identity"
+    },
+    {
+      "evidence": "world.json",
+      "id": "rel:d099ba8688856e7dfa0a",
+      "object": "capability:identity",
+      "predicate": "provides",
+      "subject": "service:identity"
+    },
+    {
+      "evidence": "world.json",
+      "id": "rel:ba3402097b7f4df3de6d",
+      "object": "resource:redis-west",
+      "predicate": "depends_on",
+      "subject": "service:notifications"
+    },
+    {
+      "evidence": "world.json",
+      "id": "rel:f29e57a0cad7c74a769c",
+      "object": "environment:staging",
+      "predicate": "deployed_in",
+      "subject": "service:notifications"
+    },
+    {
+      "evidence": "world.json",
+      "id": "rel:bbe5e319452d01e33820",
+      "object": "team:platform",
+      "predicate": "owned_by",
+      "subject": "service:notifications"
+    },
+    {
+      "evidence": "world.json",
+      "id": "rel:28b19d2459303365f57c",
+      "object": "capability:notifications",
+      "predicate": "provides",
+      "subject": "service:notifications"
+    },
+    {
+      "evidence": "world.json",
+      "id": "rel:0c3bc21ec82eb3d014f0",
+      "object": "resource:redis-west",
+      "predicate": "depends_on",
+      "subject": "service:purchase"
+    },
+    {
+      "evidence": "world.json",
+      "id": "rel:ef4ba9d5a612893bc04c",
+      "object": "environment:prod",
+      "predicate": "deployed_in",
+      "subject": "service:purchase"
+    },
+    {
+      "evidence": "world.json",
+      "id": "rel:f796f9fe53f7f9440b35",
+      "object": "team:commerce",
+      "predicate": "owned_by",
+      "subject": "service:purchase"
+    },
+    {
+      "evidence": "world.json",
+      "id": "rel:25991174213b7c9d2e79",
+      "object": "capability:purchase",
+      "predicate": "provides",
+      "subject": "service:purchase"
+    },
+    {
+      "evidence": "world.json",
+      "id": "rel:044bdab67759b83778a3",
+      "object": "resource:kafka-core",
+      "predicate": "depends_on",
+      "subject": "service:reporting"
+    },
+    {
+      "evidence": "world.json",
+      "id": "rel:528c9a1af3798f483761",
+      "object": "environment:staging",
+      "predicate": "deployed_in",
+      "subject": "service:reporting"
+    },
+    {
+      "evidence": "world.json",
+      "id": "rel:990016fda87f704f042d",
+      "object": "team:platform",
+      "predicate": "owned_by",
+      "subject": "service:reporting"
+    },
+    {
+      "evidence": "world.json",
+      "id": "rel:9561b9f3133e9b94b90c",
+      "object": "capability:reporting",
+      "predicate": "provides",
+      "subject": "service:reporting"
+    },
+    {
+      "evidence": "world.json",
+      "id": "rel:d7a147adfe62ddc45bcf",
+      "object": "service:catalogue",
+      "predicate": "covers",
+      "subject": "test:catalogue-failure"
+    },
+    {
+      "evidence": "world.json",
+      "id": "rel:988e850a7c744c9f86bd",
+      "object": "service:fulfilment",
+      "predicate": "covers",
+      "subject": "test:fulfilment-failure"
+    },
+    {
+      "evidence": "world.json",
+      "id": "rel:26a1ebd8eb677d923494",
+      "object": "service:identity",
+      "predicate": "covers",
+      "subject": "test:identity-failure"
+    },
+    {
+      "evidence": "world.json",
+      "id": "rel:1a30a487277b1244211a",
+      "object": "service:reporting",
+      "predicate": "covers",
+      "subject": "test:reporting-failure"
+    }
+  ],
+  "sha256": "01c821c964e2ea27461ba12df15cc034cd8bad51dc7d4183a2fa20528152a71f"
+}

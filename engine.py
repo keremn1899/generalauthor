@@ -448,10 +448,12 @@ def _ensure_schema_and_seed(conn: lb.Connection) -> None:
         "  PRIMARY KEY (id)"
         ")"
     )
-    conn.execute("CREATE REL TABLE LEADSTO   (FROM Concept TO Concept, label STRING DEFAULT NULL)")
-    conn.execute("CREATE REL TABLE CONTAINS  (FROM Concept TO Concept, label STRING DEFAULT NULL)")
-    conn.execute("CREATE REL TABLE EXPRESSES (FROM Concept TO Concept, label STRING DEFAULT NULL)")
-    conn.execute("CREATE REL TABLE NEARTO    (FROM Concept TO Concept, label STRING DEFAULT NULL)")
+    for rel in ("LEADSTO", "CONTAINS", "EXPRESSES", "NEARTO"):
+        conn.execute(
+            f"CREATE REL TABLE {rel} (FROM Concept TO Concept, "
+            "label STRING DEFAULT NULL, evidence STRING DEFAULT '', "
+            "relation_id STRING DEFAULT '')"
+        )
 
     # Insert nodes — supports 4-tuple (id, label, content, token_count),
     # 7-tuple (+ anchor, is_metanode, linked_graph_id), 9-tuple

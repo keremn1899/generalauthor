@@ -137,3 +137,43 @@ def test_an_unfiltered_walk_carries_what_it_passed_through(surface):
     walked = _answer(surface, _walk(), "walked")
     assert any(node_id.startswith("event:") for node_id in walked)
     assert any(node_id.startswith("place:") for node_id in walked)
+
+
+# --- predicate-constrained paths ---------------------------------------
+
+def _predicate_path(predicates: list[str]) -> dict:
+    return {
+        "name": "predicate_path",
+        "steps": [
+            {"op": "lookup", "references": ["character:ilma"], "assign": "source"},
+            {"op": "lookup", "references": ["place:the-landing"], "assign": "target"},
+            {
+                "op": "find_paths",
+                "from": "$source",
+                "to": "$target",
+                "predicates": predicates,
+                "direction": "outgoing",
+                "max_hops": 2,
+                "assign": "paths",
+            },
+        ],
+        "collect": "$paths",
+        "answers": ["paths"],
+        "limits": {"max_steps": 6, "max_hops": 2, "max_nodes": 60},
+    }
+
+
+def test_predicate_constrained_path_honours_declared_predicates(surface):
+    allowed = surface.run_ephemeral_traversal(
+        _predicate_path(["participates_in", "occurs_at"]), {}, evidence="packet"
+    )
+    refused = surface.run_ephemeral_traversal(
+        _predicate_path(["participates_in"]), {}, evidence="packet"
+    )
+
+    assert allowed["outcome"] == "FOUND"
+    assert allowed["execution_receipt"]["operations"][-1]["tool"] == "find_paths"
+    assert allowed["evidence"]["path_records"][0]["edge_label_chain"] == [
+        "participates_in", "occurs_at"
+    ]
+    assert refused["outcome"] == "EMPTY"

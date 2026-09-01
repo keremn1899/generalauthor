@@ -139,6 +139,10 @@ class Surface:
         self._verdict_memo: dict[tuple[str, str, str], tuple[str, dict[str, Any]]] = {}
         #: named-traversal results keyed by graph/format/recipe/parameter/evidence.
         self._traversal_cache: dict[str, dict[str, Any]] = {}
+        #: Full packets for compact runs.  These are retained server-side for
+        #: audit/logging and deliberately are not added back to a model-visible
+        #: compact result.
+        self._traversal_audit_packets: dict[str, dict[str, Any]] = {}
         # Shared read side of the single-owner RW lock (B13): when set, an
         # operator confirm on the write side excludes in-flight invokes.
         self._rw_lock = rw_lock
@@ -528,6 +532,21 @@ class Surface:
         out["context_views"] = ["capabilities", "graph_card", "full_map"]
         return out
 
+    def describe(self) -> dict[str, Any]:
+        """Return neutral executable schema, without graph interpretation."""
+        from mcp_server.graph_contract import neutral_graph_schema
+
+        with self._read_guard():
+            out = self._base()
+            schema = neutral_graph_schema(self._session.connection)
+        return {
+            **out,
+            "kind": "GRAPH_DESCRIPTION",
+            "outcome": "FOUND",
+            "source": "materialized_graph",
+            **schema,
+        }
+
     def contract(self, *, include_markdown: bool = True) -> dict[str, Any]:
         """Return the active user-owned ``graph.md`` semantic contract."""
         out = self._base()
@@ -539,6 +558,20 @@ class Surface:
         from mcp_server.graph_contract import GraphContractError
         from source_pipeline.traversals import WorkbookTraversalError
 
+        # ``contract`` remains the user/workbook-authored semantic document.
+        # The generated schema is intentionally exposed by ``describe`` and is
+        # only an execution fallback for ephemeral programs, not a pretend
+        # graph.md.
+        if (
+            not self._graph_contract_path.exists()
+            and not self._workbook_traversals_path.exists()
+        ):
+            return {
+                "available": False,
+                "outcome": "ABSENT",
+                "path": str(self._graph_contract_path),
+                "reason": "no_graph_md",
+            }
         try:
             document = self._load_traversal_document()
         except (GraphContractError, WorkbookTraversalError, FileNotFoundError, ValueError) as exc:
@@ -585,8 +618,11 @@ class Surface:
             return named_traversal_card(None)
 
     def _load_traversal_document(self):
-        """Load workbook programs first, unless a graph contract was explicit."""
-        from mcp_server.graph_contract import load_graph_contract
+        """Load an authored contract or derive a schema-only ephemeral one."""
+        from mcp_server.graph_contract import (
+            generated_minimal_graph_contract,
+            load_graph_contract,
+        )
         from source_pipeline.traversals import load_bound_workbook_traversals
 
         if self._graph_contract_explicit and self._graph_contract_path.exists():
@@ -601,7 +637,13 @@ class Surface:
                 self._workbook_traversals_path,
                 expected_encoding_sha256=expected,
             )
-        return load_graph_contract(self._graph_contract_path)
+        if self._graph_contract_path.exists():
+            return load_graph_contract(self._graph_contract_path)
+        with self._read_guard():
+            return generated_minimal_graph_contract(
+                self._session.connection,
+                path=f"generated://{self._db_path.name}/graph-schema",
+            )
 
     def _grain(self) -> dict[str, Any]:
         """Grain exemplars from the `.grain.json` sidecar beside the graph.
@@ -873,13 +915,6 @@ class Surface:
                 "outcome": "INVALID_RECIPE",
                 "errors": ["evidence must be summary, packet, or content"],
             }
-        if not self._workbook_traversals_path.exists() and not self._graph_contract_path.exists():
-            return {
-                **out,
-                "kind": "INVALID_TRAVERSAL",
-                "outcome": "NO_CONTRACT",
-                "errors": ["no named traversal program set is active for this graph"],
-            }
         try:
             document = self._load_traversal_document()
             compiled = compile_traversal(document)
@@ -1011,8 +1046,10 @@ class Surface:
         # them: looking up the two endpoints filled the packet, and a caller
         # reading FOUND would conclude they were connected.
         answers = tuple(getattr(compiled, "answers", ()) or ())
+        answer_sets = dict(getattr(compiled, "answer_sets", {}) or {})
         answer_count = None
         answer_node_ids: list[str] = []
+        named_answers: dict[str, list[str]] = {}
         if answers:
             variables = result.get("variables") or {}
             answer_count = sum(
@@ -1036,6 +1073,24 @@ class Surface:
                         answer_node_ids.append(node_id)
             receipt["answer_variables"] = list(answers)
             receipt["answer_count"] = answer_count
+            receipt["answer_sets"] = dict(answer_sets)
+            receipt["answer_set_counts"] = {
+                name: len(variables.get(variable) or ())
+                for name, variable in answer_sets.items()
+            }
+            for name, variable in answer_sets.items():
+                ids: list[str] = []
+                seen_ids: set[str] = set()
+                for entry in variables.get(variable) or ():
+                    node_id = (
+                        str(entry.get("id") or "")
+                        if isinstance(entry, dict)
+                        else str(entry)
+                    )
+                    if node_id and node_id not in seen_ids:
+                        seen_ids.add(node_id)
+                        ids.append(node_id)
+                named_answers[name] = ids
 
         if answer_count == 0:
             outcome = (
@@ -1095,6 +1150,39 @@ class Surface:
             "fallback_triggered": receipt.get("fallback_triggered"),
             "resolve_miss_count": receipt.get("resolve_miss_count"),
         }
+        result_mode = str(getattr(compiled, "result_mode", "full") or "full")
+        if result_mode == "compact":
+            audit_identity = {
+                "graph_version": out["graph_version"],
+                "recipe_fingerprint": compiled.fingerprint,
+                "result_fingerprint": receipt["result_fingerprint"],
+            }
+            audit_ref = "tra_" + hashlib.sha256(
+                json.dumps(
+                    audit_identity, sort_keys=True, separators=(",", ":")
+                ).encode("utf-8")
+            ).hexdigest()[:16]
+            receipt["result_mode"] = "compact"
+            receipt["audit_evidence_ref"] = audit_ref
+            self._traversal_audit_packets[audit_ref] = {
+                "evidence_packet": _copy(packet),
+                "execution_receipt": _copy(receipt),
+                "program": _copy(result["program"]),
+            }
+            payload = {
+                **out,
+                "kind": kind,
+                "outcome": outcome,
+                "recipe": recipe_meta,
+                "answers": named_answers,
+                "execution_receipt": receipt,
+                "audit_evidence_ref": audit_ref,
+                "cache_key": cache_key,
+                "cached": False,
+            }
+            self._traversal_cache[cache_key] = _copy(payload)
+            return payload
+
         payload = {
             **out,
             "kind": kind,
@@ -1971,6 +2059,7 @@ class Surface:
 
     def close(self) -> None:
         self._traversal_cache.clear()
+        self._traversal_audit_packets.clear()
         if self._store is not None:
             self._store.close()
             self._store = None

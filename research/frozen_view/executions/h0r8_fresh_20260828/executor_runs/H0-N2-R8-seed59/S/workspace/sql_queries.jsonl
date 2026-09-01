@@ -1,0 +1,43 @@
+{"event": "sql_query", "query_text": "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name", "parameters": "()", "order": 1787953880654135360}
+{"event": "sql_result", "returned_ids": [], "order": 1787953880654451475}
+{"event": "sql_query", "query_text": "PRAGMA table_info(resources)", "parameters": "()", "order": 1787953880654499471}
+{"event": "sql_result", "returned_ids": [], "order": 1787953880654542370}
+{"event": "sql_query", "query_text": "PRAGMA table_info(services)", "parameters": "()", "order": 1787953880654565031}
+{"event": "sql_result", "returned_ids": [], "order": 1787953880654592389}
+{"event": "sql_query", "query_text": "PRAGMA table_info(capabilities)", "parameters": "()", "order": 1787953880654607453}
+{"event": "sql_result", "returned_ids": [], "order": 1787953880654646341}
+{"event": "sql_query", "query_text": "PRAGMA table_info(teams)", "parameters": "()", "order": 1787953880654664634}
+{"event": "sql_result", "returned_ids": [], "order": 1787953880654688009}
+{"event": "sql_query", "query_text": "PRAGMA table_info(tests)", "parameters": "()", "order": 1787953880654699677}
+{"event": "sql_result", "returned_ids": [], "order": 1787953880654716987}
+{"event": "sql_query", "query_text": "PRAGMA table_info(environments)", "parameters": "()", "order": 1787953880654730538}
+{"event": "sql_result", "returned_ids": [], "order": 1787953880654752924}
+{"event": "sql_query", "query_text": "PRAGMA table_info(runbooks)", "parameters": "()", "order": 1787953880654766969}
+{"event": "sql_result", "returned_ids": [], "order": 1787953880654789421}
+{"event": "sql_query", "query_text": "PRAGMA table_info(integration_test_coverage)", "parameters": "()", "order": 1787953882796176357}
+{"event": "sql_result", "returned_ids": [], "order": 1787953882796427084}
+{"event": "sql_query", "query_text": "PRAGMA table_info(integration_tests)", "parameters": "()", "order": 1787953882796466639}
+{"event": "sql_result", "returned_ids": [], "order": 1787953882796502115}
+{"event": "sql_query", "query_text": "PRAGMA table_info(runbook_capability_coverage)", "parameters": "()", "order": 1787953882796520763}
+{"event": "sql_result", "returned_ids": [], "order": 1787953882796546726}
+{"event": "sql_query", "query_text": "PRAGMA table_info(service_capabilities)", "parameters": "()", "order": 1787953882796561019}
+{"event": "sql_result", "returned_ids": [], "order": 1787953882796583487}
+{"event": "sql_query", "query_text": "PRAGMA table_info(service_dependencies)", "parameters": "()", "order": 1787953882796597397}
+{"event": "sql_result", "returned_ids": [], "order": 1787953882796618637}
+{"event": "sql_query", "query_text": "PRAGMA table_info(service_deployments)", "parameters": "()", "order": 1787953882796639219}
+{"event": "sql_result", "returned_ids": [], "order": 1787953882796661558}
+{"event": "sql_query", "query_text": "PRAGMA table_info(service_ownerships)", "parameters": "()", "order": 1787953882796675975}
+{"event": "sql_result", "returned_ids": [], "order": 1787953882796697234}
+{"event": "sql_query", "query_text": "\nSELECT DISTINCT sd.service_id\nFROM service_dependencies sd\nJOIN resources r ON sd.resource_id = r.id\nWHERE r.id = 'resource:redis-west'\nORDER BY sd.service_id\n", "parameters": "()", "order": 1787953886672907480}
+{"event": "sql_query", "query_text": "\nSELECT DISTINCT sc.capability_id\nFROM service_dependencies sd\nJOIN resources r ON sd.resource_id = r.id\nJOIN service_capabilities sc ON sc.service_id = sd.service_id\nWHERE r.id = 'resource:redis-west'\nORDER BY sc.capability_id\n", "parameters": "()", "order": 1787953886673187578}
+{"event": "sql_query", "query_text": "\nSELECT DISTINCT so.team_id\nFROM service_dependencies sd\nJOIN resources r ON sd.resource_id = r.id\nJOIN service_ownerships so ON so.service_id = sd.service_id\nWHERE r.id = 'resource:redis-west'\nORDER BY so.team_id\n", "parameters": "()", "order": 1787953886673254037}
+{"event": "sql_query", "query_text": "\nSELECT DISTINCT itc.test_id\nFROM service_dependencies sd\nJOIN resources r ON sd.resource_id = r.id\nJOIN integration_test_coverage itc ON itc.service_id = sd.service_id\nWHERE r.id = 'resource:redis-west'\nORDER BY itc.test_id\n", "parameters": "()", "order": 1787953886673304946}
+{"event": "sql_query", "query_text": "SELECT * FROM runbooks", "parameters": "()", "order": 1787953886673356885}
+{"event": "sql_query", "query_text": "SELECT * FROM runbook_capability_coverage", "parameters": "()", "order": 1787953886673394930}
+{"event": "sql_query", "query_text": "SELECT * FROM environments", "parameters": "()", "order": 1787953891739785022}
+{"event": "sql_query", "query_text": "SELECT * FROM service_deployments", "parameters": "()", "order": 1787953891740039352}
+{"event": "sql_query", "query_text": "\nSELECT DISTINCT sc.capability_id\nFROM service_dependencies sd\nJOIN resources r ON sd.resource_id = r.id\nJOIN service_capabilities sc ON sc.service_id = sd.service_id\nLEFT JOIN runbook_capability_coverage rcc ON rcc.capability_id = sc.capability_id\nWHERE r.id = 'resource:redis-west'\n  AND rcc.capability_id IS NULL\nORDER BY sc.capability_id\n", "parameters": "()", "order": 1787953891740096175}
+{"event": "sql_query", "query_text": "\nSELECT DISTINCT e.id\nFROM service_dependencies sd\nJOIN resources r ON sd.resource_id = r.id\nJOIN service_capabilities sc ON sc.service_id = sd.service_id\nLEFT JOIN runbook_capability_coverage rcc ON rcc.capability_id = sc.capability_id\nJOIN service_deployments sdep ON sdep.service_id = sd.service_id\nJOIN environments e ON e.id = sdep.environment_id\nWHERE r.id = 'resource:redis-west'\n  AND rcc.capability_id IS NULL\n  AND e.name LIKE '%production%'\nORDER BY e.id\n", "parameters": "()", "order": 1787953891740172143}
+{"event": "sql_query", "query_text": "\nSELECT DISTINCT e.id, e.name\nFROM service_dependencies sd\nJOIN resources r ON sd.resource_id = r.id\nJOIN service_capabilities sc ON sc.service_id = sd.service_id\nLEFT JOIN runbook_capability_coverage rcc ON rcc.capability_id = sc.capability_id\nJOIN service_deployments sdep ON sdep.service_id = sd.service_id\nJOIN environments e ON e.id = sdep.environment_id\nWHERE r.id = 'resource:redis-west'\n  AND rcc.capability_id IS NULL\nORDER BY e.id\n", "parameters": "()", "order": 1787953891740249878}
+{"event": "sql_query", "query_text": "\nSELECT so.service_id, so.team_id, t.name\nFROM service_dependencies sd\nJOIN service_ownerships so ON so.service_id = sd.service_id\nJOIN teams t ON t.id = so.team_id\nWHERE sd.resource_id = 'resource:redis-west'\n", "parameters": "()", "order": 1787953891740349383}
+{"event": "sql_query", "query_text": "SELECT * FROM service_dependencies", "parameters": "()", "order": 1787953891740399662}

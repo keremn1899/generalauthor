@@ -1,0 +1,2383 @@
+================================================================================
+EPISODE: RAW R4
+================================================================================
+campaign id: taskview-orientation-stage1-cursor-v01-v4-searchfix
+episode id: taskview-orientation-v01-e03-raw-r4
+trajectory episode id: raw-r4-350c1a64
+replicate: 4
+condition: RAW
+provider/model: cursor/composer-2.5
+provider session id: agent-07db3bb7-06db-425c-9aeb-0becb79dfc4c
+source trajectory path: /home/kerem/Desktop/Personal Projects/graphauthor/research/taskview_orientation/results/stage1-cursor-v01-v4-searchfix/taskview-orientation-v01-e03-raw-r4/provider_trajectory.jsonl
+source trajectory SHA-256: 4825c27e66d4dc69c5c789380124d87a23a3fe06ae35b77bd5336f3d8c235bc7
+exporter version/hash: taskview-orientation-trajectory-export-v1 c60200b0443dc6f29caeb0847a0b4a6088b29f43b5f240860ab8f23fab41bada
+
+================================================================================
+PHASE 1
+================================================================================
+
+[USER]
+You are reviewing a frozen synthetic repository for a jsonlib v2-to-v3 migration. Use only participant-visible sources and supplied tools. Treat the repository as read-only; scratch space is writable. Answer each phase with the exact structured fields requested and cite source paths with inclusive line ranges. Do not anticipate later phases.
+
+Use the native source search/read and scratch tools. No preconstructed task view is available.
+
+Use only tools from the taskview-orientation MCP server. Return only one JSON object, without Markdown fences, conforming exactly to this schema: {"additionalProperties": false, "properties": {"citations": {"items": {"additionalProperties": false, "properties": {"end_line": {"type": "integer"}, "path": {"type": "string"}, "start_line": {"type": "integer"}}, "required": ["path", "start_line", "end_line"], "type": "object"}, "minItems": 1, "type": "array"}, "decoding_invariants": {"items": {"type": "string"}, "type": "array"}, "direct_change_services": {"items": {"type": "string"}, "type": "array"}, "v3_call_shape": {"type": "string"}}, "required": ["direct_change_services", "decoding_invariants", "v3_call_shape", "citations"], "type": "object"}
+
+We are migrating jsonlib v2 to v3. Identify the in-scope production service or services that require a direct integration edit. For each, cite the local implementation, state the two decoding invariants that must be preserved, and give the v3 call shape that preserves them.
+
+[STATUS] RUNNING
+
+[THINKING]
+Beginning the jsonlib v2-to-v3 migration review. I will identify production services requiring direct integration edits and cite their implementations along with the two decoding invariants and the v3 call shape.
+
+I will retrieve the MCP tools schema and search the repository for jsonlib usage, v2/v3 migration context, and decoding invariant details.
+
+[ASSISTANT]
+Discovering MCP tools and searching the repository for jsonlib v2 usage and migration scope.
+
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "jsonlib v2 v3 migration"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "jsonlib decode"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL RESULT]
+{
+  "results": [],
+  "result_count": 0,
+  "truncated": false
+}
+
+[TOOL RESULT]
+{
+  "results": [],
+  "result_count": 0,
+  "truncated": false
+}
+
+[THINKING]
+Initial searches returned empty results. The workspace path may differ from expectations.
+
+Expanding search scope to locate relevant files.
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "jsonlib"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "v2"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "decoding"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL RESULT]
+{
+  "results": [
+    {
+      "path": "architecture/partner-gateway.md",
+      "line": 4,
+      "text": "vendor endpoint whose signed request contract is pinned to jsonlib v2."
+    },
+    {
+      "path": "lockfiles/checkout-json.lock",
+      "line": 2,
+      "text": "jsonlib = \"2.8.4\""
+    },
+    {
+      "path": "lockfiles/partner-json.lock",
+      "line": 2,
+      "text": "jsonlib = \"2.8.4\""
+    },
+    {
+      "path": "lockfiles/reporting-json.lock",
+      "line": 2,
+      "text": "jsonlib = \"2.8.4\""
+    },
+    {
+      "path": "pyproject.toml",
+      "line": 4,
+      "text": "dependencies = [\"jsonlib==2.8.4\", \"jsonlib-v3==3.1.0\"]"
+    },
+    {
+      "path": "services/billing/invoice_codec.py",
+      "line": 1,
+      "text": "from jsonlib_v3 import Decoder"
+    },
+    {
+      "path": "services/checkout/json_codec.py",
+      "line": 3,
+      "text": "import jsonlib"
+    },
+    {
+      "path": "services/checkout/json_codec.py",
+      "line": 8,
+      "text": "    return jsonlib.loads("
+    },
+    {
+      "path": "services/partner_gateway/protocol.py",
+      "line": 1,
+      "text": "import jsonlib"
+    },
+    {
+      "path": "services/partner_gateway/protocol.py",
+      "line": 5,
+      "text": "    signed_body = jsonlib.dumps(order, sort_keys=True).encode(\"utf-8\")"
+    },
+    {
+      "path": "services/reporting/README.md",
+      "line": 6,
+      "text": "The service calls the accepted v3 adapter rather than jsonlib directly."
+    },
+    {
+      "path": "services/reporting/json_adapter.py",
+      "line": 1,
+      "text": "from jsonlib_v3 import Encoder"
+    },
+    {
+      "path": "tasks/migrate-jsonlib-v3.md",
+      "line": 1,
+      "text": "# jsonlib v3 migration charter"
+    },
+    {
+      "path": "tasks/migrate-jsonlib-v3.md",
+      "line": 3,
+      "text": "Migrate commerce-owned production behavior from jsonlib v2 to v3."
+    },
+    {
+      "path": "vendor/jsonlib_v3_migration.md",
+      "line": 1,
+      "text": "# jsonlib v3 migration reference"
+    }
+  ],
+  "result_count": 15,
+  "truncated": false
+}
+
+[TOOL RESULT]
+{
+  "results": [
+    {
+      "path": "architecture/partner-gateway.md",
+      "line": 4,
+      "text": "vendor endpoint whose signed request contract is pinned to jsonlib v2."
+    },
+    {
+      "path": "lockfiles/checkout-json.lock",
+      "line": 4,
+      "text": "checksum = \"sha256:checkout-v2-fixture\""
+    },
+    {
+      "path": "lockfiles/partner-json.lock",
+      "line": 4,
+      "text": "checksum = \"sha256:partner-v2-fixture\""
+    },
+    {
+      "path": "lockfiles/reporting-json.lock",
+      "line": 4,
+      "text": "checksum = \"sha256:reporting-v2-fixture\""
+    },
+    {
+      "path": "services/reporting/json_adapter.py",
+      "line": 5,
+      "text": "    \"\"\"Preserve the reporting service's accepted v2-shaped encoding call.\"\"\""
+    },
+    {
+      "path": "tasks/migrate-jsonlib-v3.md",
+      "line": 3,
+      "text": "Migrate commerce-owned production behavior from jsonlib v2 to v3."
+    },
+    {
+      "path": "tasks/migrate-jsonlib-v3.md",
+      "line": 6,
+      "text": "ownership, and a pinned v2 dependency. Do not infer scope from a source import"
+    },
+    {
+      "path": "tasks/migrate-jsonlib-v3.md",
+      "line": 12,
+      "text": "Vendor-owned protocol boundaries remain on their supported v2 wire contract and"
+    },
+    {
+      "path": "vendor/jsonlib_v3_migration.md",
+      "line": 3,
+      "text": "The v2 `loads(..., allow_comments=True, parse_float=Decimal)` convenience call is"
+    }
+  ],
+  "result_count": 9,
+  "truncated": false
+}
+
+[TOOL RESULT]
+{
+  "results": [
+    {
+      "path": "vendor/jsonlib_v3_migration.md",
+      "line": 4,
+      "text": "removed. Equivalent v3 decoding is:"
+    }
+  ],
+  "result_count": 1,
+  "truncated": false
+}
+
+[THINKING]
+I will read the migration charter and vendor reference. I will inspect json_codec and architecture docs. I will check billing and reporting. Partner gateway may be out of scope. I need to identify production services requiring direct integration edits. I need to find their decoding invariants and v3 call shapes.
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 80,
+    "path": "tasks/migrate-jsonlib-v3.md",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 80,
+    "path": "vendor/jsonlib_v3_migration.md",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 50,
+    "path": "services/checkout/json_codec.py",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 40,
+    "path": "architecture/partner-gateway.md",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL RESULT]
+{
+  "path": "tasks/migrate-jsonlib-v3.md",
+  "start_line": 1,
+  "end_line": 20,
+  "content": "# jsonlib v3 migration charter\n\nMigrate commerce-owned production behavior from jsonlib v2 to v3.\n\nScope is established by composing production deployment membership, component\nownership, and a pinned v2 dependency. Do not infer scope from a source import\nalone.\n\nA compatibility adapter may count as protection only when its contract test\ndemonstrates canonical object-key ordering and string-preserving Decimal output.\n\nVendor-owned protocol boundaries remain on their supported v2 wire contract and\nare excluded from direct code change. Their internals are not declared complete.\n\nDynamic consumers remain unresolved until every tenant alias can be mapped to a\ndeployable component from the frozen registry evidence.\n\nVerification is task-relevant only when a test exercises the migration behavior,\nnot merely when a test file names the service.\n\n"
+}
+
+[TOOL RESULT]
+{
+  "path": "vendor/jsonlib_v3_migration.md",
+  "start_line": 1,
+  "end_line": 14,
+  "content": "# jsonlib v3 migration reference\n\nThe v2 `loads(..., allow_comments=True, parse_float=Decimal)` convenience call is\nremoved. Equivalent v3 decoding is:\n\n```python\nDecoder(allow_comments=True, number_mode=\"decimal\").decode(payload)\n```\n\nThe v3 default rejects comments and uses binary floating-point numbers.\n\nFor encoding, `Encoder(canonical_keys=True, decimal_mode=\"decimal-string\")`\npreserves canonical object-key order and emits Decimal values as quoted strings.\n\n"
+}
+
+[TOOL RESULT]
+{
+  "path": "services/checkout/json_codec.py",
+  "start_line": 1,
+  "end_line": 13,
+  "content": "from decimal import Decimal\n\nimport jsonlib\n\n\ndef decode_order(payload: str) -> dict:\n    \"\"\"Decode merchant-authored order JSON without changing numeric semantics.\"\"\"\n    return jsonlib.loads(\n        payload,\n        allow_comments=True,\n        parse_float=Decimal,\n    )\n\n"
+}
+
+[TOOL RESULT]
+{
+  "path": "architecture/partner-gateway.md",
+  "start_line": 1,
+  "end_line": 11,
+  "content": "# Partner gateway boundary\n\n`service:partner-gateway` is operated by the vendor-integrations team and calls a\nvendor endpoint whose signed request contract is pinned to jsonlib v2.\n\nThe vendor validates the exact bytes of `signed_body`. Re-encoding that field\nwith v3 changes the signature input and is not permitted in this migration.\n\nThe gateway is a relevant boundary, but the vendor's internal consumers and\ntheir dependency inventory are opaque to the commerce migration.\n\n"
+}
+
+[THINKING]
+The checkout service uses jsonlib v2 loads with allow_comments and parse_float=Decimal. This requires a direct integration edit.
+
+Partner gateway is excluded from direct code changes per charter. Now searching for production deployment membership, ownership, and pinned services to identify remaining v2 dependencies.
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "commerce-owned production"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "service:checkout"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "pinned v2"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "allow_comments parse_float"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL RESULT]
+{
+  "results": [
+    {
+      "path": "tasks/migrate-jsonlib-v3.md",
+      "line": 3,
+      "text": "Migrate commerce-owned production behavior from jsonlib v2 to v3."
+    }
+  ],
+  "result_count": 1,
+  "truncated": false
+}
+
+[TOOL RESULT]
+{
+  "results": [
+    {
+      "path": "deploy/production-services.yaml",
+      "line": 3,
+      "text": "  - service:checkout"
+    },
+    {
+      "path": "deploy/service-components.yaml",
+      "line": 3,
+      "text": "  service:checkout:"
+    },
+    {
+      "path": "inventory/owners.yaml",
+      "line": 3,
+      "text": "    services: [service:checkout, service:reporting, service:external-worker]"
+    }
+  ],
+  "result_count": 3,
+  "truncated": false
+}
+
+[TOOL RESULT]
+{
+  "results": [
+    {
+      "path": "tasks/migrate-jsonlib-v3.md",
+      "line": 6,
+      "text": "ownership, and a pinned v2 dependency. Do not infer scope from a source import"
+    }
+  ],
+  "result_count": 1,
+  "truncated": false
+}
+
+[TOOL RESULT]
+{
+  "results": [],
+  "result_count": 0,
+  "truncated": false
+}
+
+[THINKING]
+Build #1030567 failed after 18 minutes and 50 seconds.Gathering evidence from the frozen repository.
+
+Reading production-services.yaml, service-components.yaml, owners.yaml, billing, reporting, and lockfiles to trace jsonlib imports across services.
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 30,
+    "path": "deploy/production-services.yaml",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 80,
+    "path": "deploy/service-components.yaml",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 40,
+    "path": "inventory/owners.yaml",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "import jsonlib"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL RESULT]
+{
+  "path": "deploy/production-services.yaml",
+  "start_line": 1,
+  "end_line": 9,
+  "content": "snapshot: production-2026-08-30\nservices:\n  - service:checkout\n  - service:reporting\n  - service:partner-gateway\nnotes:\n  dynamic_consumers: runtime/dynamic-consumers.md\n  staging_inventory: deploy/staging-services.yaml\n\n"
+}
+
+[TOOL RESULT]
+{
+  "path": "deploy/service-components.yaml",
+  "start_line": 1,
+  "end_line": 13,
+  "content": "snapshot: deployable-map-2026-08-30\nservices:\n  service:checkout:\n    component: component:checkout-json\n  service:reporting:\n    component: component:reporting-json\n  service:partner-gateway:\n    component: component:partner-json\n  service:catalog-search:\n    component: component:catalog-search\n  service:billing:\n    component: component:billing-codec\n\n"
+}
+
+[TOOL RESULT]
+{
+  "path": "inventory/owners.yaml",
+  "start_line": 1,
+  "end_line": 10,
+  "content": "teams:\n  team:commerce:\n    services: [service:checkout, service:reporting, service:external-worker]\n  team:vendor-integrations:\n    services: [service:partner-gateway]\n  team:catalogue:\n    services: [service:catalog-search]\n  team:finance:\n    services: [service:billing]\n\n"
+}
+
+[TOOL RESULT]
+{
+  "results": [
+    {
+      "path": "services/checkout/json_codec.py",
+      "line": 3,
+      "text": "import jsonlib"
+    },
+    {
+      "path": "services/partner_gateway/protocol.py",
+      "line": 1,
+      "text": "import jsonlib"
+    }
+  ],
+  "result_count": 2,
+  "truncated": false
+}
+
+[THINKING]
+The production services requiring direct integration edits are checkout, reporting, and partner-gateway.
+
+Partner-gateway is excluded because it is a vendor integration. The scope is production deployment plus commerce-owned services with pinned v2 dependencies. I will examine the lockfiles and components for checkout-json, reporting-json, partner-json, and billing-codec.
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "component:checkout-json"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "component:reporting-json"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 30,
+    "path": "services/billing/invoice_codec.py",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 30,
+    "path": "services/reporting/json_adapter.py",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL RESULT]
+{
+  "results": [
+    {
+      "path": "deploy/service-components.yaml",
+      "line": 4,
+      "text": "    component: component:checkout-json"
+    },
+    {
+      "path": "inventory/components.toml",
+      "line": 4,
+      "text": "id = \"component:checkout-json\""
+    },
+    {
+      "path": "lockfiles/checkout-json.lock",
+      "line": 1,
+      "text": "component = \"component:checkout-json\""
+    }
+  ],
+  "result_count": 3,
+  "truncated": false
+}
+
+[TOOL RESULT]
+{
+  "results": [
+    {
+      "path": "deploy/service-components.yaml",
+      "line": 6,
+      "text": "    component: component:reporting-json"
+    },
+    {
+      "path": "inventory/components.toml",
+      "line": 9,
+      "text": "id = \"component:reporting-json\""
+    },
+    {
+      "path": "lockfiles/reporting-json.lock",
+      "line": 1,
+      "text": "component = \"component:reporting-json\""
+    }
+  ],
+  "result_count": 3,
+  "truncated": false
+}
+
+[TOOL RESULT]
+{
+  "path": "services/billing/invoice_codec.py",
+  "start_line": 1,
+  "end_line": 6,
+  "content": "from jsonlib_v3 import Decoder\n\n\ndef decode_invoice(payload: str) -> dict:\n    return Decoder(number_mode=\"float\").decode(payload)\n\n"
+}
+
+[TOOL RESULT]
+{
+  "path": "services/reporting/json_adapter.py",
+  "start_line": 1,
+  "end_line": 14,
+  "content": "from jsonlib_v3 import Encoder\n\n\nclass ReportingJsonV3Adapter:\n    \"\"\"Preserve the reporting service's accepted v2-shaped encoding call.\"\"\"\n\n    @staticmethod\n    def dumps(value: object, *, sort_keys: bool, decimal_mode: str) -> str:\n        encoder = Encoder(\n            canonical_keys=sort_keys,\n            decimal_mode=\"decimal-string\" if decimal_mode == \"string\" else decimal_mode,\n        )\n        return encoder.encode(value)\n\n"
+}
+
+[THINKING]
+The Reporting service already uses the v3 adapter.
+
+Checking the Reporting service lockfile for a v2 jsonlib pin and scanning for direct jsonlib usage.
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 20,
+    "path": "lockfiles/checkout-json.lock",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 20,
+    "path": "lockfiles/reporting-json.lock",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 40,
+    "path": "inventory/components.toml",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "jsonlib"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL RESULT]
+{
+  "path": "lockfiles/checkout-json.lock",
+  "start_line": 1,
+  "end_line": 5,
+  "content": "component = \"component:checkout-json\"\njsonlib = \"2.8.4\"\nsource = \"runtime\"\nchecksum = \"sha256:checkout-v2-fixture\"\n\n"
+}
+
+[TOOL RESULT]
+{
+  "path": "lockfiles/reporting-json.lock",
+  "start_line": 1,
+  "end_line": 5,
+  "content": "component = \"component:reporting-json\"\njsonlib = \"2.8.4\"\nsource = \"runtime-via-compat-adapter\"\nchecksum = \"sha256:reporting-v2-fixture\"\n\n"
+}
+
+[TOOL RESULT]
+{
+  "path": "inventory/components.toml",
+  "start_line": 1,
+  "end_line": 17,
+  "content": "snapshot = \"commerce-components-2026-08-30\"\n\n[[component]]\nid = \"component:checkout-json\"\npath = \"services/checkout\"\nowner = \"team:commerce\"\n\n[[component]]\nid = \"component:reporting-json\"\npath = \"services/reporting\"\nowner = \"team:commerce\"\n\n[[component]]\nid = \"component:partner-json\"\npath = \"services/partner_gateway\"\nowner = \"team:vendor-integrations\"\n\n"
+}
+
+[TOOL RESULT]
+{
+  "results": [
+    {
+      "path": "architecture/partner-gateway.md",
+      "line": 4,
+      "text": "vendor endpoint whose signed request contract is pinned to jsonlib v2."
+    },
+    {
+      "path": "lockfiles/checkout-json.lock",
+      "line": 2,
+      "text": "jsonlib = \"2.8.4\""
+    },
+    {
+      "path": "lockfiles/partner-json.lock",
+      "line": 2,
+      "text": "jsonlib = \"2.8.4\""
+    },
+    {
+      "path": "lockfiles/reporting-json.lock",
+      "line": 2,
+      "text": "jsonlib = \"2.8.4\""
+    },
+    {
+      "path": "pyproject.toml",
+      "line": 4,
+      "text": "dependencies = [\"jsonlib==2.8.4\", \"jsonlib-v3==3.1.0\"]"
+    },
+    {
+      "path": "services/billing/invoice_codec.py",
+      "line": 1,
+      "text": "from jsonlib_v3 import Decoder"
+    },
+    {
+      "path": "services/checkout/json_codec.py",
+      "line": 3,
+      "text": "import jsonlib"
+    },
+    {
+      "path": "services/checkout/json_codec.py",
+      "line": 8,
+      "text": "    return jsonlib.loads("
+    },
+    {
+      "path": "services/partner_gateway/protocol.py",
+      "line": 1,
+      "text": "import jsonlib"
+    },
+    {
+      "path": "services/partner_gateway/protocol.py",
+      "line": 5,
+      "text": "    signed_body = jsonlib.dumps(order, sort_keys=True).encode(\"utf-8\")"
+    },
+    {
+      "path": "services/reporting/README.md",
+      "line": 6,
+      "text": "The service calls the accepted v3 adapter rather than jsonlib directly."
+    },
+    {
+      "path": "services/reporting/json_adapter.py",
+      "line": 1,
+      "text": "from jsonlib_v3 import Encoder"
+    },
+    {
+      "path": "tasks/migrate-jsonlib-v3.md",
+      "line": 1,
+      "text": "# jsonlib v3 migration charter"
+    },
+    {
+      "path": "tasks/migrate-jsonlib-v3.md",
+      "line": 3,
+      "text": "Migrate commerce-owned production behavior from jsonlib v2 to v3."
+    },
+    {
+      "path": "vendor/jsonlib_v3_migration.md",
+      "line": 1,
+      "text": "# jsonlib v3 migration reference"
+    }
+  ],
+  "result_count": 15,
+  "truncated": false
+}
+
+[THINKING]
+Production and commerce ownership are confirmed.
+
+Reporting is likely protected by its v3 adapter. Checkout is confirmed to need a direct integration edit. I am checking whether reporting’s adapter satisfies the required contract tests for canonical object-key ordering and string-preserving Decimal output.
+
+Reporting appears to need only a lockfile update. I am now searching for other commerce production services with direct v2 usage.
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "ReportingJsonV3Adapter"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "canonical_keys decimal-string"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "decode_order"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 20,
+    "path": "services/reporting/README.md",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL RESULT]
+{
+  "results": [
+    {
+      "path": "services/reporting/json_adapter.py",
+      "line": 4,
+      "text": "class ReportingJsonV3Adapter:"
+    },
+    {
+      "path": "services/reporting/report_builder.py",
+      "line": 3,
+      "text": "from services.reporting.json_adapter import ReportingJsonV3Adapter"
+    },
+    {
+      "path": "services/reporting/report_builder.py",
+      "line": 8,
+      "text": "    return ReportingJsonV3Adapter.dumps("
+    }
+  ],
+  "result_count": 3,
+  "truncated": false
+}
+
+[TOOL RESULT]
+{
+  "results": [],
+  "result_count": 0,
+  "truncated": false
+}
+
+[TOOL RESULT]
+{
+  "results": [
+    {
+      "path": "services/checkout/json_codec.py",
+      "line": 6,
+      "text": "def decode_order(payload: str) -> dict:"
+    },
+    {
+      "path": "services/checkout/order_reader.py",
+      "line": 1,
+      "text": "from services.checkout.json_codec import decode_order"
+    },
+    {
+      "path": "services/checkout/order_reader.py",
+      "line": 5,
+      "text": "    order = decode_order(raw_payload)"
+    },
+    {
+      "path": "tests/checkout_contract.py",
+      "line": 3,
+      "text": "from services.checkout.json_codec import decode_order"
+    },
+    {
+      "path": "tests/checkout_contract.py",
+      "line": 7,
+      "text": "    order = decode_order('{/* merchant promotion */\"id\":\"o-1\",\"total\":10.50}')"
+    }
+  ],
+  "result_count": 5,
+  "truncated": false
+}
+
+[TOOL RESULT]
+{
+  "path": "services/reporting/README.md",
+  "start_line": 1,
+  "end_line": 7,
+  "content": "# Reporting JSON\n\nReports are compared byte-for-byte by a downstream archive job. Keys must be\ncanonical and Decimal values must be emitted as strings with their scale intact.\n\nThe service calls the accepted v3 adapter rather than jsonlib directly.\n\n"
+}
+
+[THINKING]
+The reporting service uses encoding rather than decoding.
+
+Checking the checkout_contract test for the two decoding invariants.
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 30,
+    "path": "tests/checkout_contract.py",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "reporting contract"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "loads"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL RESULT]
+{
+  "path": "tests/checkout_contract.py",
+  "start_line": 1,
+  "end_line": 10,
+  "content": "from decimal import Decimal\n\nfrom services.checkout.json_codec import decode_order\n\n\ndef test_commented_decimal_order_is_preserved() -> None:\n    order = decode_order('{/* merchant promotion */\"id\":\"o-1\",\"total\":10.50}')\n    assert order[\"id\"] == \"o-1\"\n    assert order[\"total\"] == Decimal(\"10.50\")\n\n"
+}
+
+[TOOL RESULT]
+{
+  "results": [],
+  "result_count": 0,
+  "truncated": false
+}
+
+[TOOL RESULT]
+{
+  "results": [
+    {
+      "path": "config/service-defaults.yaml",
+      "line": 3,
+      "text": "  log_invalid_payloads: true"
+    },
+    {
+      "path": "runtime/dynamic-consumers.md",
+      "line": 3,
+      "text": "`service:external-worker` loads a consumer by tenant alias at runtime. The frozen"
+    },
+    {
+      "path": "services/catalog/search_codec.py",
+      "line": 5,
+      "text": "    return json.loads(payload)"
+    },
+    {
+      "path": "services/checkout/README.md",
+      "line": 3,
+      "text": "Merchants may include comments in manually maintained promotion payloads. Money"
+    },
+    {
+      "path": "services/checkout/json_codec.py",
+      "line": 8,
+      "text": "    return jsonlib.loads("
+    },
+    {
+      "path": "vendor/jsonlib_v3_migration.md",
+      "line": 3,
+      "text": "The v2 `loads(..., allow_comments=True, parse_float=Decimal)` convenience call is"
+    }
+  ],
+  "result_count": 6,
+  "truncated": false
+}
+
+[THINKING]
+The README may explicitly list the required decoding invariants.
+
+Production scope covers checkout and reporting. Partner-gateway is excluded. Reporting uses a compatibility adapter and Encoder, so it does not require a direct jsonlib integration edit. Checkout remains the primary candidate for the v2-to-v3 migration.
+
+Only checkout requires a direct jsonlib integration edit. Reporting already migrated via its v3 adapter and contains no direct jsonlib imports. Billing is excluded from production deployment.
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 15,
+    "path": "services/checkout/README.md",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 20,
+    "path": "services/reporting/report_builder.py",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "compat-adapter"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 30,
+    "path": "deploy/staging-services.yaml",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL RESULT]
+{
+  "path": "services/checkout/README.md",
+  "start_line": 1,
+  "end_line": 7,
+  "content": "# Checkout JSON\n\nMerchants may include comments in manually maintained promotion payloads. Money\nvalues must remain `Decimal` objects until the pricing boundary.\n\nThe codec is part of the production checkout path.\n\n"
+}
+
+[TOOL RESULT]
+{
+  "path": "services/reporting/report_builder.py",
+  "start_line": 1,
+  "end_line": 13,
+  "content": "from decimal import Decimal\n\nfrom services.reporting.json_adapter import ReportingJsonV3Adapter\n\n\ndef build_report() -> str:\n    row = {\"id\": \"r-7\", \"amount\": Decimal(\"10.50\")}\n    return ReportingJsonV3Adapter.dumps(\n        row,\n        sort_keys=True,\n        decimal_mode=\"string\",\n    )\n\n"
+}
+
+[TOOL RESULT]
+{
+  "results": [
+    {
+      "path": "lockfiles/reporting-json.lock",
+      "line": 3,
+      "text": "source = \"runtime-via-compat-adapter\""
+    }
+  ],
+  "result_count": 1,
+  "truncated": false
+}
+
+[TOOL RESULT]
+{
+  "path": "deploy/staging-services.yaml",
+  "start_line": 1,
+  "end_line": 7,
+  "content": "snapshot: staging-2026-08-30\nservices:\n  - service:catalog-search\n  - service:billing\n  - service:audit-exporter\nnote: staging membership does not imply production migration scope\n\n"
+}
+
+[THINKING]
+The focus is on identifying the specific decoding invariants required for the migration.
+
+Only the checkout service requires a direct integration edit. Its two decoding invariants are allowing comments in payloads and preserving money values as Decimal objects. The v3 call shape is `Decoder(allow_comments=True, number_mode="decimal").decode(payload)`.
+
+Reporting is already v3 via its adapter and requires no direct jsonlib edit. I am checking whether its adapter contract needs protection by searching the reporting tests.
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "reporting"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "invariant"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL RESULT]
+{
+  "results": [
+    {
+      "path": "deploy/production-services.yaml",
+      "line": 4,
+      "text": "  - service:reporting"
+    },
+    {
+      "path": "deploy/service-components.yaml",
+      "line": 5,
+      "text": "  service:reporting:"
+    },
+    {
+      "path": "deploy/service-components.yaml",
+      "line": 6,
+      "text": "    component: component:reporting-json"
+    },
+    {
+      "path": "inventory/components.toml",
+      "line": 9,
+      "text": "id = \"component:reporting-json\""
+    },
+    {
+      "path": "inventory/components.toml",
+      "line": 10,
+      "text": "path = \"services/reporting\""
+    },
+    {
+      "path": "inventory/owners.yaml",
+      "line": 3,
+      "text": "    services: [service:checkout, service:reporting, service:external-worker]"
+    },
+    {
+      "path": "lockfiles/reporting-json.lock",
+      "line": 1,
+      "text": "component = \"component:reporting-json\""
+    },
+    {
+      "path": "lockfiles/reporting-json.lock",
+      "line": 4,
+      "text": "checksum = \"sha256:reporting-v2-fixture\""
+    },
+    {
+      "path": "services/reporting/json_adapter.py",
+      "line": 5,
+      "text": "    \"\"\"Preserve the reporting service's accepted v2-shaped encoding call.\"\"\""
+    },
+    {
+      "path": "services/reporting/report_builder.py",
+      "line": 3,
+      "text": "from services.reporting.json_adapter import ReportingJsonV3Adapter"
+    },
+    {
+      "path": "tests/reporting_contract.py",
+      "line": 1,
+      "text": "from services.reporting.report_builder import build_report"
+    }
+  ],
+  "result_count": 11,
+  "truncated": false
+}
+
+[TOOL RESULT]
+{
+  "results": [],
+  "result_count": 0,
+  "truncated": false
+}
+
+[THINKING]
+Checking whether reporting_contract.py is encode-only. Decoding invariants may apply per-service rather than only to checkout.
+
+The schema uses singular fields, so the migration scope is overall rather than per-service. If only checkout requires a direct edit, the invariants and call shape target its decode path. If both checkout and reporting are involved, reporting would instead have encoding invariants. Now examining reporting_contract.py.
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 20,
+    "path": "tests/reporting_contract.py",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "migration scope"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL RESULT]
+{
+  "path": "tests/reporting_contract.py",
+  "start_line": 1,
+  "end_line": 6,
+  "content": "from services.reporting.report_builder import build_report\n\n\ndef test_report_is_canonical_and_decimal_is_a_string() -> None:\n    assert build_report() == '{\"amount\":\"10.50\",\"id\":\"r-7\"}'\n\n"
+}
+
+[TOOL RESULT]
+{
+  "results": [
+    {
+      "path": "deploy/staging-services.yaml",
+      "line": 6,
+      "text": "note: staging membership does not imply production migration scope"
+    }
+  ],
+  "result_count": 1,
+  "truncated": false
+}
+
+[THINKING]
+The Reporting service has a contract test for canonical keys and decimal-as-string encoding, but this concerns encoding rather than decoding invariants.
+
+Only service:checkout requires a direct integration edit. Its two decoding invariants are: allow_comments=True so merchant comments remain accepted, and parse_float=Decimal so floating-point JSON numbers decode to Decimal instances rather than binary floats.
+
+The v3 call shape is `Decoder(allow_comments=True, number_mode="decimal").decode(payload)`. Required citations cover `deploy/production-services.yaml`, `inventory/owners.yaml`, `lockfiles/checkout-json.lock`, `services/checkout/json_codec.py`, `vendor/jsonlib_v3_migration.md`, `services/checkout/README.md`, and `tests/checkout_contract.py`.
+
+Partner exclusions are documented in `tasks/migrate-jsonlib-v3.md` and `architecture/partner-gateway.md`. Reporting is excluded because its adapter is already v3 and needs no direct edit.
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "direct code change"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "service:checkout"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL RESULT]
+{
+  "results": [
+    {
+      "path": "tasks/migrate-jsonlib-v3.md",
+      "line": 13,
+      "text": "are excluded from direct code change. Their internals are not declared complete."
+    }
+  ],
+  "result_count": 1,
+  "truncated": false
+}
+
+[TOOL RESULT]
+{
+  "results": [
+    {
+      "path": "deploy/production-services.yaml",
+      "line": 3,
+      "text": "  - service:checkout"
+    },
+    {
+      "path": "deploy/service-components.yaml",
+      "line": 3,
+      "text": "  service:checkout:"
+    },
+    {
+      "path": "inventory/owners.yaml",
+      "line": 3,
+      "text": "    services: [service:checkout, service:reporting, service:external-worker]"
+    }
+  ],
+  "result_count": 3,
+  "truncated": false
+}
+
+[THINKING]
+The json_adapter is the direct integration edit required for Reporting. It is in scope under the migration charter.
+
+Checkout is the direct integration edit target. Its integration code does not import jsonlib directly, so the v2 lockfile pin is satisfied through the compat adapter layer. Two decoding invariants are being identified from the checkout context, starting with one about allow_comments.
+
+The second invariant is Decimal parsing for money values. The v3 call shape is `Decoder(allow_comments=True, number_mode="decimal").decode(payload)`. Both invariants are drawn from README lines 4-5 and test cases.
+
+The response will cite ten source files with inclusive line ranges. These cover the migration charter, production services inventory, lockfiles, checkout codec, README, vendor migration guide, contract tests, and architecture documents. The reporting README is noted as optional because it contains no direct jsonlib imports.
+
+Only checkout requires a direct integration edit. Reporting has no decode logic, and external-worker is unresolved per the charters.
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 20,
+    "path": "runtime/dynamic-consumers.md",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL RESULT]
+{
+  "path": "runtime/dynamic-consumers.md",
+  "start_line": 1,
+  "end_line": 11,
+  "content": "# Dynamic consumer inventory\n\n`service:external-worker` loads a consumer by tenant alias at runtime. The frozen\nregistry includes two concrete aliases and one wildcard fallback.\n\nThe wildcard can resolve plugins supplied outside this repository. There is no\ncomplete alias-to-component export for production, so the worker's migration\nscope mapping remains unresolved.\n\nThe loader implementation is `runtime/consumer_registry.py`.\n\n"
+}
+
+[THINKING]
+The final JSON contains two decoding invariant strings.
+
+The two decoding invariants are comment acceptance and Decimal number parsing. The v3 call shape is Decoder(allow_comments=True, number_mode="decimal").decode(payload).
+
+The JSON string omits backticks. The citations array holds inclusive file paths and line ranges.
+
+[ASSISTANT]
+{"direct_change_services":["service:checkout"],"decoding_invariants":["Merchant-authored promotion payloads may include comments and must still decode successfully.","Money values in decoded order JSON must remain Decimal objects until the pricing boundary, not binary floats."],"v3_call_shape":"Decoder(allow_comments=True, number_mode=\"decimal\").decode(payload)","citations":[{"path":"tasks/migrate-jsonlib-v3.md","start_line":5,"end_line":7},{"path":"tasks/migrate-jsonlib-v3.md","start_line":12,"end_line":13},{"path":"deploy/production-services.yaml","start_line":2,"end_line":4},{"path":"inventory/owners.yaml","start_line":2,"end_line":3},{"path":"lockfiles/checkout-json.lock","start_line":1,"end_line":3},{"path":"services/checkout/json_codec.py","start_line":1,"end_line":12},{"path":"services/checkout/README.md","start_line":3,"end_line":5},{"path":"vendor/jsonlib_v3_migration.md","start_line":3,"end_line":8},{"path":"tests/checkout_contract.py","start_line":6,"end_line":9},{"path":"lockfiles/reporting-json.lock","start_line":1,"end_line":3},{"path":"services/reporting/json_adapter.py","start_line":1,"end_line":1},{"path":"services/reporting/README.md","start_line":6,"end_line":6},{"path":"architecture/partner-gateway.md","start_line":3,"end_line":7}]}
+
+[USAGE]
+{
+  "cache_read_tokens": 147584,
+  "cache_write_tokens": 0,
+  "input_tokens": 176616,
+  "output_tokens": 5101,
+  "reasoning_tokens": null,
+  "total_tokens": 329301
+}
+
+[STATUS] FINISHED
+
+[PARTICIPANT ANSWER]
+{"direct_change_services":["service:checkout"],"decoding_invariants":["Merchant-authored promotion payloads may include comments and must still decode successfully.","Money values in decoded order JSON must remain Decimal objects until the pricing boundary, not binary floats."],"v3_call_shape":"Decoder(allow_comments=True, number_mode=\"decimal\").decode(payload)","citations":[{"path":"tasks/migrate-jsonlib-v3.md","start_line":5,"end_line":7},{"path":"tasks/migrate-jsonlib-v3.md","start_line":12,"end_line":13},{"path":"deploy/production-services.yaml","start_line":2,"end_line":4},{"path":"inventory/owners.yaml","start_line":2,"end_line":3},{"path":"lockfiles/checkout-json.lock","start_line":1,"end_line":3},{"path":"services/checkout/json_codec.py","start_line":1,"end_line":12},{"path":"services/checkout/README.md","start_line":3,"end_line":5},{"path":"vendor/jsonlib_v3_migration.md","start_line":3,"end_line":8},{"path":"tests/checkout_contract.py","start_line":6,"end_line":9},{"path":"lockfiles/reporting-json.lock","start_line":1,"end_line":3},{"path":"services/reporting/json_adapter.py","start_line":1,"end_line":1},{"path":"services/reporting/README.md","start_line":6,"end_line":6},{"path":"architecture/partner-gateway.md","start_line":3,"end_line":7}]}
+
+================================================================================
+PHASE 2
+================================================================================
+
+[USER]
+Use only tools from the taskview-orientation MCP server. Return only one JSON object, without Markdown fences, conforming exactly to this schema: {"additionalProperties": false, "properties": {"adapter": {"type": "string"}, "canonical_key_behavior": {"type": "string"}, "citations": {"items": {"additionalProperties": false, "properties": {"end_line": {"type": "integer"}, "path": {"type": "string"}, "start_line": {"type": "integer"}}, "required": ["path", "start_line", "end_line"], "type": "object"}, "minItems": 1, "type": "array"}, "decimal_serialization_behavior": {"type": "string"}, "direct_edit_required": {"type": "boolean"}, "protected_service": {"type": "string"}, "verification_assertion": {"type": "string"}}, "required": ["protected_service", "direct_edit_required", "adapter", "canonical_key_behavior", "decimal_serialization_behavior", "verification_assertion", "citations"], "type": "object"}
+
+Review the affected production service that does not require a direct integration edit. Determine which service it is and why it does not require one. Cite the relevant adapter and local call site, explain the canonical-key-order and decimal-serialization behavior that makes that decision valid, and identify the existing verification assertion.
+
+[STATUS] RUNNING
+
+[THINKING]
+I am analyzing the production service that does not require a direct integration edit for the jsonlib v2-to-v3 migration.
+
+`service:reporting` appears to be the target. It uses a v3 adapter rather than direct jsonlib imports. I will inspect its adapter, call site, contract tests, and migration charter via the MCP tools to confirm the canonical-key-order and decimal-serialization behavior and locate the verification assertion.
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 20,
+    "path": "services/reporting/json_adapter.py",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 20,
+    "path": "services/reporting/report_builder.py",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 15,
+    "path": "tests/reporting_contract.py",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 20,
+    "path": "tasks/migrate-jsonlib-v3.md",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 15,
+    "path": "services/reporting/README.md",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 15,
+    "path": "vendor/jsonlib_v3_migration.md",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 10,
+    "path": "lockfiles/reporting-json.lock",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 10,
+    "path": "deploy/production-services.yaml",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL RESULT]
+{
+  "path": "services/reporting/json_adapter.py",
+  "start_line": 1,
+  "end_line": 14,
+  "content": "from jsonlib_v3 import Encoder\n\n\nclass ReportingJsonV3Adapter:\n    \"\"\"Preserve the reporting service's accepted v2-shaped encoding call.\"\"\"\n\n    @staticmethod\n    def dumps(value: object, *, sort_keys: bool, decimal_mode: str) -> str:\n        encoder = Encoder(\n            canonical_keys=sort_keys,\n            decimal_mode=\"decimal-string\" if decimal_mode == \"string\" else decimal_mode,\n        )\n        return encoder.encode(value)\n\n"
+}
+
+[TOOL RESULT]
+{
+  "path": "services/reporting/report_builder.py",
+  "start_line": 1,
+  "end_line": 13,
+  "content": "from decimal import Decimal\n\nfrom services.reporting.json_adapter import ReportingJsonV3Adapter\n\n\ndef build_report() -> str:\n    row = {\"id\": \"r-7\", \"amount\": Decimal(\"10.50\")}\n    return ReportingJsonV3Adapter.dumps(\n        row,\n        sort_keys=True,\n        decimal_mode=\"string\",\n    )\n\n"
+}
+
+[TOOL RESULT]
+{
+  "path": "tests/reporting_contract.py",
+  "start_line": 1,
+  "end_line": 6,
+  "content": "from services.reporting.report_builder import build_report\n\n\ndef test_report_is_canonical_and_decimal_is_a_string() -> None:\n    assert build_report() == '{\"amount\":\"10.50\",\"id\":\"r-7\"}'\n\n"
+}
+
+[TOOL RESULT]
+{
+  "path": "tasks/migrate-jsonlib-v3.md",
+  "start_line": 1,
+  "end_line": 20,
+  "content": "# jsonlib v3 migration charter\n\nMigrate commerce-owned production behavior from jsonlib v2 to v3.\n\nScope is established by composing production deployment membership, component\nownership, and a pinned v2 dependency. Do not infer scope from a source import\nalone.\n\nA compatibility adapter may count as protection only when its contract test\ndemonstrates canonical object-key ordering and string-preserving Decimal output.\n\nVendor-owned protocol boundaries remain on their supported v2 wire contract and\nare excluded from direct code change. Their internals are not declared complete.\n\nDynamic consumers remain unresolved until every tenant alias can be mapped to a\ndeployable component from the frozen registry evidence.\n\nVerification is task-relevant only when a test exercises the migration behavior,\nnot merely when a test file names the service.\n\n"
+}
+
+[TOOL RESULT]
+{
+  "path": "services/reporting/README.md",
+  "start_line": 1,
+  "end_line": 7,
+  "content": "# Reporting JSON\n\nReports are compared byte-for-byte by a downstream archive job. Keys must be\ncanonical and Decimal values must be emitted as strings with their scale intact.\n\nThe service calls the accepted v3 adapter rather than jsonlib directly.\n\n"
+}
+
+[TOOL RESULT]
+{
+  "path": "vendor/jsonlib_v3_migration.md",
+  "start_line": 1,
+  "end_line": 14,
+  "content": "# jsonlib v3 migration reference\n\nThe v2 `loads(..., allow_comments=True, parse_float=Decimal)` convenience call is\nremoved. Equivalent v3 decoding is:\n\n```python\nDecoder(allow_comments=True, number_mode=\"decimal\").decode(payload)\n```\n\nThe v3 default rejects comments and uses binary floating-point numbers.\n\nFor encoding, `Encoder(canonical_keys=True, decimal_mode=\"decimal-string\")`\npreserves canonical object-key order and emits Decimal values as quoted strings.\n\n"
+}
+
+[TOOL RESULT]
+{
+  "path": "lockfiles/reporting-json.lock",
+  "start_line": 1,
+  "end_line": 5,
+  "content": "component = \"component:reporting-json\"\njsonlib = \"2.8.4\"\nsource = \"runtime-via-compat-adapter\"\nchecksum = \"sha256:reporting-v2-fixture\"\n\n"
+}
+
+[TOOL RESULT]
+{
+  "path": "deploy/production-services.yaml",
+  "start_line": 1,
+  "end_line": 9,
+  "content": "snapshot: production-2026-08-30\nservices:\n  - service:checkout\n  - service:reporting\n  - service:partner-gateway\nnotes:\n  dynamic_consumers: runtime/dynamic-consumers.md\n  staging_inventory: deploy/staging-services.yaml\n\n"
+}
+
+[THINKING]
+All required information has been gathered.
+
+The affected service is `service:reporting`. It does not require a direct integration edit because it uses `ReportingJsonV3Adapter` instead of `jsonlib` directly. The charter treats this adapter as sufficient protection when the contract test asserts canonical key ordering and string-preserving Decimal output. The relevant adapter is `services.reporting.json_adapter.ReportingJsonV3Adapter`, and the verification assertion is in `reporting_contract.py`.
+
+`canonical_key_behavior` is `sort_keys=True`, which sorts keys alphabetically such as `amount` before `id`. `decimal_serialization_behavior` is `decimal_mode="string"`, emitting quoted Decimal strings with scale intact. The exact verification assertion is `build_report() == '{"amount":"10.50","id":"r-7"}'`. Partner-gateway was excluded separately for vendor v2 wire reasons; reporting is protected by its compatibility adapter.
+
+[ASSISTANT]
+{"protected_service":"service:reporting","direct_edit_required":false,"adapter":"ReportingJsonV3Adapter (services/reporting/json_adapter.py)","canonical_key_behavior":"build_report passes sort_keys=True into ReportingJsonV3Adapter.dumps, which configures jsonlib_v3 Encoder with canonical_keys=True so object keys are emitted in canonical sorted order (amount before id).","decimal_serialization_behavior":"build_report passes decimal_mode=\"string\", which the adapter maps to Encoder decimal_mode=\"decimal-string\", emitting Decimal values as JSON strings with scale preserved (e.g. \"10.50\").","verification_assertion":"assert build_report() == '{\"amount\":\"10.50\",\"id\":\"r-7\"}' in test_report_is_canonical_and_decimal_is_a_string","citations":[{"path":"deploy/production-services.yaml","start_line":2,"end_line":4},{"path":"lockfiles/reporting-json.lock","start_line":1,"end_line":3},{"path":"services/reporting/README.md","start_line":3,"end_line":6},{"path":"tasks/migrate-jsonlib-v3.md","start_line":9,"end_line":10},{"path":"services/reporting/json_adapter.py","start_line":4,"end_line":13},{"path":"services/reporting/report_builder.py","start_line":6,"end_line":12},{"path":"vendor/jsonlib_v3_migration.md","start_line":12,"end_line":13},{"path":"tests/reporting_contract.py","start_line":4,"end_line":5}]}
+
+[USAGE]
+{
+  "cache_read_tokens": 35648,
+  "cache_write_tokens": 0,
+  "input_tokens": 37343,
+  "output_tokens": 1299,
+  "reasoning_tokens": null,
+  "total_tokens": 74290
+}
+
+[STATUS] FINISHED
+
+[PARTICIPANT ANSWER]
+{"protected_service":"service:reporting","direct_edit_required":false,"adapter":"ReportingJsonV3Adapter (services/reporting/json_adapter.py)","canonical_key_behavior":"build_report passes sort_keys=True into ReportingJsonV3Adapter.dumps, which configures jsonlib_v3 Encoder with canonical_keys=True so object keys are emitted in canonical sorted order (amount before id).","decimal_serialization_behavior":"build_report passes decimal_mode=\"string\", which the adapter maps to Encoder decimal_mode=\"decimal-string\", emitting Decimal values as JSON strings with scale preserved (e.g. \"10.50\").","verification_assertion":"assert build_report() == '{\"amount\":\"10.50\",\"id\":\"r-7\"}' in test_report_is_canonical_and_decimal_is_a_string","citations":[{"path":"deploy/production-services.yaml","start_line":2,"end_line":4},{"path":"lockfiles/reporting-json.lock","start_line":1,"end_line":3},{"path":"services/reporting/README.md","start_line":3,"end_line":6},{"path":"tasks/migrate-jsonlib-v3.md","start_line":9,"end_line":10},{"path":"services/reporting/json_adapter.py","start_line":4,"end_line":13},{"path":"services/reporting/report_builder.py","start_line":6,"end_line":12},{"path":"vendor/jsonlib_v3_migration.md","start_line":12,"end_line":13},{"path":"tests/reporting_contract.py","start_line":4,"end_line":5}]}
+
+================================================================================
+PHASE 3
+================================================================================
+
+[USER]
+Use only tools from the taskview-orientation MCP server. Return only one JSON object, without Markdown fences, conforming exactly to this schema: {"additionalProperties": false, "properties": {"boundary_status": {"type": "string"}, "boundary_subject": {"type": "string"}, "byte_stable_wire_field": {"type": "string"}, "citations": {"items": {"additionalProperties": false, "properties": {"end_line": {"type": "integer"}, "path": {"type": "string"}, "start_line": {"type": "integer"}}, "required": ["path", "start_line", "end_line"], "type": "object"}, "minItems": 1, "type": "array"}, "dynamic_lookup_mechanism": {"type": "string"}, "unresolved_status": {"type": "string"}, "unresolved_subject": {"type": "string"}, "whole_world_complete": {"type": "boolean"}}, "required": ["boundary_subject", "boundary_status", "byte_stable_wire_field", "unresolved_subject", "unresolved_status", "dynamic_lookup_mechanism", "whole_world_complete", "citations"], "type": "object"}
+
+Review the remaining boundary/exclusion and unresolved consumer in the migration scope. Recover their identities from the available evidence. For each, state its current task status and cite the evidence. Then name the boundary wire field that must remain byte-stable and the dynamic registry lookup mechanism that prevents the consumer mapping from being closed.
+
+[STATUS] RUNNING
+
+[THINKING]
+I will review the boundary and exclusion and unresolved consumer in the jsonlib migration scope.
+
+I will query the taskview-orientation MCP server for evidence on the boundary subject and status, the byte-stable wire field, the unresolved consumer identity, the dynamic lookup mechanism, and the whole_world_complete flag.
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 15,
+    "path": "architecture/partner-gateway.md",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 15,
+    "path": "runtime/dynamic-consumers.md",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 20,
+    "path": "tasks/migrate-jsonlib-v3.md",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 15,
+    "path": "services/partner_gateway/protocol.py",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 40,
+    "path": "runtime/consumer_registry.py",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL RESULT]
+{
+  "path": "architecture/partner-gateway.md",
+  "start_line": 1,
+  "end_line": 11,
+  "content": "# Partner gateway boundary\n\n`service:partner-gateway` is operated by the vendor-integrations team and calls a\nvendor endpoint whose signed request contract is pinned to jsonlib v2.\n\nThe vendor validates the exact bytes of `signed_body`. Re-encoding that field\nwith v3 changes the signature input and is not permitted in this migration.\n\nThe gateway is a relevant boundary, but the vendor's internal consumers and\ntheir dependency inventory are opaque to the commerce migration.\n\n"
+}
+
+[TOOL RESULT]
+{
+  "path": "runtime/dynamic-consumers.md",
+  "start_line": 1,
+  "end_line": 11,
+  "content": "# Dynamic consumer inventory\n\n`service:external-worker` loads a consumer by tenant alias at runtime. The frozen\nregistry includes two concrete aliases and one wildcard fallback.\n\nThe wildcard can resolve plugins supplied outside this repository. There is no\ncomplete alias-to-component export for production, so the worker's migration\nscope mapping remains unresolved.\n\nThe loader implementation is `runtime/consumer_registry.py`.\n\n"
+}
+
+[TOOL RESULT]
+{
+  "path": "tasks/migrate-jsonlib-v3.md",
+  "start_line": 1,
+  "end_line": 20,
+  "content": "# jsonlib v3 migration charter\n\nMigrate commerce-owned production behavior from jsonlib v2 to v3.\n\nScope is established by composing production deployment membership, component\nownership, and a pinned v2 dependency. Do not infer scope from a source import\nalone.\n\nA compatibility adapter may count as protection only when its contract test\ndemonstrates canonical object-key ordering and string-preserving Decimal output.\n\nVendor-owned protocol boundaries remain on their supported v2 wire contract and\nare excluded from direct code change. Their internals are not declared complete.\n\nDynamic consumers remain unresolved until every tenant alias can be mapped to a\ndeployable component from the frozen registry evidence.\n\nVerification is task-relevant only when a test exercises the migration behavior,\nnot merely when a test file names the service.\n\n"
+}
+
+[TOOL RESULT]
+{
+  "path": "services/partner_gateway/protocol.py",
+  "start_line": 1,
+  "end_line": 10,
+  "content": "import jsonlib\n\n\ndef encode_vendor_request(order: dict) -> bytes:\n    signed_body = jsonlib.dumps(order, sort_keys=True).encode(\"utf-8\")\n    return b\"signed_body=\" + signed_body\n\n\nWIRE_FIELD_REQUIRING_V2_BYTES = \"signed_body\"\n\n"
+}
+
+[TOOL RESULT]
+{
+  "path": "runtime/consumer_registry.py",
+  "start_line": 1,
+  "end_line": 11,
+  "content": "REGISTRY = {\n    \"north\": \"workers.north.JsonConsumer\",\n    \"south\": \"workers.south.JsonConsumer\",\n    \"*\": \"plugins.{tenant_alias}.JsonConsumer\",\n}\n\n\ndef resolve_consumer(tenant_alias: str) -> str:\n    target = REGISTRY.get(tenant_alias, REGISTRY[\"*\"])\n    return target.format(tenant_alias=tenant_alias)\n\n"
+}
+
+[THINKING]
+whole_world_complete is likely false.
+
+The vendor boundary is excluded and internal components are incomplete. The charter indicates both block full mapping. The dynamic consumer remains unresolved.
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "whole world complete"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "external-worker"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "partner-gateway"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL RESULT]
+{
+  "results": [],
+  "result_count": 0,
+  "truncated": false
+}
+
+[TOOL RESULT]
+{
+  "results": [
+    {
+      "path": "inventory/owners.yaml",
+      "line": 3,
+      "text": "    services: [service:checkout, service:reporting, service:external-worker]"
+    },
+    {
+      "path": "runtime/batch-consumers.md",
+      "line": 4,
+      "text": "tenant-alias registry and are not evidence about `service:external-worker`."
+    },
+    {
+      "path": "runtime/dynamic-consumers.md",
+      "line": 3,
+      "text": "`service:external-worker` loads a consumer by tenant alias at runtime. The frozen"
+    }
+  ],
+  "result_count": 3,
+  "truncated": false
+}
+
+[TOOL RESULT]
+{
+  "results": [
+    {
+      "path": "architecture/partner-gateway.md",
+      "line": 3,
+      "text": "`service:partner-gateway` is operated by the vendor-integrations team and calls a"
+    },
+    {
+      "path": "deploy/production-services.yaml",
+      "line": 5,
+      "text": "  - service:partner-gateway"
+    },
+    {
+      "path": "deploy/service-components.yaml",
+      "line": 7,
+      "text": "  service:partner-gateway:"
+    },
+    {
+      "path": "inventory/owners.yaml",
+      "line": 5,
+      "text": "    services: [service:partner-gateway]"
+    }
+  ],
+  "result_count": 4,
+  "truncated": false
+}
+
+[THINKING]
+The whole_world_complete field contains no explicit phrase.
+
+whole_world_complete is false. The boundary subject is service:partner-gateway. Its status is excluded from direct code change. It remains on the vendor-supported jsonlib v2 wire contract. The byte-stable wire field is signed_body. The unresolved subject is service:external-worker. Its migration scope mapping remains unresolved without a complete alias-to-component export.
+
+The dynamic lookup mechanism is resolve_consumer in runtime/consumer_registry.py. It loads consumers by tenant alias through REGISTRY with wildcard fallback plugins.{tenant_alias}.JsonConsumer.
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 15,
+    "path": "runtime/batch-consumers.md",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL RESULT]
+{
+  "path": "runtime/batch-consumers.md",
+  "start_line": 1,
+  "end_line": 5,
+  "content": "# Batch consumer notes\n\nNightly catalogue and audit exports use fixed entry points. They do not use the\ntenant-alias registry and are not evidence about `service:external-worker`.\n\n"
+}
+
+[THINKING]
+The JSON response is being structured with all required fields.
+
+Boundary status is excluded from direct code changes. The vendor protocol retains the pinned jsonlib v2 wire contract. Re-encoding signed_body with v3 is forbidden.
+
+Unresolved status persists because every tenant alias must map to a deployable component from frozen registry evidence. The worker's migration scope mapping remains unresolved.
+
+The dynamic lookup mechanism resolves consumer tenant aliases through a registry dictionary. It uses north and south concrete aliases plus a wildcard that formats out-of-repo plugin paths.
+
+whole_world_complete is false. Boundary internals remain incomplete and the consumer mapping is unresolved.
+
+[ASSISTANT]
+{"boundary_subject":"service:partner-gateway","boundary_status":"Vendor-owned protocol boundary: excluded from direct code change and must remain on the supported jsonlib v2 wire contract; re-encoding the signed request body with v3 is not permitted in this migration, and vendor-internal consumers are not declared complete for commerce scope.","byte_stable_wire_field":"signed_body","unresolved_subject":"service:external-worker","unresolved_status":"Migration scope mapping remains unresolved because there is no complete production alias-to-component export; dynamic consumers stay unresolved until every tenant alias maps to a deployable component from frozen registry evidence.","dynamic_lookup_mechanism":"At runtime the worker resolves a consumer via resolve_consumer(tenant_alias) in runtime/consumer_registry.py, which looks up tenant_alias in REGISTRY (concrete entries for north and south) and falls back to the \"*\" entry that formats plugins.{tenant_alias}.JsonConsumer, allowing out-of-repository plugins and preventing a closed production mapping.","whole_world_complete":false,"citations":[{"path":"tasks/migrate-jsonlib-v3.md","start_line":12,"end_line":16},{"path":"architecture/partner-gateway.md","start_line":3,"end_line":10},{"path":"services/partner_gateway/protocol.py","start_line":4,"end_line":9},{"path":"deploy/production-services.yaml","start_line":4,"end_line":5},{"path":"runtime/dynamic-consumers.md","start_line":3,"end_line":9},{"path":"runtime/consumer_registry.py","start_line":1,"end_line":10},{"path":"inventory/owners.yaml","start_line":2,"end_line":5}]}
+
+[USAGE]
+{
+  "cache_read_tokens": 84960,
+  "cache_write_tokens": 0,
+  "input_tokens": 86858,
+  "output_tokens": 1321,
+  "reasoning_tokens": null,
+  "total_tokens": 173139
+}
+
+[STATUS] FINISHED
+
+[PARTICIPANT ANSWER]
+{"boundary_subject":"service:partner-gateway","boundary_status":"Vendor-owned protocol boundary: excluded from direct code change and must remain on the supported jsonlib v2 wire contract; re-encoding the signed request body with v3 is not permitted in this migration, and vendor-internal consumers are not declared complete for commerce scope.","byte_stable_wire_field":"signed_body","unresolved_subject":"service:external-worker","unresolved_status":"Migration scope mapping remains unresolved because there is no complete production alias-to-component export; dynamic consumers stay unresolved until every tenant alias maps to a deployable component from frozen registry evidence.","dynamic_lookup_mechanism":"At runtime the worker resolves a consumer via resolve_consumer(tenant_alias) in runtime/consumer_registry.py, which looks up tenant_alias in REGISTRY (concrete entries for north and south) and falls back to the \"*\" entry that formats plugins.{tenant_alias}.JsonConsumer, allowing out-of-repository plugins and preventing a closed production mapping.","whole_world_complete":false,"citations":[{"path":"tasks/migrate-jsonlib-v3.md","start_line":12,"end_line":16},{"path":"architecture/partner-gateway.md","start_line":3,"end_line":10},{"path":"services/partner_gateway/protocol.py","start_line":4,"end_line":9},{"path":"deploy/production-services.yaml","start_line":4,"end_line":5},{"path":"runtime/dynamic-consumers.md","start_line":3,"end_line":9},{"path":"runtime/consumer_registry.py","start_line":1,"end_line":10},{"path":"inventory/owners.yaml","start_line":2,"end_line":5}]}
+
+=== FROZEN PHASE-4 MUTATION APPLIED ===
+event_type=HARNESS_MUTATION
+boundary=after_phase_3_commit_before_phase_4_prompt
+source_path=tests/checkout_contract.py
+
+================================================================================
+PHASE 4
+================================================================================
+
+[USER]
+Use only tools from the taskview-orientation MCP server. Return only one JSON object, without Markdown fences, conforming exactly to this schema: {"additionalProperties": false, "properties": {"citations": {"items": {"additionalProperties": false, "properties": {"end_line": {"type": "integer"}, "path": {"type": "string"}, "start_line": {"type": "integer"}}, "required": ["path", "start_line", "end_line"], "type": "object"}, "minItems": 1, "type": "array"}, "downstream_result_state": {"type": "string"}, "invalidated_verification": {"items": {"type": "string"}, "type": "array"}, "missing_behaviors": {"items": {"type": "string"}, "type": "array"}, "retained_state_update": {"type": "string"}}, "required": ["invalidated_verification", "missing_behaviors", "downstream_result_state", "retained_state_update", "citations"], "type": "object"}
+
+A new revision of the checkout verification file has landed. Inspect the changed bytes, update any retained task state you rely on, and report which prior verification conclusion is no longer justified and which downstream result must be reconsidered. Do not propose the replacement test yet.
+
+[STATUS] RUNNING
+
+[THINKING]
+Inspecting the changed checkout verification file.
+
+Reading the current checkout verification file and comparing it with prior state.
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "checkout verification contract test"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 50,
+    "path": "tests/checkout_contract.py",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "checkout_contract"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL RESULT]
+{
+  "results": [],
+  "result_count": 0,
+  "truncated": false
+}
+
+[TOOL RESULT]
+{
+  "path": "tests/checkout_contract.py",
+  "start_line": 1,
+  "end_line": 7,
+  "content": "from services.checkout.json_codec import decode_order\n\n\ndef test_order_smoke_case() -> None:\n    order = decode_order('{\"id\":\"o-1\",\"total\":10.5}')\n    assert order[\"id\"] == \"o-1\"\n\n"
+}
+
+[TOOL RESULT]
+{
+  "results": [],
+  "result_count": 0,
+  "truncated": false
+}
+
+[THINKING]
+The checkout verification file has changed significantly from its previous version.
+
+The prior test used a `Decimal` import to preserve decimal values. The new version dropped that import entirely. This change invalidates the prior conclusion about Decimal preservation.
+
+The renamed test now uses a bare float literal and asserts only the order ID. It no longer validates comments or Decimal preservation. The prior conclusion that these migration decoding invariants are covered by task-relevant tests is therefore invalid.
+
+The prior conclusion that checkout v3 migration decoding invariants are contract-verified must be reconsidered. The new test does not exercise the migration behavior itself; it only names the service.
+
+The retained task state must be updated to reflect that the new test is smoke-only, asserting only the order ID while omitting comments and Decimal validation. The migration charter verification rule and checkout README/json_codec still need review for citation set maintenance.
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 20,
+    "path": "tasks/migrate-jsonlib-v3.md",
+    "start_line": 17
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 15,
+    "path": "services/checkout/json_codec.py",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 10,
+    "path": "services/checkout/README.md",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "test_commented_decimal"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "test_order_smoke"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL RESULT]
+{
+  "path": "tasks/migrate-jsonlib-v3.md",
+  "start_line": 17,
+  "end_line": 20,
+  "content": "\nVerification is task-relevant only when a test exercises the migration behavior,\nnot merely when a test file names the service.\n\n"
+}
+
+[TOOL RESULT]
+{
+  "path": "services/checkout/json_codec.py",
+  "start_line": 1,
+  "end_line": 13,
+  "content": "from decimal import Decimal\n\nimport jsonlib\n\n\ndef decode_order(payload: str) -> dict:\n    \"\"\"Decode merchant-authored order JSON without changing numeric semantics.\"\"\"\n    return jsonlib.loads(\n        payload,\n        allow_comments=True,\n        parse_float=Decimal,\n    )\n\n"
+}
+
+[TOOL RESULT]
+{
+  "path": "services/checkout/README.md",
+  "start_line": 1,
+  "end_line": 7,
+  "content": "# Checkout JSON\n\nMerchants may include comments in manually maintained promotion payloads. Money\nvalues must remain `Decimal` objects until the pricing boundary.\n\nThe codec is part of the production checkout path.\n\n"
+}
+
+[TOOL RESULT]
+{
+  "results": [],
+  "result_count": 0,
+  "truncated": false
+}
+
+[TOOL RESULT]
+{
+  "results": [
+    {
+      "path": "tests/checkout_contract.py",
+      "line": 4,
+      "text": "def test_order_smoke_case() -> None:"
+    }
+  ],
+  "result_count": 1,
+  "truncated": false
+}
+
+[THINKING]
+Searching for scratch or revision notes about the checkout verification change.
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "checkout_contract.py"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "smoke_case"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL RESULT]
+{
+  "results": [],
+  "result_count": 0,
+  "truncated": false
+}
+
+[TOOL RESULT]
+{
+  "results": [
+    {
+      "path": "tests/checkout_contract.py",
+      "line": 4,
+      "text": "def test_order_smoke_case() -> None:"
+    }
+  ],
+  "result_count": 1,
+  "truncated": false
+}
+
+[THINKING]
+Retained task state will be updated via write_scratch.
+
+The JSON response must list invalidated verification conclusions, missing behaviors, downstream result state, retained state update, and citations. The prior phase 1 conclusion about checkout direct changes with decoding invariants is being invalidated.
+
+The invalidated conclusion is that checkout_contract.py verifies v2-to-v3 decoding invariants such as allow_comments and parse_float=Decimal. Missing behaviors include comment-tolerant decoding and Decimal-preserving numeric decode. The downstream result to reconsider is the charter gate confirming that checkout migration decoding invariants are contract-verified.
+
+The retained state update notes that checkout remains in scope for a direct jsonlib v3 integration edit at services/checkout/json_codec.py, with unchanged documented invariants. Verification now relies solely on test_order_smoke_case, which asserts order ids on a comment-free payload without Decimal assertions. Migration-behavior verification is absent until replaced.
+
+[TOOL CALL: write_scratch]
+{
+  "args": {
+    "content": "checkout verification revision (2026-08-31): tests/checkout_contract.py now defines test_order_smoke_case only (id assert, no comments, no Decimal). Prior test_commented_decimal_order_is_preserved removed. Checkout codec/README invariants unchanged; task-relevant migration verification for checkout is currently unmet per tasks/migrate-jsonlib-v3.md verification rule.",
+    "path": "checkout-verification-state.md"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "write_scratch"
+}
+
+[TOOL RESULT]
+{
+  "path": "checkout-verification-state.md",
+  "bytes_written": 369
+}
+
+[THINKING]
+The response will be a raw JSON object without Markdown fences.
+
+[ASSISTANT]
+{"invalidated_verification":["The conclusion that checkout_contract.py task-relevantly verifies jsonlib migration decoding behavior (comment acceptance and Decimal-preserving totals) is no longer justified.","The prior reliance on test_commented_decimal_order_is_preserved and its Decimal(\"10.50\") assertion as evidence that checkout v3 decoding preserves merchant comment and money semantics is invalidated by the revised file."],"missing_behaviors":["Decoding payloads that contain merchant comments (allow_comments=True semantics).","Asserting that JSON number literals decode to Decimal instances with preserved monetary semantics (parse_float=Decimal)."],"downstream_result_state":"Reconsider any downstream result that treated checkout as migration-verified or ready to finalize the v3 Decoder integration solely on checkout_contract.py; with only test_order_smoke_case, the charter's migration-behavior verification gate for service:checkout is no longer satisfied.","retained_state_update":"Retained state: service:checkout still requires direct integration edit at services/checkout/json_codec.py with unchanged documented invariants (comments allowed; money as Decimal), but active verification is limited to test_order_smoke_case checking order[\"id\"] on a comment-free {\"id\":\"o-1\",\"total\":10.5} payload with no total/Decimal assertion; scratch artifact checkout-verification-state.md records this revision.","citations":[{"path":"tests/checkout_contract.py","start_line":1,"end_line":7},{"path":"tasks/migrate-jsonlib-v3.md","start_line":18,"end_line":19},{"path":"services/checkout/json_codec.py","start_line":6,"end_line":12},{"path":"services/checkout/README.md","start_line":3,"end_line":5}]}
+
+[USAGE]
+{
+  "cache_read_tokens": 120896,
+  "cache_write_tokens": 0,
+  "input_tokens": 122255,
+  "output_tokens": 1934,
+  "reasoning_tokens": null,
+  "total_tokens": 245085
+}
+
+[STATUS] FINISHED
+
+[PARTICIPANT ANSWER]
+{"invalidated_verification":["The conclusion that checkout_contract.py task-relevantly verifies jsonlib migration decoding behavior (comment acceptance and Decimal-preserving totals) is no longer justified.","The prior reliance on test_commented_decimal_order_is_preserved and its Decimal(\"10.50\") assertion as evidence that checkout v3 decoding preserves merchant comment and money semantics is invalidated by the revised file."],"missing_behaviors":["Decoding payloads that contain merchant comments (allow_comments=True semantics).","Asserting that JSON number literals decode to Decimal instances with preserved monetary semantics (parse_float=Decimal)."],"downstream_result_state":"Reconsider any downstream result that treated checkout as migration-verified or ready to finalize the v3 Decoder integration solely on checkout_contract.py; with only test_order_smoke_case, the charter's migration-behavior verification gate for service:checkout is no longer satisfied.","retained_state_update":"Retained state: service:checkout still requires direct integration edit at services/checkout/json_codec.py with unchanged documented invariants (comments allowed; money as Decimal), but active verification is limited to test_order_smoke_case checking order[\"id\"] on a comment-free {\"id\":\"o-1\",\"total\":10.5} payload with no total/Decimal assertion; scratch artifact checkout-verification-state.md records this revision.","citations":[{"path":"tests/checkout_contract.py","start_line":1,"end_line":7},{"path":"tasks/migrate-jsonlib-v3.md","start_line":18,"end_line":19},{"path":"services/checkout/json_codec.py","start_line":6,"end_line":12},{"path":"services/checkout/README.md","start_line":3,"end_line":5}]}
+
+================================================================================
+PHASE 5
+================================================================================
+
+[USER]
+Use only tools from the taskview-orientation MCP server. Return only one JSON object, without Markdown fences, conforming exactly to this schema: {"additionalProperties": false, "properties": {"citations": {"items": {"additionalProperties": false, "properties": {"end_line": {"type": "integer"}, "path": {"type": "string"}, "start_line": {"type": "integer"}}, "required": ["path", "start_line", "end_line"], "type": "object"}, "minItems": 1, "type": "array"}, "completeness_universe": {"type": "string"}, "current_verification_gap": {"items": {"type": "string"}, "type": "array"}, "other_gaps_in_affected_service": {"items": {"type": "string"}, "type": "array"}, "proposed_replacement_verification": {"items": {"type": "string"}, "type": "array"}, "whole_world_blockers": {"items": {"type": "string"}, "type": "array"}, "whole_world_complete": {"type": "boolean"}}, "required": ["current_verification_gap", "proposed_replacement_verification", "other_gaps_in_affected_service", "completeness_universe", "whole_world_complete", "whole_world_blockers", "citations"], "type": "object"}
+
+Follow this temporal order exactly. (1) Report the current verification-gap set before introducing any hypothetical replacement verification assertion. (2) Inspect the checkout implementation and nearby test conventions and specify the minimal replacement verification assertion or assertions needed. (3) Do not insert the proposed replacement into retained TaskView state during this phase. (4) State whether there are any other gaps in the current affected_service universe, name the universe supporting that conclusion, and separately state whether whole-world migration completeness is justified.
+
+[STATUS] RUNNING
+
+[THINKING]
+The user wants a structured JSON response covering four ordered topics: checkout migration verification gaps, proposed replacement verification assertions, other gaps in the affected_service universe, and whether whole-world migration completeness is justified.
+
+Evidence will be gathered from sources.ntract.py. The changed checkout_cos codec invariants will be checked first. Then the checkout implementation and nearby test conventions will be inspected to determine the minimal replacement verification assertions. Nothing will be written to scratch or taskview state.
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 15,
+    "path": "tests/checkout_contract.py",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 15,
+    "path": "services/checkout/json_codec.py",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 10,
+    "path": "tests/reporting_contract.py",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: search_source]
+{
+  "args": {
+    "query": "def test_"
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "search_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 20,
+    "path": "tasks/migrate-jsonlib-v3.md",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL RESULT]
+{
+  "path": "tests/checkout_contract.py",
+  "start_line": 1,
+  "end_line": 7,
+  "content": "from services.checkout.json_codec import decode_order\n\n\ndef test_order_smoke_case() -> None:\n    order = decode_order('{\"id\":\"o-1\",\"total\":10.5}')\n    assert order[\"id\"] == \"o-1\"\n\n"
+}
+
+[TOOL RESULT]
+{
+  "path": "services/checkout/json_codec.py",
+  "start_line": 1,
+  "end_line": 13,
+  "content": "from decimal import Decimal\n\nimport jsonlib\n\n\ndef decode_order(payload: str) -> dict:\n    \"\"\"Decode merchant-authored order JSON without changing numeric semantics.\"\"\"\n    return jsonlib.loads(\n        payload,\n        allow_comments=True,\n        parse_float=Decimal,\n    )\n\n"
+}
+
+[TOOL RESULT]
+{
+  "path": "tests/reporting_contract.py",
+  "start_line": 1,
+  "end_line": 6,
+  "content": "from services.reporting.report_builder import build_report\n\n\ndef test_report_is_canonical_and_decimal_is_a_string() -> None:\n    assert build_report() == '{\"amount\":\"10.50\",\"id\":\"r-7\"}'\n\n"
+}
+
+[TOOL RESULT]
+{
+  "results": [
+    {
+      "path": "tests/catalog_contract.py",
+      "line": 4,
+      "text": "def test_catalog_document() -> None:"
+    },
+    {
+      "path": "tests/checkout_contract.py",
+      "line": 4,
+      "text": "def test_order_smoke_case() -> None:"
+    },
+    {
+      "path": "tests/partner_contract.py",
+      "line": 4,
+      "text": "def test_signed_body_uses_frozen_vendor_shape() -> None:"
+    },
+    {
+      "path": "tests/reporting_contract.py",
+      "line": 4,
+      "text": "def test_report_is_canonical_and_decimal_is_a_string() -> None:"
+    }
+  ],
+  "result_count": 4,
+  "truncated": false
+}
+
+[TOOL RESULT]
+{
+  "path": "tasks/migrate-jsonlib-v3.md",
+  "start_line": 1,
+  "end_line": 20,
+  "content": "# jsonlib v3 migration charter\n\nMigrate commerce-owned production behavior from jsonlib v2 to v3.\n\nScope is established by composing production deployment membership, component\nownership, and a pinned v2 dependency. Do not infer scope from a source import\nalone.\n\nA compatibility adapter may count as protection only when its contract test\ndemonstrates canonical object-key ordering and string-preserving Decimal output.\n\nVendor-owned protocol boundaries remain on their supported v2 wire contract and\nare excluded from direct code change. Their internals are not declared complete.\n\nDynamic consumers remain unresolved until every tenant alias can be mapped to a\ndeployable component from the frozen registry evidence.\n\nVerification is task-relevant only when a test exercises the migration behavior,\nnot merely when a test file names the service.\n\n"
+}
+
+[THINKING]
+Reviewing partner contracts, catalogs, vendor migration references, deployment, dynamic consumers, and reporting to assess the affected service universe and identify remaining gaps.
+
+Checkout is the primary verification gap. Its codec remains on v2 until migrated and verified. Reporting is protected by adapter and test coverage. Partner-gateway is excluded as a boundary. External-worker mapping is unresolved.
+
+The completeness universe draws on frozen migration scope evidence: production deployment, commerce ownership, pinned v2, boundaries, and dynamic consumers.
+
+Whole-world migration completeness is not justified. Partner-gateway internal boundaries remain incomplete. External-worker alias-to-component mapping is unresolved. Checkout verification is a separate gap from whole-world blockers.
+
+The current verification gap is being enumerated before proposing replacements.
+
+No existing test exercises the allow_comments migration behavior. No test exercises the Decimal-preserving decode migration behavior. The current smoke test only validates the order ID and omits comments and Decimal assertions. The charter excludes verification tasks from migration behavior. A minimal replacement verification assertion should follow the reporting convention: a single test with a descriptive name directly asserting the preserved behavior. The proposed pattern reverts to an older test style that was previously removed.
+
+The minimal replacement is a single test named `test_commented_decimal_order_is_preserved` that imports `Decimal` and asserts both the decoded order ID and the total value equals `Decimal("10.50")`. This preserves the public `decode_order` API after v3 migration.
+
+The minimal replacement could be split into two assertions within a single test. The affected-service universe may cover all in-scope commerce production services rather than only checkout. For checkout, the lockfile still pins v2 and the production codec imports jsonlib v2 directly.
+
+Checking deployment artifacts, lockfiles, and partner tests to identify gaps beyond the verification gap.
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 15,
+    "path": "tests/partner_contract.py",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 10,
+    "path": "deploy/production-services.yaml",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 12,
+    "path": "runtime/dynamic-consumers.md",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 10,
+    "path": "lockfiles/checkout-json.lock",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 10,
+    "path": "services/checkout/README.md",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 10,
+    "path": "vendor/jsonlib_v3_migration.md",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL RESULT]
+{
+  "path": "tests/partner_contract.py",
+  "start_line": 1,
+  "end_line": 6,
+  "content": "from services.partner_gateway.protocol import encode_vendor_request\n\n\ndef test_signed_body_uses_frozen_vendor_shape() -> None:\n    assert encode_vendor_request({\"id\": \"o-1\"}).startswith(b\"signed_body=\")\n\n"
+}
+
+[TOOL RESULT]
+{
+  "path": "deploy/production-services.yaml",
+  "start_line": 1,
+  "end_line": 9,
+  "content": "snapshot: production-2026-08-30\nservices:\n  - service:checkout\n  - service:reporting\n  - service:partner-gateway\nnotes:\n  dynamic_consumers: runtime/dynamic-consumers.md\n  staging_inventory: deploy/staging-services.yaml\n\n"
+}
+
+[TOOL RESULT]
+{
+  "path": "runtime/dynamic-consumers.md",
+  "start_line": 1,
+  "end_line": 11,
+  "content": "# Dynamic consumer inventory\n\n`service:external-worker` loads a consumer by tenant alias at runtime. The frozen\nregistry includes two concrete aliases and one wildcard fallback.\n\nThe wildcard can resolve plugins supplied outside this repository. There is no\ncomplete alias-to-component export for production, so the worker's migration\nscope mapping remains unresolved.\n\nThe loader implementation is `runtime/consumer_registry.py`.\n\n"
+}
+
+[TOOL RESULT]
+{
+  "path": "lockfiles/checkout-json.lock",
+  "start_line": 1,
+  "end_line": 5,
+  "content": "component = \"component:checkout-json\"\njsonlib = \"2.8.4\"\nsource = \"runtime\"\nchecksum = \"sha256:checkout-v2-fixture\"\n\n"
+}
+
+[TOOL RESULT]
+{
+  "path": "services/checkout/README.md",
+  "start_line": 1,
+  "end_line": 7,
+  "content": "# Checkout JSON\n\nMerchants may include comments in manually maintained promotion payloads. Money\nvalues must remain `Decimal` objects until the pricing boundary.\n\nThe codec is part of the production checkout path.\n\n"
+}
+
+[TOOL RESULT]
+{
+  "path": "vendor/jsonlib_v3_migration.md",
+  "start_line": 1,
+  "end_line": 10,
+  "content": "# jsonlib v3 migration reference\n\nThe v2 `loads(..., allow_comments=True, parse_float=Decimal)` convenience call is\nremoved. Equivalent v3 decoding is:\n\n```python\nDecoder(allow_comments=True, number_mode=\"decimal\").decode(payload)\n```\n\nThe v3 default rejects comments and uses binary floating-point numbers.\n"
+}
+
+[THINKING]
+Identifying inventory owners for the commerce affected universe.
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 10,
+    "path": "inventory/owners.yaml",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL CALL: read_source]
+{
+  "args": {
+    "end_line": 10,
+    "path": "architecture/partner-gateway.md",
+    "start_line": 1
+  },
+  "providerIdentifier": "taskview-orientation",
+  "toolName": "read_source"
+}
+
+[TOOL RESULT]
+{
+  "path": "inventory/owners.yaml",
+  "start_line": 1,
+  "end_line": 10,
+  "content": "teams:\n  team:commerce:\n    services: [service:checkout, service:reporting, service:external-worker]\n  team:vendor-integrations:\n    services: [service:partner-gateway]\n  team:catalogue:\n    services: [service:catalog-search]\n  team:finance:\n    services: [service:billing]\n\n"
+}
+
+[TOOL RESULT]
+{
+  "path": "architecture/partner-gateway.md",
+  "start_line": 1,
+  "end_line": 10,
+  "content": "# Partner gateway boundary\n\n`service:partner-gateway` is operated by the vendor-integrations team and calls a\nvendor endpoint whose signed request contract is pinned to jsonlib v2.\n\nThe vendor validates the exact bytes of `signed_body`. Re-encoding that field\nwith v3 changes the signature input and is not permitted in this migration.\n\nThe gateway is a relevant boundary, but the vendor's internal consumers and\ntheir dependency inventory are opaque to the commerce migration.\n"
+}
+
+[THINKING]
+The steps reference a missing architecture/partner-gateway file and an end_line path error.
+
+The file contains corrupted step sequences and repeated fragments.The read_source calls were corrupted or truncated in the output.
+
+The JSON response will follow temporal order. The first gap is that `test_order_smoke_case` does not exercise `allow_comments` behavior. The remaining fields will cover proposed replacement verification, scratch state avoidance, and completeness assessments.
+
+The smoke test also lacks Decimal preservation for totals and fails charter migration-behavior verification for checkout decode. It only asserts order id on a comment-free payload with a float literal. The minimal replacement verification should import Decimal, name a test like `test_commented_decimal_order_is_preserved`, and directly assert Decimal preservation.
+
+The minimal test decodes a commented JSON order and asserts both id and total preserve Decimal type. This covers both README invariants.
+
+The affected service universe shows one gap. Checkout still uses jsonlib v2 at version 2.8.4 in json_codec.py and remains unmigrated. Reporting has no gap if its adapter and tests are satisfied.
+
+External-worker is commerce-owned but missing from production-services.yaml, leaving its dynamic consumer unresolved. The affected-service universe may instead describe the migration ripple set. Under charter scope composition, production includes checkout, reporting, and partner-gateway, while commerce includes checkout, reporting, and external-worker. Direct migration work applies only to checkout; reporting is protected and needs no direct edit.
+
+Partner-gateway is excluded from migration because its vendor v2 wire must remain. The completeness universe name is still being determined.
+
+The completeness universe is named "frozen jsonlib v3 migration scope." It spans production deployment membership, commerce ownership and pinned v2 components, vendor protocol boundaries, and dynamic consumer registry completeness.
+
+Whole-world migration completeness is false. The blocker is the vendor-owned partner-gateway boundary, whose internals are not yet declared complete.
+
+The external-worker dynamic consumer lacks a closed alias-to-component export because the wildcard registry prevents closed mapping. Checkout direct v2 integration and task-relevant decode verification remain open. These are separate from the verification gap.
+
+[ASSISTANT]
+{"current_verification_gap":["checkout_contract.py provides only test_order_smoke_case, which decodes comment-free JSON and asserts order[\"id\"] only.","No active test exercises merchant comment acceptance required by decode_order (allow_comments=True).","No active test asserts money values decode as Decimal instances (parse_float=Decimal / pricing-boundary semantics).","Under the migration charter, checkout lacks task-relevant verification of migration decoding behavior because the smoke test does not exercise those behaviors."],"proposed_replacement_verification":["Add `from decimal import Decimal` alongside the existing `decode_order` import in tests/checkout_contract.py, matching reporting_contract.py’s pattern of importing the unit under test and asserting concrete wire/output semantics.","Replace or supplement the smoke-only coverage with one contract-style test named for the behavior, e.g. `test_commented_decimal_order_is_preserved`, calling `decode_order('{/* merchant promotion */\"id\":\"o-1\",\"total\":10.50}')`.","Minimal assertions: `assert order[\"id\"] == \"o-1\"` and `assert order[\"total\"] == Decimal(\"10.50\")`, covering both README-documented decode invariants in a single migration-relevant test."],"other_gaps_in_affected_service":["service:checkout still integrates jsonlib v2 directly in services/checkout/json_codec.py while lockfiles/checkout-json.lock pins jsonlib 2.8.4 with source runtime (direct integration migration not closed).","service:external-worker remains commerce-owned but its migration scope mapping is unresolved with no complete production alias-to-component export (runtime/dynamic-consumers.md).","service:partner-gateway is a production migration boundary excluded from direct code change and kept on jsonlib v2 signed wire semantics (architecture/partner-gateway.md).","service:reporting is not a direct-integration gap: it already routes through ReportingJsonV3Adapter with reporting_contract.py byte-level verification."],"completeness_universe":"Frozen jsonlib v3 migration completeness is judged over production deployment membership (deploy/production-services.yaml), commerce component ownership and pinned jsonlib dependencies (inventory/owners.yaml, deploy/service-components.yaml, lockfiles), vendor protocol exclusions (tasks/migrate-jsonlib-v3.md, architecture/partner-gateway.md), dynamic consumer registry evidence (runtime/dynamic-consumers.md, runtime/consumer_registry.py), and task-relevant contract verification (tasks/migrate-jsonlib-v3.md, tests/*_contract.py).","whole_world_complete":false,"whole_world_blockers":["Vendor-owned service:partner-gateway must remain on jsonlib v2 signed_body bytes; vendor-internal consumer inventory is opaque and not declared complete for commerce migration.","service:external-worker dynamic consumers cannot be fully mapped because the registry wildcard resolves out-of-repository plugins and production lacks a complete alias-to-component export.","Commerce-owned service:checkout still has open direct v2 integration and, until replacement verification lands, no charter-satisfying test of comment-tolerant Decimal-preserving decode migration behavior."],"citations":[{"path":"tests/checkout_contract.py","start_line":1,"end_line":7},{"path":"tests/reporting_contract.py","start_line":1,"end_line":5},{"path":"services/checkout/json_codec.py","start_line":6,"end_line":12},{"path":"services/checkout/README.md","start_line":3,"end_line":5},{"path":"tasks/migrate-jsonlib-v3.md","start_line":5,"end_line":16},{"path":"tasks/migrate-jsonlib-v3.md","start_line":18,"end_line":19},{"path":"lockfiles/checkout-json.lock","start_line":1,"end_line":4},{"path":"deploy/production-services.yaml","start_line":2,"end_line":7},{"path":"inventory/owners.yaml","start_line":2,"end_line":5},{"path":"runtime/dynamic-consumers.md","start_line":3,"end_line":8},{"path":"architecture/partner-gateway.md","start_line":3,"end_line":7},{"path":"vendor/jsonlib_v3_migration.md","start_line":3,"end_line":8}]}
+
+[USAGE]
+{
+  "cache_read_tokens": 110080,
+  "cache_write_tokens": 0,
+  "input_tokens": 112226,
+  "output_tokens": 3147,
+  "reasoning_tokens": null,
+  "total_tokens": 225453
+}
+
+[STATUS] FINISHED
+
+[PARTICIPANT ANSWER]
+{"current_verification_gap":["checkout_contract.py provides only test_order_smoke_case, which decodes comment-free JSON and asserts order[\"id\"] only.","No active test exercises merchant comment acceptance required by decode_order (allow_comments=True).","No active test asserts money values decode as Decimal instances (parse_float=Decimal / pricing-boundary semantics).","Under the migration charter, checkout lacks task-relevant verification of migration decoding behavior because the smoke test does not exercise those behaviors."],"proposed_replacement_verification":["Add `from decimal import Decimal` alongside the existing `decode_order` import in tests/checkout_contract.py, matching reporting_contract.py’s pattern of importing the unit under test and asserting concrete wire/output semantics.","Replace or supplement the smoke-only coverage with one contract-style test named for the behavior, e.g. `test_commented_decimal_order_is_preserved`, calling `decode_order('{/* merchant promotion */\"id\":\"o-1\",\"total\":10.50}')`.","Minimal assertions: `assert order[\"id\"] == \"o-1\"` and `assert order[\"total\"] == Decimal(\"10.50\")`, covering both README-documented decode invariants in a single migration-relevant test."],"other_gaps_in_affected_service":["service:checkout still integrates jsonlib v2 directly in services/checkout/json_codec.py while lockfiles/checkout-json.lock pins jsonlib 2.8.4 with source runtime (direct integration migration not closed).","service:external-worker remains commerce-owned but its migration scope mapping is unresolved with no complete production alias-to-component export (runtime/dynamic-consumers.md).","service:partner-gateway is a production migration boundary excluded from direct code change and kept on jsonlib v2 signed wire semantics (architecture/partner-gateway.md).","service:reporting is not a direct-integration gap: it already routes through ReportingJsonV3Adapter with reporting_contract.py byte-level verification."],"completeness_universe":"Frozen jsonlib v3 migration completeness is judged over production deployment membership (deploy/production-services.yaml), commerce component ownership and pinned jsonlib dependencies (inventory/owners.yaml, deploy/service-components.yaml, lockfiles), vendor protocol exclusions (tasks/migrate-jsonlib-v3.md, architecture/partner-gateway.md), dynamic consumer registry evidence (runtime/dynamic-consumers.md, runtime/consumer_registry.py), and task-relevant contract verification (tasks/migrate-jsonlib-v3.md, tests/*_contract.py).","whole_world_complete":false,"whole_world_blockers":["Vendor-owned service:partner-gateway must remain on jsonlib v2 signed_body bytes; vendor-internal consumer inventory is opaque and not declared complete for commerce migration.","service:external-worker dynamic consumers cannot be fully mapped because the registry wildcard resolves out-of-repository plugins and production lacks a complete alias-to-component export.","Commerce-owned service:checkout still has open direct v2 integration and, until replacement verification lands, no charter-satisfying test of comment-tolerant Decimal-preserving decode migration behavior."],"citations":[{"path":"tests/checkout_contract.py","start_line":1,"end_line":7},{"path":"tests/reporting_contract.py","start_line":1,"end_line":5},{"path":"services/checkout/json_codec.py","start_line":6,"end_line":12},{"path":"services/checkout/README.md","start_line":3,"end_line":5},{"path":"tasks/migrate-jsonlib-v3.md","start_line":5,"end_line":16},{"path":"tasks/migrate-jsonlib-v3.md","start_line":18,"end_line":19},{"path":"lockfiles/checkout-json.lock","start_line":1,"end_line":4},{"path":"deploy/production-services.yaml","start_line":2,"end_line":7},{"path":"inventory/owners.yaml","start_line":2,"end_line":5},{"path":"runtime/dynamic-consumers.md","start_line":3,"end_line":8},{"path":"architecture/partner-gateway.md","start_line":3,"end_line":7},{"path":"vendor/jsonlib_v3_migration.md","start_line":3,"end_line":8}]}
+

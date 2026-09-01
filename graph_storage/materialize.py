@@ -80,10 +80,12 @@ def _create_tables(conn: lb.Connection) -> None:
 
 
 def _create_edge_tables(conn: lb.Connection) -> None:
-    conn.execute("CREATE REL TABLE LEADSTO   (FROM Concept TO Concept, label STRING DEFAULT NULL)")
-    conn.execute("CREATE REL TABLE CONTAINS  (FROM Concept TO Concept, label STRING DEFAULT NULL)")
-    conn.execute("CREATE REL TABLE EXPRESSES (FROM Concept TO Concept, label STRING DEFAULT NULL)")
-    conn.execute("CREATE REL TABLE NEARTO    (FROM Concept TO Concept, label STRING DEFAULT NULL)")
+    for rel in ("LEADSTO", "CONTAINS", "EXPRESSES", "NEARTO"):
+        conn.execute(
+            f"CREATE REL TABLE {rel} (FROM Concept TO Concept, "
+            "label STRING DEFAULT NULL, evidence STRING DEFAULT '', "
+            "relation_id STRING DEFAULT '')"
+        )
 
 
 def _open_conn(db_path: Path) -> tuple[lb.Database, lb.Connection]:
@@ -140,6 +142,8 @@ def _insert_edges(
     for i, edge in enumerate(edges):
         src, dst, sst_type = edge[0], edge[1], edge[2]
         edge_label = edge[3] if len(edge) > 3 else ""
+        edge_evidence = edge[4] if len(edge) > 4 else ""
+        relation_id = edge[5] if len(edge) > 5 else ""
         if src not in known_ids or dst not in known_ids:
             skipped_unknown_id += 1
             continue
@@ -150,8 +154,14 @@ def _insert_edges(
         try:
             _conn.execute(
                 f"MATCH (a:Concept {{id: $src}}), (b:Concept {{id: $dst}})"
-                f" CREATE (a)-[:{rel_table} {{label: $label}}]->(b)",
-                {"src": src, "dst": dst, "label": edge_label or ""},
+                f" CREATE (a)-[:{rel_table} {{label: $label, evidence: $evidence, relation_id: $relation_id}}]->(b)",
+                {
+                    "src": src,
+                    "dst": dst,
+                    "label": edge_label or "",
+                    "evidence": edge_evidence or "",
+                    "relation_id": relation_id or "",
+                },
             )
             inserted += 1
         except Exception as e:
@@ -232,7 +242,8 @@ def write_graph(
     cache_path: Optional[Path] = None,
 ) -> None:
     """nodes: (id, label, text_content, semantic_anchor, token_count[, is_metanode])
-    edges: (src, dst, sst_type) or (src, dst, sst_type, label)
+    edges: (src, dst, sst_type), (src, dst, sst_type, label), or
+    (src, dst, sst_type, logical_predicate, evidence, relation_id)
 
     Embeddings are computed and written in streaming batches — never accumulates
     all vectors in memory at once (avoids OOM on large graphs like MetaQA).

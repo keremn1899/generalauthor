@@ -15,6 +15,10 @@ class _Surface:
         self.calls.append(("orient", context))
         return {"graph_id": "g", "context_view": context, "capabilities": ["read"]}
 
+    def describe(self):
+        self.calls.append(("describe",))
+        return {"kind": "GRAPH_DESCRIPTION", "schema_fingerprint": "gschema_test"}
+
     def run_traversal(
         self,
         name,
@@ -62,6 +66,15 @@ def test_graph_http_exposes_orientation_without_write_authority(tmp_path):
     assert response.status_code == 200
     assert response.json()["context_view"] == "capabilities"
     assert surface.calls == [("orient", "capabilities")]
+
+
+def test_graph_http_exposes_neutral_description(tmp_path):
+    client, surface = _client(tmp_path)
+    with client:
+        response = client.get("/describe", params={"graph": "g"})
+    assert response.status_code == 200
+    assert response.json()["schema_fingerprint"] == "gschema_test"
+    assert surface.calls == [("describe",)]
 
 
 def test_graph_http_runs_named_traversal_and_returns_receipt(tmp_path):

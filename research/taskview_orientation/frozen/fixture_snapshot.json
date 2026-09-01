@@ -1,0 +1,613 @@
+{
+  "revision": 33,
+  "semantic_rows": {
+    "affected_service": [
+      {
+        "service_id": "service:checkout"
+      },
+      {
+        "service_id": "service:reporting"
+      }
+    ],
+    "boundary": [
+      {
+        "subject_id": "service:partner-gateway"
+      }
+    ],
+    "boundary_affected_service": [],
+    "compatible_via": [
+      {
+        "adapter_id": "adapter:reporting-json-v3",
+        "new_library_id": "library:jsonlib-v3",
+        "old_library_id": "library:jsonlib-v2",
+        "service_id": "service:reporting"
+      }
+    ],
+    "component": [
+      {
+        "component_id": "component:checkout-json"
+      },
+      {
+        "component_id": "component:partner-json"
+      },
+      {
+        "component_id": "component:reporting-json"
+      }
+    ],
+    "depends_on": [
+      {
+        "component_id": "component:checkout-json",
+        "dependency_id": "library:jsonlib-v2"
+      },
+      {
+        "component_id": "component:partner-json",
+        "dependency_id": "library:jsonlib-v2"
+      },
+      {
+        "component_id": "component:reporting-json",
+        "dependency_id": "library:jsonlib-v2"
+      }
+    ],
+    "excluded": [
+      {
+        "basis": "vendor-owned boundary remains on the supported v2 protocol",
+        "subject_id": "service:partner-gateway"
+      }
+    ],
+    "implements": [
+      {
+        "component_id": "component:checkout-json",
+        "service_id": "service:checkout"
+      },
+      {
+        "component_id": "component:partner-json",
+        "service_id": "service:partner-gateway"
+      },
+      {
+        "component_id": "component:reporting-json",
+        "service_id": "service:reporting"
+      }
+    ],
+    "in_scope": [
+      {
+        "subject_id": "service:checkout"
+      },
+      {
+        "subject_id": "service:reporting"
+      }
+    ],
+    "legacy_component": [
+      {
+        "component_id": "component:checkout-json"
+      },
+      {
+        "component_id": "component:partner-json"
+      },
+      {
+        "component_id": "component:reporting-json"
+      }
+    ],
+    "production_service": [
+      {
+        "service_id": "service:checkout"
+      },
+      {
+        "service_id": "service:partner-gateway"
+      },
+      {
+        "service_id": "service:reporting"
+      }
+    ],
+    "protected_by": [
+      {
+        "adapter_id": "adapter:reporting-json-v3",
+        "service_id": "service:reporting"
+      }
+    ],
+    "requires_change": [
+      {
+        "service_id": "service:checkout"
+      }
+    ],
+    "unresolved_scope": [
+      {
+        "subject_id": "service:external-worker"
+      }
+    ],
+    "verification_gap": [],
+    "verified_by": [
+      {
+        "service_id": "service:checkout",
+        "test_id": "test:checkout-contract"
+      },
+      {
+        "service_id": "service:reporting",
+        "test_id": "test:reporting-contract"
+      }
+    ]
+  },
+  "view_description": {
+    "relations": [
+      {
+        "completeness": {
+          "basis": "Pinned production inventory, realization map, scope, and exclusions were evaluated.",
+          "current": true,
+          "execution_environment": "sqlite:3.51.1",
+          "execution_status": "SUCCEEDED",
+          "input_cardinalities": {
+            "excluded": 1,
+            "implements": 3,
+            "in_scope": 2,
+            "legacy_component": 3,
+            "production_service": 3
+          },
+          "input_versions": {
+            "excluded": 1,
+            "implements": 3,
+            "in_scope": 2,
+            "legacy_component": 1,
+            "production_service": 3
+          },
+          "known_gaps": [],
+          "output_cardinality": 2,
+          "receipt_id": "receipt:8ccab5f637de436e83eb38f91c730422",
+          "result_fingerprint": "result:dc3575952f004f9dae211255",
+          "stale": false,
+          "status": "COMPLETE",
+          "target_relation": "affected_service",
+          "universe_relation": "production_service",
+          "view_revision": 33
+        },
+        "derivation": {
+          "definition_revision": 1,
+          "inputs": [
+            "excluded",
+            "implements",
+            "in_scope",
+            "legacy_component",
+            "production_service"
+          ],
+          "last_error": "",
+          "last_run_view_revision": 33,
+          "output_cardinality": 2,
+          "state": "SUCCEEDED"
+        },
+        "description": "In-scope production services implementing a legacy component, minus exclusions.",
+        "mode": "DERIVED",
+        "name": "affected_service",
+        "relation_version": 1,
+        "roles": [
+          {
+            "column": "service_id",
+            "name": "service",
+            "type": "REFERENT"
+          }
+        ],
+        "row_count": 2,
+        "stale": false
+      },
+      {
+        "completeness": null,
+        "description": "Relevant opaque boundary.",
+        "mode": "BASE",
+        "name": "boundary",
+        "relation_version": 1,
+        "roles": [
+          {
+            "column": "subject_id",
+            "name": "subject",
+            "type": "REFERENT"
+          }
+        ],
+        "row_count": 1,
+        "stale": false
+      },
+      {
+        "completeness": {
+          "basis": "The partner boundary is represented, but its internal consumers are opaque.",
+          "current": true,
+          "execution_environment": "sqlite:3.51.1",
+          "execution_status": "SUCCEEDED",
+          "input_cardinalities": {
+            "affected_service": 2,
+            "boundary": 1
+          },
+          "input_versions": {
+            "affected_service": 1,
+            "boundary": 1
+          },
+          "known_gaps": [
+            "partner-internal dependency inventory unavailable"
+          ],
+          "output_cardinality": 0,
+          "receipt_id": "receipt:4d08a760ebe34878b9f991cf77261786",
+          "result_fingerprint": "result:c8c24e3919e3bcb83acf76a3",
+          "stale": false,
+          "status": "UNKNOWN",
+          "target_relation": "boundary_affected_service",
+          "universe_relation": "boundary",
+          "view_revision": 33
+        },
+        "derivation": {
+          "definition_revision": 1,
+          "inputs": [
+            "affected_service",
+            "boundary"
+          ],
+          "last_error": "",
+          "last_run_view_revision": 33,
+          "output_cardinality": 0,
+          "state": "SUCCEEDED"
+        },
+        "description": "Known affected services also represented as task boundaries.",
+        "mode": "DERIVED",
+        "name": "boundary_affected_service",
+        "relation_version": 1,
+        "roles": [
+          {
+            "column": "service_id",
+            "name": "service",
+            "type": "REFERENT"
+          }
+        ],
+        "row_count": 0,
+        "stale": false
+      },
+      {
+        "completeness": null,
+        "description": "Accepted n-ary migration compatibility judgment.",
+        "mode": "BASE",
+        "name": "compatible_via",
+        "relation_version": 1,
+        "roles": [
+          {
+            "column": "service_id",
+            "name": "service",
+            "type": "REFERENT"
+          },
+          {
+            "column": "old_library_id",
+            "name": "old_library",
+            "type": "REFERENT"
+          },
+          {
+            "column": "new_library_id",
+            "name": "new_library",
+            "type": "REFERENT"
+          },
+          {
+            "column": "adapter_id",
+            "name": "adapter",
+            "type": "REFERENT"
+          }
+        ],
+        "row_count": 1,
+        "stale": false
+      },
+      {
+        "completeness": null,
+        "description": "Pinned migration component inventory.",
+        "mode": "BASE",
+        "name": "component",
+        "relation_version": 3,
+        "roles": [
+          {
+            "column": "component_id",
+            "name": "component",
+            "type": "REFERENT"
+          }
+        ],
+        "row_count": 3,
+        "stale": false
+      },
+      {
+        "completeness": null,
+        "description": "Pinned direct dependency relevant to this migration.",
+        "mode": "BASE",
+        "name": "depends_on",
+        "relation_version": 3,
+        "roles": [
+          {
+            "column": "component_id",
+            "name": "component",
+            "type": "REFERENT"
+          },
+          {
+            "column": "dependency_id",
+            "name": "dependency",
+            "type": "REFERENT"
+          }
+        ],
+        "row_count": 3,
+        "stale": false
+      },
+      {
+        "completeness": null,
+        "description": "Grounded exclusion from direct task change.",
+        "mode": "BASE",
+        "name": "excluded",
+        "relation_version": 1,
+        "roles": [
+          {
+            "column": "subject_id",
+            "name": "subject",
+            "type": "REFERENT"
+          },
+          {
+            "column": "basis",
+            "name": "basis",
+            "type": "TEXT"
+          }
+        ],
+        "row_count": 1,
+        "stale": false
+      },
+      {
+        "completeness": null,
+        "description": "Deployable service-to-component realization.",
+        "mode": "BASE",
+        "name": "implements",
+        "relation_version": 3,
+        "roles": [
+          {
+            "column": "service_id",
+            "name": "service",
+            "type": "REFERENT"
+          },
+          {
+            "column": "component_id",
+            "name": "component",
+            "type": "REFERENT"
+          }
+        ],
+        "row_count": 3,
+        "stale": false
+      },
+      {
+        "completeness": null,
+        "description": "Interior task scope.",
+        "mode": "BASE",
+        "name": "in_scope",
+        "relation_version": 2,
+        "roles": [
+          {
+            "column": "subject_id",
+            "name": "subject",
+            "type": "REFERENT"
+          }
+        ],
+        "row_count": 2,
+        "stale": false
+      },
+      {
+        "completeness": {
+          "basis": "Every component in the pinned build inventory was evaluated.",
+          "current": true,
+          "execution_environment": "sqlite:3.51.1",
+          "execution_status": "SUCCEEDED",
+          "input_cardinalities": {
+            "component": 3,
+            "depends_on": 3
+          },
+          "input_versions": {
+            "component": 3,
+            "depends_on": 3
+          },
+          "known_gaps": [],
+          "output_cardinality": 3,
+          "receipt_id": "receipt:20721b506ca04e1f90d184b180d01b9d",
+          "result_fingerprint": "result:f1978d431c84c4279f52069c",
+          "stale": false,
+          "status": "COMPLETE",
+          "target_relation": "legacy_component",
+          "universe_relation": "component",
+          "view_revision": 33
+        },
+        "derivation": {
+          "definition_revision": 1,
+          "inputs": [
+            "component",
+            "depends_on"
+          ],
+          "last_error": "",
+          "last_run_view_revision": 33,
+          "output_cardinality": 3,
+          "state": "SUCCEEDED"
+        },
+        "description": "Components pinned to jsonlib v2.",
+        "mode": "DERIVED",
+        "name": "legacy_component",
+        "relation_version": 1,
+        "roles": [
+          {
+            "column": "component_id",
+            "name": "component",
+            "type": "REFERENT"
+          }
+        ],
+        "row_count": 3,
+        "stale": false
+      },
+      {
+        "completeness": null,
+        "description": "Pinned production service universe.",
+        "mode": "BASE",
+        "name": "production_service",
+        "relation_version": 3,
+        "roles": [
+          {
+            "column": "service_id",
+            "name": "service",
+            "type": "REFERENT"
+          }
+        ],
+        "row_count": 3,
+        "stale": false
+      },
+      {
+        "completeness": null,
+        "description": "Accepted task protection by a compatibility adapter.",
+        "mode": "BASE",
+        "name": "protected_by",
+        "relation_version": 1,
+        "roles": [
+          {
+            "column": "service_id",
+            "name": "service",
+            "type": "REFERENT"
+          },
+          {
+            "column": "adapter_id",
+            "name": "adapter",
+            "type": "REFERENT"
+          }
+        ],
+        "row_count": 1,
+        "stale": false
+      },
+      {
+        "completeness": {
+          "basis": "Every affected service was checked for accepted protection and exclusion.",
+          "current": true,
+          "execution_environment": "sqlite:3.51.1",
+          "execution_status": "SUCCEEDED",
+          "input_cardinalities": {
+            "affected_service": 2,
+            "excluded": 1,
+            "protected_by": 1
+          },
+          "input_versions": {
+            "affected_service": 1,
+            "excluded": 1,
+            "protected_by": 1
+          },
+          "known_gaps": [],
+          "output_cardinality": 1,
+          "receipt_id": "receipt:4f8686bd3383412087d9da8d1df1a4b4",
+          "result_fingerprint": "result:3f7bcaf68c4fca46c54493c1",
+          "stale": false,
+          "status": "COMPLETE",
+          "target_relation": "requires_change",
+          "universe_relation": "affected_service",
+          "view_revision": 33
+        },
+        "derivation": {
+          "definition_revision": 1,
+          "inputs": [
+            "affected_service",
+            "excluded",
+            "protected_by"
+          ],
+          "last_error": "",
+          "last_run_view_revision": 33,
+          "output_cardinality": 1,
+          "state": "SUCCEEDED"
+        },
+        "description": "Affected services requiring direct code change after protection and exclusion.",
+        "mode": "DERIVED",
+        "name": "requires_change",
+        "relation_version": 1,
+        "roles": [
+          {
+            "column": "service_id",
+            "name": "service",
+            "type": "REFERENT"
+          }
+        ],
+        "row_count": 1,
+        "stale": false
+      },
+      {
+        "completeness": null,
+        "description": "Consumer whose task-scope mapping remains unresolved.",
+        "mode": "BASE",
+        "name": "unresolved_scope",
+        "relation_version": 1,
+        "roles": [
+          {
+            "column": "subject_id",
+            "name": "subject",
+            "type": "REFERENT"
+          }
+        ],
+        "row_count": 1,
+        "stale": false
+      },
+      {
+        "completeness": {
+          "basis": "Every affected service was checked against current task-relevant verification assertions.",
+          "current": true,
+          "execution_environment": "sqlite:3.51.1",
+          "execution_status": "SUCCEEDED",
+          "input_cardinalities": {
+            "affected_service": 2,
+            "verified_by": 2
+          },
+          "input_versions": {
+            "affected_service": 1,
+            "verified_by": 2
+          },
+          "known_gaps": [],
+          "output_cardinality": 0,
+          "receipt_id": "receipt:cf984462614744b3ba67864137168804",
+          "result_fingerprint": "result:eb47f3dc08d9c1c86cf49073",
+          "stale": false,
+          "status": "COMPLETE",
+          "target_relation": "verification_gap",
+          "universe_relation": "affected_service",
+          "view_revision": 33
+        },
+        "derivation": {
+          "definition_revision": 1,
+          "inputs": [
+            "affected_service",
+            "verified_by"
+          ],
+          "last_error": "",
+          "last_run_view_revision": 33,
+          "output_cardinality": 0,
+          "state": "SUCCEEDED"
+        },
+        "description": "Affected services without a current task-relevant verification assertion.",
+        "mode": "DERIVED",
+        "name": "verification_gap",
+        "relation_version": 1,
+        "roles": [
+          {
+            "column": "service_id",
+            "name": "service",
+            "type": "REFERENT"
+          }
+        ],
+        "row_count": 0,
+        "stale": false
+      },
+      {
+        "completeness": null,
+        "description": "Task-relevant verification relationship.",
+        "mode": "BASE",
+        "name": "verified_by",
+        "relation_version": 2,
+        "roles": [
+          {
+            "column": "service_id",
+            "name": "service",
+            "type": "REFERENT"
+          },
+          {
+            "column": "test_id",
+            "name": "test",
+            "type": "REFERENT"
+          }
+        ],
+        "row_count": 2,
+        "stale": false
+      }
+    ],
+    "view": {
+      "revision": 33,
+      "task_spec_ref": "source://tasks/migrate-jsonlib-v3.md",
+      "view_id": "jsonlib-v3-orientation-experiment"
+    }
+  }
+}

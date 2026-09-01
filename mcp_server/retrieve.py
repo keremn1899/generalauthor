@@ -212,6 +212,8 @@ class Retrieve:
         *,
         edge_types: list[str] | None = None,
         max_hops: int = 4,
+        direction: str = "outgoing",
+        edge_labels: list[str] | None = None,
         include_content: bool = False,
         context_ref: str = "",
         graph_version: str = "",
@@ -224,12 +226,17 @@ class Retrieve:
             return types
         if not 1 <= int(max_hops) <= 6:
             raise ValueError("max_hops must be between 1 and 6")
+        if direction not in {"outgoing", "incoming", "both"}:
+            raise ValueError("direction must be outgoing, incoming, or both")
+        labels = self._strings(edge_labels or [], "edge_labels", maximum=20, required=False)
         if self._endpoint_resolution_feedback:
             return self._path_with_endpoint_resolution(
                 sources,
                 targets,
                 types,
                 max_hops=int(max_hops),
+                direction=direction,
+                edge_labels=labels,
                 include_content=include_content,
                 context_ref=context_ref,
                 graph_version=graph_version,
@@ -244,7 +251,9 @@ class Retrieve:
                         "source_set": sources,
                         "target_set": targets,
                         "edge_types": types,
-                        "max_hops": int(max_hops),
+                    "max_hops": int(max_hops),
+                    "direction": direction,
+                    **({"edge_labels": labels} if labels else {}),
                     },
                     "assign_to": "paths",
                 }],
@@ -263,6 +272,8 @@ class Retrieve:
         edge_types: list[str],
         *,
         max_hops: int,
+        direction: str,
+        edge_labels: list[str],
         include_content: bool,
         context_ref: str,
         graph_version: str,
@@ -288,8 +299,10 @@ class Retrieve:
                         "params": {
                             "source_set": "$resolved_sources",
                             "target_set": "$resolved_targets",
-                            "edge_types": edge_types,
-                            "max_hops": max_hops,
+                        "edge_types": edge_types,
+                        "max_hops": max_hops,
+                        "direction": direction,
+                        **({"edge_labels": edge_labels} if edge_labels else {}),
                         },
                         "assign_to": "paths",
                     },

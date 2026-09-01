@@ -517,6 +517,7 @@ def find_paths(
     max_hops: int = 4,
     edge_types: list[str] | None = None,
     direction: str = "outgoing",
+    edge_labels: list[str] | None = None,
     exclude_labels: tuple[str, ...] = (),
 ) -> list[dict]:
     """Find paths between source and target node sets.
@@ -537,7 +538,8 @@ def find_paths(
     it is declared symmetric; this generalises that to the caller's choice
     rather than to one edge type.
 
-    ``exclude_labels`` drops edges by predicate label. It exists because a
+    ``edge_labels`` requires every path hop to use one of the supplied logical
+    predicate labels. ``exclude_labels`` drops edges by predicate label. It exists because a
     provenance predicate every node carries -- `attested_by` to the one
     `source` node -- makes every pair of nodes two hops apart. Measured: with
     direction opened up, every "how are they connected" answer on a real saga
@@ -550,6 +552,28 @@ def find_paths(
 
     paths: list[dict] = []
     types = edge_types or SST_EDGE_TYPES
+    allowed_labels = {
+        str(label).lower().strip()
+        for label in (edge_labels or [])
+        if str(label).strip()
+    }
+    excluded_labels = {
+        str(label).lower().strip()
+        for label in exclude_labels
+        if str(label).strip()
+    }
+
+    def _rows_for_hop(cypher: str, *, current: str) -> list[tuple]:
+        """Read edge provenance where present, without breaking older graphs."""
+        try:
+            rows = list(conn.execute(
+                cypher + ", r.evidence, r.relation_id",
+                {"src_id": current},
+            ))
+            return [tuple(row) for row in rows]
+        except Exception:
+            rows = list(conn.execute(cypher, {"src_id": current}))
+            return [tuple(row) + ("", "") for row in rows]
 
     for src_id in source_set:
         for tgt_id in target_set:
@@ -557,14 +581,15 @@ def find_paths(
                 continue
             # BFS from src to tgt across all allowed edge types
             visited: set[str] = set()
-            # (current_node, path_nodes, path_edge_types, path_edge_labels)
-            queue: deque[tuple[str, list[str], list[str], list[str]]] = deque(
-                [(src_id, [src_id], [], [])]
+            # (current_node, path_nodes, path_edge_types, path_edge_labels,
+            #  path_edge_evidence, path_relation_ids)
+            queue: deque[tuple[str, list[str], list[str], list[str], list[str], list[str]]] = deque(
+                [(src_id, [src_id], [], [], [], [])]
             )
             found = False
 
             while queue and not found:
-                current, path_nodes, path_edges, path_edge_labels = queue.popleft()
+                current, path_nodes, path_edges, path_edge_labels, path_edge_evidence, path_relation_ids = queue.popleft()
                 if len(path_nodes) > max_hops + 1:
                     continue
                 if current in visited:
@@ -582,7 +607,7 @@ def find_paths(
                         "RETURN n.id, r.label"
                     )
                     try:
-                        rows = list(conn.execute(cypher, {"src_id": current}))
+                        rows = _rows_for_hop(cypher, current=current)
                     except Exception:
                         continue
 
@@ -594,19 +619,24 @@ def find_paths(
                             "RETURN n.id, r.label"
                         )
                         try:
-                            rows.extend(list(conn.execute(reverse_cypher, {"src_id": current})))
+                            rows.extend(_rows_for_hop(reverse_cypher, current=current))
                         except Exception:
                             pass
 
                     for r in rows:
                         nid, edge_lbl = r[0], (r[1] or "")
-                        if edge_lbl and edge_lbl in exclude_labels:
+                        label_key = edge_lbl.lower().strip()
+                        if allowed_labels and label_key not in allowed_labels:
+                            continue
+                        if label_key in excluded_labels:
                             continue
                         if nid in visited:
                             continue
                         new_nodes = path_nodes + [nid]
                         new_edges = path_edges + [sst_type]
                         new_edge_labels = path_edge_labels + [edge_lbl]
+                        new_edge_evidence = path_edge_evidence + [str(r[2] or "") if len(r) > 2 else ""]
+                        new_relation_ids = path_relation_ids + [str(r[3] or "") if len(r) > 3 else ""]
 
                         if nid == tgt_id:
                             paths.append({
@@ -615,12 +645,14 @@ def find_paths(
                                 "node_chain": new_nodes,
                                 "edge_chain": new_edges,
                                 "edge_label_chain": new_edge_labels,
+                                "edge_evidence_chain": new_edge_evidence,
+                                "relation_id_chain": new_relation_ids,
                                 "length": len(new_edges),
                             })
                             found = True
                             break
                         if len(new_nodes) <= max_hops:
-                            queue.append((nid, new_nodes, new_edges, new_edge_labels))
+                            queue.append((nid, new_nodes, new_edges, new_edge_labels, new_edge_evidence, new_relation_ids))
                     if found:
                         break
 
@@ -785,27 +817,35 @@ def _neighbour_hits(
         params = {"src_id": src_id}
         if rich[0]:
             try:
-                return list(conn.execute(
+                rows = list(conn.execute(
                     labelled
-                    + "RETURN n.id, n.label, r.label, n.kind, n.claim_kind, n.is_metanode",
+                    + "RETURN n.id, n.label, r.label, r.evidence, r.relation_id, n.kind, n.claim_kind, n.is_metanode",
                     params,
                 ))
+                return rows
             except Exception:
                 rich[0] = False
         try:
             rows = list(conn.execute(
-                labelled + "RETURN n.id, n.label, r.label",
+                labelled + "RETURN n.id, n.label, r.label, r.evidence, r.relation_id",
                 params,
             ))
-            return [tuple(row) + ("", "", False) for row in rows]
+            return [tuple(row) + ("", "", "", False) for row in rows]
         except RuntimeError:
-            rows = []
-            for row in conn.execute(
-                plain + "RETURN n.id, n.label",
-                params,
-            ):
-                rows.append((row[0], row[1], "", "", "", False))
-            return rows
+            try:
+                rows = list(conn.execute(
+                    labelled + "RETURN n.id, n.label, r.label",
+                    params,
+                ))
+                return [tuple(row) + ("", "", "", "", "", False) for row in rows]
+            except RuntimeError:
+                rows = []
+                for row in conn.execute(
+                    plain + "RETURN n.id, n.label",
+                    params,
+                ):
+                    rows.append((row[0], row[1], "", "", "", "", "", False))
+                return rows
 
     for sst_type in types:
         rel_name = _REL_MAP.get(sst_type)
@@ -825,15 +865,17 @@ def _neighbour_hits(
                 if edge_label_set and elabel.lower().strip() not in edge_label_set:
                     continue
                 extras = {
-                    "kind": (row[3] if len(row) > 3 else "") or "",
-                    "claim_kind": (row[4] if len(row) > 4 else "") or "",
-                    "is_metanode": bool(row[5]) if len(row) > 5 else False,
+                    "kind": (row[5] if len(row) > 5 else "") or "",
+                    "claim_kind": (row[6] if len(row) > 6 else "") or "",
+                    "is_metanode": bool(row[7]) if len(row) > 7 else False,
                 }
                 hits.append(
                     {
                         "id": nid,
                         "label": nlabel,
                         "edge_label": elabel,
+                        "edge_evidence": (row[3] if len(row) > 3 else "") or "",
+                        "relation_id": (row[4] if len(row) > 4 else "") or "",
                         "sst_type": sst_type,
                         "outgoing": outgoing,
                         "extras": extras,
@@ -909,8 +951,9 @@ def get_neighbourhood(
     seen_edge_keys: set[tuple] = set()
 
     def _record_edge(src_id: str, src_label: str, tgt_id: str, tgt_label: str,
-                     sst_type: str, edge_label: str) -> None:
-        key = (src_id, tgt_id, sst_type, edge_label)
+                     sst_type: str, edge_label: str, edge_evidence: str = "",
+                     relation_id: str = "") -> None:
+        key = (src_id, tgt_id, sst_type, edge_label, relation_id)
         if key in seen_edge_keys:
             return
         seen_edge_keys.add(key)
@@ -921,6 +964,8 @@ def get_neighbourhood(
             "target_label": tgt_label,
             "edge_type": sst_type,
             "edge_label": edge_label,
+            "edge_evidence": edge_evidence,
+            "relation_id": relation_id,
         })
 
     do_outgoing = direction in ("outgoing", "both")
@@ -939,9 +984,11 @@ def get_neighbourhood(
             return False
         label_cache.setdefault(nid, nlabel)
         if hit["outgoing"]:
-            _record_edge(src_id, src_label, nid, nlabel, hit["sst_type"], hit["edge_label"])
+            _record_edge(src_id, src_label, nid, nlabel, hit["sst_type"], hit["edge_label"],
+                         hit.get("edge_evidence") or "", hit.get("relation_id") or "")
         else:
-            _record_edge(nid, nlabel, src_id, src_label, hit["sst_type"], hit["edge_label"])
+            _record_edge(nid, nlabel, src_id, src_label, hit["sst_type"], hit["edge_label"],
+                         hit.get("edge_evidence") or "", hit.get("relation_id") or "")
         if nid in all_discovered or nid in seed_set:
             return True
         all_discovered[nid] = {
@@ -979,11 +1026,13 @@ def get_neighbourhood(
                     _record_edge(
                         parent_id, parent_label, src_id, nlabel,
                         via["sst_type"], via["edge_label"],
+                        via.get("edge_evidence") or "", via.get("relation_id") or "",
                     )
                 else:
                     _record_edge(
                         src_id, nlabel, parent_id, parent_label,
                         via["sst_type"], via["edge_label"],
+                        via.get("edge_evidence") or "", via.get("relation_id") or "",
                     )
             if src_depth >= depth:
                 continue
@@ -1318,6 +1367,8 @@ def walk_sequence(
                         "edge": {
                             "sst_type": hit["sst_type"],
                             "edge_label": hit["edge_label"],
+                            "edge_evidence": hit.get("edge_evidence") or "",
+                            "relation_id": hit.get("relation_id") or "",
                             "outgoing": hit["outgoing"],
                         },
                     }
@@ -1345,10 +1396,14 @@ def walk_sequence(
         node_chain = [step["id"] for step in path]
         edge_chain = []
         edge_label_chain = []
+        edge_evidence_chain = []
+        relation_id_chain = []
         for step in path[1:]:
             edge = step.get("edge") or {}
             edge_chain.append(edge.get("sst_type") or "")
             edge_label_chain.append(edge.get("edge_label") or "")
+            edge_evidence_chain.append(edge.get("edge_evidence") or "")
+            relation_id_chain.append(edge.get("relation_id") or "")
         for nid, step in zip(node_chain[1:], path[1:]):
             if nid in seen or len(seen) >= max_nodes:
                 continue
@@ -1367,6 +1422,8 @@ def walk_sequence(
                     "path_chain": node_chain,
                     "edge_chain": edge_chain,
                     "edge_label_chain": edge_label_chain,
+                    "edge_evidence_chain": edge_evidence_chain,
+                    "relation_id_chain": relation_id_chain,
                 }
             )
         path_carrier.append(
@@ -1374,6 +1431,8 @@ def walk_sequence(
                 "node_chain": node_chain,
                 "edge_chain": edge_chain,
                 "edge_label_chain": edge_label_chain,
+                "edge_evidence_chain": edge_evidence_chain,
+                "relation_id_chain": relation_id_chain,
             }
         )
     if records and path_carrier:

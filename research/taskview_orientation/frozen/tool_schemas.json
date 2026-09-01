@@ -1,0 +1,43 @@
+{
+  "version": "taskview-orientation-tools-v1",
+  "native": [
+    {
+      "name": "search_source",
+      "description": "Search participant-visible source text under a relative scope.",
+      "arguments": {"query": "string", "scope": "relative path, default ."}
+    },
+    {
+      "name": "read_source",
+      "description": "Read an inclusive line range from one participant-visible source file.",
+      "arguments": {"path": "relative path", "start_line": "integer", "end_line": "integer"}
+    },
+    {
+      "name": "write_scratch",
+      "description": "Write a UTF-8 scratch artifact outside the read-only source tree.",
+      "arguments": {"path": "relative path", "content": "string"}
+    }
+  ],
+  "taskview": [
+    {
+      "name": "describe",
+      "description": "Describe frozen relations, derivations, currentness, and optionally one tuple's grounding.",
+      "arguments": {"why": "optional relation and tuple"}
+    },
+    {
+      "name": "query_sql",
+      "description": "Run read-only SQL over declared semantic relation tables.",
+      "arguments": {"sql": "string", "parameters": "array"}
+    },
+    {
+      "name": "assertion",
+      "description": "Assert or retract one BASE semantic tuple.",
+      "arguments": {"action": "ASSERT or RETRACT", "relation": "string", "values": "object", "grounding": "array"}
+    },
+    {
+      "name": "rerun",
+      "description": "Rerun a registered derivation under its fixture-owned completeness contract.",
+      "arguments": {"relation": "string"}
+    }
+  ]
+}
+

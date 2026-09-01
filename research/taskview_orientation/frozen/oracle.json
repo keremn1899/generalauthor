@@ -1,0 +1,82 @@
+{
+  "version": "taskview-orientation-oracle-v1",
+  "hidden_from_participants": true,
+  "phases": {
+    "1": {
+      "direct_change_services": ["service:checkout"],
+      "decoding_invariants": ["comments accepted", "numbers remain Decimal"],
+      "v3_call_shape": "Decoder(allow_comments=True, number_mode=\"decimal\").decode(payload)",
+      "citation_witnesses": [
+        ["services/checkout/json_codec.py", 6, 12],
+        ["vendor/jsonlib_v3_migration.md", 3, 10]
+      ]
+    },
+    "2": {
+      "protected_service": "service:reporting",
+      "direct_edit_required": false,
+      "adapter": "adapter:reporting-json-v3",
+      "canonical_key_behavior": "sort_keys=True is translated to canonical_keys=True",
+      "decimal_serialization_behavior": "decimal_mode=string is translated to decimal-string and preserves Decimal as a quoted string with scale",
+      "verification_assertion": "build_report() == '{\"amount\":\"10.50\",\"id\":\"r-7\"}'",
+      "citation_witnesses": [
+        ["services/reporting/json_adapter.py", 4, 13],
+        ["services/reporting/report_builder.py", 6, 12],
+        ["tests/reporting_contract.py", 4, 5]
+      ]
+    },
+    "3": {
+      "boundary_subject": "service:partner-gateway",
+      "boundary_status": "EXCLUDED",
+      "byte_stable_wire_field": "signed_body",
+      "unresolved_subject": "service:external-worker",
+      "unresolved_status": "UNRESOLVED",
+      "dynamic_lookup_mechanism": "resolve_consumer uses REGISTRY wildcard plugins.{tenant_alias}.JsonConsumer",
+      "whole_world_complete": false,
+      "citation_witnesses": [
+        ["architecture/partner-gateway.md", 3, 10],
+        ["services/partner_gateway/protocol.py", 4, 9],
+        ["runtime/dynamic-consumers.md", 3, 10],
+        ["runtime/consumer_registry.py", 1, 10]
+      ]
+    },
+    "4": {
+      "invalidated_verification": ["service:checkout", "test:checkout-contract"],
+      "missing_behaviors": ["comment acceptance", "Decimal preservation"],
+      "downstream_result_state": "verification_gap must be treated as stale until rerun",
+      "retained_state_update": "retract verified_by(service:checkout, test:checkout-contract)",
+      "citation_witnesses": [
+        ["tests/checkout_contract.py", 4, 6]
+      ]
+    },
+    "5": {
+      "current_verification_gap": ["service:checkout"],
+      "proposed_replacement_verification": [
+        "decode a payload containing a comment",
+        "assert total equals Decimal(\"10.50\") and remains a Decimal"
+      ],
+      "other_gaps_in_affected_service": [],
+      "completeness_universe": "affected_service",
+      "whole_world_complete": false,
+      "whole_world_blockers": [
+        "service:external-worker unresolved",
+        "partner boundary internals opaque"
+      ],
+      "citation_witnesses": [
+        ["services/checkout/json_codec.py", 6, 12],
+        ["tests/checkout_contract.py", 4, 6],
+        ["runtime/dynamic-consumers.md", 6, 8],
+        ["architecture/partner-gateway.md", 9, 10]
+      ]
+    }
+  },
+  "dimensions": [
+    "task_scope",
+    "affected_change_set",
+    "exclusions_and_unresolved",
+    "local_implementation_semantics",
+    "verification_surface",
+    "changed_evidence_reaction",
+    "scoped_exhaustiveness"
+  ]
+}
+

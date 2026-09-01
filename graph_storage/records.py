@@ -13,7 +13,11 @@ class GraphEdge:
     source: str
     target: str
     sst_type: str
+    #: The logical predicate. Traversal operations match this value directly.
     label: str = ""
+    #: Optional provenance is deliberately independent from the predicate.
+    evidence: str = ""
+    relation_id: str = ""
 
     def validated_type(self) -> str | None:
         value = (self.sst_type or "").strip().lower()

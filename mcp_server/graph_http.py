@@ -771,6 +771,24 @@ def graph_routes(catalogue: GraphCatalogue, *, current_surface: Any | None = Non
                 )
             )
 
+    async def describe(request):
+        """Expose the same neutral schema descriptor as the MCP read surface."""
+        path = catalogue.resolve(request.query_params.get("graph"))
+        if path is None:
+            return json_result(operator_fault("not_found", "unknown graph"))
+        try:
+            from starlette.concurrency import run_in_threadpool
+
+            return JSONResponse(
+                await run_in_threadpool(_surface_call, path, "describe")
+            )
+        except Exception as exc:
+            return json_result(
+                operator_fault(
+                    "unavailable", f"describe failed: {type(exc).__name__}: {exc}"
+                )
+            )
+
     async def run_traversal(request):
         try:
             body = await request.json()
@@ -936,5 +954,6 @@ def graph_routes(catalogue: GraphCatalogue, *, current_surface: Any | None = Non
         Route("/node", graph_node, methods=["GET"]),
         Route("/sources", graph_sources, methods=["GET"]),
         Route("/orient", orient, methods=["GET"]),
+        Route("/describe", describe, methods=["GET"]),
         Route("/run-traversal", run_traversal, methods=["POST"]),
     ]

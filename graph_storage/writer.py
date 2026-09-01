@@ -117,8 +117,14 @@ def write_graph_records(
         try:
             conn.execute(
                 f"MATCH (a:Concept {{id: $src}}), (b:Concept {{id: $dst}})"
-                f" CREATE (a)-[:{rel_table} {{label: $label}}]->(b)",
-                {"src": e.source, "dst": e.target, "label": (e.label or "").strip()},
+                f" CREATE (a)-[:{rel_table} {{label: $label, evidence: $evidence, relation_id: $relation_id}}]->(b)",
+                {
+                    "src": e.source,
+                    "dst": e.target,
+                    "label": (e.label or "").strip(),
+                    "evidence": (e.evidence or "").strip(),
+                    "relation_id": (e.relation_id or "").strip(),
+                },
             )
             inserted += 1
         except Exception:

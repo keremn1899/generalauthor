@@ -56,7 +56,7 @@ must be requested explicitly.
 | search | query, limit |
 | select_landmarks | roles, include_pinned, limit |
 | expand / traverse | from, predicates or SST types, direction, depth, bounds |
-| paths | from, to, max_hops, direction, exclusions |
+| paths | from, to, predicates or SST types, max_hops, direction, exclusions |
 | walk_sequence | from, ordered predicates or SST types, cycle policy |
 | union | of, optionally with |
 | difference | of, minus |

@@ -1,0 +1,35 @@
+{
+  "absence_proof": false,
+  "answer_size": 3,
+  "branching_target": 5,
+  "case": "FX04",
+  "cycle": false,
+  "intermediate_reuse_outputs": 1,
+  "named_output_count": 1,
+  "neutral_program": {
+    "allowed_predicates": [
+      "depends_on",
+      "implements",
+      "deployed_to"
+    ],
+    "cycle_policy": "visited_nodes",
+    "direction": "incoming",
+    "forbidden_predicates": [
+      "crosses_deprecated"
+    ],
+    "max_depth": 5,
+    "op": "constrained_reachability",
+    "outputs": [
+      "approved_route_services"
+    ],
+    "predicate": "depends_on",
+    "seed": "package:fx04-legacy"
+  },
+  "oracle_relevant_closure_size": 72,
+  "platform": "release_safety",
+  "predicate_target": 4,
+  "prompt": "Which production services require review because their approved migration route is approved end-to-end and avoids the deprecated integration boundary? Return stable IDs only.",
+  "relevant_closure_target": 72,
+  "required_depth": 5,
+  "template": "Approved migration route"
+}

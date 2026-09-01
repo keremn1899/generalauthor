@@ -1,0 +1,449 @@
+{
+  "predicate_mapping": [
+    {
+      "object_kind": "module",
+      "predicate": "depends_on",
+      "sql": "module_depends_on_module(relation_id, subject_id, object_id, evidence)",
+      "subject_kind": "module"
+    },
+    {
+      "object_kind": "package",
+      "predicate": "depends_on",
+      "sql": "module_depends_on_package(relation_id, subject_id, object_id, evidence)",
+      "subject_kind": "module"
+    },
+    {
+      "object_kind": "boundary",
+      "predicate": "crosses",
+      "sql": "service_crosses_boundary(relation_id, subject_id, object_id, evidence)",
+      "subject_kind": "service"
+    },
+    {
+      "object_kind": "deployment",
+      "predicate": "deployed_to",
+      "sql": "service_deployed_to_deployment(relation_id, subject_id, object_id, evidence)",
+      "subject_kind": "service"
+    },
+    {
+      "object_kind": "module",
+      "predicate": "implements",
+      "sql": "service_implements_module(relation_id, subject_id, object_id, evidence)",
+      "subject_kind": "service"
+    },
+    {
+      "object_kind": "team",
+      "predicate": "owned_by",
+      "sql": "service_owned_by_team(relation_id, subject_id, object_id, evidence)",
+      "subject_kind": "service"
+    },
+    {
+      "object_kind": "resource",
+      "predicate": "uses",
+      "sql": "service_uses_resource(relation_id, subject_id, object_id, evidence)",
+      "subject_kind": "service"
+    },
+    {
+      "object_kind": "package",
+      "predicate": "retires",
+      "sql": "task_retires_package(relation_id, subject_id, object_id, evidence)",
+      "subject_kind": "task"
+    },
+    {
+      "object_kind": "deployment",
+      "predicate": "targets",
+      "sql": "task_targets_deployment(relation_id, subject_id, object_id, evidence)",
+      "subject_kind": "task"
+    },
+    {
+      "object_kind": "service",
+      "predicate": "verifies",
+      "sql": "test_verifies_service(relation_id, subject_id, object_id, evidence)",
+      "subject_kind": "test"
+    }
+  ],
+  "schemas": [
+    {
+      "cases": [
+        "order-platform-verification-control",
+        "order-platform-production-impact",
+        "identity-platform-verification-control",
+        "identity-platform-production-impact",
+        "catalogue-platform-verification-control",
+        "catalogue-platform-production-impact",
+        "telemetry-platform-verification-control",
+        "telemetry-platform-production-impact"
+      ],
+      "objects": [
+        {
+          "name": "idx_module_depends_on_module_object",
+          "sql": "CREATE INDEX \"idx_module_depends_on_module_object\" ON \"module_depends_on_module\" (object_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_module_depends_on_module_subject",
+          "sql": "CREATE INDEX \"idx_module_depends_on_module_subject\" ON \"module_depends_on_module\" (subject_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_module_depends_on_package_object",
+          "sql": "CREATE INDEX \"idx_module_depends_on_package_object\" ON \"module_depends_on_package\" (object_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_module_depends_on_package_subject",
+          "sql": "CREATE INDEX \"idx_module_depends_on_package_subject\" ON \"module_depends_on_package\" (subject_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_service_crosses_boundary_object",
+          "sql": "CREATE INDEX \"idx_service_crosses_boundary_object\" ON \"service_crosses_boundary\" (object_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_service_crosses_boundary_subject",
+          "sql": "CREATE INDEX \"idx_service_crosses_boundary_subject\" ON \"service_crosses_boundary\" (subject_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_service_deployed_to_deployment_object",
+          "sql": "CREATE INDEX \"idx_service_deployed_to_deployment_object\" ON \"service_deployed_to_deployment\" (object_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_service_deployed_to_deployment_subject",
+          "sql": "CREATE INDEX \"idx_service_deployed_to_deployment_subject\" ON \"service_deployed_to_deployment\" (subject_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_service_implements_module_object",
+          "sql": "CREATE INDEX \"idx_service_implements_module_object\" ON \"service_implements_module\" (object_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_service_implements_module_subject",
+          "sql": "CREATE INDEX \"idx_service_implements_module_subject\" ON \"service_implements_module\" (subject_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_service_owned_by_team_object",
+          "sql": "CREATE INDEX \"idx_service_owned_by_team_object\" ON \"service_owned_by_team\" (object_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_service_owned_by_team_subject",
+          "sql": "CREATE INDEX \"idx_service_owned_by_team_subject\" ON \"service_owned_by_team\" (subject_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_service_uses_resource_object",
+          "sql": "CREATE INDEX \"idx_service_uses_resource_object\" ON \"service_uses_resource\" (object_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_service_uses_resource_subject",
+          "sql": "CREATE INDEX \"idx_service_uses_resource_subject\" ON \"service_uses_resource\" (subject_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_test_verifies_service_object",
+          "sql": "CREATE INDEX \"idx_test_verifies_service_object\" ON \"test_verifies_service\" (object_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_test_verifies_service_subject",
+          "sql": "CREATE INDEX \"idx_test_verifies_service_subject\" ON \"test_verifies_service\" (subject_id)",
+          "type": "index"
+        },
+        {
+          "name": "boundarys",
+          "sql": "CREATE TABLE \"boundarys\" (id TEXT PRIMARY KEY, label TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "deployments",
+          "sql": "CREATE TABLE \"deployments\" (id TEXT PRIMARY KEY, label TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "module_depends_on_module",
+          "sql": "CREATE TABLE \"module_depends_on_module\" (relation_id TEXT PRIMARY KEY, subject_id TEXT NOT NULL, object_id TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "module_depends_on_package",
+          "sql": "CREATE TABLE \"module_depends_on_package\" (relation_id TEXT PRIMARY KEY, subject_id TEXT NOT NULL, object_id TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "modules",
+          "sql": "CREATE TABLE \"modules\" (id TEXT PRIMARY KEY, label TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "packages",
+          "sql": "CREATE TABLE \"packages\" (id TEXT PRIMARY KEY, label TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "resources",
+          "sql": "CREATE TABLE \"resources\" (id TEXT PRIMARY KEY, label TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "service_crosses_boundary",
+          "sql": "CREATE TABLE \"service_crosses_boundary\" (relation_id TEXT PRIMARY KEY, subject_id TEXT NOT NULL, object_id TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "service_deployed_to_deployment",
+          "sql": "CREATE TABLE \"service_deployed_to_deployment\" (relation_id TEXT PRIMARY KEY, subject_id TEXT NOT NULL, object_id TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "service_implements_module",
+          "sql": "CREATE TABLE \"service_implements_module\" (relation_id TEXT PRIMARY KEY, subject_id TEXT NOT NULL, object_id TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "service_owned_by_team",
+          "sql": "CREATE TABLE \"service_owned_by_team\" (relation_id TEXT PRIMARY KEY, subject_id TEXT NOT NULL, object_id TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "service_uses_resource",
+          "sql": "CREATE TABLE \"service_uses_resource\" (relation_id TEXT PRIMARY KEY, subject_id TEXT NOT NULL, object_id TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "services",
+          "sql": "CREATE TABLE \"services\" (id TEXT PRIMARY KEY, label TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "teams",
+          "sql": "CREATE TABLE \"teams\" (id TEXT PRIMARY KEY, label TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "test_verifies_service",
+          "sql": "CREATE TABLE \"test_verifies_service\" (relation_id TEXT PRIMARY KEY, subject_id TEXT NOT NULL, object_id TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "tests",
+          "sql": "CREATE TABLE \"tests\" (id TEXT PRIMARY KEY, label TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        }
+      ]
+    },
+    {
+      "cases": [
+        "order-platform-cutover-boundary-control",
+        "order-platform-cutover-readiness",
+        "identity-platform-cutover-boundary-control",
+        "identity-platform-cutover-readiness",
+        "catalogue-platform-cutover-boundary-control",
+        "catalogue-platform-cutover-readiness",
+        "telemetry-platform-cutover-boundary-control",
+        "telemetry-platform-cutover-readiness"
+      ],
+      "objects": [
+        {
+          "name": "idx_module_depends_on_module_object",
+          "sql": "CREATE INDEX \"idx_module_depends_on_module_object\" ON \"module_depends_on_module\" (object_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_module_depends_on_module_subject",
+          "sql": "CREATE INDEX \"idx_module_depends_on_module_subject\" ON \"module_depends_on_module\" (subject_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_module_depends_on_package_object",
+          "sql": "CREATE INDEX \"idx_module_depends_on_package_object\" ON \"module_depends_on_package\" (object_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_module_depends_on_package_subject",
+          "sql": "CREATE INDEX \"idx_module_depends_on_package_subject\" ON \"module_depends_on_package\" (subject_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_service_crosses_boundary_object",
+          "sql": "CREATE INDEX \"idx_service_crosses_boundary_object\" ON \"service_crosses_boundary\" (object_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_service_crosses_boundary_subject",
+          "sql": "CREATE INDEX \"idx_service_crosses_boundary_subject\" ON \"service_crosses_boundary\" (subject_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_service_deployed_to_deployment_object",
+          "sql": "CREATE INDEX \"idx_service_deployed_to_deployment_object\" ON \"service_deployed_to_deployment\" (object_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_service_deployed_to_deployment_subject",
+          "sql": "CREATE INDEX \"idx_service_deployed_to_deployment_subject\" ON \"service_deployed_to_deployment\" (subject_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_service_implements_module_object",
+          "sql": "CREATE INDEX \"idx_service_implements_module_object\" ON \"service_implements_module\" (object_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_service_implements_module_subject",
+          "sql": "CREATE INDEX \"idx_service_implements_module_subject\" ON \"service_implements_module\" (subject_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_service_owned_by_team_object",
+          "sql": "CREATE INDEX \"idx_service_owned_by_team_object\" ON \"service_owned_by_team\" (object_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_service_owned_by_team_subject",
+          "sql": "CREATE INDEX \"idx_service_owned_by_team_subject\" ON \"service_owned_by_team\" (subject_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_service_uses_resource_object",
+          "sql": "CREATE INDEX \"idx_service_uses_resource_object\" ON \"service_uses_resource\" (object_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_service_uses_resource_subject",
+          "sql": "CREATE INDEX \"idx_service_uses_resource_subject\" ON \"service_uses_resource\" (subject_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_task_retires_package_object",
+          "sql": "CREATE INDEX \"idx_task_retires_package_object\" ON \"task_retires_package\" (object_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_task_retires_package_subject",
+          "sql": "CREATE INDEX \"idx_task_retires_package_subject\" ON \"task_retires_package\" (subject_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_task_targets_deployment_object",
+          "sql": "CREATE INDEX \"idx_task_targets_deployment_object\" ON \"task_targets_deployment\" (object_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_task_targets_deployment_subject",
+          "sql": "CREATE INDEX \"idx_task_targets_deployment_subject\" ON \"task_targets_deployment\" (subject_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_test_verifies_service_object",
+          "sql": "CREATE INDEX \"idx_test_verifies_service_object\" ON \"test_verifies_service\" (object_id)",
+          "type": "index"
+        },
+        {
+          "name": "idx_test_verifies_service_subject",
+          "sql": "CREATE INDEX \"idx_test_verifies_service_subject\" ON \"test_verifies_service\" (subject_id)",
+          "type": "index"
+        },
+        {
+          "name": "boundarys",
+          "sql": "CREATE TABLE \"boundarys\" (id TEXT PRIMARY KEY, label TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "deployments",
+          "sql": "CREATE TABLE \"deployments\" (id TEXT PRIMARY KEY, label TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "module_depends_on_module",
+          "sql": "CREATE TABLE \"module_depends_on_module\" (relation_id TEXT PRIMARY KEY, subject_id TEXT NOT NULL, object_id TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "module_depends_on_package",
+          "sql": "CREATE TABLE \"module_depends_on_package\" (relation_id TEXT PRIMARY KEY, subject_id TEXT NOT NULL, object_id TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "modules",
+          "sql": "CREATE TABLE \"modules\" (id TEXT PRIMARY KEY, label TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "packages",
+          "sql": "CREATE TABLE \"packages\" (id TEXT PRIMARY KEY, label TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "resources",
+          "sql": "CREATE TABLE \"resources\" (id TEXT PRIMARY KEY, label TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "service_crosses_boundary",
+          "sql": "CREATE TABLE \"service_crosses_boundary\" (relation_id TEXT PRIMARY KEY, subject_id TEXT NOT NULL, object_id TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "service_deployed_to_deployment",
+          "sql": "CREATE TABLE \"service_deployed_to_deployment\" (relation_id TEXT PRIMARY KEY, subject_id TEXT NOT NULL, object_id TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "service_implements_module",
+          "sql": "CREATE TABLE \"service_implements_module\" (relation_id TEXT PRIMARY KEY, subject_id TEXT NOT NULL, object_id TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "service_owned_by_team",
+          "sql": "CREATE TABLE \"service_owned_by_team\" (relation_id TEXT PRIMARY KEY, subject_id TEXT NOT NULL, object_id TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "service_uses_resource",
+          "sql": "CREATE TABLE \"service_uses_resource\" (relation_id TEXT PRIMARY KEY, subject_id TEXT NOT NULL, object_id TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "services",
+          "sql": "CREATE TABLE \"services\" (id TEXT PRIMARY KEY, label TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "task_retires_package",
+          "sql": "CREATE TABLE \"task_retires_package\" (relation_id TEXT PRIMARY KEY, subject_id TEXT NOT NULL, object_id TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "task_targets_deployment",
+          "sql": "CREATE TABLE \"task_targets_deployment\" (relation_id TEXT PRIMARY KEY, subject_id TEXT NOT NULL, object_id TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "tasks",
+          "sql": "CREATE TABLE \"tasks\" (id TEXT PRIMARY KEY, label TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "teams",
+          "sql": "CREATE TABLE \"teams\" (id TEXT PRIMARY KEY, label TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "test_verifies_service",
+          "sql": "CREATE TABLE \"test_verifies_service\" (relation_id TEXT PRIMARY KEY, subject_id TEXT NOT NULL, object_id TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        },
+        {
+          "name": "tests",
+          "sql": "CREATE TABLE \"tests\" (id TEXT PRIMARY KEY, label TEXT NOT NULL, evidence TEXT NOT NULL)",
+          "type": "table"
+        }
+      ]
+    }
+  ]
+}
