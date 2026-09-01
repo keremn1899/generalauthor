@@ -10,6 +10,12 @@ import {
 // drifting apart.
 import type { LabRoute } from "./LabRoutes";
 
+/**
+ * The World IR explorer. A product route, not a lab: it ships.
+ */
+const WorldPage = lazy(() =>
+  import("./world/WorldPage").then((module) => ({ default: module.WorldPage })),
+);
 const ProductHost = lazy(() =>
   import("./product/ProductHost").then((module) => ({
     default: module.ProductHost,
@@ -35,7 +41,7 @@ const LabHost = LAB_ENABLED
  * `LabRoute` rather than re-spelling fourteen names, so a lab page added over
  * there cannot become a route this file silently fails to dispatch.
  */
-type Route = "product-graph" | "product-review" | LabRoute;
+type Route = "product-graph" | "product-review" | "world" | LabRoute;
 
 function normalizeHash() {
   const raw = window.location.hash;
@@ -47,6 +53,7 @@ function normalizeHash() {
 function routeFromHash(): Route {
   const h = window.location.hash.replace(/^#\/?/, "").split("?")[0];
 
+  if (h === "world" || h.startsWith("world/")) return "world";
   if (h === "graph" || h === "ask") return "product-graph";
   if (h === "review" || h === "log") return "product-review";
   // Constructions live in the Graphs drawer, not as a third surface.
@@ -135,7 +142,8 @@ export default function App() {
   }, []);
 
   let page;
-  if (route === "product-graph") page = <ProductHost surface="graph" />;
+  if (route === "world") page = <WorldPage />;
+  else if (route === "product-graph") page = <ProductHost surface="graph" />;
   else if (route === "product-review") page = <ProductHost surface="log" />;
   else if (LabHost) page = <LabHost route={route as LabRoute} />;
   // A build without labs still has to answer a bookmark to one. Falling back

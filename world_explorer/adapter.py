@@ -226,6 +226,9 @@ class WorldExplorerAdapter:
                         "type": role.type,
                         "column": role.column,
                         "referent": role.referent,
+                        "kinds": self.role_kinds(record["name"], role.column)
+                        if role.referent
+                        else [],
                     }
                     for role in roles
                 ],
@@ -241,6 +244,35 @@ class WorldExplorerAdapter:
                 }
             out.append(item)
         return out
+
+    #: How many distinct namespaces a role is reported as accepting before the
+    #: answer stops being a type and starts being a list.
+    MAX_ROLE_KINDS = 6
+
+    def role_kinds(self, relation: str, column: str) -> list[str]:
+        """The referent namespaces actually seen in one role, e.g. `["part"]`.
+
+        World IR types a role as REFERENT and stops there — a role knows it
+        takes a referent, not that it takes a *part*. But §7.1's schema view is
+        drawn in exactly those terms (`SupplierListing ─ listing_of ─ Part`), so
+        the kinds have to come from somewhere.
+
+        They come from the data. Referent ids in this world are namespaced —
+        `part:X160`, `context:outdoor_enclosure` — so the distinct prefixes a
+        role has actually been filled with are an observation, not a schema
+        claim, and this returns them as such. A role that has never been filled
+        reports nothing, which is honest: an empty relation has no kinds to
+        show, and inventing one would put a type on the canvas the world has
+        never asserted.
+        """
+        rows = self._view.query(
+            f'SELECT DISTINCT substr("{column}", 1, instr("{column}", \':\') - 1) '
+            f'AS kind FROM "{relation}" '
+            f'WHERE "{column}" IS NOT NULL AND instr("{column}", \':\') > 0 '
+            f"ORDER BY kind LIMIT ?",
+            (self.MAX_ROLE_KINDS,),
+        )
+        return [row["kind"] for row in rows if row["kind"]]
 
     def derivation_inputs(self, relation: str) -> list[str]:
         return [

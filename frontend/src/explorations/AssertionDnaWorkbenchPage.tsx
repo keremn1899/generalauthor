@@ -37,43 +37,31 @@ import {
   chromeCssVariables,
   GRAPH_DNA_CHIP,
   GRAPH_DNA_CHROME,
-  GRAPH_DNA_GEOMETRY,
   GRAPH_DNA_PROVISIONAL_THEME,
   GRAPH_DNA_THEME,
-  radixValue,
-  type GraphDnaTheme,
   type ThemeMode,
 } from "../styles/graphDna";
-import { FONT_SANS_FAMILY } from "../styles/typography";
+// The marks themselves live beside the surface that ships them. This page
+// authors their parameters; it does not own how they are drawn, or the board
+// and the product would be two drawings that only look alike.
+import {
+  chipNode,
+  discNode,
+  filamentEdge,
+  MARK_DEFAULTS,
+  paintOf,
+  shelfNode,
+  spokeEdge,
+  type MarkParams,
+  type Paint,
+} from "../world/marks";
 import "./AssertionDnaWorkbenchPage.css";
 
 const STORAGE_KEY = "graphauthor.assertionDna";
 
-type ChipParams = typeof GRAPH_DNA_CHIP & {
-  /** Read from `GRAPH_DNA_GEOMETRY`; adjustable here because the chip is only
-   *  ever judged against the disc it sits next to. */
-  discDiameter: number;
-  edgeWidth: number;
-  edgeOpacity: number;
-  dottedGap: number;
-  /**
-   * Whether a mechanical chip carries its own outline.
-   *
-   * On a filament the chip needs none — the line it interrupts is what holds
-   * it. Detached on the field it may need one, or it floats. This is the
-   * question the board is here to answer, so it is a knob rather than a value.
-   */
-  mechanicalOutline: boolean;
-};
+type ChipParams = MarkParams;
 
-const DEFAULTS: ChipParams = {
-  ...GRAPH_DNA_CHIP,
-  discDiameter: GRAPH_DNA_GEOMETRY.nodeDiameter,
-  edgeWidth: GRAPH_DNA_GEOMETRY.edgeWidth,
-  edgeOpacity: GRAPH_DNA_GEOMETRY.edgeOpacity,
-  dottedGap: GRAPH_DNA_GEOMETRY.dottedGap,
-  mechanicalOutline: false,
-};
+const DEFAULTS: ChipParams = MARK_DEFAULTS;
 
 function readParams(): ChipParams {
   try {
@@ -91,285 +79,6 @@ function writeParams(params: ChipParams) {
   } catch {
     /* a lab that cannot persist is still a lab */
   }
-}
-
-/** The DNA palette, resolved to paint. */
-type Paint = {
-  canvas: string;
-  ink: string;
-  field: string;
-  chip: string;
-  muted: string;
-};
-
-function paintOf(theme: GraphDnaTheme): Paint {
-  return {
-    canvas: radixValue(theme.canvas),
-    ink: radixValue(theme.node),
-    field: radixValue(theme.nodeLabel),
-    chip: radixValue(theme.chip),
-    muted: radixValue(theme.lensLabel),
-  };
-}
-
-/**
- * Chip width comes from the word in it.
- *
- * Measured rather than estimated: relation names in this world run from
- * `used_in` to `acceptable_replacement`, and a fixed plate wide enough for the
- * second is a lie about the first.
- */
-let measurer: CanvasRenderingContext2D | null = null;
-function metricsOf(text: string, size: number, weight: number): TextMetrics | null {
-  if (!measurer) {
-    measurer = document.createElement("canvas").getContext("2d");
-  }
-  if (!measurer) return null;
-  // The weight has to be the one that will be drawn. Measuring at 600 and
-  // painting at 400 gives every plate a few pixels of padding it did not ask
-  // for, on one side, which reads as a centring bug rather than as a width.
-  measurer.font = `${weight} ${size}px ${FONT_SANS_FAMILY}`;
-  return measurer.measureText(text);
-}
-
-function textWidth(text: string, size: number, weight: number): number {
-  return metricsOf(text, size, weight)?.width ?? text.length * size * 0.6;
-}
-
-/**
- * How far the word's ink sits off the anchor G6 centres it on.
- *
- * G6 draws a centred label on the font's baseline box, which is not where the
- * word looks like it is. `acceptable_replacement` has an underscore below the
- * baseline and no descender-free cap line above it, so the box's middle sits
- * above the ink's middle and the name rides high in a 10px plate — most
- * visibly at small sizes, which is exactly the size this chip is.
- *
- * Correcting from the glyphs themselves rather than from a hand-tuned constant:
- * `actualBoundingBox*` is the real inked extent of *this* string in *this*
- * face, so a relation name with no descender and one with an underscore each
- * come out centred, and neither needs its own magic number.
- */
-function opticalNudge(text: string, size: number, weight: number): number {
-  const m = metricsOf(text, size, weight);
-  if (!m) return 0;
-  const ascent = m.actualBoundingBoxAscent;
-  const descent = m.actualBoundingBoxDescent;
-  if (!Number.isFinite(ascent) || !Number.isFinite(descent)) return 0;
-  return (ascent - descent) / 2;
-}
-
-function chipWidth(text: string, p: ChipParams): number {
-  return Math.round(
-    textWidth(text, p.chipLabelSize, p.chipLabelWeight) + p.chipPaddingX * 2,
-  );
-}
-
-/**
- * The weight the product canvas actually draws node labels at.
- *
- * Not 600. `ProductGraphCanvas` ships `labelFontWeight ?? 400`, and Jost at 400
- * is already the sharp geometric face the map is built on — the board opened
- * one step heavy on every label and read as a different product.
- */
-const DISC_LABEL_WEIGHT = 400;
-
-type ChipKind = "mechanical" | "semantic" | "unresolved";
-
-function discNode(id: string, x: number, y: number, label: string, paint: Paint, p: ChipParams) {
-  return {
-    id,
-    type: "circle",
-    style: {
-      x,
-      y,
-      size: p.discDiameter,
-      fill: paint.ink,
-      stroke: paint.ink,
-      lineWidth: GRAPH_DNA_GEOMETRY.nodeLine,
-      labelText: label,
-      labelPlacement: "center" as const,
-      labelFill: paint.field,
-      labelFontFamily: FONT_SANS_FAMILY,
-      labelFontSize: GRAPH_DNA_GEOMETRY.labelSize,
-      labelFontWeight: DISC_LABEL_WEIGHT,
-      labelLineHeight: GRAPH_DNA_GEOMETRY.labelSize * GRAPH_DNA_GEOMETRY.labelLineHeight,
-      labelOffsetY: GRAPH_DNA_GEOMETRY.labelBaselineNudge,
-      labelWordWrap: true,
-      labelMaxWidth: p.discDiameter * (GRAPH_DNA_GEOMETRY.labelMaxWidth / 100),
-      labelMaxLines: GRAPH_DNA_GEOMETRY.labelMaxLines,
-      labelTextOverflow: "ellipsis" as const,
-    },
-  };
-}
-
-/** The plate. One tuple of one relation, standing on the field. */
-function chipNode(
-  id: string,
-  x: number,
-  y: number,
-  text: string,
-  kind: ChipKind,
-  paint: Paint,
-  p: ChipParams,
-) {
-  const filled = kind === "semantic";
-  const outlined = kind === "unresolved" || (kind === "mechanical" && p.mechanicalOutline);
-  return {
-    id,
-    type: "rect",
-    style: {
-      x,
-      y,
-      size: [chipWidth(text, p), p.chipHeight] as [number, number],
-      radius: p.chipRadius,
-      // A knockout, not a card: the plate is the field exactly, so filaments
-      // running under it stop being read rather than being covered by a
-      // second colour.
-      fill: filled ? paint.ink : paint.chip,
-      fillOpacity: kind === "unresolved" ? 0 : 1,
-      stroke: paint.ink,
-      lineWidth: outlined ? p.chipLine : 0,
-      lineDash: kind === "unresolved" ? ([0, p.dottedGap] as [number, number]) : undefined,
-      lineCap: "round" as const,
-      labelText: text,
-      labelPlacement: "center" as const,
-      labelFill: filled ? paint.field : paint.ink,
-      labelFontFamily: FONT_SANS_FAMILY,
-      labelFontSize: p.chipLabelSize,
-      labelFontWeight: p.chipLabelWeight,
-      labelOffsetY:
-        opticalNudge(text, p.chipLabelSize, p.chipLabelWeight) + p.chipLabelNudge,
-    },
-  };
-}
-
-/**
- * The shelf under a derived chip.
- *
- * A separate element rather than part of the plate, because the plate is a
- * `rect` and a second rule is a second shape. In the product this becomes one
- * custom node so the two can never be placed apart; here they are two so the
- * gap between them is a knob.
- */
-function shelfNode(id: string, x: number, y: number, text: string, paint: Paint, p: ChipParams) {
-  // From the word, not from the plate: a shelf the width of the box reads as a
-  // second edge of the box. The width of the name plus a little air reads as
-  // the name resting on something.
-  const width =
-    textWidth(text, p.chipLabelSize, p.chipLabelWeight) + p.shelfOverhang * 2;
-  return {
-    id,
-    type: "rect",
-    style: {
-      x,
-      y: y + p.chipHeight / 2 + p.shelfGap,
-      size: [Math.max(4, Math.round(width)), p.shelfLine] as [number, number],
-      radius: 0,
-      fill: paint.ink,
-      lineWidth: 0,
-      labelText: "",
-    },
-  };
-}
-
-type SpokeOptions = {
-  role?: string;
-  dotted?: boolean;
-  showRole: boolean;
-};
-
-/** A referent filling a role in an assertion. */
-function spokeEdge(
-  id: string,
-  source: string,
-  target: string,
-  paint: Paint,
-  p: ChipParams,
-  options: SpokeOptions,
-) {
-  return {
-    id,
-    source,
-    target,
-    style: {
-      stroke: paint.ink,
-      lineWidth: p.roleSpokeWidth,
-      // A named bond is a lit bond. G6 applies the element's opacity to the
-      // label group as well, so a chip on a 0.5 filament comes out grey on
-      // grey — and the fix is not to fight the inheritance but to accept what
-      // it is telling us: you are looking at this spoke, so it should be at
-      // full strength while you are.
-      opacity: options.showRole ? 1 : p.roleSpokeOpacity,
-      lineCap: "round" as const,
-      lineDash: options.dotted ? ([0, p.dottedGap] as [number, number]) : undefined,
-      labelText: options.showRole ? (options.role ?? "") : "",
-      labelFontFamily: FONT_SANS_FAMILY,
-      labelFontSize: p.roleLabelSize,
-      labelFontWeight: p.roleLabelWeight,
-      labelFill: paint.ink,
-      // Stated, not inherited. A label left to take the edge's opacity is a
-      // name drawn at the strength of the line under it, which is backwards:
-      // the filament is quiet so the name can be read over it.
-      labelOpacity: 1,
-      labelBackground: true,
-      labelBackgroundOpacity: 1,
-      labelBackgroundFill: paint.chip,
-      labelBackgroundLineWidth: 0,
-      labelBackgroundRadius: p.chipRadius,
-      labelPadding: [p.chipPaddingY, p.chipPaddingX] as [number, number],
-      labelAutoRotate: false,
-      labelPlacement: p.roleLabelAt,
-    },
-  };
-}
-
-/** A plain filament, with or without its name showing. */
-function filamentEdge(
-  id: string,
-  source: string,
-  target: string,
-  paint: Paint,
-  p: ChipParams,
-  options: { label?: string; named: boolean; semantic?: boolean },
-) {
-  const named = options.named && Boolean(options.label);
-  return {
-    id,
-    source,
-    target,
-    style: {
-      stroke: paint.ink,
-      lineWidth: p.edgeWidth,
-      // See `spokeEdge`: naming a bond lights it.
-      opacity: named ? 1 : p.edgeOpacity,
-      lineCap: "round" as const,
-      labelText: named ? options.label : "",
-      labelFontFamily: FONT_SANS_FAMILY,
-      labelFontSize: p.chipLabelSize,
-      labelFontWeight: p.chipLabelWeight,
-      // The plate on a filament is the same plate, so it is centred the same
-      // way. Letting the edge label fall back to G6's own placement is how the
-      // collapsed and detached forms stop being one object.
-      labelOffsetY:
-        opticalNudge(options.label ?? "", p.chipLabelSize, p.chipLabelWeight) +
-        p.chipLabelNudge,
-      labelFill: options.semantic ? paint.field : paint.ink,
-      // See `spokeEdge`: the plate and the word on it are their own strength.
-      // A semantic chip inheriting a 0.5 filament came out as grey-on-grey and
-      // stopped being the same object as the plate an n-ary tuple stands on,
-      // which is the whole claim this board is here to make.
-      labelOpacity: 1,
-      labelBackground: named,
-      labelBackgroundOpacity: 1,
-      labelBackgroundFill: options.semantic ? paint.ink : paint.chip,
-      labelBackgroundLineWidth: 0,
-      labelBackgroundRadius: p.chipRadius,
-      labelPadding: [p.chipPaddingY, p.chipPaddingX] as [number, number],
-      labelAutoRotate: false,
-      labelPlacement: 0.5,
-    },
-  };
 }
 
 type Specimen = {

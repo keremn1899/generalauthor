@@ -80,6 +80,31 @@ def test_schema_carries_the_facts_the_projection_needs(adapter):
     assert any(not role["referent"] for role in schema["rated_voltage"]["roles"])
 
 
+def test_role_kinds_are_observed_not_declared(adapter):
+    """§7.1 is drawn in kinds the schema does not have.
+
+    A role is typed REFERENT and nothing more, so `Part ─ listing_of ─
+    SupplierListing` has to come from the ids the role has actually been filled
+    with. Observation, not schema — and a role nothing has filled reports
+    nothing rather than inventing a type the world never asserted.
+    """
+    schema = {record["name"]: record for record in adapter.schema()}
+    kinds = {
+        role["name"]: role["kinds"] for role in schema["listing_of"]["roles"]
+    }
+    assert kinds == {"listing": ["listing"], "part": ["part"]}
+
+    ternary = {role["name"]: role["kinds"] for role in schema["acceptable_replacement"]["roles"]}
+    assert ternary["context"] == ["context"]
+    assert ternary["new_part"] == ternary["old_part"] == ["part"]
+
+    # A scalar role has no kind at all — it never becomes a disc.
+    scalar = next(
+        role for role in schema["rated_voltage"]["roles"] if not role["referent"]
+    )
+    assert scalar["kinds"] == []
+
+
 def test_derived_state_is_distinguishable_and_names_its_inputs(adapter):
     schema = {record["name"]: record for record in adapter.schema()}
     eligible = schema["eligible_part"]

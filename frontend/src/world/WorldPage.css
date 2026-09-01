@@ -1,0 +1,153 @@
+/**
+ * The explorer's chrome. Same tokens as the product shell, so the canvas and
+ * the panel around it are one room — nothing here mixes a grey of its own.
+ */
+
+.world * {
+  border-radius: 0;
+}
+
+.world {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-sans, system-ui, sans-serif);
+}
+
+.world__bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.7rem;
+}
+
+.world__id {
+  font-weight: 500;
+}
+
+.world__rev,
+.world__hint {
+  color: var(--ink-muted);
+}
+
+.world__bar button {
+  margin-left: auto;
+  padding: 4px 10px;
+  font: inherit;
+  font-size: 0.66rem;
+  color: var(--ink);
+  background: var(--canvas);
+  border: 1px solid var(--rule);
+  cursor: pointer;
+}
+
+.world__bar button[data-active="true"] {
+  background: var(--ink);
+  color: var(--panel);
+  border-color: var(--ink);
+}
+
+.world__body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  min-height: 0;
+}
+
+.world__stage {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.world__panel {
+  border-left: 1px solid var(--rule);
+  background: var(--panel);
+  padding: 16px;
+  overflow-y: auto;
+  font-size: 0.7rem;
+  line-height: 1.5;
+}
+
+.world__panel h2 {
+  margin: 0 0 4px;
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+.world__panel h3 {
+  margin: 14px 0 4px;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  font-weight: 400;
+}
+
+.world__mode,
+.world__note,
+.world__hint {
+  margin: 0 0 8px;
+  color: var(--ink-muted);
+}
+
+.world__facts,
+.world__facts-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 8px;
+  margin: 0 0 12px;
+}
+
+.world__facts dt,
+.world__facts-row dt {
+  color: var(--ink-muted);
+}
+
+.world__facts dd,
+.world__facts-row dd {
+  margin: 0;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.world__roles,
+.world__inputs {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.world__roles li {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 3px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.world__roles li b {
+  font-weight: 400;
+}
+
+.world__roles li span,
+.world__inputs li {
+  color: var(--ink-muted);
+}
+
+.world__inputs li {
+  padding: 2px 0;
+}
+
+.world__error {
+  padding: 24px;
+  color: var(--ink-muted);
+}
+
+.world__error code {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.66rem;
+}
