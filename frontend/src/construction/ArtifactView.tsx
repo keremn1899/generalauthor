@@ -10,9 +10,11 @@ import { useEffect, useMemo, useState } from "react";
 import {
   constructionApi,
   type AdmissionProposal,
+  type DocketRow,
   type IntakeAccount,
   type PassArtifact,
 } from "../api/construction";
+import { markOf } from "./Docket";
 import { tokenFromLocation } from "../api/plane";
 
 type Json = Record<string, unknown>;
@@ -329,6 +331,7 @@ function AdmissionCard({
   actor,
   busy,
   onAdmit,
+  onWithdraw,
 }: {
   record: AdmissionRecord;
   column: "WORLD" | "PURPOSE";
@@ -342,12 +345,22 @@ function AdmissionCard({
     reason: string,
     test: string,
   ) => Promise<void>;
+  onWithdraw: (record: AdmissionRecord) => Promise<void>;
 }) {
   const [editing, setEditing] = useState(false);
   const [reason, setReason] = useState("");
   const [test, setTest] = useState("");
   const name = words(record.name);
   const target = column === "WORLD" ? "PURPOSE" : "WORLD";
+  // Named, not merely disabled. A dead button is a puzzle; the obligation
+  // surface says which burden is unmet and this one owes the same answer.
+  const unmet = !actor.trim()
+    ? "a proposal is someone's — name yourself"
+    : !reason.trim()
+      ? `moving ${name} to ${target} needs a reason`
+      : !test.trim()
+        ? "record the purpose-independence test you applied"
+        : null;
   return (
     <article
       className="admission-card"
@@ -375,18 +388,30 @@ function AdmissionCard({
           <div>
             <button
               type="button"
-              disabled={busy || !actor.trim() || !reason.trim() || !test.trim()}
+              disabled={Boolean(unmet) || busy}
               onClick={() => void onAdmit(record, target, reason, test)}
             >
               record proposal
             </button>
             <button type="button" disabled={busy} onClick={() => setEditing(false)}>cancel</button>
+            {unmet ? <span className="verdict__unmet">{unmet}</span> : null}
           </div>
         </div>
       ) : (
-        <button type="button" disabled={busy || !actor.trim()} onClick={() => setEditing(true)}>
-          propose {target}
-        </button>
+        <div className="admission-card__actions">
+          <button type="button" disabled={busy || !actor.trim()} onClick={() => setEditing(true)}>
+            propose {target}
+          </button>
+          {proposal ? (
+            // §6.4: every intervention has a backward path. Without this one an
+            // admission was one-way — P7 and P8 stayed stale for the life of
+            // the run, and proposing the artifact's value again would not undo
+            // it, because a standing proposal is still an intervention.
+            <button type="button" disabled={busy || !actor.trim()} onClick={() => void onWithdraw(record)}>
+              withdraw
+            </button>
+          ) : null}
+        </div>
       )}
     </article>
   );
@@ -399,6 +424,7 @@ function AdmissionGate({
   actor,
   busy,
   onAdmit,
+  onWithdraw,
 }: {
   document: Json;
   outputs: Record<string, unknown>;
@@ -411,6 +437,7 @@ function AdmissionGate({
     reason: string,
     test: string,
   ) => Promise<void>;
+  onWithdraw: (record: AdmissionRecord) => Promise<void>;
 }) {
   const relations = list(document.relations).map(object) as AdmissionRecord[];
   const appearsInOutput = (name: string) => hasObjectKey(outputs, name);
@@ -435,6 +462,7 @@ function AdmissionGate({
                 actor={actor}
                 busy={busy}
                 onAdmit={onAdmit}
+                onWithdraw={onWithdraw}
               />
             );
           })}
@@ -449,14 +477,66 @@ function outputRows(document: Json): { label: string; rows: unknown[] } {
   return entry ? { label: entry[0], rows: entry[1] as unknown[] } : { label: "rows", rows: [] };
 }
 
+/** The premise obligations behind one purpose answer, and who decided each.
+ *
+ * §15's provenance case: opening a purpose output must reach, in finite
+ * clicks, the human verdicts it rests on — and distinguish them from the
+ * machine's. A count does neither. The rows come from the docket rather than
+ * from P3 because the docket row is the one that carries the standing verdict,
+ * and the mark is the docket's own geometry for exactly this distinction. */
+function Premises({
+  rows,
+  onOpen,
+}: {
+  rows: DocketRow[];
+  onOpen: (id: string) => void;
+}) {
+  if (!rows.length) return <p className="artifact__absent">No premise obligation names this purpose.</p>;
+  const human = rows.filter((row) => row.verdict).length;
+  return (
+    <div className="premises">
+      <p className="premises__account">
+        {rows.length} premise obligation{rows.length === 1 ? "" : "s"} name this
+        purpose{human ? `, ${human} decided by a person` : ", none decided by a person"}.
+      </p>
+      <ul>
+        {rows.map((row) => (
+          <li key={row.obligation_id} data-mark={markOf(row)}>
+            <button type="button" onClick={() => onOpen(row.obligation_id)}>
+              <span className="docket__mark" aria-hidden="true" />
+              <b>{row.obligation_id}</b>
+              <span>{row.relation ?? "—"}</span>
+              {/* Both dispositions, never one in place of the other. §6.4: the
+                  machine's judgment stays readable under the human's, because
+                  the disagreement is the record worth having. */}
+              <span className="premises__disposition">
+                {row.verdict
+                  ? `${row.verdict.disposition} by ${row.verdict.actor}`
+                  : row.disposition ?? "undecided"}
+              </span>
+              {row.verdict && row.verdict.supersedes ? (
+                <span className="premises__superseded">
+                  machine said {row.verdict.supersedes}
+                </span>
+              ) : null}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 function Answers({
   outputs,
   derivations,
-  obligations,
+  rows: docketRows,
+  onOpenObligation,
 }: {
   outputs: Record<string, unknown>;
   derivations: Json;
-  obligations: unknown[];
+  rows: DocketRow[];
+  onOpenObligation: (id: string) => void;
 }) {
   const [selected, setSelected] = useState(Object.keys(outputs)[0] ?? "");
   const document = object(outputs[selected]);
@@ -464,8 +544,8 @@ function Answers({
   const derivation = list(derivations.derivations).map(object).find(
     (item) => words(item.output_relation).toLowerCase() === `purpose_ir/${selected.toLowerCase()}/output.json`,
   );
-  const demanded = obligations.map(object).filter((item) =>
-    list(item.required_by).map((value) => words(value).toUpperCase()).includes(selected.toUpperCase()),
+  const demanded = docketRows.filter((row) =>
+    row.required_by.map((value) => value.toUpperCase()).includes(selected.toUpperCase()),
   );
 
   return (
@@ -489,7 +569,7 @@ function Answers({
               <details>
                 <summary>derivation and obligations</summary>
                 {derivation ? <JsonFields value={derivation} /> : <p className="artifact__absent">no matching P7 derivation</p>}
-                <p>{demanded.length} P3 obligation{demanded.length === 1 ? "" : "s"} name this purpose.</p>
+                <Premises rows={demanded} onOpen={onOpenObligation} />
                 <p className="artifact__absent">The run records relation-level derivation, not row lineage; this is the strongest link the frozen artifacts support.</p>
               </details>
             </li>
@@ -499,7 +579,7 @@ function Answers({
         <div className="answer-rows__empty">
           <p>This answer contains no rows.</p>
           {derivation ? <JsonFields value={derivation} /> : null}
-          <p>{demanded.length} premise obligation{demanded.length === 1 ? "" : "s"} name this purpose.</p>
+          <Premises rows={demanded} onOpen={onOpenObligation} />
         </div>
       )}
     </div>
@@ -509,15 +589,19 @@ function Answers({
 export function ArtifactView({
   pass,
   actor,
+  rows,
   onActor,
   onClose,
   onChanged,
+  onOpenObligation,
 }: {
   pass: string;
   actor: string;
+  rows: DocketRow[];
   onActor: (actor: string) => void;
   onClose: () => void;
   onChanged: () => Promise<void>;
+  onOpenObligation: (id: string) => void;
 }) {
   const [artifacts, setArtifacts] = useState<Record<string, PassArtifact>>({});
   const [proposals, setProposals] = useState<Record<string, AdmissionProposal>>({});
@@ -527,7 +611,7 @@ export function ArtifactView({
   const needed = useMemo(() => {
     if (pass === "p1") return ["p0", "p1"];
     if (pass === "p6") return ["p6", "p8"];
-    if (pass === "p8") return ["p3", "p7", "p8"];
+    if (pass === "p8") return ["p7", "p8"];
     return [pass];
   }, [pass]);
 
@@ -573,6 +657,25 @@ export function ArtifactView({
     }
   };
 
+  const withdraw = async (record: AdmissionRecord) => {
+    setBusy(true);
+    try {
+      const relation = words(record.name);
+      await constructionApi.withdraw(relation, actor);
+      setProposals((held) => {
+        const rest = { ...held };
+        delete rest[relation];
+        return rest;
+      });
+      setProblem(null);
+      await onChanged();
+    } catch (error) {
+      setProblem(error instanceof Error ? error.message : String(error));
+    } finally {
+      setBusy(false);
+    }
+  };
+
   const current = artifacts[pass];
   return (
     <section className="artifact" aria-label={`${pass} artifact`}>
@@ -601,13 +704,15 @@ export function ArtifactView({
               actor={actor}
               busy={busy}
               onAdmit={admit}
+              onWithdraw={withdraw}
             />
           ) : null}
           {pass === "p8" ? (
             <Answers
               outputs={current.items ?? {}}
               derivations={object(artifacts.p7?.document)}
-              obligations={list(artifacts.p3?.document)}
+              rows={rows}
+              onOpenObligation={onOpenObligation}
             />
           ) : null}
           {["p3", "p4", "p5"].includes(pass) ? (

@@ -467,6 +467,15 @@
 
 .admission-card__form > div {
   display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+}
+
+/* Propose and, once something stands, withdraw it — §6.4's two directions,
+   side by side so the backward one is not hidden behind a second screen. */
+.admission-card__actions {
+  display: flex;
   gap: 6px;
 }
 
@@ -631,7 +640,11 @@
 /* The mark. Geometry carries construction origin: an outline is the machine's
    judgment, a filled square is a person's, and the rule above it is the crown
    the canvas draws over an adjudicated chip. A hollow dotted mark is an
-   obligation nobody has decided yet. */
+   obligation nobody has decided yet.
+
+   Keyed on `[data-mark]` rather than on the docket row, because the answer's
+   premise list draws the same distinction about the same obligations and a
+   second copy of this geometry is a second thing to retune. */
 .docket__mark {
   grid-row: 1 / span 3;
   align-self: center;
@@ -653,15 +666,15 @@
   transform: rotate(45deg);
 }
 
-.docket__row[data-mark="machine"] .docket__mark::before {
+[data-mark="machine"] .docket__mark::before {
   border-color: var(--ink);
 }
 
-.docket__row[data-mark="undecided"] .docket__mark::before {
+[data-mark="undecided"] .docket__mark::before {
   border-style: dotted;
 }
 
-.docket__row[data-mark="adjudicated"] .docket__mark::before {
+[data-mark="adjudicated"] .docket__mark::before {
   background: var(--ink);
   border-color: var(--ink);
 }
@@ -669,7 +682,7 @@
 /* The crown: a rule above a human verdict, mirroring the shelf the canvas
    draws beneath a derivation. It sits on the unrotated box, so it stays level
    and centred over the lozenge whatever the lozenge is doing. */
-.docket__row[data-mark="adjudicated"] .docket__mark::after {
+[data-mark="adjudicated"] .docket__mark::after {
   content: "";
   position: absolute;
   left: 0;
@@ -1195,4 +1208,70 @@
   color: var(--ink-muted);
   font-size: 0.64rem;
   line-height: 1.5;
+}
+
+/* The premises behind one purpose answer. §15: reaching the human verdicts an
+   output rests on, and telling them from the machine's. The mark does the
+   telling — it is the docket's geometry, reused rather than restated — so
+   nothing here needs a colour. */
+.premises__account {
+  margin: 0 0 6px;
+  color: var(--ink-muted);
+  font-size: 0.66rem;
+}
+
+.premises ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--rule);
+}
+
+.premises li {
+  border-bottom: 1px solid var(--rule);
+}
+
+/* The whole row is the control, as on the docket: an obligation is opened, not
+   a link inside it followed. */
+.premises li button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 5px 4px;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: 0.7rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.premises li button:hover {
+  background: var(--surface-raised);
+}
+
+.premises li b {
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.premises li span:not(.docket__mark) {
+  color: var(--ink-muted);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Pushed right so the two dispositions read as a pair at the end of the row
+   rather than as more of the identifier. */
+.premises__disposition {
+  margin-left: auto;
+}
+
+.premises__superseded {
+  flex: none;
+  font-size: 0.62rem;
 }

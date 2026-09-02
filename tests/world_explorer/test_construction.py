@@ -548,3 +548,42 @@ def test_without_a_construction_the_routes_say_so(tmp_path):
         response = get(opened, "/construction/docket")
     assert response.status_code == 404
     assert "no construction is open" in response.json()["error"]
+
+
+def test_upholding_the_machine_stales_nothing(reader):
+    """§15's under-closure-upheld case, stated exactly: a person records
+    `UNRESOLVED` where the packet genuinely preserves several live candidates.
+    That is a decision and is recorded as one — the mark on the obligation
+    changes to ADJUDICATED — but no downstream pass reads a different value
+    than it did before, so nothing goes stale. Staleness is about changed
+    inputs, not about who last touched the row."""
+    overview = reader.overview(
+        {"alpha": {"disposition": "UNRESOLVED", "supersedes": "UNRESOLVED"}}
+    )
+    by_id = {entry["pass"]: entry for entry in overview["passes"]}
+    assert [name for name, entry in by_id.items() if entry["state"] == "STALE"] == []
+
+
+def test_a_supplied_judgment_is_a_change_even_with_no_machine_verdict(reader):
+    """An absent `supersedes` means the machine decided nothing there. The
+    human's verdict is new input, not an affirmation of one."""
+    overview = reader.overview({"alpha": {"disposition": "SAME_ENTITY"}})
+    by_id = {entry["pass"]: entry for entry in overview["passes"]}
+    assert by_id["p6"]["state"] == "STALE"
+
+
+def test_one_upheld_verdict_does_not_hide_another_that_moved(reader):
+    """The fold is over every standing verdict, so an affirmation sitting
+    beside a real overturn must not mask it."""
+    overview = reader.overview(
+        {
+            "alpha": {"disposition": "UNRESOLVED", "supersedes": "UNRESOLVED"},
+            "beta": {"disposition": "SAME_ENTITY", "supersedes": "UNRESOLVED"},
+        }
+    )
+    by_id = {entry["pass"]: entry for entry in overview["passes"]}
+    assert [name for name, entry in by_id.items() if entry["state"] == "STALE"] == [
+        "p6",
+        "p7",
+        "p8",
+    ]

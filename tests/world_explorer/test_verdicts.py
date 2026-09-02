@@ -305,3 +305,87 @@ def test_admission_is_a_proposal_and_stales_only_downstream(client):
     passes = get(client, "/construction").json()["passes"]
     stale = [entry["pass"] for entry in passes if entry["state"] == "STALE"]
     assert stale == ["p7", "p8"]
+
+
+def test_withdrawing_an_admission_leaves_nothing_standing(ledger):
+    """§6.4 — every intervention has a backward path. Proposing the artifact's
+    value back is a different act: it leaves a human proposal standing, and the
+    spine is right to call that an intervention. Withdrawal removes it."""
+    ledger.admit(
+        "identity_judgment",
+        "PURPOSE",
+        reason="This relation encodes the active purpose's threshold.",
+        purpose_independence_test="Withdraw the purpose and the threshold disappears.",
+        supersedes="WORLD",
+        actor="kerem",
+    )
+    withdrawal = ledger.withdraw("identity_judgment", actor="kerem")
+    assert withdrawal["kind"] == "REVERT"
+    assert withdrawal["reverts"] == "PURPOSE"
+    assert ledger.current_admissions() == {}
+    # Both records survive; §6.4 has no silent edits.
+    assert len(ledger.entries()) == 2
+
+
+def test_withdrawing_nothing_is_a_miss(ledger):
+    with pytest.raises(KeyError):
+        ledger.withdraw("identity_judgment", actor="kerem")
+
+
+def test_a_withdrawal_belongs_to_someone(ledger):
+    ledger.admit(
+        "identity_judgment",
+        "PURPOSE",
+        reason="Purpose-bound.",
+        purpose_independence_test="Withdraw A and it disappears.",
+        supersedes="WORLD",
+        actor="kerem",
+    )
+    with pytest.raises(ValueError, match="actor"):
+        ledger.withdraw("identity_judgment", actor=" ")
+
+
+def test_an_admission_withdrawal_does_not_touch_the_obligations(ledger):
+    """The two folds share a file and not a namespace: a relation-addressed
+    withdrawal must not withdraw an obligation-addressed verdict."""
+    close(ledger, obligation_id="alpha", disposition="UNRESOLVED", supporting_evidence=[])
+    ledger.admit(
+        "identity_judgment",
+        "PURPOSE",
+        reason="Purpose-bound.",
+        purpose_independence_test="Withdraw A and it disappears.",
+        supersedes="WORLD",
+        actor="kerem",
+    )
+    ledger.withdraw("identity_judgment", actor="kerem")
+    assert set(ledger.current()) == {"alpha"}
+    assert ledger.current_admissions() == {}
+
+
+def test_withdrawal_over_http_returns_p7_and_p8_off_stale(client):
+    """The whole point of the backward path: without it an admission was a
+    one-way door and the run's last two passes stayed stale for its lifetime."""
+    post(
+        client,
+        "/construction/admission",
+        {
+            "relation": "identity_judgment",
+            "admission": "PURPOSE",
+            "reason": "The active purpose supplies this threshold.",
+            "purpose_independence_test": "Withdraw A and the threshold disappears.",
+            "actor": "kerem",
+        },
+    )
+    response = post(
+        client,
+        "/construction/withdrawal",
+        {"relation": "identity_judgment", "actor": "kerem"},
+    )
+    assert response.status_code == 200
+    assert get(client, "/construction/admissions").json()["admissions"] == {}
+    passes = get(client, "/construction").json()["passes"]
+    assert [entry["pass"] for entry in passes if entry["state"] == "STALE"] == []
+
+
+def test_the_withdrawal_route_is_gated(client):
+    assert client.post("/construction/withdrawal", json={}).status_code == 401

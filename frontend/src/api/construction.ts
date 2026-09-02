@@ -226,4 +226,10 @@ export const constructionApi = {
     purpose_independence_test: string;
     actor: string;
   }) => send<AdmissionProposal>("/construction/admission", proposal),
+
+  /** §6.4's backward path for an admission proposal. Withdrawing is not the
+   * same as proposing the artifact's value back: it leaves nothing standing,
+   * which is what returns P7 and P8 off stale. */
+  withdraw: (relation: string, actor: string) =>
+    send<Verdict>("/construction/withdrawal", { relation, actor }),
 };

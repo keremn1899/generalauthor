@@ -202,9 +202,17 @@ export function ConstructionPage() {
           <ArtifactView
             pass={pass}
             actor={actor}
+            rows={docket?.obligations ?? []}
             onActor={setActor}
             onClose={() => setPass(null)}
             onChanged={loadDocket}
+            // §15's provenance case ends here: the answer names a premise, and
+            // the premise opens where it can be argued with. Leaving the pass
+            // view is the point — the obligation lives on the docket.
+            onOpenObligation={(id) => {
+              setSelected(id);
+              setPass(null);
+            }}
           />
         ) : (
           <Docket

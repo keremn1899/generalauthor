@@ -372,17 +372,44 @@ class ConstructionReader:
         return moved
 
     @staticmethod
+    def _changed(record: dict[str, Any], field: str) -> bool:
+        """Whether one verdict moved the value the next pass would read.
+
+        §15's under-closure-upheld case: a person who records `UNRESOLVED`
+        where the machine already said `UNRESOLVED` has made a decision, and it
+        is recorded as one — but nothing downstream reads a different value
+        than it did before, so nothing goes stale. The record carries the
+        machine's judgment in `supersedes` precisely so this is answerable.
+
+        An absent `supersedes` is a supplied judgment, not an affirmed one:
+        the machine decided nothing there, so the human's verdict is new input.
+
+        Only adjudications are asked this. An admission proposal supersedes
+        whatever stood before it, which may be an earlier proposal rather than
+        the artifact, so agreement with `supersedes` would not mean the P6
+        input is where the constructor left it. Withdrawing an admission is
+        what returns it, and that is `revert`, not a comparison.
+        """
+        superseded = record.get("supersedes")
+        if superseded is None:
+            return True
+        return str(superseded).strip().upper() != str(record.get(field, "")).strip().upper()
+
+    @classmethod
     def _intervened(
+        cls,
         verdicts: dict[str, dict[str, Any]] | None,
         admissions: dict[str, dict[str, Any]] | None = None,
     ) -> set[str]:
-        """Which passes a human has intervened in.
+        """Which passes a human has *changed*.
 
         Adjudications stand at P5 and admission proposals at P6. Both use the
-        same positional staleness mechanism; only their address differs.
+        same positional staleness mechanism; only their address differs. An
+        affirmation is a decision but not a change, and staleness is about
+        changed inputs, so it is not counted here — see `_changed`.
         """
         intervened: set[str] = set()
-        if verdicts:
+        if any(cls._changed(record, "disposition") for record in (verdicts or {}).values()):
             intervened.add("p5")
         if admissions:
             intervened.add("p6")

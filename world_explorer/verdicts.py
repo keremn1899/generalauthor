@@ -131,6 +131,8 @@ class VerdictLedger:
         for record in self.entries():
             obligation_id = str(record.get("obligation_id", ""))
             if not obligation_id:
+                # An admission and its withdrawal are addressed by relation.
+                # Different namespace, different fold — see current_admissions.
                 continue
             if record.get("kind") == REVERT:
                 standing.pop(obligation_id, None)
@@ -150,8 +152,12 @@ class VerdictLedger:
         standing: dict[str, dict[str, Any]] = {}
         for record in self.entries():
             relation = str(record.get("relation", ""))
-            if record.get("kind") == ADMISSION and relation:
+            if not relation:
+                continue
+            if record.get("kind") == ADMISSION:
                 standing[relation] = record
+            elif record.get("kind") == REVERT:
+                standing.pop(relation, None)
         return standing
 
     # -- writing ------------------------------------------------------------
@@ -238,6 +244,34 @@ class VerdictLedger:
                 "kind": REVERT,
                 "obligation_id": obligation_id,
                 "reverts": standing.get("disposition"),
+                "actor": actor.strip(),
+                "at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            }
+        )
+
+    def withdraw(self, relation: str, *, actor: str = "") -> dict[str, Any]:
+        """Withdraw the standing admission proposal for one relation.
+
+        §6.4 gives every intervention a backward path, and without this one an
+        admission was a one-way door: `current_admissions` folded forward with
+        nothing that could empty it, so P7 and P8 stayed stale for the life of
+        the run and no second proposal could put them back. Proposing the
+        artifact's value again is not the same act — it leaves a human
+        proposal standing, and the spine is right to call that an
+        intervention. Withdrawal removes the proposal; the artifact's own
+        admission is current again.
+        """
+        if not actor.strip():
+            raise ValueError("a withdrawal is someone's; actor is required")
+        relation = relation.strip()
+        standing = self.current_admissions().get(relation)
+        if standing is None:
+            raise KeyError(f"no standing admission proposal on {relation!r} to withdraw")
+        return self._append(
+            {
+                "kind": REVERT,
+                "relation": relation,
+                "reverts": standing.get("admission"),
                 "actor": actor.strip(),
                 "at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             }

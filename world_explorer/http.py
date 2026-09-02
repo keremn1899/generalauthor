@@ -30,9 +30,9 @@ reading its imports rather than by trusting a route. It needs no thread of its
 own: it holds no long-lived connection; P2's SQLite coverage account opens in
 URI read-only mode and closes in the same call.
 
-Three routes on that plane do write, and they are the only three in this app:
-`/construction/verdict`, `/construction/admission`, and
-`/construction/revert` append to a ledger
+Four routes on that plane do write, and they are the only four in this app:
+`/construction/verdict`, `/construction/admission`, `/construction/revert`
+and `/construction/withdrawal` append to a ledger
 (`verdicts.py`) held outside both the run and any world. The read-only
 guarantee this app makes is about *worlds*, and it is unchanged — a verdict is
 an input to the next build, and the only path from one to a world tuple is a
@@ -326,6 +326,14 @@ def build_app(
             actor=str(body.get("actor") or ""),
         )
 
+    async def construction_withdrawal(request):
+        """§6.4 — withdraw an admission proposal, the backward path for §6.2."""
+        body = await request.json()
+        relation = str(body.get("relation") or "")
+        if not relation:
+            raise ValueError("relation is required")
+        return standing().withdraw(relation, actor=str(body.get("actor") or ""))
+
     async def construction_verdict(request):
         """§6.1 — record one adjudication, or refuse it.
 
@@ -425,6 +433,11 @@ def build_app(
                 methods=["POST"],
             ),
             Route("/construction/revert", guard(construction_revert), methods=["POST"]),
+            Route(
+                "/construction/withdrawal",
+                guard(construction_withdrawal),
+                methods=["POST"],
+            ),
         ],
     )
 
