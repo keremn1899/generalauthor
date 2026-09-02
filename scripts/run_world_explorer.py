@@ -20,6 +20,11 @@ Human verdicts append to `data/verdicts/<run>.jsonl`, outside the run.
 `--verdicts` names a different file. Nothing is ever written into the campaign
 directory: it is user-owned, usually mid-flight, and a pass artifact is the
 record of what the constructor said.
+
+`--scores` names the scorers' report, and `--scores-at` a dotted path into it
+(`axis_d_matrix.T1`) when the report covers a whole campaign. Certification is
+the scorers' word (§5): without this flag every pass reads as unscored on the
+spine, which is honest, and the front end never fills it in.
 """
 
 from __future__ import annotations
@@ -45,6 +50,8 @@ def main() -> int:
     parser.add_argument("--token", default="devtoken")
     parser.add_argument("--construction", type=Path, default=None)
     parser.add_argument("--verdicts", type=Path, default=None)
+    parser.add_argument("--scores", type=Path, default=None)
+    parser.add_argument("--scores-at", default=None)
     args = parser.parse_args()
 
     if not args.world.exists():
@@ -63,6 +70,7 @@ def main() -> int:
         )
         print(f"construction:   {args.construction} on /construction")
         print(f"verdicts:       {ledger}")
+        print(f"scores:         {args.scores or 'none — passes read unscored'}")
     serve(
         args.world,
         host=args.host,
@@ -70,6 +78,8 @@ def main() -> int:
         token=args.token or None,
         construction=args.construction,
         verdicts=ledger,
+        scores=args.scores,
+        scores_at=args.scores_at,
     )
     return 0
 

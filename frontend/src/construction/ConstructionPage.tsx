@@ -8,10 +8,10 @@
  * the front door for the same reason a review opens on the diff rather than on
  * the repository.
  *
- * Two surfaces, one column each: the docket (§8.1) and one obligation opened
- * into three panes (§8.2). The spine — pass state and what a verdict costs to
- * rebuild — is §14 step 4 and is deliberately absent rather than stubbed: a
- * pass state this page invented would be worse than one it does not show.
+ * Three surfaces (§4): the spine as a narrow rail, the docket as the front
+ * door, and one obligation opened into three panes. The rail is last in
+ * importance and first on the page for the reason a CI build page puts its
+ * stage list there — you glance at it, you do not work in it.
  *
  * Everything reloads from the server after a verdict. The alternative is
  * patching the docket locally, which would mean this page held its own opinion
@@ -37,6 +37,7 @@ import {
 } from "../styles/graphDna";
 import { Docket } from "./Docket";
 import { Obligation } from "./Obligation";
+import { Spine } from "./Spine";
 import "./ConstructionPage.css";
 
 function storedTheme(): ThemeMode {
@@ -69,6 +70,7 @@ export function ConstructionPage() {
   const [overview, setOverview] = useState<ConstructionOverview | null>(null);
   const [docket, setDocket] = useState<DocketData | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
+  const [pass, setPass] = useState<string | null>(null);
   const [opened, setOpened] = useState<OpenedObligation | null>(null);
   const [history, setHistory] = useState<Verdict[]>([]);
   const [actor, setActor] = useState<string>(storedActor);
@@ -189,6 +191,12 @@ export function ConstructionPage() {
       </header>
 
       <div className="construction__body">
+        <Spine
+          passes={overview?.passes ?? []}
+          open={docket?.counts.open}
+          selected={pass}
+          onSelect={setPass}
+        />
         <Docket
           docket={docket}
           selected={selected}

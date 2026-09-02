@@ -125,7 +125,7 @@ def build_run(root: Path) -> Path:
         "p6": {"admission": []},
         "p7": derivations,
     }
-    for pass_id, artifact in PASS_ARTIFACTS.items():
+    for index, (pass_id, artifact) in enumerate(PASS_ARTIFACTS.items()):
         snapshot = root / "passes" / pass_id / "workspace_snapshot"
         _write(
             root / "passes" / pass_id / "agent.json",
@@ -135,7 +135,9 @@ def build_run(root: Path) -> Path:
                 "reported_model": "Test Model",
                 "returncode": 0,
                 "timed_out": False,
-                "finished_at": "2026-09-02T08:00:00+00:00",
+                # A minute apiece. The passes run in sequence and record only
+                # when they finished, so the gap is the pass.
+                "finished_at": f"2026-09-02T08:{index:02d}:00+00:00",
                 "isolation_preflight": {"leaks": 0},
             },
         )
@@ -200,12 +202,86 @@ def test_overview_reports_artifacts_and_counts(reader):
     assert overview["unreadable"] == []
 
 
-def test_overview_confers_no_pass_state(reader):
-    """§5: certification comes from the scorers. The read plane reports what
-    the run recorded and nothing that sounds like a verdict on it."""
-    serialised = json.dumps(reader.overview())
-    for word in ("CERTIFIED", "PROVISIONAL", "STALE", "certified"):
-        assert word not in serialised
+def test_no_pass_is_certified_without_a_scorer(reader):
+    """§5: certification comes from the scorers, and the front end reports
+    state rather than conferring it. With no score handed in, every clean pass
+    reads unscored — never certified."""
+    passes = reader.overview()["passes"]
+    assert all(entry["state"] is None for entry in passes)
+    assert all(entry["scored"] is None for entry in passes)
+    assert all(entry["because"] == ["no scorer has spoken"] for entry in passes)
+    assert "CERTIFIED" not in json.dumps(reader.overview())
+
+
+def test_a_scorer_certifies_and_a_bad_score_does_not_fail(reader):
+    """A scorer's `pass: false` is not §5's FAILED — that word is about the
+    artifact, and a pass can produce a perfectly valid artifact full of wrong
+    judgments. T1's P5 is exactly that, and it is why the docket exists."""
+    overview = reader.overview(None, {"p0": {"pass": True}, "p5": {"pass": False}})
+    by_id = {entry["pass"]: entry for entry in overview["passes"]}
+    assert by_id["p0"]["state"] == "CERTIFIED"
+    assert by_id["p5"]["state"] is None
+    assert by_id["p5"]["scored"] is False
+    assert by_id["p5"]["because"] == ["the scorers did not pass it"]
+
+
+def test_a_verdict_makes_the_downstream_passes_stale(reader):
+    """§10: verdict recorded → passes P6–P8 go stale on the spine. Upstream of
+    the intervention is untouched, which is the whole reason adjudication is
+    the cheap intervention."""
+    overview = reader.overview({"alpha": {"disposition": "SAME_ENTITY"}})
+    by_id = {entry["pass"]: entry for entry in overview["passes"]}
+    assert [name for name, entry in by_id.items() if entry["state"] == "STALE"] == [
+        "p6",
+        "p7",
+        "p8",
+    ]
+    assert by_id["p5"]["state"] is None
+    assert by_id["p6"]["because"] == ["intervened in upstream: p5"]
+
+
+def test_a_pass_that_wrote_nothing_is_failed(reader, tmp_path):
+    """§5's FAILED: ran and did not produce a valid artifact."""
+    (reader.path / "passes" / "p7" / "workspace_snapshot" / "07_derivations.json").unlink()
+    by_id = {entry["pass"]: entry for entry in reader.overview()["passes"]}
+    assert by_id["p7"]["state"] == "FAILED"
+    assert by_id["p7"]["because"] == ["wrote no readable artifact"]
+
+
+def test_a_moved_input_makes_a_pass_provisional(reader):
+    """§5's reused machinery: each snapshot is cumulative, so p6 holds the copy
+    of P5's artifact that p6 actually read. Diverge them and P6 ran against an
+    input that has since moved."""
+    seen = reader.path / "passes" / "p6" / "workspace_snapshot" / "05_dispositions.json"
+    seen.write_text("[]", encoding="utf-8")
+    by_id = {entry["pass"]: entry for entry in reader.overview()["passes"]}
+    assert by_id["p6"]["state"] == "PROVISIONAL"
+    assert by_id["p6"]["because"] == ["input has moved since it ran: p5"]
+    assert by_id["p5"]["state"] is None
+
+
+def test_cost_is_positional_and_reproduces_the_table(reader):
+    """§5's table, without a second copy of the chain: an intervention at pass
+    N preserves P0–N and re-runs everything after it."""
+    assert reader.cost("p5")["invalidates"] == ["p6", "p7", "p8"]
+    assert reader.cost("p6")["invalidates"] == ["p7", "p8"]
+    assert reader.cost("p1")["invalidates"] == ["p2", "p3", "p4", "p5", "p6", "p7", "p8"]
+    adjudicate = reader.cost("p5")
+    assert adjudicate["intervention"] == "adjudicate"
+    assert adjudicate["preserves"] == ["p0", "p1", "p2", "p3", "p4", "p5"]
+    # P7's derivation program is authored and survives; only its outputs move.
+    assert adjudicate["preserves_program"] is True
+    assert reader.cost("p1")["intervention"] == "amend"
+
+
+def test_cost_is_measured_wall_clock_not_a_timeout(reader):
+    """The honest answer to "what will this cost" is what it cost last time.
+    A pass with no predecessor stamp is reported unmeasured, not guessed."""
+    cost = reader.cost("p5")
+    assert cost["seconds"] == 180.0
+    assert cost["measured"] == 3
+    assert cost["unmeasured"] == []
+    assert reader.cost("p0")["measured"] == 8
 
 
 def test_the_agent_record_carries_no_narration(reader):
@@ -214,7 +290,7 @@ def test_the_agent_record_carries_no_narration(reader):
         "model": "Test Model",
         "returncode": 0,
         "timed_out": False,
-        "finished_at": "2026-09-02T08:00:00+00:00",
+        "finished_at": "2026-09-02T08:05:00+00:00",
     }
 
 

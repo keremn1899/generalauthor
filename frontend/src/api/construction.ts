@@ -114,6 +114,29 @@ export type PassEntry = {
     finished_at: string | null;
   } | null;
   items?: number;
+  /** §5's four states — or null, which means no scorer has spoken. The front
+   * end reports state; it never confers it, so null is rendered as unscored
+   * and never quietly promoted to certified. */
+  state: "CERTIFIED" | "PROVISIONAL" | "FAILED" | "STALE" | null;
+  /** Why, in the server's words. Empty when the state needs no account. */
+  because: string[];
+  scored: boolean | null;
+  /** Observed wall clock for this pass, from the run itself. */
+  seconds: number | null;
+  question: string;
+};
+
+/** §5 — what an intervention at one pass invalidates, stated before the act. */
+export type Cost = {
+  at: string;
+  intervention: "amend" | "adjudicate" | "admit" | null;
+  invalidates: string[];
+  preserves: string[];
+  preserves_program: boolean;
+  seconds: number | null;
+  measured: number;
+  unmeasured: string[];
+  standing: string[];
 };
 
 export type ConstructionOverview = {
@@ -138,6 +161,7 @@ export const constructionApi = {
     read<OpenedObligation>(
       `/construction/obligation?id=${encodeURIComponent(id)}`,
     ),
+  cost: (at: string) => read<Cost>(`/construction/cost?at=${encodeURIComponent(at)}`),
   pass: (id: string) =>
     read<{ pass: string; artifact: string; document?: unknown; items?: Record<string, unknown> }>(
       `/construction/pass?id=${encodeURIComponent(id)}`,

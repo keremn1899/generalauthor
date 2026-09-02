@@ -50,6 +50,7 @@ from __future__ import annotations
 import asyncio
 import contextlib
 import hmac
+import json
 import re
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -87,6 +88,8 @@ def build_app(
     token: str | None = None,
     construction: Path | str | None = None,
     verdicts: Path | str | None = None,
+    scores: Path | str | None = None,
+    scores_at: str | None = None,
 ):
     from starlette.applications import Starlette
     from starlette.requests import Request
@@ -109,6 +112,30 @@ def build_app(
         if run
         else None
     )
+
+    def scored() -> dict[str, Any]:
+        """The scorers' word on this run's passes, re-read per request.
+
+        A path rather than a loaded map, for the reason the reader gives: a
+        score file is written by a scorer that may run again while this server
+        is up, and a copy held in memory would be a second opinion with its own
+        staleness. `scores_at` walks into a campaign report — the shape of that
+        report is the campaign's business, so it is named on the command line
+        rather than guessed at here.
+        """
+        if not scores:
+            return {}
+        try:
+            document = json.loads(Path(scores).read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            # An unreadable score file must not take the docket down with it.
+            # Every pass reads as unscored, which is the true statement.
+            return {}
+        for step in (scores_at or "").split(".") if scores_at else ():
+            if not isinstance(document, dict) or step not in document:
+                return {}
+            document = document[step]
+        return document if isinstance(document, dict) else {}
 
     def opened() -> ConstructionReader:
         if run is None:
@@ -230,7 +257,11 @@ def build_app(
         return {"demand": await session.call(lambda adapter: adapter.demand())}
 
     async def construction_overview(request):
-        return opened().overview()
+        return opened().overview(standing().current(), scored())
+
+    async def construction_cost(request):
+        """§5 — what an intervention here costs, before it is made."""
+        return opened().cost(_required(request, "at"), standing().current())
 
     async def construction_pass(request):
         return opened().pass_artifact(_required(request, "id"))
@@ -335,6 +366,7 @@ def build_app(
             Route("/world/demand", guard(demand)),
             Route("/world/query", query, methods=["POST"]),
             Route("/construction", guard(construction_overview)),
+            Route("/construction/cost", guard(construction_cost)),
             Route("/construction/pass", guard(construction_pass)),
             Route("/construction/docket", guard(construction_docket)),
             Route("/construction/obligation", guard(construction_obligation)),
@@ -360,11 +392,20 @@ def serve(
     token: str | None = None,
     construction: Path | str | None = None,
     verdicts: Path | str | None = None,
+    scores: Path | str | None = None,
+    scores_at: str | None = None,
 ) -> None:
     import uvicorn
 
     uvicorn.run(
-        build_app(world, token=token, construction=construction, verdicts=verdicts),
+        build_app(
+            world,
+            token=token,
+            construction=construction,
+            verdicts=verdicts,
+            scores=scores,
+            scores_at=scores_at,
+        ),
         host=host,
         port=port,
         log_level="warning",

@@ -22,16 +22,20 @@ A run that is mid-flight is read, not refused. A pass whose artifact is absent
 or half-written is reported as absent or unreadable; it never becomes a 500 and
 it never becomes an invented state.
 
-**Pass state is not confected here.** §5's CERTIFIED / PROVISIONAL / FAILED /
-STALE comes from the scorers, and the front end reports it rather than
-conferring it. What this module reports about a pass is what the run itself
-recorded: whether the artifact is there, and what the adapter's `agent.json`
-said about the process that produced it.
+**A pass is never certified here.** §5's CERTIFIED is the scorers' word. Three
+of the four states are structural and this module reads them off the run —
+FAILED is an absent or unreadable artifact, STALE is an intervention standing
+upstream, PROVISIONAL is an input that has moved since the pass ran. The fourth
+requires a scorer to have spoken, and when none has the state is `None`: not
+certified, not failed, unscored. Reporting `None` is the point. A front end
+that filled it in would be conferring certification, which §5 forbids, and the
+absence of a score is itself worth seeing on the spine.
 """
 
 from __future__ import annotations
 
 import json
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -52,12 +56,45 @@ PASS_ARTIFACTS: dict[str, str] = {
 
 PASSES: list[str] = list(PASS_ARTIFACTS)
 
+#: §2's third column: the question a human opens each pass to answer. Carried
+#: here rather than in the front end because it is part of what the pass *is* —
+#: a spine that showed nine status ticks and no questions would be a progress
+#: bar, and §3 is explicit that this is not one.
+PASS_QUESTIONS: dict[str, str] = {
+    "p0": "Did it understand what I asked for?",
+    "p1": "Are these the right things and distinctions?",
+    "p2": "Did the deterministic part land, and is it grounded?",
+    "p3": "Is this the right frontier?",
+    "p4": "Did it look at the right evidence?",
+    "p5": "Is this judgment right?",
+    "p6": "World-true, or only true for this purpose?",
+    "p7": "What rests on what; what blocks?",
+    "p8": "Is the answer right, and what is it standing on?",
+}
+
+
 #: Dispositions that close an obligation. Everything else leaves it open, and
 #: `UNRESOLVED` is a decision the constructor made, not an absence of one.
 CLOSING = frozenset({"SAME_ENTITY", "DISTINCT", "ACCEPT", "REJECT", "PRESENT", "ABSENT"})
 
 #: A purpose output declares itself by its path, `purpose_ir/a/output.json`.
 PURPOSE_OUTPUT_PREFIX = "purpose_ir/"
+
+
+#: §5's four pass states. The front end reports these; it confers none of them.
+CERTIFIED = "CERTIFIED"
+PROVISIONAL = "PROVISIONAL"
+FAILED = "FAILED"
+STALE = "STALE"
+
+#: Which pass an intervention of each kind is made at (§6). The pass is the
+#: address; what it costs is derived from where it sits in the chain, not from
+#: a table that could drift out of step with the chain.
+INTERVENTIONS: dict[str, str] = {
+    "p1": "amend",
+    "p5": "adjudicate",
+    "p6": "admit",
+}
 
 
 class ArtifactError(ValueError):
@@ -252,24 +289,225 @@ class ConstructionReader:
             "blocking": open_ and bool(purposes),
         }
 
+    # -- §5 the spine -------------------------------------------------------
+
+    def _finished(self, pass_id: str) -> datetime | None:
+        agent = self._agent(pass_id)
+        stamp = (agent or {}).get("finished_at")
+        if not stamp:
+            return None
+        try:
+            return datetime.fromisoformat(str(stamp))
+        except ValueError:
+            return None
+
+    def _elapsed(self) -> dict[str, float | None]:
+        """How long each pass actually took, in seconds.
+
+        The passes run in sequence and each records only `finished_at`, so a
+        pass's duration is the gap since the one before it. P0 has no
+        predecessor and is reported as unknown rather than guessed.
+
+        This is deliberately the *observed* cost rather than the campaign's
+        `TIMEOUTS` ceiling. A timeout is what a pass was allowed; the spine is
+        answering "what will this cost me", and the honest answer is what it
+        cost last time. It also keeps the read plane from importing a
+        campaign — `research/` is the user's, and a cost statement that broke
+        when a timeout was retuned would be measuring the wrong thing.
+        """
+        seconds: dict[str, float | None] = {}
+        previous: datetime | None = None
+        for pass_id in PASSES:
+            finished = self._finished(pass_id)
+            if finished is None:
+                seconds[pass_id] = None
+                continue
+            seconds[pass_id] = None if previous is None else (finished - previous).total_seconds()
+            previous = finished
+        return seconds
+
+    @staticmethod
+    def _identical(left: Path, right: Path) -> bool:
+        if left.is_dir() or right.is_dir():
+            if not (left.is_dir() and right.is_dir()):
+                return False
+            names = {item.name for item in left.iterdir()}
+            if names != {item.name for item in right.iterdir()}:
+                return False
+            return all(
+                ConstructionReader._identical(left / name, right / name) for name in names
+            )
+        if not (left.exists() and right.exists()):
+            return left.exists() == right.exists()
+        return left.read_bytes() == right.read_bytes()
+
+    def _moved_inputs(self, pass_id: str) -> list[str]:
+        """Upstream artifacts that no longer look like what this pass read.
+
+        This is §5's whole idea, and it is reused machinery rather than new:
+        `_tv_derivations` says *ran against input version N, input is now at
+        N+3*, and the same reasoning points at passes. Each pass's
+        `workspace_snapshot` is cumulative, so p6's snapshot holds the copy of
+        `05_dispositions.json` that p6 actually read. If that copy and p5's own
+        artifact have diverged, p6 ran against an input that has since moved,
+        and P6 is `PROVISIONAL` — no scorer required, and no flag anyone has to
+        remember to set.
+        """
+        index = PASSES.index(pass_id)
+        mine = self._snapshot(pass_id)
+        moved: list[str] = []
+        for upstream in PASSES[:index]:
+            theirs = self._snapshot(upstream) / PASS_ARTIFACTS[upstream]
+            seen = mine / PASS_ARTIFACTS[upstream]
+            # An artifact this pass never carried is not an input it read, and
+            # an input it never read cannot have moved under it. Snapshots are
+            # cumulative in practice, so in a real run this skips nothing —
+            # but reading absence as movement would put a whole chain into
+            # PROVISIONAL on the strength of a file nobody consulted.
+            if not theirs.exists() or not seen.exists():
+                continue
+            if not self._identical(seen, theirs):
+                moved.append(upstream)
+        return moved
+
+    @staticmethod
+    def _intervened(verdicts: dict[str, dict[str, Any]] | None) -> set[str]:
+        """Which passes a human has intervened in. Today a verdict is an
+        adjudication and adjudications are P5's; §6.2's admission change lands
+        at P6 and will arrive here as a second kind rather than a second
+        mechanism."""
+        return {"p5"} if verdicts else set()
+
+    def _pass_state(
+        self,
+        pass_id: str,
+        *,
+        ran: bool,
+        valid: bool,
+        agent: dict[str, Any] | None,
+        intervened: set[str],
+        scored: bool | None,
+    ) -> tuple[str | None, list[str]]:
+        """§5's state for one pass, and why.
+
+        Order is the argument. A pass that produced nothing is FAILED whatever
+        a scorer said about the run; a pass with an intervention upstream is
+        STALE whatever its own inputs look like, because it is going to re-run
+        regardless. PROVISIONAL is the quieter one and comes last of the three
+        structural states.
+
+        CERTIFIED is only ever returned on a scorer's word. Everything else
+        clean returns `None`, which the spine reads as unscored.
+        """
+        if not ran:
+            return None, []
+        if not valid:
+            return FAILED, ["wrote no readable artifact"]
+        if agent and (agent.get("timed_out") or (agent.get("returncode") or 0) != 0):
+            return FAILED, ["the pass did not exit cleanly"]
+        if intervened & set(PASSES[: PASSES.index(pass_id)]):
+            upstream = sorted(intervened & set(PASSES[: PASSES.index(pass_id)]))
+            return STALE, [f"intervened in upstream: {', '.join(upstream)}"]
+        moved = self._moved_inputs(pass_id)
+        if moved:
+            return PROVISIONAL, [f"input has moved since it ran: {', '.join(moved)}"]
+        if scored is True:
+            return CERTIFIED, []
+        if scored is False:
+            # Ran, produced its artifact, and the scorers would not sign it.
+            # Not FAILED — §5's FAILED is about the artifact — and emphatically
+            # not certified. T1's P5 is exactly this, and it is the reason the
+            # docket exists.
+            return None, ["the scorers did not pass it"]
+        return None, ["no scorer has spoken"]
+
+    def cost(self, at: str, verdicts: dict[str, dict[str, Any]] | None = None) -> dict[str, Any]:
+        """§5 — what an intervention at one pass costs, before it is made.
+
+        The invalidation rule is positional, not a lookup table: an
+        intervention at pass N preserves P0..N and re-runs everything after it.
+        That reproduces §5's table exactly — adjudicate at P5 re-runs P6-P8,
+        admit at P6 re-runs P7-P8, amend at P1 re-runs P2-P8 — without a second
+        copy of the chain that could drift out of step with the first.
+
+        What is preserved is stated as well as what is not, because the point
+        of the statement is that adjudication is *cheap*. A person who cannot
+        see that P0-P4 survive will hesitate over the one intervention the
+        measured failure actually needs.
+        """
+        if at not in PASS_ARTIFACTS:
+            raise KeyError(f"no pass {at!r} in this construction")
+        index = PASSES.index(at)
+        invalidates = PASSES[index + 1 :]
+        elapsed = self._elapsed()
+        known = [elapsed[pass_id] for pass_id in invalidates if elapsed.get(pass_id) is not None]
+        return {
+            "at": at,
+            "intervention": INTERVENTIONS.get(at),
+            "invalidates": invalidates,
+            "preserves": PASSES[: index + 1],
+            # P7's derivation program is authored, not derived, and survives an
+            # adjudication; only its outputs are recomputed (§5).
+            "preserves_program": at == "p5",
+            "seconds": round(sum(known), 1) if known else None,
+            # An estimate over fewer passes than it invalidates is an estimate
+            # that will read low, so it says so instead of rounding up.
+            "measured": len(known),
+            "unmeasured": [
+                pass_id for pass_id in invalidates if elapsed.get(pass_id) is None
+            ],
+            "standing": sorted(self._intervened(verdicts)),
+        }
+
     # -- §12 the routes -----------------------------------------------------
 
-    def overview(self) -> dict[str, Any]:
-        """The run: its passes, their artifacts, and the headline counts.
+    def overview(
+        self,
+        verdicts: dict[str, dict[str, Any]] | None = None,
+        scores: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """§12's `GET /construction` — passes, states, artifact presence, counts.
 
-        No pass is called certified here. `ran`, `artifact` and `agent` are
-        what the run recorded about itself; §5's state is the scorers' word and
-        arrives with the spine.
+        `scores` is handed in for the same reason `verdicts` are: certification
+        is the scorers' word (§5) and this module has no business knowing where
+        a campaign keeps its report. A pass with no score is reported unscored,
+        never certified.
         """
+        intervened = self._intervened(verdicts)
+        elapsed = self._elapsed()
+        graded = scores or {}
+
         passes: list[dict[str, Any]] = []
         for pass_id in PASSES:
             artifact = self._artifact_path(pass_id)
+            agent = self._agent(pass_id)
+            valid = artifact.exists()
+            if valid and artifact.is_file():
+                try:
+                    _load(artifact)
+                except ArtifactError:
+                    valid = False
+            grade = graded.get(pass_id)
+            scored = grade.get("pass") if isinstance(grade, dict) else grade
+            state, because = self._pass_state(
+                pass_id,
+                ran=(self.path / "passes" / pass_id).is_dir(),
+                valid=valid,
+                agent=agent,
+                intervened=intervened,
+                scored=scored if isinstance(scored, bool) else None,
+            )
             entry: dict[str, Any] = {
                 "pass": pass_id,
                 "artifact": PASS_ARTIFACTS[pass_id],
                 "present": artifact.exists(),
                 "ran": (self.path / "passes" / pass_id).is_dir(),
-                "agent": self._agent(pass_id),
+                "agent": agent,
+                "state": state,
+                "because": because,
+                "scored": scored if isinstance(scored, bool) else None,
+                "seconds": elapsed.get(pass_id),
+                "question": PASS_QUESTIONS[pass_id],
             }
             if artifact.is_dir():
                 entry["items"] = len(sorted(artifact.glob("*.json")))
