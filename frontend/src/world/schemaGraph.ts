@@ -30,9 +30,11 @@ import {
   projectionOf,
   shelfNode,
   spokeEdge,
+  type ChipKind,
   type MarkParams,
   type Paint,
 } from "./marks";
+import { unsettled } from "./show";
 
 export type SchemaLayout = {
   /** Relations with no place on the canvas: scalar properties of one kind. */
@@ -51,6 +53,11 @@ const SATELLITE_GAP = 54;
 
 function kindOf(role: { kinds?: string[] }): string | null {
   return role.kinds && role.kinds.length ? role.kinds[0] : null;
+}
+
+/** Construction origin decides the plate; derived still gets the shelf. */
+function chipKind(relation: WorldRelation): ChipKind {
+  return (relation.origins ?? []).includes("SEMANTIC") ? "semantic" : "mechanical";
 }
 
 /** Every referent namespace the schema mentions, in a stable order. */
@@ -91,9 +98,10 @@ function centroid(points: Point[]): Point {
 /**
  * Build the schema canvas.
  *
- * `stalePaint` is handed in rather than decided here: a stale relation renders
- * in the provisional palette, and which palette that is belongs to the theme,
- * not to the projection.
+ * `stalePaint` is handed in rather than decided here: an unsettled relation
+ * (stale, or a completeness receipt that is not COMPLETE) renders in the
+ * provisional palette, and which palette that is belongs to the theme, not
+ * to the projection.
  */
 export function schemaLayout(
   relations: WorldRelation[],
@@ -169,8 +177,14 @@ export function schemaLayout(
       };
     }
 
-    const chipPaint = relation.stale ? stalePaint : paint;
+    const chipPaint = unsettled(
+      relation.stale,
+      relation.completeness?.status ?? null,
+    )
+      ? stalePaint
+      : paint;
     const named = options.namedAtRest || options.focused === relation.name;
+    const kind = chipKind(relation);
 
     if (projection === "bond" && distinct) {
       // The chip rides the filament — unless the relation is derived, because a
@@ -183,7 +197,7 @@ export function schemaLayout(
             at.x,
             at.y,
             relation.name,
-            "mechanical",
+            kind,
             chipPaint,
             params,
           ),
@@ -223,7 +237,7 @@ export function schemaLayout(
           `kind:${roleKinds[1]}`,
           chipPaint,
           params,
-          { label: relation.name, named },
+          { label: relation.name, named, semantic: kind === "semantic" },
         ),
       );
       continue;
@@ -237,7 +251,7 @@ export function schemaLayout(
         at.x,
         at.y,
         relation.name,
-        "mechanical",
+        kind,
         chipPaint,
         params,
       ),

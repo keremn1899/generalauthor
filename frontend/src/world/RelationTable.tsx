@@ -170,6 +170,9 @@ export function RelationTable({
           {total} tuple{total === 1 ? "" : "s"}
           {subject ? ` of ${subject.label}` : ""} · {relation.mode.toLowerCase()}
           {relation.stale ? " · stale" : ""}
+          {relation.completeness && relation.completeness.status !== "COMPLETE"
+            ? ` · ${relation.completeness.status.toLowerCase()}`
+            : ""}
         </span>
         {subject ? (
           <button type="button" onClick={onWiden}>

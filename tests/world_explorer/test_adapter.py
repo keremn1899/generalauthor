@@ -117,6 +117,69 @@ def test_derived_state_is_distinguishable_and_names_its_inputs(adapter):
     assert schema["listing_of"]["mode"] == "BASE"
 
 
+def test_schema_names_origin_and_completeness_for_the_overlay(adapter):
+    """§9's SHOW and overlay read facts off the schema, not off the canvas.
+
+    Construction origin is who decided the tuples — SHOW's four layers — and
+    completeness is a claim about a relation, or absent. A missing receipt is
+    not UNKNOWN; UNKNOWN is a status someone recorded. The BOM fixture has
+    COMPLETE receipts on derived relations and none on BASE ones, and nothing
+    is stale until an input moves.
+    """
+    schema = {record["name"]: record for record in adapter.schema()}
+    assert schema["acceptable_replacement"]["origins"] == ["SEMANTIC"]
+    assert schema["listing_of"]["origins"] == ["MECHANICAL"]
+    assert schema["eligible_part"]["origins"] == ["DERIVED"]
+
+    complete = schema["eligible_part"]["completeness"]
+    assert complete["status"] == "COMPLETE"
+    assert complete["current"] is True
+    assert complete["universe"]
+    assert schema["listing_of"]["completeness"] is None
+
+    overview = adapter.overview()
+    assert overview["incomplete"] == []
+    assert overview["stale"] == []
+
+
+def test_schema_sees_staleness_after_an_input_moves(world_path: Path, tmp_path):
+    """The overlay's input: an input that has moved makes the derived relation stale.
+
+    The derivation drawer already accounts for this per input. The canvas
+    needs the same fact at relation grain, or it is still just a flag in a
+    panel. Copied rather than mutated in place: the module-scoped world is
+    everyone else's fixture.
+    """
+    from research.semantic_integration.core.origins import ConstructionOrigin
+
+    copy = tmp_path / "stale.sqlite"
+    copy.write_bytes(world_path.read_bytes())
+    origins = Path(str(world_path) + ".origins.json")
+    if origins.exists():
+        Path(str(copy) + ".origins.json").write_bytes(origins.read_bytes())
+
+    with WorldExplorerAdapter(copy) as opened:
+        eligible = next(item for item in opened.schema() if item["name"] == "eligible_part")
+        assert eligible["stale"] is False
+
+        rated = next(item for item in opened.schema() if item["name"] == "rated_voltage")
+        referent = next(role["name"] for role in rated["roles"] if role["referent"])
+        scalar = next(role["name"] for role in rated["roles"] if not role["referent"])
+        opened._world.add_referent("part:ZZZ-stale", label="stale-probe")
+        opened._world.assert_tuple(
+            "rated_voltage",
+            {referent: "part:ZZZ-stale", scalar: 1},
+            origin=ConstructionOrigin.MECHANICAL,
+        )
+
+        moved = next(item for item in opened.schema() if item["name"] == "eligible_part")
+        assert moved["stale"] is True
+        assert "eligible_part" in opened.overview()["stale"]
+        # Completeness stays the last declared status — stale is a different fact.
+        assert moved["completeness"]["status"] == "COMPLETE"
+        assert moved["completeness"]["current"] is False
+
+
 def test_dependency_closure_runs_both_ways_from_any_relation(adapter):
     # §8.6 asks what a derived relation rests on; §21 asks what depends on a
     # thing, which is the same edge read backwards. A base relation has no

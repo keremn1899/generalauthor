@@ -59,6 +59,8 @@ export type FieldAssertion = {
   relation: string;
   origin: string;
   mode: string;
+  stale: boolean;
+  completeness: "COMPLETE" | "INCOMPLETE" | "UNKNOWN" | null;
   /** Referent role values, in role order. */
   spokes: { role: string; id: string }[];
   /** Scalar role values, which stay off the field and in the inspector. */
@@ -84,6 +86,9 @@ export type FieldBond = {
   assertion_id: string;
   relation: string;
   origin: string;
+  mode: string;
+  stale: boolean;
+  completeness: "COMPLETE" | "INCOMPLETE" | "UNKNOWN" | null;
   source: string;
   target: string;
 };
@@ -174,6 +179,8 @@ export type ExpansionInput = {
   anchor: string;
   relation: string;
   mode: string;
+  stale: boolean;
+  completeness: "COMPLETE" | "INCOMPLETE" | "UNKNOWN" | null;
   roles: WorldRole[];
   tuples: WorldTuple[];
   /** Labels for referents that may not be on the field yet. */
@@ -194,6 +201,8 @@ export function expand(set: WorkingSet, input: ExpansionInput): WorkingSet {
       anchor: input.anchor,
       relation: input.relation,
       mode: input.mode,
+      stale: input.stale,
+      completeness: input.completeness,
       roles: input.roles,
       tuple,
       labels: input.labels,
@@ -205,6 +214,8 @@ export function expand(set: WorkingSet, input: ExpansionInput): WorkingSet {
 export type PlacementInput = {
   relation: string;
   mode: string;
+  stale: boolean;
+  completeness: "COMPLETE" | "INCOMPLETE" | "UNKNOWN" | null;
   roles: WorldRole[];
   tuple: WorldTuple;
   labels: Map<string, string | null>;
@@ -343,6 +354,9 @@ function fold(
         assertion_id: tuple.assertion_id,
         relation: input.relation,
         origin: tuple.origin,
+        mode: input.mode,
+        stale: input.stale,
+        completeness: input.completeness,
         source: spokes[0].id,
         target: spokes[1].id,
       });
@@ -355,6 +369,8 @@ function fold(
     relation: input.relation,
     origin: tuple.origin,
     mode: input.mode,
+    stale: input.stale,
+    completeness: input.completeness,
     spokes,
     scalars,
   });

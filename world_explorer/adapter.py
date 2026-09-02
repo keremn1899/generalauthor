@@ -174,6 +174,45 @@ class WorldExplorerAdapter:
             "values": {role.name: row[role.column] for role in roles},
         }
 
+    @staticmethod
+    def _completeness_out(receipt: Mapping[str, Any] | None) -> dict[str, Any] | None:
+        """The completeness claim, named for the canvas rather than the store.
+
+        TaskView's receipt carries versions, fingerprints and environment —
+        facts the derivation drawer already has from the run record. What the
+        overlay needs is the declared status, the universe it was claimed over,
+        and whether that claim is still current. A missing receipt is `None`,
+        not UNKNOWN: UNKNOWN is a status someone recorded.
+        """
+        if not receipt:
+            return None
+        gaps = receipt.get("known_gaps") or []
+        return {
+            "status": receipt["status"],
+            "universe": receipt.get("universe_relation"),
+            "current": bool(receipt.get("current")),
+            "known_gaps": list(gaps) if isinstance(gaps, list) else [],
+        }
+
+    def _origins_of(self, name: str, mode: str) -> list[str]:
+        """Construction origins of one relation, sampled rather than counted.
+
+        SHOW classifies a relation by who decided its tuples, and relations in
+        this world are homogeneous — `listing_of` is mechanical, 
+        `acceptable_replacement` is semantic, derived relations are derived.
+        One assertion is enough to say which, and sampling keeps schema() off
+        the full assertion scan overview() already pays for.
+        """
+        if mode == "DERIVED":
+            return ["DERIVED"]
+        rows = self._view.query(
+            "SELECT assertion_id FROM _tv_assertions WHERE relation_name = ? LIMIT 1",
+            (name,),
+        )
+        if not rows:
+            return []
+        return [self._origin(rows[0]["assertion_id"])]
+
     # -- §7.1 world and schema ---------------------------------------------
 
     def overview(self) -> dict[str, Any]:
@@ -187,6 +226,12 @@ class WorldExplorerAdapter:
             origin = self._origin(row["assertion_id"])
             origins[origin] = origins.get(origin, 0) + 1
         demand = self._demand_document
+        incomplete = [
+            record["name"]
+            for record in described
+            if record["completeness"]
+            and record["completeness"]["status"] != "COMPLETE"
+        ]
         return {
             "world_id": self._world.world_id,
             "revision": self._view.revision,
@@ -195,6 +240,7 @@ class WorldExplorerAdapter:
             "assertions": counts["assertions"],
             "origins": origins,
             "stale": self._world.stale_relations(),
+            "incomplete": incomplete,
             "demand": None
             if demand is None
             else {
@@ -235,7 +281,8 @@ class WorldExplorerAdapter:
                 "referent_arity": sum(1 for role in roles if role.referent),
                 "count": record["row_count"],
                 "stale": record["stale"],
-                "completeness": record["completeness"],
+                "origins": self._origins_of(record["name"], record["mode"]),
+                "completeness": self._completeness_out(record["completeness"]),
             }
             if record.get("derivation"):
                 item["derivation"] = {
@@ -527,7 +574,7 @@ class WorldExplorerAdapter:
             "assertion_state": found[0]["origin"],
             "created_revision": int(found[0]["created_revision"]),
             "relation_stale": record["stale"],
-            "completeness": record["completeness"],
+            "completeness": self._completeness_out(record["completeness"]),
             "grounding": self._grounding("ASSERTION", assertion_id),
         }
         if record["mode"] == "DERIVED":

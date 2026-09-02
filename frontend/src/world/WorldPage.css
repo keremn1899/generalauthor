@@ -1,71 +1,20 @@
 /**
- * The explorer's chrome. Same tokens as the product shell, so the canvas and
- * the panel around it are one room — nothing here mixes a grey of its own.
+ * World-only remainder. Chrome (identity bar, instrument, finder, overlay,
+ * reader type) is imported from the graph page. This file keeps the canvas
+ * column, the table/derivation/frontier drawers, and inspector copy that has
+ * no graph equivalent.
  */
 
 .world * {
   border-radius: 0;
 }
 
-.world {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  background: var(--canvas);
-  color: var(--ink);
-  font-family: var(--font-sans, system-ui, sans-serif);
-}
-
-.world__bar {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 10px 16px;
-  border-bottom: 1px solid var(--rule);
-  font-size: 0.7rem;
-}
-
-.world__id {
-  font-weight: 500;
-}
-
-.world__rev,
-.world__hint {
-  color: var(--ink-muted);
-}
-
-.world__bar button {
-  margin-left: auto;
-  padding: 4px 10px;
-  font: inherit;
-  font-size: 0.66rem;
-  color: var(--ink);
-  background: var(--canvas);
-  border: 1px solid var(--rule);
-  cursor: pointer;
-}
-
-.world__bar button[data-active="true"] {
-  background: var(--ink);
-  color: var(--panel);
-  border-color: var(--ink);
-}
-
-.world__body {
-  flex: 1;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 260px;
-  min-height: 0;
-}
-
 /* The canvas and the extension under it are one column: §11 says you never
    choose between them, so the table takes room from the canvas rather than
-   replacing it. */
+   replacing it. `.gm__stage` is already the filling field; this only stacks. */
 .world__plane {
   display: flex;
   flex-direction: column;
-  min-width: 0;
-  min-height: 0;
 }
 
 .world__stage {
@@ -74,28 +23,145 @@
   overflow: hidden;
 }
 
-.world__panel {
-  border-left: 1px solid var(--rule);
-  background: var(--panel);
-  padding: 16px;
-  overflow-y: auto;
-  font-size: 0.7rem;
-  line-height: 1.5;
+/* The World reader follows the Graph reader's title/body/footer anatomy, but
+   its content is factual rather than prose. One selected subject per panel;
+   no permanent dashboard competing with the map. */
+.world-reader__article {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
 }
 
-.world__panel h2 {
-  margin: 0 0 4px;
-  font-size: 0.82rem;
-  font-weight: 500;
+.world-reader__header {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: flex-start;
+  gap: 0.55rem;
+  min-width: 0;
+  padding: 1rem var(--reader-inset) 0.9rem;
+  border-bottom: 1px solid var(--rule);
 }
 
-.world__panel h3 {
-  margin: 14px 0 4px;
-  font-size: 0.6rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+.world-reader__heading {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.world-reader__heading h2 {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-size: var(--reader-size);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.world-reader__heading p {
+  margin: 0.3rem 0 0;
   color: var(--ink-muted);
-  font-weight: 400;
+  font-size: 0.66rem;
+  line-height: 1.35;
+}
+
+.world-reader__header .node-reader__kind {
+  margin-top: 0.05rem;
+}
+
+.world-reader__close {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0.15rem 0;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  background: none;
+  color: var(--ink-muted);
+  font: inherit;
+  font-size: 0.64rem;
+  cursor: pointer;
+}
+
+.world-reader__close:hover,
+.world-reader__close:focus-visible {
+  border-bottom-color: currentColor;
+  color: var(--ink);
+  outline: none;
+}
+
+.world-reader__content {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  padding: 0.95rem var(--reader-inset) 1.25rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  font-size: 0.76rem;
+  line-height: 1.52;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--ink) 30%, transparent) transparent;
+}
+
+.world-reader__description {
+  max-width: 42ch;
+  margin: 0 0 1rem;
+  color: var(--ink);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.world-reader__section {
+  margin-top: 1.3rem;
+}
+
+.world-reader__section h3,
+.world-reader__content > h3 {
+  margin: 0 0 0.45rem;
+  color: var(--ink);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.world-reader__section--list {
+  margin-right: calc(-1 * var(--reader-inset));
+  margin-left: calc(-1 * var(--reader-inset));
+}
+
+.world-reader__section--list > h3 {
+  padding: 0 var(--reader-inset);
+}
+
+.world-reader__section--list .gm__list {
+  padding-bottom: 0;
+}
+
+.world-reader__actions {
+  display: flex;
+  flex: 0 0 auto;
+  border-top: 1px solid var(--rule);
+}
+
+.world-reader__actions .node-reader__link {
+  flex: 1 1 0;
+  justify-content: center;
+  width: auto;
+  min-height: 2.65rem;
+  padding: 0 0.8rem;
+  color: var(--ink-muted);
+  text-align: center;
+}
+
+.world-reader__actions .node-reader__link + .node-reader__link {
+  border-left: 1px solid var(--rule);
+}
+
+.world-reader__actions .node-reader__link:hover,
+.world-reader__actions .node-reader__link:focus-visible {
+  background: var(--panel);
+  color: var(--ink);
+  outline: none;
 }
 
 .world__mode,
@@ -105,21 +171,22 @@
   color: var(--ink-muted);
 }
 
-.world__facts,
-.world__facts-row {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 2px 8px;
-  margin: 0 0 12px;
+.world__facts {
+  margin: 0;
 }
 
-.world__facts dt,
-.world__facts-row dt {
+.world__facts > div {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.75rem;
+  padding: 0.28rem 0;
+}
+
+.world__facts dt {
   color: var(--ink-muted);
 }
 
-.world__facts dd,
-.world__facts-row dd {
+.world__facts dd {
   margin: 0;
   text-align: right;
   font-variant-numeric: tabular-nums;
@@ -127,30 +194,36 @@
 
 .world__roles,
 .world__inputs {
-  margin: 8px 0 0;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .world__roles li {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 3px 0;
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 0.8rem;
+  padding: 0.43rem 0;
   border-bottom: 1px solid var(--rule);
 }
 
 .world__roles li b {
   font-weight: 400;
+  color: var(--ink-muted);
 }
 
-.world__roles li span,
+.world__roles li span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  text-align: right;
+}
+
 .world__inputs li {
   color: var(--ink-muted);
 }
 
 .world__inputs li {
-  padding: 2px 0;
+  padding: 0.15rem 0;
 }
 
 .world__error {
@@ -163,95 +236,6 @@
   font-size: 0.66rem;
 }
 
-/* -- Find ---------------------------------------------------------------- */
-
-.world__find {
-  position: relative;
-  margin-left: auto;
-  width: 240px;
-}
-
-.world__find input {
-  width: 100%;
-  padding: 4px 8px;
-  font: inherit;
-  font-size: 0.68rem;
-  color: var(--ink);
-  background: var(--canvas);
-  border: 1px solid var(--rule);
-}
-
-.world__find ul {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  z-index: 2;
-  margin: 2px 0 0;
-  padding: 0;
-  list-style: none;
-  background: var(--panel);
-  border: 1px solid var(--rule);
-  max-height: 320px;
-  overflow-y: auto;
-}
-
-.world__find button,
-.world__expand button {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  width: 100%;
-  padding: 5px 8px;
-  font: inherit;
-  font-size: 0.66rem;
-  text-align: left;
-  color: var(--ink);
-  background: none;
-  border: none;
-  border-bottom: 1px solid var(--rule);
-  cursor: pointer;
-}
-
-.world__find button:hover,
-.world__expand button:not(:disabled):hover {
-  background: var(--canvas);
-}
-
-.world__find button b,
-.world__expand button b {
-  font-weight: 400;
-}
-
-.world__find button span,
-.world__expand button span {
-  color: var(--ink-muted);
-  font-variant-numeric: tabular-nums;
-}
-
-.world__expand {
-  margin: 4px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.world__expand button:disabled {
-  cursor: default;
-  color: var(--ink-muted);
-}
-
-.world__drop {
-  margin-top: 14px;
-  padding: 5px 8px;
-  width: 100%;
-  font: inherit;
-  font-size: 0.64rem;
-  color: var(--ink-muted);
-  background: var(--canvas);
-  border: 1px solid var(--rule);
-  cursor: pointer;
-}
-
 .world__grounding {
   margin: 4px 0 0;
   padding: 0;
@@ -261,7 +245,7 @@
 .world__grounding li {
   display: flex;
   flex-direction: column;
-  padding: 4px 0;
+  padding: 0.32rem 0;
   border-bottom: 1px solid var(--rule);
 }
 
@@ -274,11 +258,41 @@
 }
 
 .world__notice {
-  margin: 0 0 10px;
-  padding: 6px 8px;
-  background: var(--canvas);
-  border: 1px solid var(--rule);
+  margin: 0;
+  padding: 0.55rem var(--reader-inset);
+  border-bottom: 1px solid var(--rule);
   color: var(--ink-muted);
+  font-size: 0.68rem;
+}
+
+.world-reader__demand {
+  display: flex;
+  width: 100%;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 1rem 0 0;
+  padding: 0.65rem 0;
+  border: 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.world-reader__demand span:last-child {
+  color: var(--ink-muted);
+  font-size: 0.68rem;
+  text-align: right;
+}
+
+.world-reader__demand:hover span:first-child,
+.world-reader__demand:focus-visible span:first-child {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
 }
 
 /* -- Relation extension --------------------------------------------------- */

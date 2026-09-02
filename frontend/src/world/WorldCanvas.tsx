@@ -1,5 +1,5 @@
 /**
- * The field — a referent and the neighborhood someone grew around it.
+ * The field — a referent and the neighborhood someone grows around it.
  *
  * §7.2, and the mode the product actually lives in. What the schema canvas does
  * for vocabulary this does for instances, in the same two marks: discs are
@@ -24,7 +24,7 @@
  * anything.
  */
 
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Graph } from "@antv/g6";
 import {
   chipNode,
@@ -42,6 +42,11 @@ import {
   type ThemeMode,
 } from "../styles/graphDna";
 import type { WorkingSet } from "./workingSet";
+import {
+  assertionShown,
+  unsettled,
+  type ShowState,
+} from "./show";
 
 export type CanvasSelection =
   | { kind: "referent"; id: string }
@@ -68,6 +73,7 @@ export function WorldCanvas({
   params,
   hovered,
   selection,
+  show,
   onHover,
   onSelect,
   onPositions,
@@ -77,12 +83,14 @@ export function WorldCanvas({
   params: MarkParams;
   hovered: string | null;
   selection: CanvasSelection;
+  show: ShowState;
   onHover: (id: string | null) => void;
   onSelect: (selection: CanvasSelection) => void;
   onPositions: (positions: Map<string, { x: number; y: number }>) => void;
 }) {
   const hostRef = useRef<HTMLDivElement>(null);
   const graphRef = useRef<Graph | null>(null);
+  const [stageSize, setStageSize] = useState({ width: 0, height: 0 });
   /** Marks on the field last time we drew, so growth can be noticed. */
   const drawnRef = useRef(0);
   /**
@@ -98,9 +106,15 @@ export function WorldCanvas({
    */
   const setRef = useRef(set);
   setRef.current = set;
+  const selectionRef = useRef(selection);
+  selectionRef.current = selection;
   const paint = useMemo(() => paintOf(GRAPH_DNA_THEME[mode]), [mode]);
-  const stale = useMemo(() => paintOf(GRAPH_DNA_PROVISIONAL_THEME[mode]), [mode]);
+  const provisional = useMemo(
+    () => paintOf(GRAPH_DNA_PROVISIONAL_THEME[mode]),
+    [mode],
+  );
   const dim = useMemo(() => dimmed(paint), [paint]);
+  const dimProvisional = useMemo(() => dimmed(provisional), [provisional]);
 
   /** Which ids the pointer's subject touches, including itself. */
   const lit = useMemo(() => {
@@ -136,22 +150,47 @@ export function WorldCanvas({
   const data = useMemo(() => {
     const nodes: unknown[] = [];
     const edges: unknown[] = [];
-    const paintFor = (id: string) => (lit && !lit.has(id) ? dim : paint);
+    const loneSeed =
+      set.referents.size === 1 &&
+      set.assertions.size === 0 &&
+      set.demands.size === 0 &&
+      set.bonds.length === 0;
+    const paintFor = (id: string, overlay = false) => {
+      if (overlay) return lit && !lit.has(id) ? dimProvisional : provisional;
+      return lit && !lit.has(id) ? dim : paint;
+    };
     const named = (id: string) => Boolean(lit?.has(id));
 
     for (const referent of set.referents.values()) {
-      const at = set.positions.get(referent.id) ?? { x: 0, y: 0 };
+      const stored = set.positions.get(referent.id) ?? { x: 0, y: 0 };
+      // Give a new seed a real field position instead of distorting the camera
+      // with a single-element fit. Once moved, its stored position wins and
+      // this convenience disappears.
+      const at =
+        loneSeed &&
+        stored.x === 0 &&
+        stored.y === 0 &&
+        stageSize.width &&
+        stageSize.height
+          ? { x: stageSize.width / 2, y: stageSize.height / 2 }
+          : stored;
       nodes.push(
         discNode(referent.id, at.x, at.y, referent.label, paintFor(referent.id), params),
       );
     }
 
     for (const assertion of set.assertions.values()) {
+      if (!assertionShown(assertion.origin, assertion.mode, show)) continue;
       const at = set.positions.get(assertion.assertion_id) ?? { x: 0, y: 0 };
+      const overlay = unsettled(assertion.stale, assertion.completeness);
       const chipPaint =
-        assertion.origin === "SEMANTIC" && lit && !lit.has(assertion.assertion_id)
-          ? stale
-          : paintFor(assertion.assertion_id);
+        overlay
+          ? paintFor(assertion.assertion_id, true)
+          : assertion.origin === "SEMANTIC" &&
+              lit &&
+              !lit.has(assertion.assertion_id)
+            ? provisional
+            : paintFor(assertion.assertion_id);
       nodes.push(
         chipNode(
           assertion.assertion_id,
@@ -182,7 +221,7 @@ export function WorldCanvas({
             `${assertion.assertion_id}:${index}`,
             spoke.id,
             assertion.assertion_id,
-            paintFor(assertion.assertion_id),
+            paintFor(assertion.assertion_id, overlay),
             params,
             { role: spoke.role, showRole: named(assertion.assertion_id) },
           ),
@@ -196,6 +235,7 @@ export function WorldCanvas({
     // that they are joined, and the point of this mark is that no such claim
     // has been made.
     for (const demand of set.demands.values()) {
+      if (!show.unresolved) continue;
       const at = set.positions.get(demand.key) ?? { x: 0, y: 0 };
       nodes.push(
         chipNode(
@@ -225,12 +265,14 @@ export function WorldCanvas({
 
     for (const bond of set.bonds) {
       if (!set.referents.has(bond.source) || !set.referents.has(bond.target)) continue;
+      if (!assertionShown(bond.origin, bond.mode, show)) continue;
+      const overlay = unsettled(bond.stale, bond.completeness);
       edges.push(
         filamentEdge(
           bond.assertion_id,
           bond.source,
           bond.target,
-          paintFor(bond.assertion_id),
+          paintFor(bond.assertion_id, overlay),
           params,
           {
             label: bond.relation,
@@ -241,7 +283,17 @@ export function WorldCanvas({
       );
     }
     return { nodes, edges };
-  }, [set, paint, dim, stale, params, lit]);
+  }, [
+    set,
+    paint,
+    dim,
+    provisional,
+    dimProvisional,
+    params,
+    lit,
+    show,
+    stageSize,
+  ]);
 
   /** Dragged positions belong to the person, so they are read back before use. */
   const harvest = useCallback(() => {
@@ -257,6 +309,22 @@ export function WorldCanvas({
     if (out.size) onPositions(out);
   }, [onPositions]);
 
+  const applySelection = useCallback(() => {
+    const graph = graphRef.current;
+    if (!graph || graph.destroyed || drawnRef.current === 0) return;
+    const selected = selectionRef.current?.id ?? null;
+    const states: Record<string, string[]> = {};
+    for (const node of graph.getNodeData()) {
+      const id = String(node.id);
+      states[id] = id === selected ? ["selected"] : [];
+    }
+    for (const edge of graph.getEdgeData()) {
+      const id = String(edge.id);
+      states[id] = id === selected ? ["selected"] : [];
+    }
+    void graph.setElementState(states, false).catch(() => {});
+  }, []);
+
   useEffect(() => {
     const host = hostRef.current;
     if (!host) return;
@@ -266,6 +334,25 @@ export function WorldCanvas({
       animation: false,
       padding: 60,
       background: paint.canvas,
+      node: {
+        style: { cursor: "grab" },
+        state: {
+          selected: {
+            halo: true,
+            haloLineWidth: 9,
+            haloStroke: paint.ink,
+            haloStrokeOpacity: 0.16,
+          },
+        },
+      },
+      edge: {
+        state: {
+          selected: {
+            lineWidth: Math.max(1.5, params.edgeWidth * 1.8),
+            opacity: 1,
+          },
+        },
+      },
       behaviors: ["zoom-canvas", "drag-canvas", "drag-element"],
     });
     graphRef.current = graph;
@@ -345,7 +432,7 @@ export function WorldCanvas({
     graph.setData(data as never);
     void graph
       .draw()
-      .then(() => {
+      .then(async () => {
         if (graphRef.current !== graph) return undefined;
         // The *viewport* follows new matter; the marks do not. Growing the
         // field is the one moment the camera should move — otherwise an
@@ -354,19 +441,43 @@ export function WorldCanvas({
         // made stays where you left it while you read it.
         const grew = count > drawnRef.current;
         drawnRef.current = count;
-        return grew ? graph.fitView() : undefined;
+        if (grew && count === 1) {
+          // `fitView` magnifies a single disc to fill the whole stage. A seed
+          // is an entry point, not a hero image. Its datum is centred from the
+          // measured field height above, so the viewport stays at scale 1.
+          await graph.zoomTo(1, { duration: 0 });
+        } else if (grew) {
+          await graph.fitView();
+        }
+        applySelection();
       })
       .catch((problem: unknown) => {
         // Same as at mount: a draw in flight when the canvas is torn down is
         // not something to report.
         if (graphRef.current === graph) console.error(problem);
       });
-  }, [data]);
+  }, [applySelection, data]);
+
+  useEffect(() => {
+    applySelection();
+  }, [applySelection, selection]);
 
   useEffect(() => {
     const graph = graphRef.current;
-    if (graph) graph.setOptions({ background: paint.canvas });
-  }, [paint.canvas]);
+    if (!graph) return;
+    graph.setOptions({ background: paint.canvas });
+    graph.setNode({
+      style: { cursor: "grab" },
+      state: {
+        selected: {
+          halo: true,
+          haloLineWidth: 9,
+          haloStroke: paint.ink,
+          haloStrokeOpacity: 0.16,
+        },
+      },
+    });
+  }, [paint.canvas, paint.ink]);
 
   // A renderer sized once is sized wrong the moment anything else on the page
   // takes room: opening the extension drawer halves the stage, and a graph that
@@ -380,10 +491,16 @@ export function WorldCanvas({
       const graph = graphRef.current;
       if (!graph || !host.clientWidth || !host.clientHeight) return;
       graph.resize(host.clientWidth, host.clientHeight);
+      setStageSize((current) =>
+        current.width === host.clientWidth &&
+        current.height === host.clientHeight
+          ? current
+          : { width: host.clientWidth, height: host.clientHeight },
+      );
     });
     observer.observe(host);
     return () => observer.disconnect();
-  }, []);
+  }, [applySelection]);
 
   return (
     <div

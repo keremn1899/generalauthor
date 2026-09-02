@@ -56,6 +56,9 @@ def test_schema_and_overview(client):
 
     relations = {r["name"]: r for r in get(client, "/world/schema").json()["relations"]}
     assert relations["acceptable_replacement"]["arity"] == 3
+    assert relations["acceptable_replacement"]["origins"] == ["SEMANTIC"]
+    assert relations["eligible_part"]["completeness"]["status"] == "COMPLETE"
+    assert overview["incomplete"] == []
 
 
 def test_referent_expand_and_assertion_round_trip(client):
@@ -70,6 +73,7 @@ def test_referent_expand_and_assertion_round_trip(client):
     assertion_id = expanded["tuples"][0]["assertion_id"]
     detail = get(client, f"/world/assertion?id={assertion_id}").json()
     assert detail["origin"] == "SEMANTIC"
+    assert detail["completeness"] is None
     assert len(detail["values"]) == 3
 
 

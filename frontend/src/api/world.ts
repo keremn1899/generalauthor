@@ -17,6 +17,13 @@ export type WorldRole = {
   kinds?: RoleKindList;
 };
 
+export type WorldCompleteness = {
+  status: "COMPLETE" | "INCOMPLETE" | "UNKNOWN";
+  universe: string | null;
+  current: boolean;
+  known_gaps: unknown[];
+};
+
 export type WorldRelation = {
   name: string;
   description: string | null;
@@ -26,7 +33,15 @@ export type WorldRelation = {
   roles: WorldRole[];
   count: number;
   stale: boolean;
-  completeness: Record<string, unknown> | null;
+  /**
+   * Construction origins observed in this relation's tuples.
+   *
+   * SHOW reads this, not mode: a BASE relation can be SEMANTIC
+   * (`acceptable_replacement`) or MECHANICAL (`listing_of`), and collapsing
+   * those onto BASE would hide the semantic seam the toggle exists to keep.
+   */
+  origins: string[];
+  completeness: WorldCompleteness | null;
   derivation?: { state?: string; inputs: string[] } & Record<string, unknown>;
 };
 
@@ -38,6 +53,8 @@ export type WorldOverview = {
   assertions: number;
   origins: Record<string, number>;
   stale: string[];
+  /** Relations whose completeness receipt exists and is not COMPLETE. */
+  incomplete: string[];
   demand: {
     purpose: { id: string; revision: number; statement: string };
     obligations: number;
@@ -72,6 +89,7 @@ export type WorldAssertion = WorldTuple & {
   assertion_state: string;
   created_revision: number;
   relation_stale: boolean;
+  completeness: WorldCompleteness | null;
   grounding: WorldGrounding[];
   derivation?: { inputs: string[] } & Record<string, unknown>;
 };
