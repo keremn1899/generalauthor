@@ -1,0 +1,25 @@
+{
+  "obligation_id": "obl-0061",
+  "selected_observations": [
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "INV-3001 billed_name",
+      "excerpt": "\"billed_name\": \"Oakfield Logistik GmbH\""
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "Oakfield rebrand",
+      "excerpt": "Oakfield rebranded in 2023 from Oakfield Logistics GmbH to Oakfield Logistik GmbH."
+    },
+    {
+      "source_path": "sources/contracts/MSA-OAK-2018.md",
+      "location": "Counterparty",
+      "excerpt": "Counterparty: Oakfield Logistics GmbH"
+    }
+  ],
+  "selection_rationale": "Pulled naming and registry observations for both endpoints (billing:Oakfield Logistik GmbH, contract:MSA-OAK-2018) plus any documented rebrand or ambiguity notes relevant to Purpose B identity topology.",
+  "known_missing_information": [
+    "world/world.sqlite is absent from the workspace; P2 mechanical tuples (contract_section_excerpt, identity_link_candidate, etc.) could not be queried via TaskView and evidence was selected directly from heterogeneous source files per 02_mechanical_report.json inventory.",
+    "Rebrand from Oakfield Logistics GmbH to Oakfield Logistik GmbH may require legal_form_name_variant application beyond raw string match."
+  ]
+}

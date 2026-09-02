@@ -1,0 +1,209 @@
+{
+  "oracle_id": "taskview-bom-c0-v1",
+  "frozen_before_c1_evaluation": true,
+  "source_fingerprints": {
+    "manufacturer.csv": "sha256:31f380d664c7e832cc3066ed4d9f342be14833c899ca0dd8d93c76682b2ca084",
+    "suppliers.json": "sha256:ab343f7e311db86274846c08dd2a1f92c3607c068180cbeddf54fbc930c48e12",
+    "bom.csv": "sha256:a86d39d97bd993988be54ef850698095c08f38b247dd3e63ece5fb15a341dadc",
+    "engineering_notes.md": "sha256:bb9e10c4c220701d7c5ff755c18a7d39e78371d014680b99576626f3e4652c16"
+  },
+  "role_order": {
+    "manufacturer_part": ["part"],
+    "supplier_listing": ["listing"],
+    "bom_item": ["bom_item"],
+    "part_type": ["part", "part_type"],
+    "listing_of": ["listing", "part"],
+    "offered_by": ["listing", "supplier"],
+    "listing_availability": ["listing", "state"],
+    "rated_voltage": ["part", "volts"],
+    "temperature_range": ["part", "minimum_c", "maximum_c"],
+    "lifecycle": ["part", "state"],
+    "requires_type": ["bom_item", "part_type"],
+    "requires_voltage": ["bom_item", "volts"],
+    "requires_temperature": ["bom_item", "minimum_c", "maximum_c"],
+    "deployment_environment": ["bom_item", "environment"],
+    "candidate_replacement": ["new_part", "old_part"],
+    "acceptable_replacement": ["new_part", "old_part", "context"],
+    "voltage_compatible": ["part", "bom_item"],
+    "temperature_compatible": ["part", "bom_item"],
+    "eligible_part": ["part", "bom_item"],
+    "spec_conflict": ["part", "property"]
+  },
+  "relations": {
+    "manufacturer_part": {
+      "origin": "MECHANICAL",
+      "source_basis": ["manufacturer.csv"],
+      "tuples": [["part:X100"], ["part:X110"], ["part:X120"], ["part:X130"], ["part:X140"], ["part:X150"], ["part:X160"], ["part:X170"], ["part:X180"], ["part:R200"], ["part:R210"], ["part:C300"]]
+    },
+    "supplier_listing": {
+      "origin": "MECHANICAL",
+      "source_basis": ["suppliers.json"],
+      "tuples": [["listing:AC-X100"], ["listing:AC-X110"], ["listing:AC-X120"], ["listing:NW-X130"], ["listing:NW-X140"], ["listing:NW-X150"], ["listing:AC-X160"], ["listing:NW-X170"], ["listing:AC-X180"], ["listing:AC-R200"], ["listing:NW-R210"], ["listing:NW-C300"]]
+    },
+    "bom_item": {
+      "origin": "MECHANICAL",
+      "source_basis": ["bom.csv"],
+      "tuples": [["bom:BOM-A"], ["bom:BOM-B"], ["bom:BOM-C"], ["bom:BOM-D"]]
+    },
+    "part_type": {
+      "origin": "MECHANICAL",
+      "source_basis": ["manufacturer.csv"],
+      "tuples": [
+        ["part:X100", "sensor_interface"], ["part:X110", "sensor_interface"], ["part:X120", "sensor_interface"],
+        ["part:X130", "sensor_interface"], ["part:X140", "sensor_interface"], ["part:X150", "sensor_interface"],
+        ["part:X160", "sensor_interface"], ["part:X170", "sensor_interface"], ["part:X180", "sensor_interface"],
+        ["part:R200", "power_relay"], ["part:R210", "power_relay"], ["part:C300", "connector"]
+      ]
+    },
+    "listing_of": {
+      "origin": "MECHANICAL",
+      "source_basis": ["manufacturer.csv", "suppliers.json"],
+      "tuples": [
+        ["listing:AC-X100", "part:X100"], ["listing:AC-X110", "part:X110"], ["listing:AC-X120", "part:X120"],
+        ["listing:NW-X130", "part:X130"], ["listing:NW-X140", "part:X140"], ["listing:NW-X150", "part:X150"],
+        ["listing:AC-X160", "part:X160"], ["listing:NW-X170", "part:X170"], ["listing:AC-X180", "part:X180"],
+        ["listing:AC-R200", "part:R200"], ["listing:NW-R210", "part:R210"], ["listing:NW-C300", "part:C300"]
+      ]
+    },
+    "offered_by": {
+      "origin": "MECHANICAL",
+      "source_basis": ["suppliers.json"],
+      "tuples": [
+        ["listing:AC-X100", "supplier:acme-supply"], ["listing:AC-X110", "supplier:acme-supply"],
+        ["listing:AC-X120", "supplier:acme-supply"], ["listing:NW-X130", "supplier:northwind-parts"],
+        ["listing:NW-X140", "supplier:northwind-parts"], ["listing:NW-X150", "supplier:northwind-parts"],
+        ["listing:AC-X160", "supplier:acme-supply"], ["listing:NW-X170", "supplier:northwind-parts"],
+        ["listing:AC-X180", "supplier:acme-supply"], ["listing:AC-R200", "supplier:acme-supply"],
+        ["listing:NW-R210", "supplier:northwind-parts"], ["listing:NW-C300", "supplier:northwind-parts"]
+      ]
+    },
+    "listing_availability": {
+      "origin": "MECHANICAL",
+      "source_basis": ["suppliers.json"],
+      "tuples": [
+        ["listing:AC-X100", "stock"], ["listing:AC-X110", "stock"], ["listing:AC-X120", "backorder"],
+        ["listing:NW-X130", "stock"], ["listing:NW-X140", "stock"], ["listing:NW-X150", "stock"],
+        ["listing:AC-X160", "obsolete"], ["listing:NW-X170", "stock"], ["listing:AC-X180", "stock"],
+        ["listing:AC-R200", "limited"], ["listing:NW-R210", "stock"], ["listing:NW-C300", "stock"]
+      ]
+    },
+    "rated_voltage": {
+      "origin": "MECHANICAL",
+      "source_basis": ["manufacturer.csv", "suppliers.json"],
+      "tuples": [
+        ["part:X100", 24], ["part:X100", 28], ["part:X110", 24], ["part:X120", 12],
+        ["part:X130", 24], ["part:X140", 24], ["part:X150", 48], ["part:X160", 24],
+        ["part:X170", 5], ["part:X180", 24], ["part:R200", 24], ["part:R210", 24], ["part:C300", 5]
+      ]
+    },
+    "temperature_range": {
+      "origin": "MECHANICAL",
+      "source_basis": ["manufacturer.csv"],
+      "tuples": [
+        ["part:X100", -20, 80], ["part:X110", -30, 85], ["part:X120", -20, 70],
+        ["part:X130", 0, 60], ["part:X140", -40, 105], ["part:X150", -20, 80],
+        ["part:X160", -20, 75], ["part:X170", -10, 50], ["part:X180", -20, 80],
+        ["part:R200", -20, 70], ["part:R210", -40, 85], ["part:C300", -20, 70]
+      ]
+    },
+    "lifecycle": {
+      "origin": "MECHANICAL",
+      "source_basis": ["manufacturer.csv"],
+      "tuples": [
+        ["part:X100", "active"], ["part:X110", "active"], ["part:X120", "active"], ["part:X130", "active"],
+        ["part:X140", "active"], ["part:X150", "active"], ["part:X160", "discontinued"], ["part:X170", "active"],
+        ["part:X180", "active"], ["part:R200", "active"], ["part:R210", "active"], ["part:C300", "active"]
+      ]
+    },
+    "requires_type": {
+      "origin": "MECHANICAL",
+      "source_basis": ["bom.csv"],
+      "tuples": [["bom:BOM-A", "sensor_interface"], ["bom:BOM-B", "sensor_interface"], ["bom:BOM-C", "power_relay"], ["bom:BOM-D", "connector"]]
+    },
+    "requires_voltage": {
+      "origin": "MECHANICAL",
+      "source_basis": ["bom.csv"],
+      "tuples": [["bom:BOM-A", 24], ["bom:BOM-B", 24], ["bom:BOM-C", 24], ["bom:BOM-D", 5]]
+    },
+    "requires_temperature": {
+      "origin": "MECHANICAL",
+      "source_basis": ["bom.csv"],
+      "tuples": [["bom:BOM-A", -20, 70], ["bom:BOM-B", 0, 50], ["bom:BOM-C", -10, 65], ["bom:BOM-D", -10, 40]]
+    },
+    "deployment_environment": {
+      "origin": "MECHANICAL",
+      "source_basis": ["bom.csv"],
+      "tuples": [
+        ["bom:BOM-A", "context:outdoor_enclosure"], ["bom:BOM-B", "context:indoor_panel"],
+        ["bom:BOM-C", "context:high_vibration_cabinet"], ["bom:BOM-D", "context:indoor_panel"]
+      ]
+    },
+    "candidate_replacement": {
+      "origin": "MECHANICAL",
+      "source_basis": ["engineering_notes.md"],
+      "tuples": [["part:X110", "part:X160"], ["part:R210", "part:R200"]]
+    },
+    "acceptable_replacement": {
+      "origin": "SEMANTIC",
+      "assertions": [
+        {
+          "tuple": ["part:X110", "part:X160", "context:outdoor_enclosure"],
+          "grounding": {
+            "source": "engineering_notes.md",
+            "source_fingerprint": "sha256:bb9e10c4c220701d7c5ff755c18a7d39e78371d014680b99576626f3e4652c16",
+            "native_location": "lines 10-13",
+            "construction_method": "hand-authored oracle engineering judgment"
+          }
+        },
+        {
+          "tuple": ["part:R210", "part:R200", "context:high_vibration_cabinet"],
+          "grounding": {
+            "source": "engineering_notes.md",
+            "source_fingerprint": "sha256:bb9e10c4c220701d7c5ff755c18a7d39e78371d014680b99576626f3e4652c16",
+            "native_location": "lines 19-21",
+            "construction_method": "hand-authored oracle engineering judgment"
+          }
+        }
+      ]
+    },
+    "voltage_compatible": {
+      "origin": "DERIVED",
+      "derivation": "exact equality of required and observed voltage within required part type",
+      "tuples": [
+        ["part:X100", "bom:BOM-A"], ["part:X100", "bom:BOM-B"], ["part:X110", "bom:BOM-A"],
+        ["part:X110", "bom:BOM-B"], ["part:X130", "bom:BOM-A"], ["part:X130", "bom:BOM-B"],
+        ["part:X140", "bom:BOM-A"], ["part:X140", "bom:BOM-B"], ["part:X160", "bom:BOM-A"],
+        ["part:X160", "bom:BOM-B"], ["part:X180", "bom:BOM-A"], ["part:X180", "bom:BOM-B"],
+        ["part:R200", "bom:BOM-C"], ["part:R210", "bom:BOM-C"], ["part:C300", "bom:BOM-D"]
+      ]
+    },
+    "temperature_compatible": {
+      "origin": "DERIVED",
+      "derivation": "part range contains required range within required part type",
+      "tuples": [
+        ["part:X100", "bom:BOM-A"], ["part:X100", "bom:BOM-B"], ["part:X110", "bom:BOM-A"],
+        ["part:X110", "bom:BOM-B"], ["part:X120", "bom:BOM-A"], ["part:X120", "bom:BOM-B"],
+        ["part:X130", "bom:BOM-B"], ["part:X140", "bom:BOM-A"], ["part:X140", "bom:BOM-B"],
+        ["part:X150", "bom:BOM-A"], ["part:X150", "bom:BOM-B"], ["part:X160", "bom:BOM-A"],
+        ["part:X160", "bom:BOM-B"], ["part:X170", "bom:BOM-B"], ["part:X180", "bom:BOM-A"],
+        ["part:X180", "bom:BOM-B"], ["part:R200", "bom:BOM-C"], ["part:R210", "bom:BOM-C"],
+        ["part:C300", "bom:BOM-D"]
+      ]
+    },
+    "eligible_part": {
+      "origin": "DERIVED",
+      "derivation": "voltage and temperature compatible and lifecycle not discontinued",
+      "tuples": [
+        ["part:X100", "bom:BOM-A"], ["part:X100", "bom:BOM-B"], ["part:X110", "bom:BOM-A"],
+        ["part:X110", "bom:BOM-B"], ["part:X130", "bom:BOM-B"], ["part:X140", "bom:BOM-A"],
+        ["part:X140", "bom:BOM-B"], ["part:X180", "bom:BOM-A"], ["part:X180", "bom:BOM-B"],
+        ["part:R200", "bom:BOM-C"], ["part:R210", "bom:BOM-C"], ["part:C300", "bom:BOM-D"]
+      ]
+    },
+    "spec_conflict": {
+      "origin": "DERIVED",
+      "derivation": "more than one distinct observed value for a part property",
+      "tuples": [["part:X100", "rated_voltage_v"]]
+    }
+  }
+}

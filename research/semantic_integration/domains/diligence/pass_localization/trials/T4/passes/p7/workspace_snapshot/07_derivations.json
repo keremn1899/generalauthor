@@ -1,0 +1,169 @@
+{
+  "limitations": [
+    "Purpose semantic relations (counterparty_identity_epistemic, invoice_contract_association, commercial_dependency_status) are not persisted in 06_world/world.sqlite per P6 admission; derive_purposes.py loads their resolved tuples from 05_dispositions.json as required premises.",
+    "contract_recorded_expired and contract_obligation_kind completeness receipts are INCOMPLETE: absence of expired=false or negative obligation kinds is not closed-world asserted.",
+    "REJECT clause-presence dispositions produce no present=false tuples; acquisition-relevance derivation only fires on positive ACCEPT clause tuples."
+  ],
+  "derivations": [
+    {
+      "output_relation": "invoice_is_open",
+      "required_input_relations": ["invoice_fields"],
+      "optional_enrichment_relations": [],
+      "epistemic_behavior": "Mechanical projection of billing status; no unresolved branch.",
+      "completeness_assumptions": "COMPLETE over invoice_fields universe: every invoice with status='open' is emitted; closed invoices are omitted without asserting negation.",
+      "deterministic_computation": "SELECT invoice_ref_id AS invoice_id FROM invoice_fields WHERE status = 'open'",
+      "required_premise": "invoice_fields.status recorded verbatim from sources/billing/invoices.json.",
+      "optional_enrichment": null,
+      "blocking_unresolved_state": [],
+      "non_blocking_unresolved_state": []
+    },
+    {
+      "output_relation": "contract_recorded_expired",
+      "required_input_relations": ["contract_expiry_date"],
+      "optional_enrichment_relations": ["contract_document", "contract_term_text"],
+      "epistemic_behavior": "Positive-only expired marking; contracts without explicit past expiry or not-renewed language receive no tuple.",
+      "completeness_assumptions": "INCOMPLETE over contract_document: only contracts with explicit expiry_date matching expired/not-renewed patterns are marked expired=true.",
+      "deterministic_computation": "SELECT contract_id, 1 AS expired FROM contract_expiry_date WHERE expiry_date indicates past expiry or not-renewed language.",
+      "required_premise": "contract_expiry_date tuple when contract source records an explicit expiry line.",
+      "optional_enrichment": "contract_term_text may corroborate not-renewed language but is not required when expiry_date is explicit.",
+      "blocking_unresolved_state": [],
+      "non_blocking_unresolved_state": [
+        "Missing contract_expiry_date for a contract does not block active-contract derivations; absence is treated as not positively expired."
+      ]
+    },
+    {
+      "output_relation": "contract_obligation_kind",
+      "required_input_relations": [
+        "contract_exclusivity_present",
+        "contract_auto_renewal_present",
+        "contract_rolling_term_present"
+      ],
+      "optional_enrichment_relations": ["contract_document"],
+      "epistemic_behavior": "Emits obligation kind labels only for ACCEPT clause-presence tuples (present=true); REJECT and UNRESOLVED clause judgments produce no kind row.",
+      "completeness_assumptions": "INCOMPLETE over contract_document: kinds emitted only where world holds present=true on a clause relation; no negative kind assertions.",
+      "deterministic_computation": "UNION of contract_id with kind in {exclusivity, auto_renewal, rolling_term} from respective clause relations WHERE present = 1.",
+      "required_premise": "At least one ACCEPT disposition on the corresponding clause-presence relation for the contract.",
+      "optional_enrichment": "contract_document provides the contract universe for completeness receipt.",
+      "blocking_unresolved_state": [
+        "UNRESOLVED exclusivity (or other obligation clause) on a contract blocks emitting that obligation kind but does not block other kinds from the same contract."
+      ],
+      "non_blocking_unresolved_state": [
+        "REJECT clause-presence disposition: contract simply lacks that obligation kind without asserting a negative dependency finding."
+      ]
+    },
+    {
+      "output_relation": "contract_acquisition_relevant",
+      "required_input_relations": [
+        "contract_coc_consent_required",
+        "contract_coc_termination_permitted",
+        "contract_assignment_consent_required",
+        "contract_assignment_notice_required",
+        "contract_assignment_competitor_prohibited"
+      ],
+      "optional_enrichment_relations": ["contract_document"],
+      "epistemic_behavior": "Purpose A policy OR over acquisition-relevant clause types; relevant=true only when at least one policy-listed clause has present=true in world.",
+      "completeness_assumptions": "INCOMPLETE over contract_document: contracts with no positive clause tuple are omitted rather than marked relevant=false.",
+      "deterministic_computation": "For each contract, relevant=true if ANY of the five clause relations has present=true; otherwise no tuple.",
+      "required_premise": "Purpose A acquisition_relevant_conditions policy mapping clause types to diligence relevance.",
+      "optional_enrichment": "contract_document enumerates candidate contracts.",
+      "blocking_unresolved_state": [
+        "UNRESOLVED on any single acquisition-relevant clause type blocks asserting that clause as present but does not alone block relevance if another clause type is positively present."
+      ],
+      "non_blocking_unresolved_state": [
+        "REJECT clause-presence: treated as that clause type not present for relevance OR; does not assert global irrelevance."
+      ]
+    },
+    {
+      "output_relation": "contract_active_for_diligence",
+      "required_input_relations": ["contract_document_kind", "contract_recorded_expired"],
+      "optional_enrichment_relations": ["contract_document", "contract_expiry_date"],
+      "epistemic_behavior": "Purpose A/C active-contract policy: expired SOWs are inactive; other contracts are active unless positively marked expired.",
+      "completeness_assumptions": "INCOMPLETE over contract_document when contract_recorded_expired is incomplete: active=true is default when no expired=true tuple exists.",
+      "deterministic_computation": "active=false when kind='SOW' AND contract_recorded_expired.expired=true; otherwise active=true for contracts in contract_document.",
+      "required_premise": "Purpose active_contract_policy excluding expired SOWs.",
+      "optional_enrichment": "contract_expiry_date is upstream of contract_recorded_expired.",
+      "blocking_unresolved_state": [],
+      "non_blocking_unresolved_state": [
+        "Missing contract_recorded_expired tuple: contract treated as not positively expired, therefore active under policy unless kind=SOW with positive expiry evidence."
+      ]
+    },
+    {
+      "output_relation": "purpose_a_exposure_invoice",
+      "required_input_relations": [
+        "invoice_fields",
+        "invoice_contract_association",
+        "contract_acquisition_relevant",
+        "contract_active_for_diligence"
+      ],
+      "optional_enrichment_relations": [
+        "source_asserted_invoice_contract",
+        "text_exact_match",
+        "legal_name_form_variant",
+        "contract_counterparty_name"
+      ],
+      "epistemic_behavior": "Include invoice when association=asserted to an active acquisition-relevant contract, or association=unresolved; omit asserted associations to inactive or non-relevant contracts without treating as negative exposure.",
+      "completeness_assumptions": "Coverage over invoice_fields: every invoice meeting inclusion policy appears; invoices with asserted but non-qualifying contract linkage are omitted per Purpose A scope.",
+      "deterministic_computation": "JOIN invoice_fields with invoice_contract_association and contract policy relations; filter by inclusion rule; sort by invoice_id.",
+      "required_premise": "invoice_contract_association semantic tuples (asserted or unresolved) from P5 dispositions.",
+      "optional_enrichment": "World identity evidence relations support association premise but are not required when dispositions already resolve association.",
+      "blocking_unresolved_state": [
+        "invoice_contract_association=unresolved: invoice is included with association unresolved but does not receive an asserted contract linkage row."
+      ],
+      "non_blocking_unresolved_state": [
+        "UNRESOLVED acquisition-relevant clause on a contract: does not block inclusion when another clause type is positively present and association is asserted.",
+        "Missing contract_acquisition_relevant tuple: contract treated as not acquisition-relevant for inclusion filter."
+      ]
+    },
+    {
+      "output_relation": "purpose_b_reconciliation_link",
+      "required_input_relations": ["counterparty_identity_epistemic"],
+      "optional_enrichment_relations": [
+        "text_exact_match",
+        "legal_name_form_variant",
+        "source_asserted_same_entity",
+        "crm_account_fields",
+        "registry_entity_fields",
+        "contract_counterparty_name",
+        "invoice_fields"
+      ],
+      "epistemic_behavior": "Direct projection of Purpose B epistemic labels; UNRESOLVED is explicit agnosticism, not DISTINCT.",
+      "completeness_assumptions": "COMPLETE over the Purpose B required_link_set emitted in P5: all connectivity links for commercially relevant relationships appear.",
+      "deterministic_computation": "SELECT left, right, epistemic FROM counterparty_identity_epistemic ORDER BY left, right.",
+      "required_premise": "counterparty_identity_epistemic semantic tuples from P5 dispositions.",
+      "optional_enrichment": "World mechanical identity relations ground SAME_ENTITY premises cited in disposition packets.",
+      "blocking_unresolved_state": [],
+      "non_blocking_unresolved_state": [
+        "UNRESOLVED epistemic on a link pair: emitted as UNRESOLVED; does not block other links in the graph.",
+        "DISTINCT on registry candidates: emitted as DISTINCT; does not imply global merge prohibition failure."
+      ]
+    },
+    {
+      "output_relation": "purpose_c_dependency_entry",
+      "required_input_relations": [
+        "commercial_dependency_status",
+        "invoice_is_open",
+        "contract_obligation_kind",
+        "invoice_fields",
+        "contract_document"
+      ],
+      "optional_enrichment_relations": [
+        "counterparty_identity_epistemic",
+        "contract_recorded_expired",
+        "contract_active_for_diligence"
+      ],
+      "epistemic_behavior": "Assemble dependency rows from commercial_dependency_status; status=dependent requires resolved identity and both policy tests; status=unresolved preserves agnosticism when identity blocks the join.",
+      "completeness_assumptions": "Coverage per Purpose C: each counterparty-contract pair with dependent or unresolved outcome from commercial_dependency_status is materialized with open invoice ids and obligation kinds.",
+      "deterministic_computation": "For each commercial_dependency_status tuple, collect open invoice_ids for the counterparty billing identifier and obligation_kinds from contract_obligation_kind; serialize sorted lists; sort entries by contract_id.",
+      "required_premise": "commercial_dependency_status semantic tuples from P5 dispositions.",
+      "optional_enrichment": "counterparty_identity_epistemic UNRESOLVED pairs explain unresolved dependency deferrals; contract_obligation_kind supplies sorted obligation_kinds.",
+      "blocking_unresolved_state": [
+        "UNRESOLVED counterparty_identity_epistemic between invoice billed name and contract counterparty forces commercial_dependency_status=unresolved, blocking dependent classification.",
+        "UNRESOLVED obligation clause on a contract blocks that obligation kind in obligation_kinds but may not block dependent if another kind is positively present and identity is resolved."
+      ],
+      "non_blocking_unresolved_state": [
+        "UNRESOLVED registry candidate links for Northbridge: do not block dependent status when billing-to-contract identity is SAME_ENTITY.",
+        "Expired contract exclusion: pairs on expired SOW without active relationship are omitted from output rather than listed as unresolved."
+      ]
+    }
+  ]
+}

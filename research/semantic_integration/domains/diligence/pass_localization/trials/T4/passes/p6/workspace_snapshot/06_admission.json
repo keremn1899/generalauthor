@@ -1,0 +1,242 @@
+{
+  "admissions": [
+    {
+      "name": "invoice_fields",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Verbatim invoice billing attributes compiled from invoices.json (C1 mechanical).",
+      "purpose_independence_test": "Invoice billing attributes remain factual records in invoices.json regardless of diligence purpose."
+    },
+    {
+      "name": "crm_account_fields",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Verbatim CRM account attributes compiled from crm.csv (C1 mechanical).",
+      "purpose_independence_test": "CRM account attributes remain source facts independent of reconciliation policy."
+    },
+    {
+      "name": "registry_entity_fields",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Verbatim registry attributes compiled from company_registry.csv (C1 mechanical).",
+      "purpose_independence_test": "Registry row attributes remain jurisdictional facts independent of identity policy."
+    },
+    {
+      "name": "contract_document",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Contract document identity from sources/contracts/*.md (C1 mechanical).",
+      "purpose_independence_test": "Contract document identity is fixed by authoritative contract files."
+    },
+    {
+      "name": "contract_counterparty_name",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Counterparty name parsed from contract headers (C1 mechanical).",
+      "purpose_independence_test": "Counterparty name on a contract is stated contract text, not a diligence judgment."
+    },
+    {
+      "name": "contract_effective_date",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Effective date parsed from contract sources (C1 mechanical).",
+      "purpose_independence_test": "Effective date is stated contract text independent of active-contract policy."
+    },
+    {
+      "name": "contract_term_text",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Term language extracted verbatim from contract sources (C1 mechanical).",
+      "purpose_independence_test": "Term language is verbatim contract text independent of obligation classification."
+    },
+    {
+      "name": "contract_expiry_date",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Explicit expiry dates where recorded in contract sources (C1 mechanical).",
+      "purpose_independence_test": "Explicit expiry dates are contract facts independent of diligence scope."
+    },
+    {
+      "name": "contract_document_kind",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Document kind from filename prefix and heading (C1 mechanical).",
+      "purpose_independence_test": "Document kind follows filename and heading, not purpose-specific thresholds."
+    },
+    {
+      "name": "contract_coc_consent_required",
+      "admission": "WORLD",
+      "construction_class": "SEMANTIC",
+      "reason": "C3-resolved clause presence grounded in contract change-of-control text.",
+      "purpose_independence_test": "Whether contract text requires change-of-control consent is a textual fact about the agreement."
+    },
+    {
+      "name": "contract_coc_termination_permitted",
+      "admission": "WORLD",
+      "construction_class": "SEMANTIC",
+      "reason": "C3-resolved clause presence grounded in contract change-of-control text.",
+      "purpose_independence_test": "Whether contract text permits change-of-control termination is a textual fact about the agreement."
+    },
+    {
+      "name": "contract_assignment_consent_required",
+      "admission": "WORLD",
+      "construction_class": "SEMANTIC",
+      "reason": "C3-resolved clause presence grounded in assignment sections.",
+      "purpose_independence_test": "Whether assignment requires consent is determined from assignment clause language alone."
+    },
+    {
+      "name": "contract_assignment_notice_required",
+      "admission": "WORLD",
+      "construction_class": "SEMANTIC",
+      "reason": "C3-resolved clause presence grounded in assignment sections.",
+      "purpose_independence_test": "Whether assignment requires notice is determined from assignment clause language alone."
+    },
+    {
+      "name": "contract_assignment_competitor_prohibited",
+      "admission": "WORLD",
+      "construction_class": "SEMANTIC",
+      "reason": "C3-resolved clause presence grounded in assignment sections.",
+      "purpose_independence_test": "Whether competitor assignment is prohibited is determined from assignment clause language alone."
+    },
+    {
+      "name": "contract_exclusivity_present",
+      "admission": "WORLD",
+      "construction_class": "SEMANTIC",
+      "reason": "C3-resolved exclusivity presence; REJECT/UNRESOLVED negatives not closed-world asserted.",
+      "purpose_independence_test": "Whether exclusivity language appears in the contract is a textual fact."
+    },
+    {
+      "name": "contract_auto_renewal_present",
+      "admission": "WORLD",
+      "construction_class": "SEMANTIC",
+      "reason": "C3-resolved auto-renewal presence grounded in term language.",
+      "purpose_independence_test": "Whether auto-renewal language appears is a textual fact about term mechanics."
+    },
+    {
+      "name": "contract_rolling_term_present",
+      "admission": "WORLD",
+      "construction_class": "SEMANTIC",
+      "reason": "C3-resolved rolling-term presence grounded in term language.",
+      "purpose_independence_test": "Whether rolling-term language appears is a textual fact about term mechanics."
+    },
+    {
+      "name": "text_exact_match",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Mechanically determinable exact name equality across source fields (C1).",
+      "purpose_independence_test": "Exact string equality between recorded names is mechanically determinable."
+    },
+    {
+      "name": "legal_name_form_variant",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Mechanically determinable legal-form suffix variants (C1).",
+      "purpose_independence_test": "Legal-form suffix variants are mechanically determinable from recorded names."
+    },
+    {
+      "name": "source_asserted_same_entity",
+      "admission": "WORLD",
+      "construction_class": "SEMANTIC",
+      "reason": "C3 ACCEPT only when authoritative sources explicitly assert sameness.",
+      "purpose_independence_test": "Explicit same-entity statements in authoritative sources are world facts when grounded."
+    },
+    {
+      "name": "source_asserted_invoice_contract",
+      "admission": "WORLD",
+      "construction_class": "SEMANTIC",
+      "reason": "C3 ACCEPT only when authoritative sources explicitly link invoice to contract.",
+      "purpose_independence_test": "Explicit invoice-to-contract linkage in authoritative sources is a world fact when grounded."
+    },
+    {
+      "name": "invoice_is_open",
+      "admission": "WORLD",
+      "construction_class": "DERIVED",
+      "reason": "C4 derivation from invoice_fields.status without purpose policy.",
+      "purpose_independence_test": "Open invoice status follows billing source status without purpose policy."
+    },
+    {
+      "name": "contract_recorded_expired",
+      "admission": "WORLD",
+      "construction_class": "DERIVED",
+      "reason": "C4 derivation from contract_expiry_date and expired/not-renewed source language.",
+      "purpose_independence_test": "Expired status follows explicit expiry dates or expired/not-renewed source language."
+    },
+    {
+      "name": "contract_obligation_kind",
+      "admission": "WORLD",
+      "construction_class": "DERIVED",
+      "reason": "C4 projection of ACCEPT clause-presence relations to obligation kind labels.",
+      "purpose_independence_test": "Obligation kind labels trace to resolved clause-presence facts, not Purpose C dependency policy."
+    },
+    {
+      "name": "counterparty_identity_epistemic",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "reason": "Purpose B epistemic reconciliation labels; meaning depends on identity policy.",
+      "purpose_independence_test": "Epistemic SAME_ENTITY/DISTINCT/UNRESOLVED labels depend on Purpose B reconciliation policy."
+    },
+    {
+      "name": "invoice_contract_association",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "reason": "Purpose A association judgment with asserted/unresolved disposition.",
+      "purpose_independence_test": "Asserted versus unresolved invoice-contract linkage depends on Purpose A association threshold."
+    },
+    {
+      "name": "contract_acquisition_relevant",
+      "admission": "PURPOSE",
+      "construction_class": "DERIVED",
+      "reason": "Purpose A policy over world clause facts for acquisition relevance.",
+      "purpose_independence_test": "Acquisition relevance applies Purpose A clause-type policy to world clause facts."
+    },
+    {
+      "name": "contract_active_for_diligence",
+      "admission": "PURPOSE",
+      "construction_class": "DERIVED",
+      "reason": "Purpose A/C active-contract policy excluding expired SOWs.",
+      "purpose_independence_test": "Active-contract classification applies diligence policy to world expiry facts."
+    },
+    {
+      "name": "commercial_dependency_status",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "reason": "Purpose C dependency classification requiring policy conjunction tests.",
+      "purpose_independence_test": "Dependent versus unresolved classification applies Purpose C conjunction policy."
+    },
+    {
+      "name": "purpose_a_exposure_invoice",
+      "admission": "PURPOSE",
+      "construction_class": "DERIVED",
+      "reason": "Purpose A output projection; not promoted to World IR.",
+      "purpose_independence_test": "Exposure report row selection is a Purpose A output artifact."
+    },
+    {
+      "name": "purpose_b_reconciliation_link",
+      "admission": "PURPOSE",
+      "construction_class": "DERIVED",
+      "reason": "Purpose B output projection; not promoted to World IR.",
+      "purpose_independence_test": "Reconciliation link rows are a Purpose B output projection."
+    },
+    {
+      "name": "purpose_c_dependency_entry",
+      "admission": "PURPOSE",
+      "construction_class": "DERIVED",
+      "reason": "Purpose C output projection; not promoted to World IR.",
+      "purpose_independence_test": "Dependency table rows are a Purpose C output projection."
+    }
+  ],
+  "world_commitments": {
+    "source_database": "02_mechanical_world/world.sqlite",
+    "semantic_assertions_from_dispositions": 16,
+    "purpose_dispositions_excluded": 48,
+    "reject_dispositions_not_asserted": 28,
+    "unresolved_dispositions_not_asserted": 4
+  },
+  "limitations": [
+    "Purpose IR relations and their dispositions are recorded in 06_admission.json but not persisted in 06_world/world.sqlite.",
+    "REJECT dispositions on clause-presence relations do not emit present=false tuples (kernel: no closed-world negation).",
+    "UNRESOLVED exclusivity dispositions on four contracts remain without world tuples.",
+    "contract_recorded_expired marks only positively expired contracts; non-expired contracts lack expired=false tuples.",
+    "Prior pass P2 omitted DERIVED relations; P6 registers invoice_is_open, contract_recorded_expired, and contract_obligation_kind."
+  ]
+}

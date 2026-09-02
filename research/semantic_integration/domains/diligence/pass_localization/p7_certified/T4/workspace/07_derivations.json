@@ -1,0 +1,55 @@
+{
+  "pass": "P7",
+  "world": {
+    "path": "world/world.sqlite",
+    "view_id": "diligence-world"
+  },
+  "limitations": [],
+  "purposes": {
+    "a": {
+      "purpose": "contractual_revenue_exposure",
+      "inputs": [
+        "invoice_record",
+        "contract_active",
+        "contract_clause_kind",
+        "identity_judgment"
+      ],
+      "acquisition_clause_kinds": [
+        "change_of_control_consent",
+        "change_of_control_termination",
+        "assignment_notice_or_consent",
+        "competitor_assignment_prohibition"
+      ],
+      "sql": "SELECT DISTINCT i.invoice_id, i.billed_name, i.amount, i.currency, i.period, i.status, ca.contract_id, CASE WHEN ij.disposition = 'SAME_ENTITY' THEN 'asserted' ELSE 'unresolved' END AS association FROM invoice_record i JOIN identity_judgment ij ON ((ij.left = 'billing:' || i.billed_name AND ij.right LIKE 'contract:%') OR (ij.right = 'billing:' || i.billed_name AND ij.left LIKE 'contract:%')) JOIN contract_active ca ON ca.contract_id = CASE WHEN ij.left LIKE 'contract:%' THEN substr(ij.left, 10) ELSE substr(ij.right, 10) END AND ca.active = 1 JOIN contract_clause_kind cc ON cc.contract_id = ca.contract_id WHERE cc.clause_kind IN ('change_of_control_consent', 'change_of_control_termination', 'assignment_notice_or_consent', 'competitor_assignment_prohibition') ORDER BY i.invoice_id",
+      "outputs": [
+        "08_outputs/a.json",
+        "purpose_ir/a/output.json"
+      ]
+    },
+    "b": {
+      "purpose": "counterparty_reconciliation",
+      "inputs": ["identity_judgment"],
+      "sql": "SELECT left, right, disposition AS epistemic FROM identity_judgment ORDER BY left, right",
+      "outputs": [
+        "08_outputs/b.json",
+        "purpose_ir/b/output.json"
+      ]
+    },
+    "c": {
+      "purpose": "commercial_dependency",
+      "inputs": [
+        "contract_active",
+        "contract_clause_kind",
+        "contract_record",
+        "invoice_record",
+        "identity_judgment",
+        "crm_record"
+      ],
+      "obligation_kinds": ["exclusivity", "auto_renewal", "rolling_term"],
+      "outputs": [
+        "08_outputs/c.json",
+        "purpose_ir/c/output.json"
+      ]
+    }
+  }
+}

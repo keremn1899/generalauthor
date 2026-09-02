@@ -1,0 +1,24 @@
+{
+  "obligation_id": "obl-084-invoice_contract_link-invoice-INV-3001-contract-MSA-OAK-2018",
+  "selected_observations": [
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "INV-3001",
+      "excerpt": "\"invoice_id\": \"INV-3001\", \"billed_name\": \"Oakfield Logistik GmbH\", \"period\": \"2024-Q4\", \"status\": \"paid\""
+    },
+    {
+      "source_path": "sources/contracts/MSA-OAK-2018.md",
+      "location": "header",
+      "excerpt": "Counterparty: Oakfield Logistics GmbH"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "lines 6-7",
+      "excerpt": "Oakfield rebranded in 2023 from Oakfield Logistics GmbH to Oakfield Logistik GmbH. Companies House / Handelsregister number HRB 88421 did not change. CRM still shows the old English-facing name."
+    }
+  ],
+  "selection_rationale": "Invoice billed_name and contract counterparty must be matched via legal_entity_identity before asserting LINKED.",
+  "known_missing_information": [
+    "Oakfield billed name differs from contract counterparty spelling; rebrand note required to bridge identity."
+  ]
+}

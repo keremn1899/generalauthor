@@ -1,0 +1,50 @@
+{
+  "pass": "P7",
+  "world": "world/world.sqlite",
+  "view_id": "diligence-world",
+  "script": "construction/derivations/derive_purposes.py",
+  "purposes": {
+    "a": {
+      "purpose": "contractual_revenue_exposure",
+      "function": "derive_purpose_a",
+      "description": "Invoices whose billed counterparty has an active contract with acquisition-relevant clauses.",
+      "inputs": [
+        "invoice_record",
+        "identity_judgment",
+        "contract_active",
+        "contract_clause_kind"
+      ],
+      "outputs": [
+        "08_outputs/a.json",
+        "purpose_ir/a/output.json"
+      ]
+    },
+    "b": {
+      "purpose": "counterparty_reconciliation",
+      "function": "derive_purpose_b",
+      "description": "Identity links required to connect CRM, billing, contract, and registry records.",
+      "inputs": [
+        "identity_judgment"
+      ],
+      "outputs": [
+        "08_outputs/b.json",
+        "purpose_ir/b/output.json"
+      ]
+    },
+    "c": {
+      "purpose": "commercial_dependency",
+      "function": "derive_purpose_c",
+      "description": "Counterparties with current commercial relationships and qualifying contract obligations.",
+      "inputs": [
+        "invoice_record",
+        "identity_judgment",
+        "contract_active",
+        "contract_clause_kind"
+      ],
+      "outputs": [
+        "08_outputs/c.json",
+        "purpose_ir/c/output.json"
+      ]
+    }
+  }
+}

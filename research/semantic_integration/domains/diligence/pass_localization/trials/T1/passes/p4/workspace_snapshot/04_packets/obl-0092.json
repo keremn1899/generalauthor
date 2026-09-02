@@ -1,0 +1,20 @@
+{
+  "obligation_id": "obl-0092",
+  "selected_observations": [
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "invoice INV-5001",
+      "excerpt": "\"invoice_id\": \"INV-5001\", \"billed_name\": \"Meridian Energy Partners LLC\""
+    },
+    {
+      "source_path": "sources/contracts/MSA-MER-2024.md",
+      "location": "Counterparty",
+      "excerpt": "Counterparty: Meridian Energy Partners LLC"
+    }
+  ],
+  "selection_rationale": "Compared billed_name on INV-5001 with contract counterparty on contract:MSA-MER-2024 for Purpose A association judgment.",
+  "known_missing_information": [
+    "world/world.sqlite is absent from the workspace; P2 mechanical tuples (contract_section_excerpt, identity_link_candidate, etc.) could not be queried via TaskView and evidence was selected directly from heterogeneous source files per 02_mechanical_report.json inventory.",
+    "entity_identity_judgment between billing and contract endpoints is not yet resolved in prior passes."
+  ]
+}

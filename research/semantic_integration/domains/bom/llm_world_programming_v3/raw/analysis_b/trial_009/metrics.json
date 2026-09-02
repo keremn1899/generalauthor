@@ -1,0 +1,106 @@
+{
+  "condition": "raw",
+  "finished_at": "2026-09-01T18:09:13.777495+00:00",
+  "isolation_leaks": [],
+  "isolation_preflight": {
+    "failures": [],
+    "ok": true
+  },
+  "leaks_before": [],
+  "program_burden": {
+    "exists": true,
+    "inspect_tuple_calls": 0,
+    "nonempty_lines": 148,
+    "open_world_calls": 0,
+    "parser_calls": {
+      "DictReader": 1,
+      "json_loads": 1,
+      "re": 1
+    },
+    "relation_references": [
+      "deployment_environment",
+      "lifecycle",
+      "part_type",
+      "rated_voltage",
+      "temperature_compatible",
+      "voltage_compatible"
+    ],
+    "source_schema_fields": [
+      "bom_item",
+      "deployment_environment",
+      "lifecycle",
+      "listings",
+      "manufacturer_part_number",
+      "max_temp_c",
+      "min_temp_c",
+      "part_number",
+      "part_type",
+      "rated_voltage_v",
+      "required_voltage_v"
+    ],
+    "sql_statements": 0,
+    "syntax_ok": true
+  },
+  "score": {
+    "exact": false,
+    "executes": true,
+    "failure_class": "SEMANTIC_ACCEPTANCE",
+    "indoor": {
+      "bom_item": "bom:BOM-B",
+      "context": "context:indoor_panel",
+      "leaves_viability_uncertain": [
+        "semantic_acceptance"
+      ],
+      "new_part": "part:X100",
+      "new_part_lifecycle_active": true,
+      "old_part": "part:X160",
+      "old_part_lifecycle": "discontinued",
+      "prevents_viability": [],
+      "semantic_state": "not_established",
+      "temperature_compatible": true,
+      "voltage_compatible": true
+    },
+    "parses": true,
+    "pass": false,
+    "program_exists": true,
+    "program_path": "/home/kerem/Desktop/Personal Projects/generalauthor/research/semantic_integration/domains/bom/llm_world_programming_v3/raw/analysis_b/trial_009/workspace/analysis.py",
+    "run_stderr": "",
+    "schema_valid": true,
+    "support_present": false,
+    "unknown_as_false": false
+  },
+  "task_id": "analysis_b",
+  "timed_out": false,
+  "tools": {
+    "mentioned_paths": [
+      "/tmp/world-experiment/bom-llm-world-programming-v3/bcd229532930fac7945b29edb97bb9de/README.md",
+      "/tmp/world-experiment/bom-llm-world-programming-v3/bcd229532930fac7945b29edb97bb9de/sources/engineering_notes.md",
+      "/tmp/world-experiment/bom-llm-world-programming-v3/bcd229532930fac7945b29edb97bb9de/sources/bom.csv",
+      "/tmp/world-experiment/bom-llm-world-programming-v3/bcd229532930fac7945b29edb97bb9de/sources/suppliers.json",
+      "/tmp/world-experiment/bom-llm-world-programming-v3/bcd229532930fac7945b29edb97bb9de/sources/manufacturer.csv",
+      "/tmp/world-experiment/bom-llm-world-programming-v3/bcd229532930fac7945b29edb97bb9de/analysis.py",
+      "analysis.py",
+      "output.json",
+      ">/dev/null",
+      "analysis.py",
+      "/tmp/world-experiment/bom-llm-world-programming-v3/bcd229532930fac7945b29edb97bb9de/output.json",
+      "analysis.py",
+      "./analysis.py",
+      "output.json",
+      ">/dev/null"
+    ],
+    "python_executions_guess": 3,
+    "read_calls": 6,
+    "shell_calls": 3,
+    "tool_calls_started": 15,
+    "write_calls": 0
+  },
+  "trial": 9,
+  "usage": {
+    "input_tokens": 27,
+    "is_error": false,
+    "model": "GPT-5.6 Sol 272K High",
+    "output_tokens": 6199,
+    "total_tokens": 6226
+  }
+}

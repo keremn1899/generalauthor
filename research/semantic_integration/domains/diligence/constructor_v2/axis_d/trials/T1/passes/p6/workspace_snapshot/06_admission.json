@@ -1,0 +1,178 @@
+{
+  "pass": "P6",
+  "view_id": "diligence-world",
+  "limitations": [],
+  "relations": [
+    {
+      "name": "source_row",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "A referent is grounded to an authoritative source row or document span.",
+      "purpose_independence_test": "source_row copies or grounds facts directly from sources; meaning and truth conditions do not vary with the active purpose."
+    },
+    {
+      "name": "invoice_billed_name",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "The billed_name field as represented on an invoice in billing sources.",
+      "purpose_independence_test": "invoice_billed_name copies or grounds facts directly from sources; meaning and truth conditions do not vary with the active purpose."
+    },
+    {
+      "name": "invoice_amount",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "The billed amount as represented on an invoice in billing sources.",
+      "purpose_independence_test": "invoice_amount copies or grounds facts directly from sources; meaning and truth conditions do not vary with the active purpose."
+    },
+    {
+      "name": "invoice_currency",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "The currency code as represented on an invoice in billing sources.",
+      "purpose_independence_test": "invoice_currency copies or grounds facts directly from sources; meaning and truth conditions do not vary with the active purpose."
+    },
+    {
+      "name": "invoice_period",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "The billing period as represented on an invoice in billing sources.",
+      "purpose_independence_test": "invoice_period copies or grounds facts directly from sources; meaning and truth conditions do not vary with the active purpose."
+    },
+    {
+      "name": "invoice_status",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "The invoice payment status as represented in billing sources (e.g. open, paid).",
+      "purpose_independence_test": "invoice_status copies or grounds facts directly from sources; meaning and truth conditions do not vary with the active purpose."
+    },
+    {
+      "name": "crm_account_name",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "The account_name field as represented for a CRM account.",
+      "purpose_independence_test": "crm_account_name copies or grounds facts directly from sources; meaning and truth conditions do not vary with the active purpose."
+    },
+    {
+      "name": "registry_legal_name",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "The registered legal_name as represented in the company registry.",
+      "purpose_independence_test": "registry_legal_name copies or grounds facts directly from sources; meaning and truth conditions do not vary with the active purpose."
+    },
+    {
+      "name": "registry_status",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "The registry status as represented for a company (e.g. active, dissolved).",
+      "purpose_independence_test": "registry_status copies or grounds facts directly from sources; meaning and truth conditions do not vary with the active purpose."
+    },
+    {
+      "name": "contract_counterparty_name",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "The counterparty name as stated on a contract document.",
+      "purpose_independence_test": "contract_counterparty_name copies or grounds facts directly from sources; meaning and truth conditions do not vary with the active purpose."
+    },
+    {
+      "name": "contract_document_kind",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "The document kind as represented in contract heading or filename (e.g. msa, sow).",
+      "purpose_independence_test": "contract_document_kind copies or grounds facts directly from sources; meaning and truth conditions do not vary with the active purpose."
+    },
+    {
+      "name": "contract_expiry_date",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "An explicit expiry or end date stated on a contract document, when present.",
+      "purpose_independence_test": "contract_expiry_date copies or grounds facts directly from sources; meaning and truth conditions do not vary with the active purpose."
+    },
+    {
+      "name": "contract_term_text",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "The term or duration clause text as represented on a contract document.",
+      "purpose_independence_test": "contract_term_text copies or grounds facts directly from sources; meaning and truth conditions do not vary with the active purpose."
+    },
+    {
+      "name": "identity_judgment",
+      "admission": "WORLD",
+      "construction_class": "SEMANTIC",
+      "reason": "Two referents denote the same legal counterparty, are distinct, or remain unresolved.",
+      "purpose_independence_test": "Truth depends on authoritative source evidence about identity or contract text, not on which analytical purpose is currently active."
+    },
+    {
+      "name": "contract_clause_judgment",
+      "admission": "WORLD",
+      "construction_class": "SEMANTIC",
+      "reason": "A specific contractual clause kind is present in, absent from, or cannot be resolved from the contract text.",
+      "purpose_independence_test": "Truth depends on authoritative source evidence about identity or contract text, not on which analytical purpose is currently active."
+    },
+    {
+      "name": "invoice_open",
+      "admission": "WORLD",
+      "construction_class": "DERIVED",
+      "reason": "An invoice whose billing source status is open.",
+      "purpose_independence_test": "invoice_open is computed from WORLD base facts via explicit SQL; removing purposes would not change the derivation inputs or truth conditions."
+    },
+    {
+      "name": "contract_stated_expired",
+      "admission": "WORLD",
+      "construction_class": "DERIVED",
+      "reason": "A contract document that explicitly states it has expired or includes a past expiry date.",
+      "purpose_independence_test": "contract_stated_expired is computed from WORLD base facts via explicit SQL; removing purposes would not change the derivation inputs or truth conditions."
+    },
+    {
+      "name": "diligence_active_contract",
+      "admission": "PURPOSE",
+      "construction_class": "DERIVED",
+      "reason": "A contract treated as active under diligence policy, excluding expired statements of work.",
+      "purpose_independence_test": "If purposes A/B/C were withdrawn, diligence_active_contract would lose its policy-defined meaning because it encodes diligence thresholds, active-contract rules, or purpose-specific row inclusion rather than source-anchored facts."
+    },
+    {
+      "name": "acquisition_relevant_contract",
+      "admission": "PURPOSE",
+      "construction_class": "DERIVED",
+      "reason": "An active diligence contract bearing at least one acquisition-relevant clause kind under purpose A policy.",
+      "purpose_independence_test": "If purposes A/B/C were withdrawn, acquisition_relevant_contract would lose its policy-defined meaning because it encodes diligence thresholds, active-contract rules, or purpose-specific row inclusion rather than source-anchored facts."
+    },
+    {
+      "name": "commercial_dependency_row",
+      "admission": "PURPOSE",
+      "construction_class": "DERIVED",
+      "reason": "A contract-counterparty pair that is a candidate dependency row under purpose C policy, including rows withheld when identity is unresolved.",
+      "purpose_independence_test": "If purposes A/B/C were withdrawn, commercial_dependency_row would lose its policy-defined meaning because it encodes diligence thresholds, active-contract rules, or purpose-specific row inclusion rather than source-anchored facts."
+    }
+  ],
+  "purpose_relations_excluded_from_world_sqlite": [
+    "diligence_active_contract",
+    "acquisition_relevant_contract",
+    "commercial_dependency_row"
+  ],
+  "world_sqlite": {
+    "path": "06_world/world.sqlite",
+    "view_revision": 212,
+    "persisted_relations": [
+      "contract_clause_judgment",
+      "contract_counterparty_name",
+      "contract_document_kind",
+      "contract_expiry_date",
+      "contract_stated_expired",
+      "contract_term_text",
+      "crm_account_name",
+      "identity_judgment",
+      "invoice_amount",
+      "invoice_billed_name",
+      "invoice_currency",
+      "invoice_open",
+      "invoice_period",
+      "invoice_status",
+      "registry_legal_name",
+      "registry_status",
+      "source_row"
+    ],
+    "semantic_commitments_admitted": 78,
+    "identity_judgment_tuples": 38,
+    "contract_clause_judgment_tuples": 50
+  }
+}

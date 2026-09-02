@@ -1,0 +1,99 @@
+{
+  "adapter": "cursor-agent-bwrap-isolated-workspace-agent-v2",
+  "adjudicated_false_representable": false,
+  "agent_mode": "agent (default; write and shell enabled)",
+  "budget": {
+    "identical_for_raw_and_world": true,
+    "max_tool_calls": "not exposed; wall-clock timeout is the stop",
+    "max_turns": "not exposed by cursor-agent CLI",
+    "timeout_seconds_per_trial": 600
+  },
+  "conditions": [
+    "raw",
+    "world"
+  ],
+  "expected_output_fingerprints": {
+    "analysis_a": "sha256:f730cd3c90ab911cc4c68129dca90269c78ddf8f847b2b35771c01954af6e264",
+    "analysis_b": "sha256:f3d7c79f8f5690c49b22d2b1836d88a60600c9a4872a9c9a90c25dd7f7ca7226"
+  },
+  "experiment_id": "bom-llm-world-programming-v2",
+  "failure_taxonomy": [
+    "IDENTITY_RECONCILIATION",
+    "SOURCE_PARSING",
+    "SOURCE_SCHEMA",
+    "CONTEXT_MATCHING",
+    "SEMANTIC_ACCEPTANCE",
+    "UNKNOWN_AS_FALSE",
+    "CONFLICT_INTERPRETATION",
+    "RELATION_MISUSE",
+    "SQL_OR_PYTHON",
+    "OUTPUT_FORMAT",
+    "OTHER"
+  ],
+  "fingerprint": "sha256:1dce61a6a60bfaac49c5d907408b9dc28670db90e7c343b8c9b6757ee6ede998",
+  "force": true,
+  "frozen_world_dir": "/home/kerem/Desktop/Personal Projects/generalauthor/research/semantic_integration/domains/bom/llm_world_programming_v2/fixtures",
+  "hypotheses": [
+    "H1",
+    "H2",
+    "H3",
+    "H4",
+    "H5"
+  ],
+  "isolation": {
+    "live_root": "/tmp/world-experiment/bom-llm-world-programming-v2",
+    "method": "bwrap tmpfs over repository, Cursor project dir, and sibling live trials",
+    "preflight": "cannot list repo; cannot read expected/human solutions; cannot see sibling trials"
+  },
+  "metrics": [
+    "exact_task_success",
+    "semantic_error_class",
+    "acquisition_burden",
+    "token_usage_if_exposed",
+    "attempts_proxy_from_tool_calls",
+    "program_burden",
+    "provenance_support_present",
+    "unknown_as_false",
+    "isolation_preflight"
+  ],
+  "model": "gpt-5.6-sol-high",
+  "n_runs": 40,
+  "n_trials": 10,
+  "open_world": "reads stored TaskView view_id from world.sqlite; does not hardcode view identity",
+  "predecessor": "bom-llm-world-programming-v1",
+  "primary_success_criterion": "PASS iff the saved program executes in a clean condition environment and canonical JSON matches the frozen expected artifact",
+  "prompt_fingerprints": {
+    "raw:analysis_a": "sha256:e47a91d4cb534a118b0519a26969d08723a244a0de65c90b91434f3ce214ac2b",
+    "raw:analysis_b": "sha256:c8bbbbe0ebb58f7e6c5a8dd4191c55ff303e5e1b4f459531de9aea6b21d7d70d",
+    "world:analysis_a": "sha256:743380bec83234aa23afb227cd7786af1b4213ff48c0fbd32bc59ab94b64449a",
+    "world:analysis_b": "sha256:a37b563cce84ca52f84ed946f7f056185a1263f64d9707574d3e747061a7cb4a"
+  },
+  "provenance_subtest": "analysis_a support field; scored separately",
+  "provider_inference_calls_at_freeze": 0,
+  "raw_fixture_fingerprint": {
+    "bom.csv": "sha256:a86d39d97bd993988be54ef850698095c08f38b247dd3e63ece5fb15a341dadc",
+    "engineering_notes.md": "sha256:bb9e10c4c220701d7c5ff755c18a7d39e78371d014680b99576626f3e4652c16",
+    "manufacturer.csv": "sha256:31f380d664c7e832cc3066ed4d9f342be14833c899ca0dd8d93c76682b2ca084",
+    "suppliers.json": "sha256:ab343f7e311db86274846c08dd2a1f92c3607c068180cbeddf54fbc930c48e12"
+  },
+  "sandbox": "enabled",
+  "status": "FROZEN_BEFORE_INFERENCE",
+  "task_c": "deferred until A/B isolation-held signal is measured",
+  "task_fingerprints": {
+    "analysis_a": "sha256:a2bd58825616aace6d4a6da6d24481f5000aee1782f1f806da8600f676e6ef67",
+    "analysis_b": "sha256:dd660092ace2e5b3a4e3d3aaceeb17260439a2a5942b617a8e824fc3227b2dd4"
+  },
+  "tasks": [
+    "analysis_a",
+    "analysis_b"
+  ],
+  "temperature": "not exposed by cursor-agent CLI",
+  "timeout_seconds": 600,
+  "world_api_doc_fingerprint": "sha256:2e09e9ac3a9be0a1db0d4e7085f4847b44f45a4eca943c405498af55f74257a9",
+  "world_api_fingerprint": "sha256:ebe5c8af39b3a2883c10bdf7994f7975cc09bf5d59079fd63d03bf23e946f731",
+  "world_fixture_fingerprint": {
+    "obligations.json": "sha256:7b2582d0cbfffd074af6fb7ca02a35bf3f1514641b784ce785df5f0408a248ce",
+    "world.sqlite": "sha256:ec435286e7ceb75832f4f1c4cdd8a8c914a54fa9cc502db5be5b6240f4c72c4a",
+    "world.sqlite.origins.json": "sha256:2472c86efa7e55d9d02f776a4947262d6831ce6b2f881c962329edfd9ab61538"
+  }
+}

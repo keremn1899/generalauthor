@@ -1,0 +1,105 @@
+{
+  "limitations": [
+    "Purpose-scoped semantic judgments from 05_dispositions.json are not copied into 06_world/world.sqlite; they remain available for Purpose IR construction.",
+    "identity_judgment dispositions are recorded in assertion grounding detail because the relation schema exposes only left/right roles.",
+    "Two identity_judgment candidate pairs present in 02_mechanical_world (billing:Oakfield Logistik GmbH/registry:HRB 88421 and billing:Vellum Print Co Ltd/contract:SOW-VEL-2022) had no adjudicated entry in 05_dispositions.json and were not admitted."
+  ],
+  "admissions": [
+    {
+      "relation": "invoice_record",
+      "admission": "WORLD",
+      "reason": "MECHANICAL relation compiling reusable source facts: A billed revenue row as represented in billing sources with its stated identifiers, counterparty name, amount, currency, period, and payment status.",
+      "purpose_independence_test": "If purposes A/B/C disappeared, billed invoice rows would still be the same billing-source facts."
+    },
+    {
+      "relation": "invoice_tax_identifier",
+      "admission": "WORLD",
+      "reason": "MECHANICAL relation compiling reusable source facts: The VAT or tax identifier printed on an invoice when the billing source supplies one.",
+      "purpose_independence_test": "If purposes disappeared, invoice tax identifiers would still be whatever the billing JSON states."
+    },
+    {
+      "relation": "crm_account_record",
+      "admission": "WORLD",
+      "reason": "MECHANICAL relation compiling reusable source facts: A CRM account row as represented in the CRM export with its stated commercial identity fields.",
+      "purpose_independence_test": "If purposes disappeared, CRM account rows would still be the same export records."
+    },
+    {
+      "relation": "registry_company_record",
+      "admission": "WORLD",
+      "reason": "MECHANICAL relation compiling reusable source facts: A company registry entry with registered legal name, number, jurisdiction, and registry status as stated in the registry source.",
+      "purpose_independence_test": "If purposes disappeared, registry entries would still be the same registered company facts."
+    },
+    {
+      "relation": "contract_record",
+      "admission": "WORLD",
+      "reason": "MECHANICAL relation compiling reusable source facts: Contract document metadata as stated in contract front matter, including counterparty name, effective date, term language, and explicit expiry when present.",
+      "purpose_independence_test": "If purposes disappeared, contract header metadata would still be the same documentary facts."
+    },
+    {
+      "relation": "contract_body_text",
+      "admission": "WORLD",
+      "reason": "MECHANICAL relation compiling reusable source facts: Full textual content of a contract document as represented in the contract source file.",
+      "purpose_independence_test": "If purposes disappeared, contract text would still be the same source document content."
+    },
+    {
+      "relation": "typed_identifier",
+      "admission": "WORLD",
+      "reason": "MECHANICAL relation compiling reusable source facts: Canonical typed identifier string for a referent in the Purpose B/C identifier forms (crm:, billing:, registry:, contract:).",
+      "purpose_independence_test": "If purposes disappeared, canonical identifier strings would still map deterministically to referents."
+    },
+    {
+      "relation": "legal_name_variant",
+      "admission": "WORLD",
+      "reason": "MECHANICAL relation compiling reusable source facts: Two name strings are exact legal-form variants of the same registered name under deterministic suffix and punctuation normalization.",
+      "purpose_independence_test": "If purposes disappeared, normalized legal-name variant pairs would still hold under the same mechanical rule."
+    },
+    {
+      "relation": "identity_judgment",
+      "admission": "WORLD",
+      "reason": "SEMANTIC relation compiling reusable source facts: Two referents denote the same legal counterparty, are distinct, or remain unresolved.",
+      "purpose_independence_test": "If purposes disappeared, whether two identifiers denote the same legal counterparty would still be the same identity question with the same evidence conditions."
+    },
+    {
+      "relation": "acquisition_clause_judgment",
+      "admission": "PURPOSE",
+      "reason": "SEMANTIC relation whose meaning depends on purpose policy for ['A']: Whether grounded contract text contains an acquisition-relevant clause of the stated kind under Purpose A policy.",
+      "purpose_independence_test": "If Purpose A disappeared, the ACCEPT/REJECT/UNRESOLVED finding for acquisition-relevant kinds would lose its policy-defined meaning."
+    },
+    {
+      "relation": "obligation_kind_judgment",
+      "admission": "PURPOSE",
+      "reason": "SEMANTIC relation whose meaning depends on purpose policy for ['C']: Whether grounded contract text contains a commercial obligation provision of the stated kind (exclusivity, auto_renewal, rolling_term) under Purpose C policy.",
+      "purpose_independence_test": "If Purpose C disappeared, obligation-kind ACCEPT/REJECT/UNRESOLVED findings would no longer answer a defined analytical question."
+    },
+    {
+      "relation": "active_contract_judgment",
+      "admission": "PURPOSE",
+      "reason": "SEMANTIC relation whose meaning depends on purpose policy for ['A', 'C']: Whether a contract counts as in-force under the shared Purpose A/C active-contract policy (expired statement of work is not active).",
+      "purpose_independence_test": "If Purposes A/C disappeared, active/inactive classification under their shared in-force policy would be undefined."
+    },
+    {
+      "relation": "open_invoice",
+      "admission": "WORLD",
+      "reason": "DERIVED relation compiling reusable source facts: Invoice whose billing-source status is open.",
+      "purpose_independence_test": "If purposes disappeared, open status would still be invoice_record.status = open."
+    },
+    {
+      "relation": "purpose_a_qualifying_invoice",
+      "admission": "PURPOSE",
+      "reason": "DERIVED relation whose meaning depends on purpose policy for ['A']: Purpose A output row: a represented billed invoice tied to an active contract bearing at least one acquisition-relevant clause, with association asserted or unresolved per identity policy.",
+      "purpose_independence_test": "If Purpose A disappeared, qualifying-invoice rows would not be a meaningful standalone proposition."
+    },
+    {
+      "relation": "purpose_b_reconciliation_link",
+      "admission": "PURPOSE",
+      "reason": "DERIVED relation whose meaning depends on purpose policy for ['B']: Purpose B output link connecting typed identifiers with SAME_ENTITY, DISTINCT, or UNRESOLVED per identity_judgment and contracts/purpose_b.json orientation rules.",
+      "purpose_independence_test": "If Purpose B disappeared, reconciliation link epistemic rendering would not be independently meaningful."
+    },
+    {
+      "relation": "purpose_c_commercial_dependency",
+      "admission": "PURPOSE",
+      "reason": "DERIVED relation whose meaning depends on purpose policy for ['C']: Purpose C output row: contract-centric commercial dependency with sorted obligation kinds and status dependent or unresolved under Purpose C conjunction policy.",
+      "purpose_independence_test": "If Purpose C disappeared, commercial-dependency status rows would not be independently meaningful."
+    }
+  ]
+}

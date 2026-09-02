@@ -1,0 +1,24 @@
+{
+  "obligation_id": "obl:identity_judgment:11e6e30d797d",
+  "selected_observations": [
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "invoice_id INV-1001",
+      "excerpt": "{\n  \"invoice_id\": \"INV-1001\",\n  \"billed_name\": \"Helion Robotics Limited\",\n  \"vat_or_tax_id\": \"GB884210193\",\n  \"amount\": 180000,\n  \"currency\": \"GBP\",\n  \"period\": \"2024-Q4\",\n  \"status\": \"paid\"\n}"
+    },
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row HEL-441",
+      "excerpt": "crm_account_id,account_name,domain,country,owner,status\nHEL-441,Helion Robotics Ltd,helionrobotics.com,GB,A. Chen,active"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "line 3",
+      "excerpt": "Helion Robotics Ltd is the operating name used in CRM. Invoices and Companies House use Helion Robotics Limited. That is the same legal entity. Helion Industrial Systems Ltd is a different company; it sold sensors to us in 2018 and has no current MSA."
+    }
+  ],
+  "selection_rationale": "Pairwise identity between billing:Helion Robotics Limited and crm:HEL-441 requires comparing source-native names, identifiers, and any internal notes on rebranding or legal-form variants.",
+  "known_missing_information": [
+    "No authoritative corporate linkage document (e.g. certificate of incorporation matching tax ID) in data room."
+  ]
+}

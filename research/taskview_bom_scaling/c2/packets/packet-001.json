@@ -1,0 +1,130 @@
+{
+  "candidate_assertion": {
+    "relation": "acceptable_replacement",
+    "tuple": [
+      "part:R210",
+      "part:R200",
+      "context:high_vibration_cabinet"
+    ]
+  },
+  "conflicts": [],
+  "evidence": [
+    {
+      "native_location": "row 11 (part_number=R200)",
+      "record": "R200,power_relay,Standard power relay,24,-20,70,active",
+      "source": "manufacturer.csv",
+      "source_fingerprint": "sha256:31f380d664c7e832cc3066ed4d9f342be14833c899ca0dd8d93c76682b2ca084"
+    },
+    {
+      "native_location": "row 12 (part_number=R210)",
+      "record": "R210,power_relay,Vibration-rated power relay,24,-40,85,active",
+      "source": "manufacturer.csv",
+      "source_fingerprint": "sha256:31f380d664c7e832cc3066ed4d9f342be14833c899ca0dd8d93c76682b2ca084"
+    },
+    {
+      "native_location": "row 4 (bom_item=BOM-C)",
+      "record": "BOM-C,power_relay,24,-10,65,high_vibration_cabinet",
+      "source": "bom.csv",
+      "source_fingerprint": "sha256:a86d39d97bd993988be54ef850698095c08f38b247dd3e63ece5fb15a341dadc"
+    },
+    {
+      "native_location": "lines 15-21 (ER-2)",
+      "record": "## ER-2\n\nCandidate: `R210` replaces `R200`.\n\nFor the `high_vibration_cabinet` context used by BOM-C, the team treats R210 as\nan acceptable substitute. The vibration descriptions use different supplier\nterminology, and no numeric crosswalk appears in the available source set.",
+      "source": "engineering_notes.md",
+      "source_fingerprint": "sha256:bb9e10c4c220701d7c5ff755c18a7d39e78371d014680b99576626f3e4652c16"
+    }
+  ],
+  "known_mechanical_facts": {
+    "candidate_replacement": [
+      [
+        "part:R210",
+        "part:R200"
+      ]
+    ],
+    "deployment_environment": [
+      [
+        "bom:BOM-C",
+        "context:high_vibration_cabinet"
+      ]
+    ],
+    "eligible_part": [
+      [
+        "part:R200",
+        "bom:BOM-C"
+      ],
+      [
+        "part:R210",
+        "bom:BOM-C"
+      ]
+    ],
+    "lifecycle": [
+      [
+        "part:R200",
+        "active"
+      ],
+      [
+        "part:R210",
+        "active"
+      ]
+    ],
+    "part_type": [
+      [
+        "part:R200",
+        "power_relay"
+      ],
+      [
+        "part:R210",
+        "power_relay"
+      ]
+    ],
+    "rated_voltage": [
+      [
+        "part:R200",
+        24
+      ],
+      [
+        "part:R210",
+        24
+      ]
+    ],
+    "requires_temperature": [
+      [
+        "bom:BOM-C",
+        -10,
+        65
+      ]
+    ],
+    "requires_type": [
+      [
+        "bom:BOM-C",
+        "power_relay"
+      ]
+    ],
+    "requires_voltage": [
+      [
+        "bom:BOM-C",
+        24
+      ]
+    ],
+    "temperature_range": [
+      [
+        "part:R200",
+        -20,
+        70
+      ],
+      [
+        "part:R210",
+        -40,
+        85
+      ]
+    ]
+  },
+  "missing_information": [
+    "No deterministic rule interprets the qualified prose as acceptance; no numeric crosswalk covers its environmental qualification."
+  ],
+  "relevant_referents": [
+    "part:R210",
+    "part:R200",
+    "context:high_vibration_cabinet"
+  ]
+}

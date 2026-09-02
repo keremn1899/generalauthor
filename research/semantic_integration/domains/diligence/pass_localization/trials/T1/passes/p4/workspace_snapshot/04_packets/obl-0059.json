@@ -1,0 +1,30 @@
+{
+  "obligation_id": "obl-0059",
+  "selected_observations": [
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "INV-2001 billed_name",
+      "excerpt": "\"billed_name\": \"Northbridge Analytics Inc.\""
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "Northbridge naming",
+      "excerpt": "Billing and the MSA use \"Northbridge Analytics Inc.\""
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 2019-0008841",
+      "excerpt": "2019-0008841,NORTHBRIDGE ANALYTICS LLC,Wyoming,active"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "Northbridge LLC",
+      "excerpt": "A 2024 credit check also returned a Wyoming LLC, \"Northbridge Analytics LLC\"."
+    }
+  ],
+  "selection_rationale": "Pulled naming and registry observations for both endpoints (billing:Northbridge Analytics Inc., registry:2019-0008841) plus any documented rebrand or ambiguity notes relevant to Purpose B identity topology.",
+  "known_missing_information": [
+    "world/world.sqlite is absent from the workspace; P2 mechanical tuples (contract_section_excerpt, identity_link_candidate, etc.) could not be queried via TaskView and evidence was selected directly from heterogeneous source files per 02_mechanical_report.json inventory.",
+    "Commercial notes state the Northbridge registry link is unresolved; insufficient to choose between Delaware Inc and Wyoming LLC without legal determination."
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "pass": "P6",
+  "artifact": "admission",
+  "relations": [
+    {
+      "name": "invoice_record",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "invoice_record copies authoritative source fields without purpose-specific reinterpretation; truth conditions are fixed by the cited sources.",
+      "purpose_independence_test": "If analytical purposes A/B/C disappeared, One billed-revenue invoice as recorded in authoritative billing sources, keyed by invoice_id referent. would retain the same meaning and truth conditions because it is grounded in authoritative source text or mechanical compilation, not in purpose-specific thresholds or reporting policy."
+    },
+    {
+      "name": "crm_account_record",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "crm_account_record copies authoritative source fields without purpose-specific reinterpretation; truth conditions are fixed by the cited sources.",
+      "purpose_independence_test": "If analytical purposes A/B/C disappeared, One CRM account row as recorded, keyed by crm:<crm_account_id> referent. would retain the same meaning and truth conditions because it is grounded in authoritative source text or mechanical compilation, not in purpose-specific thresholds or reporting policy."
+    },
+    {
+      "name": "registry_company_record",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "registry_company_record copies authoritative source fields without purpose-specific reinterpretation; truth conditions are fixed by the cited sources.",
+      "purpose_independence_test": "If analytical purposes A/B/C disappeared, One company-registry row as recorded, keyed by registry:<company_number> referent. would retain the same meaning and truth conditions because it is grounded in authoritative source text or mechanical compilation, not in purpose-specific thresholds or reporting policy."
+    },
+    {
+      "name": "contract_header",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "contract_header copies authoritative source fields without purpose-specific reinterpretation; truth conditions are fixed by the cited sources.",
+      "purpose_independence_test": "If analytical purposes A/B/C disappeared, Contract identity and counterparty naming as stated in an authoritative contract file, keyed by contract:<filename-without-.md> referent. would retain the same meaning and truth conditions because it is grounded in authoritative source text or mechanical compilation, not in purpose-specific thresholds or reporting policy."
+    },
+    {
+      "name": "contract_stated_expiry",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "contract_stated_expiry copies authoritative source fields without purpose-specific reinterpretation; truth conditions are fixed by the cited sources.",
+      "purpose_independence_test": "If analytical purposes A/B/C disappeared, An explicit expiry or non-renewal statement recorded in a contract source, when the text states one. would retain the same meaning and truth conditions because it is grounded in authoritative source text or mechanical compilation, not in purpose-specific thresholds or reporting policy."
+    },
+    {
+      "name": "contract_section_excerpt",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "contract_section_excerpt copies authoritative source fields without purpose-specific reinterpretation; truth conditions are fixed by the cited sources.",
+      "purpose_independence_test": "If analytical purposes A/B/C disappeared, A verbatim excerpt of a labeled contract section used to ground later clause-presence judgments. would retain the same meaning and truth conditions because it is grounded in authoritative source text or mechanical compilation, not in purpose-specific thresholds or reporting policy."
+    },
+    {
+      "name": "legal_form_name_variant",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "legal_form_name_variant copies authoritative source fields without purpose-specific reinterpretation; truth conditions are fixed by the cited sources.",
+      "purpose_independence_test": "If analytical purposes A/B/C disappeared, A documented mechanical legal-form spelling variant between two name strings (e.g., Ltd versus Limited) that sources treat as the same registered form. would retain the same meaning and truth conditions because it is grounded in authoritative source text or mechanical compilation, not in purpose-specific thresholds or reporting policy."
+    },
+    {
+      "name": "contract_clause_present",
+      "admission": "WORLD",
+      "construction_class": "SEMANTIC",
+      "reason": "contract_clause_present adjudicates contract text or lifecycle facts independent of acquisition-relevance filters, exposure reporting, or dependency policy.",
+      "purpose_independence_test": "If analytical purposes A/B/C disappeared, Whether specific contractual language of a given clause_kind appears in the authoritative contract text, independent of any acquisition or dependency policy. would retain the same meaning and truth conditions because it is grounded in authoritative source text or mechanical compilation, not in purpose-specific thresholds or reporting policy."
+    },
+    {
+      "name": "contract_lifecycle_status",
+      "admission": "WORLD",
+      "construction_class": "SEMANTIC",
+      "reason": "contract_lifecycle_status adjudicates contract text or lifecycle facts independent of acquisition-relevance filters, exposure reporting, or dependency policy.",
+      "purpose_independence_test": "If analytical purposes A/B/C disappeared, Whether a contract is active or expired according to stated dates, explicit expiry/non-renewal language, and recorded term structure in sources. would retain the same meaning and truth conditions because it is grounded in authoritative source text or mechanical compilation, not in purpose-specific thresholds or reporting policy."
+    },
+    {
+      "name": "entity_identity_judgment",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "reason": "entity_identity_judgment records a purpose-scoped judgment whose disposition vocabulary and acceptance criteria are defined by the requesting analytical purpose.",
+      "purpose_independence_test": "If analytical purposes A/B/C disappeared, Purpose B epistemic judgment linking two prescribed identifier endpoints as the same legal counterparty, distinct parties, or unresolved. would lose its analytical role or depend on purpose-specific join topology, identity policy, or dependency criteria that are not independently meaningful without the requesting purpose."
+    },
+    {
+      "name": "invoice_counterparty_association",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "reason": "invoice_counterparty_association records a purpose-scoped judgment whose disposition vocabulary and acceptance criteria are defined by the requesting analytical purpose.",
+      "purpose_independence_test": "If analytical purposes A/B/C disappeared, Purpose A judgment whether an invoice billed name and a contract counterparty can be confidently linked for exposure reporting. would lose its analytical role or depend on purpose-specific join topology, identity policy, or dependency criteria that are not independently meaningful without the requesting purpose."
+    },
+    {
+      "name": "commercial_dependency_assertion",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "reason": "commercial_dependency_assertion records a purpose-scoped judgment whose disposition vocabulary and acceptance criteria are defined by the requesting analytical purpose.",
+      "purpose_independence_test": "If analytical purposes A/B/C disappeared, Purpose C judgment that a counterparty-contract pair is commercially dependent under Purpose C rules or remains unresolved because identity or join evidence is insufficient. would lose its analytical role or depend on purpose-specific join topology, identity policy, or dependency criteria that are not independently meaningful without the requesting purpose."
+    },
+    {
+      "name": "identity_link_candidate",
+      "admission": "PURPOSE",
+      "construction_class": "DERIVED",
+      "reason": "identity_link_candidate enumerates candidates required by a specific purpose's evaluation topology; it is not a source-backed world fact.",
+      "purpose_independence_test": "If analytical purposes A/B/C disappeared, A directed pair of Purpose B identifier endpoints that must receive an entity_identity_judgment to connect CRM, billing, contract, and registry candidates for a commercial relationship. would lose its analytical role or depend on purpose-specific join topology, identity policy, or dependency criteria that are not independently meaningful without the requesting purpose."
+    },
+    {
+      "name": "invoice_contract_association_candidate",
+      "admission": "PURPOSE",
+      "construction_class": "DERIVED",
+      "reason": "invoice_contract_association_candidate enumerates candidates required by a specific purpose's evaluation topology; it is not a source-backed world fact.",
+      "purpose_independence_test": "If analytical purposes A/B/C disappeared, An invoice-contract pair whose billed name and contract counterparty may correspond and therefore requires a Purpose A association judgment. would lose its analytical role or depend on purpose-specific join topology, identity policy, or dependency criteria that are not independently meaningful without the requesting purpose."
+    },
+    {
+      "name": "open_invoice",
+      "admission": "WORLD",
+      "construction_class": "DERIVED",
+      "reason": "open_invoice is a deterministic derivation over WORLD base relations with source-inherited grounding; it does not encode purpose policy.",
+      "purpose_independence_test": "If analytical purposes A/B/C disappeared, Invoices whose billing status is recorded as open in authoritative billing sources. would retain the same meaning and truth conditions because it is grounded in authoritative source text or mechanical compilation, not in purpose-specific thresholds or reporting policy."
+    },
+    {
+      "name": "dependency_evaluation_candidate",
+      "admission": "PURPOSE",
+      "construction_class": "DERIVED",
+      "reason": "dependency_evaluation_candidate enumerates candidates required by a specific purpose's evaluation topology; it is not a source-backed world fact.",
+      "purpose_independence_test": "If analytical purposes A/B/C disappeared, A counterparty identifier and contract referent pair that Purpose C must evaluate for commercial dependency or unresolved status. would lose its analytical role or depend on purpose-specific join topology, identity policy, or dependency criteria that are not independently meaningful without the requesting purpose."
+    }
+  ],
+  "world_relations_persisted": [
+    "invoice_record",
+    "crm_account_record",
+    "registry_company_record",
+    "contract_header",
+    "contract_stated_expiry",
+    "contract_section_excerpt",
+    "legal_form_name_variant",
+    "contract_clause_present",
+    "contract_lifecycle_status",
+    "open_invoice"
+  ],
+  "purpose_relations_excluded": [
+    "entity_identity_judgment",
+    "invoice_counterparty_association",
+    "commercial_dependency_assertion",
+    "identity_link_candidate",
+    "invoice_contract_association_candidate",
+    "dependency_evaluation_candidate"
+  ],
+  "limitations": [
+    "Started from 02_mechanical_world/world.sqlite; PURPOSE candidate relations and seeds were removed from the admitted world store.",
+    "contract_clause_present: 4 UNRESOLVED obligation(s) record no world tuple per kernel unresolved-state policy.",
+    "Persisted 41 contract_clause_present and 5 contract_lifecycle_status WORLD tuples from 05_dispositions.json.",
+    "Purpose-scoped dispositions (entity_identity_judgment, invoice_counterparty_association, commercial_dependency_assertion) were not promoted into 06_world/world.sqlite."
+  ]
+}

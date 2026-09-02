@@ -1,0 +1,57 @@
+{
+  "task": "replacement_state",
+  "cases": [
+    {
+      "new_part": "part:R210",
+      "old_part": "part:R200",
+      "context": "context:high_vibration_cabinet",
+      "bom_items": [
+        "bom:BOM-C"
+      ],
+      "mechanical_state": "suitable",
+      "semantic_state": "accepted",
+      "epistemic": "ASSERTED_TRUE"
+    },
+    {
+      "new_part": "part:X110",
+      "old_part": "part:X160",
+      "context": "context:indoor_panel",
+      "bom_items": [
+        "bom:BOM-B"
+      ],
+      "mechanical_state": "suitable",
+      "semantic_state": "unresolved",
+      "epistemic": "UNRESOLVED"
+    },
+    {
+      "new_part": "part:X110",
+      "old_part": "part:X160",
+      "context": "context:outdoor_enclosure",
+      "bom_items": [
+        "bom:BOM-A"
+      ],
+      "mechanical_state": "suitable",
+      "semantic_state": "accepted",
+      "epistemic": "ASSERTED_TRUE"
+    }
+  ],
+  "support": [
+    {
+      "claim": "part:R210 replaces part:R200 in context:high_vibration_cabinet for bom:BOM-C; mechanical_state=suitable; semantic_state=accepted",
+      "evidence": [
+        {
+          "source": "bom.csv",
+          "locator": "row 4 (bom_item=BOM-C)"
+        },
+        {
+          "source": "engineering_notes.md",
+          "locator": "lines 15-21 (ER-2)"
+        },
+        {
+          "source": "manufacturer.csv",
+          "locator": "row 12 (part_number=R210)"
+        }
+      ]
+    }
+  ]
+}

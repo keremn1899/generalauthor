@@ -1,0 +1,53 @@
+{
+  "pass": "P7",
+  "world": "world/world.sqlite",
+  "view_id": "diligence-world",
+  "script": "construction/derivations/derive_purposes.py",
+  "purposes": {
+    "a": {
+      "purpose": "contractual_revenue_exposure",
+      "inputs": [
+        "invoice_record",
+        "contract_active",
+        "contract_clause_kind",
+        "identity_judgment"
+      ],
+      "outputs": {
+        "purpose_ir": "purpose_ir/a/output.json",
+        "artifact": "08_outputs/a.json"
+      },
+      "acquisition_clause_kinds": [
+        "change_of_control_consent",
+        "change_of_control_termination",
+        "assignment_notice_or_consent",
+        "competitor_assignment_prohibition"
+      ]
+    },
+    "b": {
+      "purpose": "counterparty_reconciliation",
+      "inputs": ["identity_judgment"],
+      "outputs": {
+        "purpose_ir": "purpose_ir/b/output.json",
+        "artifact": "08_outputs/b.json"
+      }
+    },
+    "c": {
+      "purpose": "commercial_dependency",
+      "inputs": [
+        "invoice_record",
+        "contract_active",
+        "contract_clause_kind",
+        "identity_judgment"
+      ],
+      "outputs": {
+        "purpose_ir": "purpose_ir/c/output.json",
+        "artifact": "08_outputs/c.json"
+      },
+      "obligation_clause_kinds": {
+        "exclusivity": "exclusivity",
+        "auto_renewal": "auto_renewal",
+        "rolling_term": "rolling_term"
+      }
+    }
+  }
+}

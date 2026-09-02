@@ -1,0 +1,64 @@
+{
+  "pass": "P7",
+  "view_id": "diligence-world",
+  "world_path": "world/world.sqlite",
+  "derivations": [
+    {
+      "id": "purpose_a_contractual_revenue_exposure",
+      "purpose": "a",
+      "output": {
+        "purpose_ir": "purpose_ir/a/output.json",
+        "snapshot": "08_outputs/a.json"
+      },
+      "inputs": [
+        "invoice_record",
+        "contract_active",
+        "contract_clause_kind",
+        "identity_judgment"
+      ],
+      "parameters": {
+        "acquisition_clause_kinds": [
+          "assignment_notice_or_consent",
+          "change_of_control_consent",
+          "change_of_control_termination",
+          "competitor_assignment_prohibition"
+        ]
+      },
+      "basis": "Invoices whose billed name is linked to an active contract carrying an acquisition-relevant clause; association reflects billing-to-contract identity disposition."
+    },
+    {
+      "id": "purpose_b_counterparty_reconciliation",
+      "purpose": "b",
+      "output": {
+        "purpose_ir": "purpose_ir/b/output.json",
+        "snapshot": "08_outputs/b.json"
+      },
+      "inputs": ["identity_judgment"],
+      "basis": "Export compiled identity judgments connecting CRM, billing, contract, and registry identifiers required for commercial reconciliation."
+    },
+    {
+      "id": "purpose_c_commercial_dependency",
+      "purpose": "c",
+      "output": {
+        "purpose_ir": "purpose_ir/c/output.json",
+        "snapshot": "08_outputs/c.json"
+      },
+      "inputs": [
+        "contract_active",
+        "contract_clause_kind",
+        "contract_record",
+        "identity_judgment",
+        "invoice_record"
+      ],
+      "parameters": {
+        "dependency_clause_kinds": [
+          "auto_renewal",
+          "exclusivity",
+          "rolling_term"
+        ],
+        "continuity_clause_kinds": ["auto_renewal", "rolling_term"]
+      },
+      "basis": "Active contracts with exclusivity, auto-renewal, or rolling-term obligations where a current commercial relationship holds via open invoice or continuity clause; unresolved billing-to-contract identity yields unresolved status."
+    }
+  ]
+}

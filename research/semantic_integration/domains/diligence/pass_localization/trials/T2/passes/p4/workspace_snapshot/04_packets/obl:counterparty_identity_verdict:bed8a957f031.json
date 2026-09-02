@@ -1,0 +1,24 @@
+{
+  "obligation_id": "obl:counterparty_identity_verdict:bed8a957f031",
+  "selected_observations": [
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "invoice_id INV-5001",
+      "excerpt": "{\n  \"invoice_id\": \"INV-5001\",\n  \"billed_name\": \"Meridian Energy Partners LLC\",\n  \"vat_or_tax_id\": \"\",\n  \"amount\": 250000,\n  \"currency\": \"USD\",\n  \"period\": \"2025-Q1\",\n  \"status\": \"open\"\n}"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 4721193",
+      "excerpt": "4721193,MERIDIAN ENERGY PARTNERS LLC,Delaware,active"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 4",
+      "excerpt": "Meridian Energy Partners invoices are the advisory retainer under MSA-MER-2024."
+    }
+  ],
+  "selection_rationale": "Identity verdict for (billing:Meridian Energy Partners LLC, registry:4721193) requires comparing name forms across CRM, billing, contract, registry, and explicit commercial notes.",
+  "known_missing_information": [
+    "Purpose B policy verdict (SAME_ENTITY/DISTINCT/UNRESOLVED) not yet established; P2 made no identity assertions."
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "pass": "P7",
+  "description": "Purpose derivations over certified World relations (read-only)",
+  "view_id": "diligence-world",
+  "world": "world/world.sqlite",
+  "runner": "construction/derivations/derive_purposes.py",
+  "purposes": [
+    {
+      "id": "a",
+      "purpose": "contractual_revenue_exposure",
+      "spec": "purposes/visible_a.md",
+      "inputs": [
+        "invoice_record",
+        "contract_active",
+        "contract_clause_kind",
+        "identity_judgment"
+      ],
+      "outputs": [
+        "08_outputs/a.json",
+        "purpose_ir/a/output.json"
+      ],
+      "notes": [
+        "Acquisition-relevant clause kinds: change_of_control_consent, change_of_control_termination, assignment_notice_or_consent, competitor_assignment_prohibition",
+        "Invoice-to-contract association uses identity_judgment billing->contract links; inactive contracts excluded"
+      ]
+    },
+    {
+      "id": "b",
+      "purpose": "counterparty_reconciliation",
+      "spec": "purposes/visible_b.md",
+      "inputs": [
+        "identity_judgment"
+      ],
+      "outputs": [
+        "08_outputs/b.json",
+        "purpose_ir/b/output.json"
+      ],
+      "notes": [
+        "Epistemic labels mirror identity_judgment.disposition"
+      ]
+    },
+    {
+      "id": "c",
+      "purpose": "commercial_dependency",
+      "spec": "purposes/visible_c.md",
+      "inputs": [
+        "contract_active",
+        "contract_clause_kind",
+        "invoice_record",
+        "identity_judgment"
+      ],
+      "outputs": [
+        "08_outputs/c.json",
+        "purpose_ir/c/output.json"
+      ],
+      "notes": [
+        "Current relationship: open invoice or active contract with auto_renewal or rolling_term clause",
+        "Obligation kinds: exclusivity, auto_renewal, rolling_term on active contracts",
+        "Counterparty keyed as billing:<billed_name> via SAME_ENTITY billing->contract link"
+      ]
+    }
+  ]
+}

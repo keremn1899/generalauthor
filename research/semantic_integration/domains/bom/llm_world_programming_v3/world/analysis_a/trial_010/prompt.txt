@@ -1,0 +1,54 @@
+A compiled semantic World containing the information required for this analysis is available through the documented Python/SQL interface. Write Python to inspect it and produce the requested JSON output.
+
+# Task: replacement state
+
+Determine the current state of represented replacement candidates under the
+deployment contexts they apply to.
+
+For each candidate/context case, report:
+- new part, old part, and context
+- BOM items in that context
+- whether the new part is mechanically suitable for those BOM items
+- semantic acceptance state
+- an epistemic class
+
+Do not treat missing acceptance as false. Missing a positive acceptance
+judgment is not the same as a negative judgment.
+
+Identifiers in the JSON result must use these forms:
+- parts: "part:<part_number>"
+- BOM items: "bom:<bom_item>"
+- contexts: "context:<deployment_environment>"
+- listings: "listing:<sku>"
+
+Core JSON shape (this is the scored payload; extra keys are ignored except as noted):
+
+{
+  "task": "replacement_state",
+  "cases": [
+    {
+      "new_part": string,
+      "old_part": string,
+      "context": string,
+      "bom_items": [string],
+      "mechanical_state": "suitable" | "unsuitable",
+      "semantic_state": "accepted" | "unresolved" | "not_established",
+      "epistemic": "ASSERTED_TRUE" | "UNRESOLVED" | "NOT_KNOWN"
+    }
+  ]
+}
+
+Sort cases by new_part, old_part, context. Sort bom_items lexicographically.
+
+Provenance subtest (scored separately; do not omit the core fields):
+Also include a top-level "support" array tracing one case to authoritative
+evidence. Each item:
+
+{"claim": string, "evidence": [{"source": string, "locator": string}]}
+
+Do not write a prose explanation.
+
+Save the Python program as analysis.py in the workspace root.
+Write the JSON result to output.json in the workspace root.
+The program must be executable: a later scorer will run analysis.py in a clean copy of this environment.
+Do not hard-code an answer you did not compute.

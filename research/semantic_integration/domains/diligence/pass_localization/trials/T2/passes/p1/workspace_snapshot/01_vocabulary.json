@@ -1,0 +1,545 @@
+{
+  "relations": [
+    {
+      "name": "source_invoice",
+      "roles": [
+        { "name": "invoice_id", "type": "TEXT" },
+        { "name": "billed_name", "type": "TEXT" },
+        { "name": "amount", "type": "REAL" },
+        { "name": "currency", "type": "TEXT" },
+        { "name": "period", "type": "TEXT" },
+        { "name": "status", "type": "TEXT" },
+        { "name": "vat_or_tax_id", "type": "TEXT" }
+      ],
+      "role_types": ["TEXT", "TEXT", "REAL", "TEXT", "TEXT", "TEXT", "TEXT"],
+      "meaning": "A represented invoice row exactly as recorded in billing sources.",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "required_by": ["A", "C"],
+      "grounding_contract": "Each tuple must cite sources/billing/invoices.json by invoice_id row.",
+      "construction_rule": "Parse invoices.json; copy scalar fields without normalization of billed_name."
+    },
+    {
+      "name": "source_crm_account",
+      "roles": [
+        { "name": "crm_account_id", "type": "TEXT" },
+        { "name": "account_name", "type": "TEXT" },
+        { "name": "domain", "type": "TEXT" },
+        { "name": "country", "type": "TEXT" },
+        { "name": "owner", "type": "TEXT" },
+        { "name": "status", "type": "TEXT" }
+      ],
+      "role_types": ["TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT"],
+      "meaning": "A CRM account record exactly as recorded in CRM sources.",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "required_by": ["B"],
+      "grounding_contract": "Each tuple must cite sources/crm.csv by crm_account_id row.",
+      "construction_rule": "Parse crm.csv; copy fields without merging or canonicalizing account_name."
+    },
+    {
+      "name": "source_registry_entity",
+      "roles": [
+        { "name": "company_number", "type": "TEXT" },
+        { "name": "legal_name", "type": "TEXT" },
+        { "name": "jurisdiction", "type": "TEXT" },
+        { "name": "registry_status", "type": "TEXT" }
+      ],
+      "role_types": ["TEXT", "TEXT", "TEXT", "TEXT"],
+      "meaning": "A company registry row exactly as recorded in the registry source.",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "required_by": ["B"],
+      "grounding_contract": "Each tuple must cite sources/company_registry.csv by company_number row.",
+      "construction_rule": "Parse company_registry.csv; copy fields without cross-row merge."
+    },
+    {
+      "name": "source_contract_document",
+      "roles": [
+        { "name": "contract_stem", "type": "TEXT" },
+        { "name": "file_path", "type": "TEXT" }
+      ],
+      "role_types": ["TEXT", "TEXT"],
+      "meaning": "A contract or statement-of-work document identified by its filename stem in sources.",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "required_by": ["A", "B", "C"],
+      "grounding_contract": "Each tuple must cite one file under sources/contracts/ by path.",
+      "construction_rule": "Enumerate sources/contracts/*.md; contract_stem is filename without .md extension."
+    },
+    {
+      "name": "source_commercial_note",
+      "roles": [
+        { "name": "note_path", "type": "TEXT" },
+        { "name": "paragraph_index", "type": "INTEGER" },
+        { "name": "text", "type": "TEXT" }
+      ],
+      "role_types": ["TEXT", "INTEGER", "TEXT"],
+      "meaning": "A paragraph of internal commercial notes preserved as an authoritative source observation.",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "required_by": ["B"],
+      "grounding_contract": "Each tuple must cite sources/commercial_notes.md by paragraph index.",
+      "construction_rule": "Split commercial_notes.md on blank lines; index paragraphs from zero."
+    },
+    {
+      "name": "contract_counterparty_name",
+      "roles": [
+        { "name": "contract", "type": "REFERENT" },
+        { "name": "stated_name", "type": "TEXT" }
+      ],
+      "role_types": ["REFERENT", "TEXT"],
+      "meaning": "The counterparty legal name stated in a contract document header.",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "required_by": ["A", "B", "C"],
+      "grounding_contract": "Each tuple must cite the Counterparty line in the contract markdown file.",
+      "construction_rule": "Parse the Counterparty field from contract header; bind contract referent to contract_stem."
+    },
+    {
+      "name": "contract_effective_date",
+      "roles": [
+        { "name": "contract", "type": "REFERENT" },
+        { "name": "effective_date", "type": "TEXT" }
+      ],
+      "role_types": ["REFERENT", "TEXT"],
+      "meaning": "The effective date stated in a contract document header.",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "required_by": ["A", "C"],
+      "grounding_contract": "Each tuple must cite the Effective line in the contract markdown file.",
+      "construction_rule": "Parse Effective field as verbatim source text."
+    },
+    {
+      "name": "contract_term_text",
+      "roles": [
+        { "name": "contract", "type": "REFERENT" },
+        { "name": "term_text", "type": "TEXT" }
+      ],
+      "role_types": ["REFERENT", "TEXT"],
+      "meaning": "The term or duration statement stated in a contract document header.",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "required_by": ["A", "C"],
+      "grounding_contract": "Each tuple must cite the Term line in the contract markdown file.",
+      "construction_rule": "Parse Term field as verbatim source text without interpreting renewal mechanics."
+    },
+    {
+      "name": "contract_expiry_statement",
+      "roles": [
+        { "name": "contract", "type": "REFERENT" },
+        { "name": "expiry_text", "type": "TEXT" },
+        { "name": "not_renewed", "type": "BOOLEAN" }
+      ],
+      "role_types": ["REFERENT", "TEXT", "BOOLEAN"],
+      "meaning": "An explicit expiry or non-renewal statement present in a contract document.",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "required_by": ["A", "C"],
+      "grounding_contract": "Each tuple must cite Expiry or equivalent explicit expiry language in the contract file.",
+      "construction_rule": "Emit only when source states explicit expiry; set not_renewed when source says not renewed or expired."
+    },
+    {
+      "name": "contract_section_clause",
+      "roles": [
+        { "name": "contract", "type": "REFERENT" },
+        { "name": "section_heading", "type": "TEXT" },
+        { "name": "clause_text", "type": "TEXT" }
+      ],
+      "role_types": ["REFERENT", "TEXT", "TEXT"],
+      "meaning": "A contract section heading and its clause body as observed in source markdown.",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "required_by": ["A", "C"],
+      "grounding_contract": "Each tuple must cite the section heading and following text in the contract file.",
+      "construction_rule": "Split contract markdown on ## headings; preserve heading and body text verbatim."
+    },
+    {
+      "name": "invoice_is_open",
+      "roles": [
+        { "name": "invoice_id", "type": "TEXT" },
+        { "name": "is_open", "type": "BOOLEAN" }
+      ],
+      "role_types": ["TEXT", "BOOLEAN"],
+      "meaning": "Whether an invoice status field records it as open versus paid or closed.",
+      "admission": "WORLD",
+      "construction_class": "DERIVED",
+      "required_by": ["C"],
+      "grounding_contract": "Derived from source_invoice.status with grounding pointer to the invoice row.",
+      "construction_rule": "is_open is true when source_invoice.status equals open; otherwise false.",
+      "candidate_generation_rule": "One row per source_invoice tuple."
+    },
+    {
+      "name": "billing_identifier",
+      "roles": [
+        { "name": "billed_name", "type": "TEXT" },
+        { "name": "identifier", "type": "TEXT" }
+      ],
+      "role_types": ["TEXT", "TEXT"],
+      "meaning": "The mandated billing identifier form billing:<billed_name> for a recorded billed name.",
+      "admission": "WORLD",
+      "construction_class": "DERIVED",
+      "required_by": ["B", "C"],
+      "grounding_contract": "identifier must be deterministically formed from billed_name appearing in source_invoice.",
+      "construction_rule": "identifier equals billing: concatenated with exact billed_name string from billing source.",
+      "candidate_generation_rule": "One row per distinct billed_name in source_invoice."
+    },
+    {
+      "name": "crm_identifier",
+      "roles": [
+        { "name": "crm_account_id", "type": "TEXT" },
+        { "name": "identifier", "type": "TEXT" }
+      ],
+      "role_types": ["TEXT", "TEXT"],
+      "meaning": "The mandated CRM identifier form crm:<crm_account_id> for a CRM account.",
+      "admission": "WORLD",
+      "construction_class": "DERIVED",
+      "required_by": ["B", "C"],
+      "grounding_contract": "identifier must be deterministically formed from crm_account_id in source_crm_account.",
+      "construction_rule": "identifier equals crm: concatenated with crm_account_id.",
+      "candidate_generation_rule": "One row per source_crm_account tuple."
+    },
+    {
+      "name": "registry_identifier",
+      "roles": [
+        { "name": "company_number", "type": "TEXT" },
+        { "name": "identifier", "type": "TEXT" }
+      ],
+      "role_types": ["TEXT", "TEXT"],
+      "meaning": "The mandated registry identifier form registry:<company_number> for a registry row.",
+      "admission": "WORLD",
+      "construction_class": "DERIVED",
+      "required_by": ["B", "C"],
+      "grounding_contract": "identifier must be deterministically formed from company_number in source_registry_entity.",
+      "construction_rule": "identifier equals registry: concatenated with company_number.",
+      "candidate_generation_rule": "One row per source_registry_entity tuple."
+    },
+    {
+      "name": "contract_identifier",
+      "roles": [
+        { "name": "contract_stem", "type": "TEXT" },
+        { "name": "identifier", "type": "TEXT" }
+      ],
+      "role_types": ["TEXT", "TEXT"],
+      "meaning": "The mandated contract identifier form contract:<contract_stem> for a contract document.",
+      "admission": "WORLD",
+      "construction_class": "DERIVED",
+      "required_by": ["A", "B", "C"],
+      "grounding_contract": "identifier must be deterministically formed from contract_stem in source_contract_document.",
+      "construction_rule": "identifier equals contract: concatenated with contract_stem.",
+      "candidate_generation_rule": "One row per source_contract_document tuple."
+    },
+    {
+      "name": "clause_encodes_feature",
+      "roles": [
+        { "name": "contract", "type": "REFERENT" },
+        { "name": "section_heading", "type": "TEXT" },
+        { "name": "feature", "type": "TEXT" }
+      ],
+      "role_types": ["REFERENT", "TEXT", "TEXT"],
+      "meaning": "A contract clause text encodes a specific contractual feature independent of diligence policy thresholds.",
+      "admission": "WORLD",
+      "construction_class": "SEMANTIC",
+      "required_by": ["A", "C"],
+      "grounding_contract": "Ground in contract_section_clause text and cite the section heading; do not infer features absent from clause language.",
+      "construction_rule": "Read assignment, change-of-control, exclusivity, and term sections; assert feature when clause language encodes it.",
+      "candidate_generation_rule": "Candidates are contract_section_clause rows whose headings mention Assignment, Change of control, Exclusivity, or Term.",
+      "unresolved_judgment": "Whether ambiguous clause language encodes a listed feature.",
+      "allowed_dispositions": [
+        "change_of_control_consent_required",
+        "change_of_control_notice_required",
+        "change_of_control_termination_right",
+        "change_of_control_silent",
+        "assignment_consent_required",
+        "assignment_notice_required",
+        "assignment_affiliate_exception",
+        "assignment_competitor_prohibition",
+        "assignment_unrestricted",
+        "exclusivity_commitment",
+        "auto_renewal_term",
+        "rolling_term_period",
+        "month_to_month_term",
+        "UNRESOLVED"
+      ]
+    },
+    {
+      "name": "contract_in_force",
+      "roles": [
+        { "name": "contract", "type": "REFERENT" },
+        { "name": "in_force", "type": "BOOLEAN" }
+      ],
+      "role_types": ["REFERENT", "BOOLEAN"],
+      "meaning": "Whether a contract or statement of work is expired versus in force based on grounded dates and term statements in sources.",
+      "admission": "WORLD",
+      "construction_class": "SEMANTIC",
+      "required_by": ["A", "C"],
+      "grounding_contract": "Ground in contract_effective_date, contract_term_text, contract_expiry_statement, and explicit expired language in the contract file.",
+      "construction_rule": "Apply source dates and explicit expiry or not-renewed statements; do not treat silence as expiration.",
+      "candidate_generation_rule": "One candidate per contract referent with compiled date and term observations.",
+      "unresolved_judgment": "Whether temporal status cannot be determined from grounded dates and term text alone.",
+      "allowed_dispositions": ["true", "false", "UNRESOLVED"]
+    },
+    {
+      "name": "contract_continues_by_structure",
+      "roles": [
+        { "name": "contract", "type": "REFERENT" },
+        { "name": "continuation_kind", "type": "TEXT" }
+      ],
+      "role_types": ["REFERENT", "TEXT"],
+      "meaning": "How a contract's stated term structure provides ongoing continuation absent explicit expiry.",
+      "admission": "WORLD",
+      "construction_class": "SEMANTIC",
+      "required_by": ["C"],
+      "grounding_contract": "Ground in contract_term_text and any term-related clause_encodes_feature rows.",
+      "construction_rule": "Classify continuation from verbatim term statements and renewal clauses without applying Purpose C dependency thresholds.",
+      "candidate_generation_rule": "One candidate per contract referent with contract_term_text.",
+      "unresolved_judgment": "Whether term language establishes auto-renewal, rolling continuation, or month-to-month continuation.",
+      "allowed_dispositions": [
+        "auto_renewal",
+        "rolling_term",
+        "month_to_month",
+        "fixed_with_explicit_expiry",
+        "none",
+        "UNRESOLVED"
+      ]
+    },
+    {
+      "name": "source_asserts_same_entity",
+      "roles": [
+        { "name": "left_label", "type": "TEXT" },
+        { "name": "right_label", "type": "TEXT" },
+        { "name": "basis", "type": "TEXT" }
+      ],
+      "role_types": ["TEXT", "TEXT", "TEXT"],
+      "meaning": "Authoritative source text explicitly states two named records refer to the same legal entity.",
+      "admission": "WORLD",
+      "construction_class": "SEMANTIC",
+      "required_by": ["B"],
+      "grounding_contract": "Ground in commercial_notes, registry text, or contract header where source explicitly equates names or entities.",
+      "construction_rule": "Assert only when a source sentence positively identifies two labels as the same legal entity.",
+      "candidate_generation_rule": "Pairs of name strings co-mentioned in source_commercial_note or co-occurring as registry legal_name variants on one company_number.",
+      "unresolved_judgment": "Whether source text is an explicit same-entity assertion versus mere similarity.",
+      "allowed_dispositions": ["ASSERTED", "UNRESOLVED"]
+    },
+    {
+      "name": "source_asserts_distinct_entity",
+      "roles": [
+        { "name": "left_label", "type": "TEXT" },
+        { "name": "right_label", "type": "TEXT" },
+        { "name": "basis", "type": "TEXT" }
+      ],
+      "role_types": ["TEXT", "TEXT", "TEXT"],
+      "meaning": "Authoritative source text explicitly states two named records are different legal entities.",
+      "admission": "WORLD",
+      "construction_class": "SEMANTIC",
+      "required_by": ["B"],
+      "grounding_contract": "Ground in commercial_notes or registry rows where source explicitly distinguishes entities.",
+      "construction_rule": "Assert only when a source sentence positively identifies two labels as distinct legal entities.",
+      "candidate_generation_rule": "Pairs of similar trade or operating names mentioned together in source_commercial_note paragraphs.",
+      "unresolved_judgment": "Whether source text is an explicit distinct-entity assertion versus mere co-mention.",
+      "allowed_dispositions": ["ASSERTED", "UNRESOLVED"]
+    },
+    {
+      "name": "mechanical_legal_form_match",
+      "roles": [
+        { "name": "name_a", "type": "TEXT" },
+        { "name": "name_b", "type": "TEXT" },
+        { "name": "registry_company_number", "type": "TEXT" }
+      ],
+      "role_types": ["TEXT", "TEXT", "TEXT"],
+      "meaning": "Two name strings are exact legal-form variants tied to the same registry company_number grounding.",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "required_by": ["B"],
+      "grounding_contract": "Both names must appear in sources tied to the same company_number in source_registry_entity or contract grounded to that registry row.",
+      "construction_rule": "Normalize only standard legal suffix variants (Ltd/Limited, Inc./Incorporated, LLC) when company_number linkage is grounded."
+    },
+    {
+      "name": "commercial_relationship_path",
+      "roles": [
+        { "name": "crm_account_id", "type": "TEXT" },
+        { "name": "billed_name", "type": "TEXT" },
+        { "name": "contract_stem", "type": "TEXT" },
+        { "name": "registry_company_number", "type": "TEXT" }
+      ],
+      "role_types": ["TEXT", "TEXT", "TEXT", "TEXT"],
+      "meaning": "A commercially relevant connection path linking CRM account, invoice billed name, governing contract, and candidate registry entity for one relationship.",
+      "admission": "WORLD",
+      "construction_class": "SEMANTIC",
+      "required_by": ["B", "C"],
+      "grounding_contract": "Each role must be grounded in CRM, billing, contract, registry, or commercial_notes observations that participate in the same commercial relationship.",
+      "construction_rule": "Assemble paths from CRM accounts, their invoices, governing MSAs or SOWs, and registry candidates without applying Purpose B merge policy.",
+      "candidate_generation_rule": "CRM accounts with status active or churned plus invoices sharing domain, name overlap, or explicit note linkage; registry candidates are rows whose legal_name appears in the path or notes.",
+      "unresolved_judgment": "Which contract governs a CRM–billing pair or which registry row is the candidate legal entity.",
+      "allowed_dispositions": ["ASSERTED", "UNRESOLVED"]
+    },
+    {
+      "name": "required_reconciliation_link",
+      "roles": [
+        { "name": "left", "type": "TEXT" },
+        { "name": "right", "type": "TEXT" }
+      ],
+      "role_types": ["TEXT", "TEXT"],
+      "meaning": "An identifier pair that Purpose B must emit with an explicit epistemic verdict to connect CRM, billing, contract, and registry along a commercial relationship.",
+      "admission": "PURPOSE",
+      "construction_class": "DERIVED",
+      "required_by": ["B"],
+      "grounding_contract": "Derived from commercial_relationship_path and mandated identifier forms; not all pairwise combinations in the universe.",
+      "construction_rule": "Enumerate left/right pairs along each commercial_relationship_path using billing_identifier, crm_identifier, contract_identifier, and registry_identifier.",
+      "candidate_generation_rule": "Adjacent pairs on each path: crm–billing, billing–contract counterparty name or contract id, billing–registry, contract–registry, crm–contract."
+    },
+    {
+      "name": "counterparty_identity_verdict",
+      "roles": [
+        { "name": "left", "type": "TEXT" },
+        { "name": "right", "type": "TEXT" },
+        { "name": "epistemic", "type": "TEXT" }
+      ],
+      "role_types": ["TEXT", "TEXT", "TEXT"],
+      "meaning": "Purpose B policy verdict on whether two mandated identifiers denote the same legal counterparty, distinct entities, or remain unresolved.",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "required_by": ["B", "C"],
+      "grounding_contract": "Ground positive SAME_ENTITY or DISTINCT in world evidence relations; UNRESOLVED when policy withholds judgment.",
+      "construction_rule": "Apply Purpose B policies: no fuzzy global merge, mechanical legal-form match allowed, similar trade names distinct by default.",
+      "candidate_generation_rule": "One candidate per required_reconciliation_link tuple.",
+      "unresolved_judgment": "Insufficient grounded evidence to assert SAME_ENTITY or DISTINCT under Purpose B policy.",
+      "allowed_dispositions": ["SAME_ENTITY", "DISTINCT", "UNRESOLVED"]
+    },
+    {
+      "name": "invoice_contract_association",
+      "roles": [
+        { "name": "invoice_id", "type": "TEXT" },
+        { "name": "contract_id", "type": "TEXT" },
+        { "name": "association", "type": "TEXT" }
+      ],
+      "role_types": ["TEXT", "TEXT", "TEXT"],
+      "meaning": "Purpose A verdict linking a represented invoice to a governing contract and counterparty identity as asserted or unresolved.",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "required_by": ["A", "C"],
+      "grounding_contract": "Ground asserted associations in billing, contract, notes, and identity evidence; unresolved when billed name and contract counterparty cannot be confidently joined.",
+      "construction_rule": "association is asserted only when invoice-to-contract and billed-name-to-counterparty linkage is confident; otherwise unresolved without treating missing linkage as negative.",
+      "candidate_generation_rule": "Each source_invoice paired with candidate contracts from commercial_relationship_path or explicit note linkage.",
+      "unresolved_judgment": "Whether billed_name and contract counterparty confidently denote the same party for this invoice.",
+      "allowed_dispositions": ["asserted", "unresolved"]
+    },
+    {
+      "name": "contract_active_for_exposure",
+      "roles": [
+        { "name": "contract_id", "type": "TEXT" },
+        { "name": "active", "type": "BOOLEAN" }
+      ],
+      "role_types": ["TEXT", "BOOLEAN"],
+      "meaning": "Purpose A policy verdict that a contract counts as active for acquisition-exposure testing.",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "required_by": ["A"],
+      "grounding_contract": "Ground in contract_in_force and contract_expiry_statement; expired SOWs are not active under Purpose A policy.",
+      "construction_rule": "active is false for expired statements of work; otherwise follow grounded in_force status.",
+      "candidate_generation_rule": "One candidate per contract_identifier.",
+      "unresolved_judgment": "Whether temporal status is insufficient to classify active versus expired for Purpose A.",
+      "allowed_dispositions": ["true", "false", "UNRESOLVED"]
+    },
+    {
+      "name": "contract_acquisition_relevant_term",
+      "roles": [
+        { "name": "contract_id", "type": "TEXT" },
+        { "name": "has_relevant_term", "type": "BOOLEAN" }
+      ],
+      "role_types": ["TEXT", "BOOLEAN"],
+      "meaning": "Purpose A policy verdict that a contract bears at least one acquisition-relevant condition among the three enumerated families.",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "required_by": ["A"],
+      "grounding_contract": "Ground in clause_encodes_feature rows for change-of-control and assignment families.",
+      "construction_rule": "has_relevant_term when any Purpose A family matches: CoC consent or notice, CoC termination right, or assignment consent or notice including affiliate-only or competitor-prohibited assignment.",
+      "candidate_generation_rule": "Contracts with any clause_encodes_feature in CoC or assignment families.",
+      "unresolved_judgment": "Whether compiled clause features satisfy Purpose A acquisition-relevance threshold.",
+      "allowed_dispositions": ["true", "false", "UNRESOLVED"]
+    },
+    {
+      "name": "invoice_exposure_qualifies",
+      "roles": [
+        { "name": "invoice_id", "type": "TEXT" },
+        { "name": "qualifies", "type": "BOOLEAN" }
+      ],
+      "role_types": ["TEXT", "BOOLEAN"],
+      "meaning": "Purpose A verdict that a represented invoice belongs in the contractual revenue exposure report.",
+      "admission": "PURPOSE",
+      "construction_class": "DERIVED",
+      "required_by": ["A"],
+      "grounding_contract": "Derived from invoice_contract_association, contract_active_for_exposure, and contract_acquisition_relevant_term.",
+      "construction_rule": "qualifies when invoice has asserted or unresolved association to a contract that is active for exposure and bears acquisition-relevant terms; unresolved association rows still qualify for output.",
+      "candidate_generation_rule": "Every source_invoice with any candidate contract linkage."
+    },
+    {
+      "name": "contract_obligation_kind",
+      "roles": [
+        { "name": "contract_id", "type": "TEXT" },
+        { "name": "kind", "type": "TEXT" }
+      ],
+      "role_types": ["TEXT", "TEXT"],
+      "meaning": "Purpose C classification mapping a contract to one of the closed obligation_kinds vocabulary entries.",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "required_by": ["C"],
+      "grounding_contract": "Ground in clause_encodes_feature and contract_continues_by_structure aligned to exclusivity, auto_renewal, or rolling_term.",
+      "construction_rule": "kind must be exactly exclusivity, auto_renewal, or rolling_term per Purpose C vocabulary.",
+      "candidate_generation_rule": "Contracts with exclusivity_commitment, auto_renewal_term, or rolling_term_period features.",
+      "unresolved_judgment": "Whether clause and term evidence supports a specific obligation_kinds label.",
+      "allowed_dispositions": ["exclusivity", "auto_renewal", "rolling_term", "UNRESOLVED"]
+    },
+    {
+      "name": "counterparty_current_relationship",
+      "roles": [
+        { "name": "counterparty", "type": "TEXT" },
+        { "name": "has_current_relationship", "type": "TEXT" }
+      ],
+      "role_types": ["TEXT", "TEXT"],
+      "meaning": "Purpose C policy verdict on whether a counterparty has a current commercial relationship via open invoice or continuing active contract.",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "required_by": ["C"],
+      "grounding_contract": "Ground in invoice_is_open, contract_in_force, and contract_continues_by_structure; exclude expired contracts and one-off paid historical invoices without active contract.",
+      "construction_rule": "has_current_relationship is true when an open invoice exists or an in-force contract auto-renews or continues on rolling or month-to-month term.",
+      "candidate_generation_rule": "Counterparties appearing in commercial_relationship_path with open invoices or in-force contracts.",
+      "unresolved_judgment": "Whether current-relationship prong cannot be assessed because identity or contract status is unresolved.",
+      "allowed_dispositions": ["true", "false", "UNRESOLVED"]
+    },
+    {
+      "name": "commercial_dependency_status",
+      "roles": [
+        { "name": "counterparty", "type": "TEXT" },
+        { "name": "contract_id", "type": "TEXT" },
+        { "name": "status", "type": "TEXT" }
+      ],
+      "role_types": ["TEXT", "TEXT", "TEXT"],
+      "meaning": "Purpose C verdict that a counterparty–contract pair is commercially dependent or unresolved when identity joins block assessment.",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "required_by": ["C"],
+      "grounding_contract": "Ground both prongs: counterparty_current_relationship and contract_obligation_kind on the same contract; propagate UNRESOLVED identity from counterparty_identity_verdict.",
+      "construction_rule": "status is dependent when both prongs hold; unresolved when any required join or prong assessment is unresolved; never emit false negative from missing identity.",
+      "candidate_generation_rule": "Each counterparty–contract pair from commercial_relationship_path with in-force or candidate obligation features.",
+      "unresolved_judgment": "Whether dependency can be asserted when invoice–contract or identity linkage remains unresolved.",
+      "allowed_dispositions": ["dependent", "unresolved"]
+    },
+    {
+      "name": "dependency_open_invoices",
+      "roles": [
+        { "name": "counterparty", "type": "TEXT" },
+        { "name": "contract_id", "type": "TEXT" },
+        { "name": "invoice_id", "type": "TEXT" }
+      ],
+      "role_types": ["TEXT", "TEXT", "TEXT"],
+      "meaning": "Open invoices tied to a counterparty–contract dependency row when invoice association is asserted.",
+      "admission": "PURPOSE",
+      "construction_class": "DERIVED",
+      "required_by": ["C"],
+      "grounding_contract": "Derived from invoice_is_open and invoice_contract_association with asserted association.",
+      "construction_rule": "Emit invoice_id for open invoices linked to the contract row; omit or leave empty when association is unresolved.",
+      "candidate_generation_rule": "Open invoices sharing commercial_relationship_path with the contract and counterparty."
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "obligation_id": "obl-082-invoice_contract_link-invoice-INV-2001-contract-MSA-NBA-2021",
+  "selected_observations": [
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "INV-2001",
+      "excerpt": "\"invoice_id\": \"INV-2001\", \"billed_name\": \"Northbridge Analytics Inc.\", \"period\": \"2024-Q4\", \"status\": \"paid\""
+    },
+    {
+      "source_path": "sources/contracts/MSA-NBA-2021.md",
+      "location": "header",
+      "excerpt": "Counterparty: Northbridge Analytics, Inc."
+    }
+  ],
+  "selection_rationale": "Invoice billed_name and contract counterparty must be matched via legal_entity_identity before asserting LINKED.",
+  "known_missing_information": [
+    "No explicit contract reference field on invoice; linkage requires identity chain judgment."
+  ]
+}

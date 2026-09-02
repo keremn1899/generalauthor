@@ -1,0 +1,112 @@
+{
+  "pass": "P6",
+  "source_inputs": [
+    "01_vocabulary.json",
+    "05_dispositions.json",
+    "02_mechanical_world/world.sqlite"
+  ],
+  "limitations": [
+    "Purpose relations (purpose_a_qualifying_invoice, purpose_b_required_link, purpose_c_commercial_dependency) are classified but not materialized in 06_world/world.sqlite per admission policy.",
+    "invoice_contract_link vocabulary allows only LINKED and UNRESOLVED; no negative link disposition was resolved in 05_dispositions.json.",
+    "legal_entity_identity pairs in 05_dispositions.json resolved only to SAME_ENTITY or UNRESOLVED; no DISTINCT judgments were admitted.",
+    "counterparty_identifier completeness receipt uses source_crm_account as universe anchor; full cross-source coverage is asserted in basis text rather than a dedicated union universe relation."
+  ],
+  "relations": [
+    {
+      "name": "source_invoice",
+      "admission": "WORLD",
+      "reason": "Verbatim billing records keyed by source invoice_id are factual source observations independent of any analytical purpose.",
+      "purpose_independence_test": "If purposes A/B/C disappeared, each invoice tuple would still denote the same billed amount, period, status, and billed name drawn from sources/billing/invoices.json."
+    },
+    {
+      "name": "source_crm_account",
+      "admission": "WORLD",
+      "reason": "CRM account rows copied from sources/crm.csv are mechanical source facts, not purpose-scoped judgments.",
+      "purpose_independence_test": "If purposes A/B/C disappeared, each CRM account tuple would still represent the same account_name, domain, and crm_account_id from the CRM export."
+    },
+    {
+      "name": "source_registry_company",
+      "admission": "WORLD",
+      "reason": "Registry company rows are authoritative registry observations keyed by company_number.",
+      "purpose_independence_test": "If purposes A/B/C disappeared, each registry tuple would still state the same legal_name, jurisdiction, and status from sources/company_registry.csv."
+    },
+    {
+      "name": "source_contract",
+      "admission": "WORLD",
+      "reason": "Contract header metadata and counterparty name as stated in each contract file are source-document facts.",
+      "purpose_independence_test": "If purposes A/B/C disappeared, each contract tuple would still report the same effective_date, term_text, and counterparty_name_as_stated from the contract markdown header."
+    },
+    {
+      "name": "contract_clause_excerpt",
+      "admission": "WORLD",
+      "reason": "Verbatim clause excerpts are mechanical extractions of contract text spans, not acquisition-relevance classifications.",
+      "purpose_independence_test": "If purposes A/B/C disappeared, each excerpt tuple would still quote the same heading and body text from the named contract section."
+    },
+    {
+      "name": "legal_name_normalization",
+      "admission": "WORLD",
+      "reason": "Legal-suffix and punctuation normalization is a deterministic mechanical transform with no purpose policy or threshold.",
+      "purpose_independence_test": "If purposes A/B/C disappeared, each raw_name would still map to the same normalized_name under the fixed normalization rules."
+    },
+    {
+      "name": "contract_lifecycle_status",
+      "admission": "WORLD",
+      "reason": "Whether a contract is active or expired on the evaluation date is a factual lifecycle judgment grounded in contract dates and term mechanics, not in acquisition-relevance policy.",
+      "purpose_independence_test": "If purposes A/B/C disappeared, ACTIVE versus EXPIRED would still be decided from the same effective dates, expiry statements, and renewal language in sources."
+    },
+    {
+      "name": "contract_term_reading",
+      "admission": "WORLD",
+      "reason": "PRESENT/ABSENT/UNRESOLVED readings for named clause families describe what the contract text asserts, without collapsing into purpose-specific acquisition-relevance labels.",
+      "purpose_independence_test": "If purposes A/B/C disappeared, each (contract, term_kind) reading would still mean the same presence or absence of that clause family in the contract text."
+    },
+    {
+      "name": "legal_entity_identity",
+      "admission": "WORLD",
+      "reason": "Pairwise same-entity judgments across CRM, billing, registry, and contract records are reusable counterparty facts grounded in names, registry numbers, and authoritative notes.",
+      "purpose_independence_test": "If purposes A/B/C disappeared, SAME_ENTITY versus UNRESOLVED for a given record pair would still be supported by the same identity evidence in sources."
+    },
+    {
+      "name": "invoice_contract_link",
+      "admission": "WORLD",
+      "reason": "Invoice-to-contract linkage based on counterparty identity and stated commercial relationships is a factual governance tie, distinct from purpose A association labeling.",
+      "purpose_independence_test": "If purposes A/B/C disappeared, LINKED versus UNRESOLVED for an invoice-contract pair would still reflect the same identity and relationship evidence without applying purpose confidence thresholds."
+    },
+    {
+      "name": "invoice_open",
+      "admission": "WORLD",
+      "reason": "Open versus closed status is mechanically derived from source_invoice.status with no purpose policy.",
+      "purpose_independence_test": "If purposes A/B/C disappeared, is_open would still be true exactly when the source invoice status equals open."
+    },
+    {
+      "name": "active_contract",
+      "admission": "WORLD",
+      "reason": "The set of contracts with lifecycle disposition ACTIVE is a direct projection of contract_lifecycle_status, reusable beyond any single purpose gate.",
+      "purpose_independence_test": "If purposes A/B/C disappeared, a contract would still appear in active_contract exactly when contract_lifecycle_status.disposition is ACTIVE."
+    },
+    {
+      "name": "counterparty_identifier",
+      "admission": "WORLD",
+      "reason": "Deterministic crm:/billing:/registry:/contract: identifier strings are canonical record keys derived from source-native keys, not purpose-B epistemic policy.",
+      "purpose_independence_test": "If purposes A/B/C disappeared, each source record would still map to the same prefixed identifier string from its native key fields."
+    },
+    {
+      "name": "purpose_a_qualifying_invoice",
+      "admission": "PURPOSE",
+      "reason": "Qualifying-invoice selection and association asserted versus unresolved labels depend on purpose A acquisition-relevant term families and association confidence policy.",
+      "purpose_independence_test": "If purpose A disappeared, there would be no independent meaning for acquisition-relevant exposure labeling or the asserted/unresolved association threshold applied to invoice_contract_link."
+    },
+    {
+      "name": "purpose_b_required_link",
+      "admission": "PURPOSE",
+      "reason": "Required-link rows apply purpose B epistemic policy over commercially relevant pairs, copying legal_entity_identity only when purpose confidence rules permit.",
+      "purpose_independence_test": "If purpose B disappeared, the epistemic column would lose its policy-defined meaning even though underlying legal_entity_identity judgments remain in World."
+    },
+    {
+      "name": "purpose_c_commercial_dependency",
+      "admission": "PURPOSE",
+      "reason": "Dependent versus unresolved status applies purpose C conjunctive definition over open invoices, continuing contracts, obligation kinds, and confident identity joins.",
+      "purpose_independence_test": "If purpose C disappeared, the dependent/unresolved status label would have no truth conditions independent of the purpose C conjunctive policy."
+    }
+  ]
+}

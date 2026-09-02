@@ -1,0 +1,101 @@
+[
+  {
+    "relation": "identity_judgment",
+    "values": {
+      "left": "crm:HEL-441",
+      "right": "billing:Helion Robotics Limited"
+    },
+    "judgment": "Whether CRM operating name denotes the same legal entity as invoice billed name.",
+    "evidence": ["commercial_notes.md: Helion Robotics Ltd is operating name; invoices use Helion Robotics Limited"]
+  },
+  {
+    "relation": "identity_judgment",
+    "values": {
+      "left": "billing:Helion Robotics Limited",
+      "right": "registry:11847201"
+    },
+    "judgment": "Whether billed name matches registry legal name HELION ROBOTICS LIMITED.",
+    "evidence": ["company_registry.csv row 11847201", "normalized legal-form match"]
+  },
+  {
+    "relation": "identity_judgment",
+    "values": {
+      "left": "crm:HEL-441",
+      "right": "contract:MSA-HELION-2019"
+    },
+    "judgment": "Whether CRM account is party to MSA-HELION-2019.",
+    "evidence": ["crm.csv HEL-441", "MSA-HELION-2019 counterparty Helion Robotics Ltd."]
+  },
+  {
+    "relation": "identity_judgment",
+    "values": {
+      "left": "billing:Helion Robotics Limited",
+      "right": "contract:MSA-HELION-2019"
+    },
+    "judgment": "Whether billing name is contract counterparty.",
+    "evidence": ["invoice billed_name", "contract counterparty_text"]
+  },
+  {
+    "relation": "identity_judgment",
+    "values": {
+      "left": "crm:NBA-102",
+      "right": "billing:Northbridge Analytics Inc."
+    },
+    "judgment": "Whether CRM short name matches billing legal name.",
+    "evidence": ["commercial_notes.md: sales short name vs billing Inc. form"]
+  },
+  {
+    "relation": "identity_judgment",
+    "values": {
+      "left": "billing:Northbridge Analytics Inc.",
+      "right": "registry:3840192"
+    },
+    "judgment": "Whether billing name matches Delaware INC registry row.",
+    "evidence": ["company_registry.csv NORTHBRIDGE ANALYTICS INC"]
+  },
+  {
+    "relation": "identity_judgment",
+    "values": {
+      "left": "billing:Northbridge Analytics Inc.",
+      "right": "registry:2019-0008841"
+    },
+    "judgment": "Whether billing name matches Wyoming LLC registry row.",
+    "evidence": ["commercial_notes.md: Legal has not determined which registry entity is contracting party"]
+  },
+  {
+    "relation": "identity_judgment",
+    "values": {
+      "left": "crm:NBA-102",
+      "right": "registry:2019-0008841"
+    },
+    "judgment": "Whether CRM account maps to Wyoming LLC registry entity.",
+    "evidence": ["commercial_notes.md: registry link unresolved"]
+  },
+  {
+    "relation": "identity_judgment",
+    "values": {
+      "left": "crm:OAK-77",
+      "right": "billing:Oakfield Logistik GmbH"
+    },
+    "judgment": "Whether rebranded billing name matches CRM legacy name.",
+    "evidence": ["commercial_notes.md: rebrand 2023, same register number"]
+  },
+  {
+    "relation": "identity_judgment",
+    "values": {
+      "left": "billing:Oakfield Logistik GmbH",
+      "right": "registry:HRB 88421"
+    },
+    "judgment": "Whether billing name matches Handelsregister row.",
+    "evidence": ["company_registry.csv Oakfield Logistik GmbH"]
+  },
+  {
+    "relation": "identity_judgment",
+    "values": {
+      "left": "registry:11847201",
+      "right": "registry:11847299"
+    },
+    "judgment": "Whether two Helion-named registry companies are distinct.",
+    "evidence": ["commercial_notes.md: Helion Industrial Systems Ltd is a different company"]
+  }
+]

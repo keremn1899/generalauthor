@@ -1,0 +1,25 @@
+{
+  "obligation_id": "obl:identity_judgment:3fbf91ffb894",
+  "selected_observations": [
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "invoice_id INV-2001",
+      "excerpt": "{\n  \"invoice_id\": \"INV-2001\",\n  \"billed_name\": \"Northbridge Analytics Inc.\",\n  \"vat_or_tax_id\": \"\",\n  \"amount\": 96000,\n  \"currency\": \"USD\",\n  \"period\": \"2024-Q4\",\n  \"status\": \"paid\"\n}"
+    },
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row NBA-102",
+      "excerpt": "crm_account_id,account_name,domain,country,owner,status\nNBA-102,Northbridge Analytics,northbridge.io,US,J. Patel,active"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "line 7",
+      "excerpt": "Northbridge: sales uses the short name \"Northbridge Analytics\". Billing and the MSA use \"Northbridge Analytics Inc.\" A 2024 credit check also returned a Wyoming LLC, \"Northbridge Analytics LLC\". Legal has not determined which registry entity is the contracting party. Treat that registry link as unresolved."
+    }
+  ],
+  "selection_rationale": "Pairwise identity between billing:Northbridge Analytics Inc. and crm:NBA-102 requires comparing source-native names, identifiers, and any internal notes on rebranding or legal-form variants.",
+  "known_missing_information": [
+    "No authoritative corporate linkage document (e.g. certificate of incorporation matching tax ID) in data room.",
+    "Northbridge registry entity ambiguity (Delaware Inc vs Wyoming LLC) noted in commercial_notes; legal determination not in data room."
+  ]
+}

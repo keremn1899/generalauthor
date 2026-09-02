@@ -1,0 +1,30 @@
+{
+  "obligation_id": "obl-0084",
+  "selected_observations": [
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 2019-0008841",
+      "excerpt": "2019-0008841,NORTHBRIDGE ANALYTICS LLC,Wyoming,active"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "Northbridge LLC",
+      "excerpt": "A 2024 credit check also returned a Wyoming LLC, \"Northbridge Analytics LLC\"."
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 3840192",
+      "excerpt": "3840192,NORTHBRIDGE ANALYTICS INC,Delaware,active"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "Northbridge unresolved",
+      "excerpt": "Legal has not determined which registry entity is the contracting party. Treat that registry link as unresolved."
+    }
+  ],
+  "selection_rationale": "Pulled naming and registry observations for both endpoints (registry:2019-0008841, registry:3840192) plus any documented rebrand or ambiguity notes relevant to Purpose B identity topology.",
+  "known_missing_information": [
+    "world/world.sqlite is absent from the workspace; P2 mechanical tuples (contract_section_excerpt, identity_link_candidate, etc.) could not be queried via TaskView and evidence was selected directly from heterogeneous source files per 02_mechanical_report.json inventory.",
+    "No single authoritative source states whether two registry records refer to the same legal person."
+  ]
+}

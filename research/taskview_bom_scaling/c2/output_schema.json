@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "taskview-bom-c2-output-v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["decision", "grounds", "reason"],
+  "properties": {
+    "decision": {
+      "type": "string",
+      "enum": ["ACCEPT", "REJECT", "UNRESOLVED"]
+    },
+    "grounds": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source", "record_or_span"],
+        "properties": {
+          "source": {"type": "string"},
+          "record_or_span": {"type": "string"}
+        }
+      }
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1000
+    }
+  }
+}

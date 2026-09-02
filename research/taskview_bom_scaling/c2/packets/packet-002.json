@@ -1,0 +1,126 @@
+{
+  "candidate_assertion": {
+    "relation": "acceptable_replacement",
+    "tuple": [
+      "part:X110",
+      "part:X160",
+      "context:outdoor_enclosure"
+    ]
+  },
+  "conflicts": [],
+  "evidence": [
+    {
+      "native_location": "row 3 (part_number=X110)",
+      "record": "X110,sensor_interface,Coated sensor interface,24,-30,85,active",
+      "source": "manufacturer.csv",
+      "source_fingerprint": "sha256:31f380d664c7e832cc3066ed4d9f342be14833c899ca0dd8d93c76682b2ca084"
+    },
+    {
+      "native_location": "row 8 (part_number=X160)",
+      "record": "X160,sensor_interface,Legacy sealed sensor interface,24,-20,75,discontinued",
+      "source": "manufacturer.csv",
+      "source_fingerprint": "sha256:31f380d664c7e832cc3066ed4d9f342be14833c899ca0dd8d93c76682b2ca084"
+    },
+    {
+      "native_location": "row 2 (bom_item=BOM-A)",
+      "record": "BOM-A,sensor_interface,24,-20,70,outdoor_enclosure",
+      "source": "bom.csv",
+      "source_fingerprint": "sha256:a86d39d97bd993988be54ef850698095c08f38b247dd3e63ece5fb15a341dadc"
+    },
+    {
+      "native_location": "lines 6-14 (ER-1)",
+      "record": "## ER-1\n\nCandidate: `X110` replaces `X160`.\n\nFor the `outdoor_enclosure` context used by BOM-A, X110 is the preferred\nfallback if the existing conformal coating process is retained. Qualification\nwas not repeated after the coating vendor changed, so this is an engineering\nacceptance judgment rather than a conclusion from the tabulated ratings alone.",
+      "source": "engineering_notes.md",
+      "source_fingerprint": "sha256:bb9e10c4c220701d7c5ff755c18a7d39e78371d014680b99576626f3e4652c16"
+    }
+  ],
+  "known_mechanical_facts": {
+    "candidate_replacement": [
+      [
+        "part:X110",
+        "part:X160"
+      ]
+    ],
+    "deployment_environment": [
+      [
+        "bom:BOM-A",
+        "context:outdoor_enclosure"
+      ]
+    ],
+    "eligible_part": [
+      [
+        "part:X110",
+        "bom:BOM-A"
+      ]
+    ],
+    "lifecycle": [
+      [
+        "part:X110",
+        "active"
+      ],
+      [
+        "part:X160",
+        "discontinued"
+      ]
+    ],
+    "part_type": [
+      [
+        "part:X110",
+        "sensor_interface"
+      ],
+      [
+        "part:X160",
+        "sensor_interface"
+      ]
+    ],
+    "rated_voltage": [
+      [
+        "part:X110",
+        24
+      ],
+      [
+        "part:X160",
+        24
+      ]
+    ],
+    "requires_temperature": [
+      [
+        "bom:BOM-A",
+        -20,
+        70
+      ]
+    ],
+    "requires_type": [
+      [
+        "bom:BOM-A",
+        "sensor_interface"
+      ]
+    ],
+    "requires_voltage": [
+      [
+        "bom:BOM-A",
+        24
+      ]
+    ],
+    "temperature_range": [
+      [
+        "part:X110",
+        -30,
+        85
+      ],
+      [
+        "part:X160",
+        -20,
+        75
+      ]
+    ]
+  },
+  "missing_information": [
+    "No deterministic rule interprets the qualified prose as acceptance; no numeric crosswalk covers its environmental qualification."
+  ],
+  "relevant_referents": [
+    "part:X110",
+    "part:X160",
+    "context:outdoor_enclosure"
+  ]
+}
