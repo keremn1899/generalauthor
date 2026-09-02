@@ -40,7 +40,37 @@ It is **not**:
 - a transcript viewer;
 - a replacement for the read-side explorer.
 
-### 1.1 Frozen artifacts, one world
+### 1.1 What read-side means, and where this writes
+
+The companion spec's §17 excludes source-system mutations, actions, workflow
+execution, approval flows, write-back, and automated operational decisions.
+Every item on that list is the product reaching outside itself. None of them is
+a human recording a judgment, and §17's closing line is a gate rather than a
+prohibition: semantic authoring is to be a separate feature discussion rather
+than an assumption. This document is that discussion.
+
+The boundary that actually holds:
+
+```text
+THE WORLD IS READ-ONLY.        06_world/world.sqlite is never written by
+                               this surface, at any point, for any reason.
+
+CONSTRUCTION IS WHERE WRITES GO.  A verdict is an input to the next
+                               construction, recorded beside the run.
+
+THE ONLY PATH FROM A VERDICT TO A WORLD TUPLE IS A REBUILD.
+```
+
+This is enforced structurally, not by discipline. There is no endpoint that
+mutates a compiled world, so a human judgment can reach the world only by
+invalidating P6–P8 and re-running them. §5's staleness model is that
+enforcement, not merely a convenience.
+
+The prohibited shortcut, named so it is recognizable: applying a verdict
+directly into `06_world/world.sqlite` to avoid the rebuild. It is one tuple, it
+is obviously correct, and it collapses the boundary. Rebuild or do not decide.
+
+### 1.2 Frozen artifacts, one world
 
 This version reads a **completed** construction from disk. There is no
 streaming, no cancellation, no partial state, and no cross-trial comparison.
@@ -464,7 +494,11 @@ Rules carried from the companion spec: retrieval does not call a model; exact
 misses stay exact misses; the reads are deterministic and cheap enough that the
 docket is not paginated below a thousand obligations.
 
-Verdicts persist beside the run, never inside a pass artifact.
+Verdicts persist beside the run, never inside a pass artifact and never
+inside a compiled world. No endpoint on this surface writes
+`02_mechanical_world/world.sqlite` or `06_world/world.sqlite`. The `POST`
+routes above record proposals against the construction; they do not materialize
+anything.
 
 ---
 
@@ -480,6 +514,13 @@ Verdicts persist beside the run, never inside a pass artifact.
 - **Free-text evidence.** Citations are selections from the packet.
 - **Bulk adjudication.** "Accept all remaining" is how 81 careful declines
   become 81 unsupported closures.
+- **An approval flow.** §17 excludes these by name, and the docket is close
+  enough to warrant a guard. A docket is one reviewer recording judgments
+  about evidence. It becomes the excluded thing the moment it gains assignment,
+  sign-off, routing between people, or a multi-party state machine. If those
+  are ever wanted, they are a different product and a different discussion.
+- **Direct world editing.** See §1.1. There is no such endpoint and there
+  should never be one.
 
 ---
 
