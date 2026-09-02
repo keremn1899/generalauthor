@@ -27,7 +27,7 @@ _EVENT_LITERAL = re.compile(r'"([a-z_]+\.[a-z_]+(?::[A-Za-z_]+)?)"')
 
 #: Dotted strings that are not event types.
 _NOT_EVENTS = re.compile(
-    r"^[a-z_]+\.(py|json|lbug|md|yaml|yml|sqlite|txt|idx|enc|secret)$")
+    r"^[a-z_]+\.(py|json|jsonl|lbug|md|yaml|yml|sqlite|txt|idx|enc|secret)$")
 
 
 def _production_files():

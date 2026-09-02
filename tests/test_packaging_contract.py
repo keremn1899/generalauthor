@@ -114,7 +114,7 @@ def test_cursor_extra_installs_the_agent_surface_and_html_parser():
     """
     extras = _pyproject()["project"]["optional-dependencies"]
     offered = {_name(item) for item in extras["cursor"]}
-    assert {"mcp", "beautifulsoup4", "pypdf"} <= offered
+    assert {"mcp", "beautifulsoup4", "pypdf", "cursor-sdk"} <= offered
 
 
 def test_mcp_is_pinned_below_the_release_that_breaks_the_server():

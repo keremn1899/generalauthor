@@ -28,18 +28,20 @@ dependencies = [
     "python-dotenv>=1.0.0",
     "httpx>=0.27.0",
     "PyYAML>=6.0",
-    "cursor-sdk>=1.0.30",
 ]
 
 [project.optional-dependencies]
 mcp = ["mcp>=1.0,<2"]
 http = ["mcp>=1.0,<2", "starlette>=0.37,<1", "uvicorn>=0.29"]
 construct = ["beautifulsoup4>=4.12.0", "pypdf>=5.0"]
-cursor = ["mcp>=1.0,<2", "beautifulsoup4>=4.12.0", "pypdf>=5.0"]
-dev = ["pytest>=8.0.0"]
+cursor = [
+    "mcp>=1.0,<2", "beautifulsoup4>=4.12.0", "pypdf>=5.0",
+    "cursor-sdk>=1.0.30",
+]
+dev = ["pytest>=8.0.0", "cursor-sdk>=1.0.30"]
 all = [
     "mcp>=1.0,<2", "starlette>=0.37,<1", "uvicorn>=0.29",
-    "beautifulsoup4>=4.12.0", "pypdf>=5.0",
+    "beautifulsoup4>=4.12.0", "pypdf>=5.0", "cursor-sdk>=1.0.30",
 ]
 
 [project.scripts]
