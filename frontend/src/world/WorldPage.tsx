@@ -1,34 +1,55 @@
 /**
- * World — the read-side explorer's home.
+ * World — the read-side explorer.
  *
- * You land on the schema, not on an empty canvas and not on a table. It is the
- * one whole-World view that does not break rule 9: a vocabulary is small no
- * matter how large its extensions, so drawing all of it answers *what kind of
- * world is this?* without ever putting a database on the field.
+ * Two modes over one design language. You land on the **vocabulary**: the
+ * schema graph, the only whole-World view rule 9 allows, answering *what kind
+ * of world is this?* before you have anything to search for. Finding a referent
+ * moves you to the **field**, where a neighborhood is grown one expansion at a
+ * time and never rendered whole.
+ *
+ * Search is client-side against every referent, loaded once. At the largest
+ * world we have that is 3,118 rows in about three milliseconds, so a request
+ * per keystroke would be slower than holding the list — and a search that
+ * cannot be out of date is one less thing to reason about.
  *
  * Deliberately not built on `ProductShell`. That shell knows about graphs,
  * logs, constructions, an operator plane and a write path — none of which
- * exist here, and inheriting them would make this surface look like a fourth
- * tab of a product it is not part of. It reads the same chrome tokens, so it
- * is the same room.
+ * exist here. It reads the same chrome tokens, so it is the same room.
  */
 
-import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
-import { Graph } from "@antv/g6";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import {
   worldApi,
+  type WorldAssertion,
   type WorldOverview,
+  type WorldReferent,
   type WorldRelation,
 } from "../api/world";
 import {
   chromeCssVariables,
   GRAPH_DNA_CHROME,
-  GRAPH_DNA_PROVISIONAL_THEME,
-  GRAPH_DNA_THEME,
   type ThemeMode,
 } from "../styles/graphDna";
-import { MARK_DEFAULTS, paintOf } from "./marks";
-import { schemaLayout } from "./schemaGraph";
+import { MARK_DEFAULTS } from "./marks";
+import { SchemaCanvas } from "./SchemaCanvas";
+import { WorldCanvas, type CanvasSelection } from "./WorldCanvas";
+import {
+  drop,
+  emptySet,
+  expand,
+  expansionKey,
+  fieldSize,
+  MAX_FIELD_NODES,
+  seed,
+  type WorkingSet,
+} from "./workingSet";
 import "./WorldPage.css";
 
 function storedTheme(): ThemeMode {
@@ -41,175 +62,197 @@ function storedTheme(): ThemeMode {
   }
 }
 
-function SchemaCanvas({
-  relations,
-  mode,
-  namedAtRest,
-  focused,
-  onFocus,
+type Directory = { id: string; label: string | null }[];
+
+function Find({
+  directory,
+  onPick,
 }: {
-  relations: WorldRelation[];
-  mode: ThemeMode;
-  namedAtRest: boolean;
-  focused: string | null;
-  onFocus: (relation: string | null) => void;
+  directory: Directory;
+  onPick: (id: string, label: string) => void;
 }) {
-  const hostRef = useRef<HTMLDivElement>(null);
-  const graphRef = useRef<Graph | null>(null);
-
-  const paint = useMemo(() => paintOf(GRAPH_DNA_THEME[mode]), [mode]);
-  const stalePaint = useMemo(
-    () => paintOf(GRAPH_DNA_PROVISIONAL_THEME[mode]),
-    [mode],
-  );
-  const layout = useMemo(
-    () =>
-      schemaLayout(relations, paint, stalePaint, MARK_DEFAULTS, {
-        namedAtRest,
-        focused,
-      }),
-    [relations, paint, stalePaint, namedAtRest, focused],
-  );
-
-  useEffect(() => {
-    const host = hostRef.current;
-    if (!host || !relations.length) return;
-    const graph = new Graph({
-      container: host,
-      data: layout.data as never,
-      animation: false,
-      autoFit: { type: "view", options: { direction: "both" } },
-      padding: 48,
-      background: paint.canvas,
-      // Pan and zoom, no drag. The schema's arrangement is computed and stable
-      // on purpose — a vocabulary you can rearrange is one you cannot learn the
-      // shape of — so nodes are read, not moved.
-      behaviors: ["zoom-canvas", "drag-canvas"],
-    });
-    graphRef.current = graph;
-
-    // G6's event type is the union of everything it can emit, so the element
-    // id is reached through an unknown rather than asserted into a shape the
-    // library does not promise.
-    const idOf = (event: unknown): string | null => {
-      const target = (event as { target?: { id?: unknown } } | undefined)?.target;
-      return typeof target?.id === "string" ? target.id : null;
-    };
-    graph.on("node:pointerenter", (event) => {
-      const id = idOf(event);
-      onFocus(id && id.startsWith("rel:") ? id.slice(4) : null);
-    });
-    graph.on("edge:pointerenter", (event) => {
-      const id = idOf(event);
-      if (id) onFocus(id.split(":")[0]);
-    });
-    graph.on("canvas:click", () => onFocus(null));
-
-    void graph.render();
-    return () => {
-      graphRef.current = null;
-      graph.destroy();
-    };
-  }, [layout, paint.canvas, relations.length, onFocus]);
-
-  return <div className="world__stage" ref={hostRef} style={{ background: paint.canvas }} />;
-}
-
-function RelationPanel({
-  relations,
-  focused,
-  overview,
-}: {
-  relations: WorldRelation[];
-  focused: string | null;
-  overview: WorldOverview | null;
-}) {
-  const relation = relations.find((item) => item.name === focused) ?? null;
-
-  if (!relation) {
-    return (
-      <aside className="world__panel">
-        <h2>Vocabulary</h2>
-        {overview ? (
-          <dl className="world__facts">
-            <dt>relations</dt>
-            <dd>{overview.relations}</dd>
-            <dt>referents</dt>
-            <dd>{overview.referents}</dd>
-            <dt>assertions</dt>
-            <dd>{overview.assertions}</dd>
-            {Object.entries(overview.origins).map(([origin, count]) => (
-              <div key={origin} className="world__facts-row">
-                <dt>{origin.toLowerCase()}</dt>
-                <dd>{count}</dd>
-              </div>
-            ))}
-          </dl>
-        ) : null}
-        {overview?.demand ? (
-          <p className="world__note">
-            <b>{overview.demand.purpose.id}</b> demands {overview.demand.demanded}{" "}
-            case{overview.demand.demanded === 1 ? "" : "s"};{" "}
-            {overview.demand.obligations} unresolved.
-          </p>
-        ) : (
-          <p className="world__note">
-            No purpose loaded — unresolved obligations cannot be shown.
-          </p>
-        )}
-        <p className="world__hint">Hover a relation to read it.</p>
-      </aside>
-    );
-  }
+  const [query, setQuery] = useState("");
+  const matches = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    if (!needle) return [];
+    return directory
+      .filter(
+        (item) =>
+          item.id.toLowerCase().includes(needle) ||
+          (item.label ?? "").toLowerCase().includes(needle),
+      )
+      .slice(0, 12);
+  }, [directory, query]);
 
   return (
-    <aside className="world__panel">
-      <h2>{relation.name}</h2>
-      <p className="world__mode">
-        {relation.mode.toLowerCase()} · arity {relation.arity} ·{" "}
-        {relation.count} tuple{relation.count === 1 ? "" : "s"}
-        {relation.stale ? " · stale" : ""}
-      </p>
-      {relation.description ? (
-        <p className="world__note">{relation.description}</p>
+    <div className="world__find">
+      <input
+        value={query}
+        placeholder="Find a referent…"
+        onChange={(event) => setQuery(event.target.value)}
+      />
+      {matches.length ? (
+        <ul>
+          {matches.map((item) => (
+            <li key={item.id}>
+              <button
+                type="button"
+                onClick={() => {
+                  onPick(item.id, item.label || item.id);
+                  setQuery("");
+                }}
+              >
+                <b>{item.label || item.id}</b>
+                <span>{item.id}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
       ) : null}
+    </div>
+  );
+}
+
+function Grounding({ assertion }: { assertion: WorldAssertion }) {
+  const sources = assertion.grounding.filter((item) => item.kind === "SOURCE");
+  const world = assertion.grounding.find((item) => item.kind === "WORLD");
+  return (
+    <>
+      <h3>grounded by</h3>
+      {sources.length ? (
+        <ul className="world__grounding">
+          {sources.map((item) => (
+            <li key={item.reference}>
+              <b>{item.native_handle}</b>
+              <span>{item.native_location}</span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="world__note">No source grounding recorded.</p>
+      )}
+      {world?.construction_method ? (
+        <p className="world__note">method · {world.construction_method}</p>
+      ) : null}
+    </>
+  );
+}
+
+function AssertionPanel({ assertion }: { assertion: WorldAssertion | null }) {
+  if (!assertion) return <p className="world__hint">Reading…</p>;
+  return (
+    <>
+      <h2>{assertion.relation}</h2>
+      <p className="world__mode">
+        {assertion.origin.toLowerCase()} · {assertion.mode.toLowerCase()} · rev{" "}
+        {assertion.created_revision}
+        {assertion.relation_stale ? " · relation stale" : ""}
+      </p>
       <ol className="world__roles">
-        {relation.roles.map((role) => (
+        {assertion.roles.map((role) => (
           <li key={role.name}>
             <b>{role.name}</b>
-            <span>{role.referent ? (role.kinds?.join(", ") || "referent") : role.type.toLowerCase()}</span>
+            <span>{String(assertion.values[role.name] ?? "—")}</span>
           </li>
         ))}
       </ol>
-      {relation.derivation?.inputs?.length ? (
+      {assertion.derivation?.inputs?.length ? (
         <>
           <h3>rests on</h3>
           <ul className="world__inputs">
-            {relation.derivation.inputs.map((input) => (
+            {assertion.derivation.inputs.map((input) => (
               <li key={input}>{input}</li>
             ))}
           </ul>
         </>
       ) : null}
-    </aside>
+      <Grounding assertion={assertion} />
+    </>
+  );
+}
+
+function ReferentPanel({
+  detail,
+  set,
+  onExpand,
+  onDrop,
+}: {
+  detail: WorldReferent | null;
+  set: WorkingSet;
+  onExpand: (relation: string, count: number) => void;
+  onDrop: () => void;
+}) {
+  if (!detail) return <p className="world__hint">Reading…</p>;
+  const room = MAX_FIELD_NODES - fieldSize(set);
+  return (
+    <>
+      <h2>{detail.label || detail.id}</h2>
+      <p className="world__mode">{detail.id}</p>
+      {detail.fields.length ? (
+        <ol className="world__roles">
+          {detail.fields.map((field) => (
+            <li key={field.assertion_id}>
+              <b>{field.relation}</b>
+              <span>{String(field.value)}</span>
+            </li>
+          ))}
+        </ol>
+      ) : null}
+      <h3>expand</h3>
+      <ul className="world__expand">
+        {detail.relations.map((relation) => {
+          const already = set.expanded.has(expansionKey(detail.id, relation.name));
+          // The cost is known before anything is drawn, which is what makes a
+          // bounded canvas workable rather than a truncation.
+          const tooMany = relation.count > room;
+          return (
+            <li key={relation.name}>
+              <button
+                type="button"
+                disabled={already || tooMany}
+                onClick={() => onExpand(relation.name, relation.count)}
+              >
+                <b>{relation.name}</b>
+                <span>{already ? "on field" : tooMany ? "too many" : relation.count}</span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+      <button type="button" className="world__drop" onClick={onDrop}>
+        take off the field
+      </button>
+    </>
   );
 }
 
 export function WorldPage() {
   const [mode] = useState<ThemeMode>(storedTheme);
-  const [relations, setRelations] = useState<WorldRelation[]>([]);
   const [overview, setOverview] = useState<WorldOverview | null>(null);
-  const [focused, setFocused] = useState<string | null>(null);
-  const [namedAtRest, setNamedAtRest] = useState(true);
+  const [relations, setRelations] = useState<WorldRelation[]>([]);
+  const [directory, setDirectory] = useState<Directory>([]);
   const [error, setError] = useState<string | null>(null);
+
+  const [set, setSet] = useState<WorkingSet>(emptySet);
+  const [selection, setSelection] = useState<CanvasSelection>(null);
+  const [hovered, setHovered] = useState<string | null>(null);
+  const [focusedRelation, setFocusedRelation] = useState<string | null>(null);
+  const [namedAtRest, setNamedAtRest] = useState(true);
+  const [assertion, setAssertion] = useState<WorldAssertion | null>(null);
+  const [referent, setReferent] = useState<WorldReferent | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
+
+  const labels = useRef(new Map<string, string | null>());
 
   useEffect(() => {
     let cancelled = false;
-    Promise.all([worldApi.overview(), worldApi.schema()])
-      .then(([summary, schema]) => {
+    Promise.all([worldApi.overview(), worldApi.schema(), worldApi.referents()])
+      .then(([summary, schema, all]) => {
         if (cancelled) return;
         setOverview(summary);
         setRelations(schema);
+        setDirectory(all);
+        labels.current = new Map(all.map((item) => [item.id, item.label]));
       })
       .catch((problem: Error) => {
         if (!cancelled) setError(problem.message);
@@ -219,24 +262,106 @@ export function WorldPage() {
     };
   }, []);
 
-  const onFocus = useCallback((relation: string | null) => setFocused(relation), []);
+  // Selection drives one fetch, and only one: a chip reads its assertion, a
+  // disc reads its neighborhood costs.
+  useEffect(() => {
+    setNotice(null);
+    if (!selection) {
+      setAssertion(null);
+      setReferent(null);
+      return;
+    }
+    let cancelled = false;
+    if (selection.kind === "assertion") {
+      setAssertion(null);
+      worldApi
+        .assertion(selection.id)
+        .then((found) => !cancelled && setAssertion(found))
+        .catch((problem: Error) => !cancelled && setNotice(problem.message));
+    } else {
+      setReferent(null);
+      worldApi
+        .referent(selection.id)
+        .then((found) => !cancelled && setReferent(found))
+        .catch((problem: Error) => !cancelled && setNotice(problem.message));
+    }
+    return () => {
+      cancelled = true;
+    };
+  }, [selection]);
+
+  const onSeed = useCallback((id: string, label: string) => {
+    setSet((current) => seed(current, id, label));
+    setSelection({ kind: "referent", id });
+  }, []);
+
+  const onExpand = useCallback(
+    async (relation: string, count: number) => {
+      if (!selection || selection.kind !== "referent") return;
+      if (count > MAX_FIELD_NODES - fieldSize(set)) {
+        setNotice(`${relation} has ${count} tuples — more than the field holds.`);
+        return;
+      }
+      const schema = relations.find((item) => item.name === relation);
+      try {
+        const expansion = await worldApi.expand(selection.id, relation);
+        setSet((current) =>
+          expand(current, {
+            anchor: selection.id,
+            relation,
+            mode: schema?.mode ?? "BASE",
+            roles: expansion.roles,
+            tuples: expansion.tuples,
+            labels: labels.current,
+          }),
+        );
+      } catch (problem) {
+        setNotice((problem as Error).message);
+      }
+    },
+    [relations, selection, set],
+  );
+
+  const onPositions = useCallback((positions: Map<string, { x: number; y: number }>) => {
+    setSet((current) => ({ ...current, positions: new Map([...current.positions, ...positions]) }));
+  }, []);
+
+  const onDrop = useCallback(() => {
+    if (!selection || selection.kind !== "referent") return;
+    setSet((current) => drop(current, selection.id));
+    setSelection(null);
+  }, [selection]);
+
   const style = chromeCssVariables(GRAPH_DNA_CHROME[mode]) as CSSProperties;
+  const onField = fieldSize(set) > 0;
+  const relation = relations.find((item) => item.name === focusedRelation) ?? null;
 
   return (
     <main className="world" style={style} data-mode={mode}>
       <header className="world__bar">
         <span className="world__id">{overview?.world_id ?? "world"}</span>
-        <span className="world__rev">
-          {overview ? `rev ${overview.revision}` : ""}
-        </span>
-        <button
-          type="button"
-          data-active={namedAtRest}
-          onClick={() => setNamedAtRest((on) => !on)}
-        >
-          names
-        </button>
+        <span className="world__rev">{overview ? `rev ${overview.revision}` : ""}</span>
+        <Find directory={directory} onPick={onSeed} />
+        {onField ? (
+          <>
+            <span className="world__rev">
+              {fieldSize(set)} / {MAX_FIELD_NODES} on field
+            </span>
+            <button type="button" onClick={() => { setSet(emptySet()); setSelection(null); }}>
+              vocabulary
+            </button>
+          </>
+        ) : (
+          <button
+            type="button"
+            data-active={namedAtRest}
+            onClick={() => setNamedAtRest((on) => !on)}
+          >
+            names
+          </button>
+        )}
       </header>
+
       {error ? (
         <p className="world__error">
           {error} — is the read plane running?{" "}
@@ -244,14 +369,108 @@ export function WorldPage() {
         </p>
       ) : (
         <div className="world__body">
-          <SchemaCanvas
-            relations={relations}
-            mode={mode}
-            namedAtRest={namedAtRest}
-            focused={focused}
-            onFocus={onFocus}
-          />
-          <RelationPanel relations={relations} focused={focused} overview={overview} />
+          {onField ? (
+            <WorldCanvas
+              set={set}
+              mode={mode}
+              params={MARK_DEFAULTS}
+              hovered={hovered}
+              selection={selection}
+              onHover={setHovered}
+              onSelect={setSelection}
+              onPositions={onPositions}
+            />
+          ) : (
+            <SchemaCanvas
+              relations={relations}
+              mode={mode}
+              namedAtRest={namedAtRest}
+              focused={focusedRelation}
+              onFocus={setFocusedRelation}
+            />
+          )}
+
+          <aside className="world__panel">
+            {notice ? <p className="world__notice">{notice}</p> : null}
+            {onField && selection?.kind === "assertion" ? (
+              <AssertionPanel assertion={assertion} />
+            ) : onField && selection?.kind === "referent" ? (
+              <ReferentPanel
+                detail={referent}
+                set={set}
+                onExpand={onExpand}
+                onDrop={onDrop}
+              />
+            ) : onField ? (
+              <p className="world__hint">Click a mark to read it.</p>
+            ) : relation ? (
+              <>
+                <h2>{relation.name}</h2>
+                <p className="world__mode">
+                  {relation.mode.toLowerCase()} · arity {relation.arity} ·{" "}
+                  {relation.count} tuple{relation.count === 1 ? "" : "s"}
+                  {relation.stale ? " · stale" : ""}
+                </p>
+                <ol className="world__roles">
+                  {relation.roles.map((role) => (
+                    <li key={role.name}>
+                      <b>{role.name}</b>
+                      <span>
+                        {role.referent
+                          ? role.kinds?.join(", ") || "referent"
+                          : role.type.toLowerCase()}
+                      </span>
+                    </li>
+                  ))}
+                </ol>
+                {relation.derivation?.inputs?.length ? (
+                  <>
+                    <h3>rests on</h3>
+                    <ul className="world__inputs">
+                      {relation.derivation.inputs.map((input) => (
+                        <li key={input}>{input}</li>
+                      ))}
+                    </ul>
+                  </>
+                ) : null}
+              </>
+            ) : (
+              <>
+                <h2>Vocabulary</h2>
+                {overview ? (
+                  <dl className="world__facts">
+                    <dt>relations</dt>
+                    <dd>{overview.relations}</dd>
+                    <dt>referents</dt>
+                    <dd>{overview.referents}</dd>
+                    <dt>assertions</dt>
+                    <dd>{overview.assertions}</dd>
+                    {Object.entries(overview.origins).map(([origin, count]) => (
+                      <div key={origin} className="world__facts-row">
+                        <dt>{origin.toLowerCase()}</dt>
+                        <dd>{count}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                ) : null}
+                {overview?.demand ? (
+                  <p className="world__note">
+                    <b>{overview.demand.purpose.id}</b> demands{" "}
+                    {overview.demand.demanded} case
+                    {overview.demand.demanded === 1 ? "" : "s"};{" "}
+                    {overview.demand.obligations} unresolved.
+                  </p>
+                ) : (
+                  <p className="world__note">
+                    No purpose loaded — unresolved obligations cannot be shown.
+                  </p>
+                )}
+                <p className="world__hint">
+                  Hover a relation to read it, or find a referent to open a field.
+                </p>
+              </>
+            )}
+          </aside>
         </div>
       )}
     </main>

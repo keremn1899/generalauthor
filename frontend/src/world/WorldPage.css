@@ -151,3 +151,121 @@
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 0.66rem;
 }
+
+/* -- Find ---------------------------------------------------------------- */
+
+.world__find {
+  position: relative;
+  margin-left: auto;
+  width: 240px;
+}
+
+.world__find input {
+  width: 100%;
+  padding: 4px 8px;
+  font: inherit;
+  font-size: 0.68rem;
+  color: var(--ink);
+  background: var(--canvas);
+  border: 1px solid var(--rule);
+}
+
+.world__find ul {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  margin: 2px 0 0;
+  padding: 0;
+  list-style: none;
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.world__find button,
+.world__expand button {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  padding: 5px 8px;
+  font: inherit;
+  font-size: 0.66rem;
+  text-align: left;
+  color: var(--ink);
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--rule);
+  cursor: pointer;
+}
+
+.world__find button:hover,
+.world__expand button:not(:disabled):hover {
+  background: var(--canvas);
+}
+
+.world__find button b,
+.world__expand button b {
+  font-weight: 400;
+}
+
+.world__find button span,
+.world__expand button span {
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.world__expand {
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.world__expand button:disabled {
+  cursor: default;
+  color: var(--ink-muted);
+}
+
+.world__drop {
+  margin-top: 14px;
+  padding: 5px 8px;
+  width: 100%;
+  font: inherit;
+  font-size: 0.64rem;
+  color: var(--ink-muted);
+  background: var(--canvas);
+  border: 1px solid var(--rule);
+  cursor: pointer;
+}
+
+.world__grounding {
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.world__grounding li {
+  display: flex;
+  flex-direction: column;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.world__grounding li b {
+  font-weight: 400;
+}
+
+.world__grounding li span {
+  color: var(--ink-muted);
+}
+
+.world__notice {
+  margin: 0 0 10px;
+  padding: 6px 8px;
+  background: var(--canvas);
+  border: 1px solid var(--rule);
+  color: var(--ink-muted);
+}
