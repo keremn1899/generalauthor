@@ -22,6 +22,14 @@ single-worker executor, opens the world *inside* it, and runs every call there.
 That also serialises reads, which matches the repository's existing rule that
 one process owns a graph file at a time.
 
+`/construction` is the same app's second plane: one frozen constructor run,
+read. It shares the bearer guard and the read-only guarantee, and it is a
+separate module (`construction.py`) for the same reason this app is separate
+from `mcp_server` — nothing in it can write, and that is checkable by reading
+its imports rather than by trusting a route. It needs no thread of its own: it
+holds no connection, only files, and its reads are a few milliseconds of local
+JSON.
+
 Identifiers travel as query parameters rather than path segments because they
 contain colons — `part:X160`, `assertion:0489b6…` — and a path that has to be
 escaped and unescaped correctly at both ends is a bug waiting for the first id
@@ -41,6 +49,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 from world_explorer.adapter import WorldExplorerAdapter
+from world_explorer.construction import ConstructionReader
 
 #: The read substrate stays open (§13), but only as a read.
 SELECT_ONLY = re.compile(r"^\s*(SELECT|WITH)\b", re.IGNORECASE)
@@ -64,13 +73,29 @@ class WorldSession:
         self._pool.shutdown(wait=True)
 
 
-def build_app(world: Path | str, *, token: str | None = None):
+def build_app(
+    world: Path | str,
+    *,
+    token: str | None = None,
+    construction: Path | str | None = None,
+):
     from starlette.applications import Starlette
     from starlette.requests import Request
     from starlette.responses import JSONResponse
     from starlette.routing import Route
 
     session = WorldSession(world)
+    # Opened once so a bad path fails at startup rather than on the first
+    # request, then read through on every call — it caches nothing, so holding
+    # it open costs nothing and changes nothing.
+    run = ConstructionReader(construction) if construction else None
+
+    def opened() -> ConstructionReader:
+        if run is None:
+            raise KeyError(
+                "no construction is open — start the server with --construction"
+            )
+        return run
 
     def authorized(request: Request) -> bool:
         if not token:
@@ -184,6 +209,18 @@ def build_app(world: Path | str, *, token: str | None = None):
         # it can say so — which is the true statement.
         return {"demand": await session.call(lambda adapter: adapter.demand())}
 
+    async def construction_overview(request):
+        return opened().overview()
+
+    async def construction_pass(request):
+        return opened().pass_artifact(_required(request, "id"))
+
+    async def construction_docket(request):
+        return opened().docket()
+
+    async def construction_obligation(request):
+        return opened().obligation(_required(request, "id"))
+
     async def query(request):
         if not authorized(request):
             return JSONResponse({"error": "unauthorized"}, status_code=401)
@@ -228,6 +265,10 @@ def build_app(world: Path | str, *, token: str | None = None):
             Route("/world/support", guard(support)),
             Route("/world/demand", guard(demand)),
             Route("/world/query", query, methods=["POST"]),
+            Route("/construction", guard(construction_overview)),
+            Route("/construction/pass", guard(construction_pass)),
+            Route("/construction/docket", guard(construction_docket)),
+            Route("/construction/obligation", guard(construction_obligation)),
         ],
     )
 
@@ -238,9 +279,13 @@ def serve(
     host: str = "127.0.0.1",
     port: int = 8139,
     token: str | None = None,
+    construction: Path | str | None = None,
 ) -> None:
     import uvicorn
 
     uvicorn.run(
-        build_app(world, token=token), host=host, port=port, log_level="warning"
+        build_app(world, token=token, construction=construction),
+        host=host,
+        port=port,
+        log_level="warning",
     )
