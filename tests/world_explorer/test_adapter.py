@@ -117,6 +117,88 @@ def test_derived_state_is_distinguishable_and_names_its_inputs(adapter):
     assert schema["listing_of"]["mode"] == "BASE"
 
 
+def test_dependency_closure_runs_both_ways_from_any_relation(adapter):
+    # §8.6 asks what a derived relation rests on; §21 asks what depends on a
+    # thing, which is the same edge read backwards. A base relation has no
+    # derivation and must still answer the second question.
+    up = adapter.derivation("eligible_part")
+    assert up["rests_on"]["eligible_part"] == [
+        "lifecycle",
+        "temperature_compatible",
+        "voltage_compatible",
+    ]
+    # Transitive, not one hop: the compatibility relations are themselves
+    # derived, and the closure reaches what they read.
+    assert "rated_voltage" in up["rests_on"]["voltage_compatible"]
+    assert up["nodes"]["rated_voltage"]["mode"] == "BASE"
+    assert up["supports"] == {}
+
+    down = adapter.derivation("rated_voltage")
+    assert down["run"] is None
+    assert down["rests_on"] == {}
+    assert down["supports"]["rated_voltage"] == ["spec_conflict", "voltage_compatible"]
+    assert down["supports"]["voltage_compatible"] == ["eligible_part"]
+
+
+def test_a_relation_reached_twice_is_one_node_with_one_edge_list(adapter):
+    # `part_type` feeds both compatibility relations, so the walk arrives at it
+    # along two paths. Adjacency, not a nested tree, is what keeps that one fact.
+    closure = adapter.derivation("eligible_part")
+    assert "part_type" in closure["rests_on"]["voltage_compatible"]
+    assert "part_type" in closure["rests_on"]["temperature_compatible"]
+    assert len(closure["nodes"]) == len(set(closure["nodes"]))
+    for reached in closure["rests_on"].values():
+        assert len(reached) == len(set(reached))
+
+
+def test_the_run_record_compares_every_input_against_the_relation_now(adapter):
+    run = adapter.derivation("eligible_part")["run"]
+    assert run["state"] == "SUCCEEDED"
+    assert "FROM voltage_compatible" in run["sql"]
+    inputs = {item["relation"]: item for item in run["inputs"]}
+    # Nothing has moved in a world nobody has written to since it was compiled,
+    # so staleness has an account and the account is "current".
+    assert all(not item["moved"] for item in inputs.values())
+    assert inputs["voltage_compatible"]["version_at_run"] == inputs[
+        "voltage_compatible"
+    ]["version_now"]
+    # The engine snapshots inputs the dependency table does not declare. That
+    # difference is reported rather than merged away.
+    assert inputs["lifecycle"]["declared"] is True
+    assert inputs["bom_item"]["declared"] is False
+
+
+def test_tuple_level_support_is_offered_as_candidates_not_lineage(adapter):
+    # No table in this world records which input rows produced an output row.
+    # What can be answered is which input tuples mention the same referents,
+    # and the ranking says how many — never that they are the cause.
+    derived = adapter.rows("eligible_part", limit=1)["rows"][0]
+    support = adapter.derivation_support(derived["assertion_id"])
+    assert support["derived"] is True
+    assert support["referents"] == [
+        derived["values"]["part"],
+        derived["values"]["bom_item"],
+    ]
+    inputs = {item["relation"]: item for item in support["inputs"]}
+    assert set(inputs) == {"lifecycle", "temperature_compatible", "voltage_compatible"}
+    # The two-referent inputs match on both roles; lifecycle only carries the
+    # part, so it can only ever mention one.
+    assert inputs["voltage_compatible"]["tuples"][0]["mentions"] == 2
+    assert inputs["lifecycle"]["tuples"][0]["mentions"] == 1
+    assert inputs["lifecycle"]["tuples"][0]["values"]["part"] == derived["values"]["part"]
+    # Capped: an explanation that returns the whole extension is an extension.
+    for item in support["inputs"]:
+        assert len(item["tuples"]) <= adapter.MAX_SUPPORT
+        assert item["matched"] >= len(item["tuples"])
+
+
+def test_support_of_a_base_assertion_says_so_rather_than_guessing(adapter):
+    base = adapter.rows("rated_voltage", limit=1)["rows"][0]
+    support = adapter.derivation_support(base["assertion_id"])
+    assert support["derived"] is False
+    assert support["inputs"] == []
+
+
 def test_referent_separates_card_fields_from_relations_and_counts_them(adapter):
     referent = adapter.referent("part:X160")
     fields = {field["relation"]: field["value"] for field in referent["fields"]}

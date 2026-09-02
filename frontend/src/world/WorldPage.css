@@ -453,3 +453,209 @@
   color: var(--ink);
   border-color: var(--ink);
 }
+
+/* -- §8.6 the derivation explorer ----------------------------------------
+   Same drawer as the tables — the plane below the canvas answers one question
+   at a time — but it scrolls as a document rather than a window, because a
+   dependency closure is a handful of rows and a run record is four. */
+
+.deriv__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.deriv__columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.deriv__columns > section {
+  padding: 10px 12px 12px;
+  border-right: 1px solid var(--rule);
+}
+
+.deriv__columns > section:last-child {
+  border-right: none;
+}
+
+.deriv h3 {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0 0 7px;
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.deriv h3 span {
+  font-size: 0.62rem;
+  letter-spacing: 0;
+  text-transform: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.deriv__tree {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.deriv__tree li {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  line-height: 1.7;
+}
+
+/* The guide characters are the only thing on this surface that has to line up
+   column for column, so they are the only thing set in a monospace. */
+.deriv__rule {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.62rem;
+  color: var(--rule-strong, var(--ink-muted));
+  white-space: pre;
+}
+
+.deriv__tree button,
+.deriv__grid button,
+.deriv__input h4 button {
+  padding: 0;
+  font: inherit;
+  text-align: left;
+  justify-self: start;
+  color: var(--ink);
+  background: none;
+  border: none;
+  border-bottom: 1px solid transparent;
+  cursor: pointer;
+}
+
+.deriv__tree button:hover,
+.deriv__grid button:hover,
+.deriv__input h4 button:hover {
+  border-bottom-color: var(--ink);
+}
+
+.deriv__of {
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.deriv__note {
+  margin: 0;
+  padding: 2px 0 0;
+  color: var(--ink-muted);
+  line-height: 1.6;
+  max-width: 62ch;
+}
+
+.deriv__sql {
+  margin: 0;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--canvas);
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.62rem;
+  line-height: 1.6;
+  color: var(--ink);
+  overflow-x: auto;
+}
+
+.deriv__run,
+.deriv__support {
+  padding: 10px 12px 12px;
+  border-top: 1px solid var(--rule);
+}
+
+.deriv__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) 120px 120px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  line-height: 2;
+}
+
+.deriv__grid span {
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.deriv__grid[data-head="true"] span {
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--rule);
+}
+
+/* An input that has moved since the run is the account of the relation's
+   staleness. Weight, not colour: the three colours belong to the queue, and
+   this is a fact about a computation rather than a state to triage. */
+.deriv__grid[data-moved="true"] span:last-child {
+  color: var(--ink);
+  box-shadow: inset 3px 0 0 var(--ink);
+  padding-left: 8px;
+}
+
+.deriv__input {
+  padding: 8px 0 2px;
+}
+
+.deriv__input h4 {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0 0 3px;
+  font-size: 0.66rem;
+  font-weight: 500;
+}
+
+.deriv__input h4 span {
+  color: var(--ink-muted);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+
+.deriv__tuple {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 0 8px;
+  line-height: 1.9;
+  cursor: pointer;
+  border-bottom: 1px solid var(--rule);
+}
+
+.deriv__tuple:hover {
+  background: var(--canvas);
+}
+
+.deriv__tuple[data-present] {
+  box-shadow: inset 3px 0 0 var(--ink);
+}
+
+.deriv__tuple span {
+  font-variant-numeric: tabular-nums;
+}
+
+/* How many of the derived tuple's referents this row mentions — the ranking,
+   and the whole of the claim being made about it. */
+.deriv__mentions {
+  margin-left: auto;
+  color: var(--ink-muted);
+}
+
+.deriv__tuple--head {
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  cursor: default;
+}
+
+.deriv__tuple--head:hover {
+  background: none;
+}

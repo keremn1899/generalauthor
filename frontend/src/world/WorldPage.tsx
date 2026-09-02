@@ -40,6 +40,7 @@ import {
   GRAPH_DNA_CHROME,
   type ThemeMode,
 } from "../styles/graphDna";
+import { DerivationView } from "./DerivationView";
 import { FrontierTable, type Obligation } from "./FrontierTable";
 import { MARK_DEFAULTS } from "./marks";
 import { RelationTable } from "./RelationTable";
@@ -148,17 +149,25 @@ function Grounding({ assertion }: { assertion: WorldAssertion }) {
 function AssertionPanel({
   assertion,
   onTable,
+  onDerivation,
 }: {
   assertion: WorldAssertion | null;
   onTable: (relation: string) => void;
+  onDerivation: (relation: string, assertion: string | null) => void;
 }) {
   if (!assertion) return <p className="world__hint">Reading…</p>;
   return (
     <>
       <h2>{assertion.relation}</h2>
+      {/* Two origins, and they are different questions: who decided this
+          (the product's) and how it entered the store (TaskView's). A derived
+          tuple answers both with the same word, and printing it twice reads as
+          a defect rather than as agreement. */}
       <p className="world__mode">
-        {assertion.origin.toLowerCase()} · {assertion.mode.toLowerCase()} · rev{" "}
-        {assertion.created_revision}
+        {[assertion.origin.toLowerCase(), assertion.mode.toLowerCase()]
+          .filter((word, index, all) => all.indexOf(word) === index)
+          .join(" · ")}{" "}
+        · rev {assertion.created_revision}
         {assertion.relation_stale ? " · relation stale" : ""}
       </p>
       <ol className="world__roles">
@@ -172,6 +181,8 @@ function AssertionPanel({
       {assertion.derivation?.inputs?.length ? (
         <>
           <h3>rests on</h3>
+          {/* The list is the way in rather than the answer: one hop up is not
+              a dependency, and this tuple can ask what supports it. */}
           <ul className="world__inputs">
             {assertion.derivation.inputs.map((input) => (
               <li key={input}>{input}</li>
@@ -180,6 +191,13 @@ function AssertionPanel({
         </>
       ) : null}
       <Grounding assertion={assertion} />
+      <button
+        type="button"
+        className="world__drop"
+        onClick={() => onDerivation(assertion.relation, assertion.assertion_id)}
+      >
+        {assertion.mode === "DERIVED" ? "why this tuple" : "what depends on this"}
+      </button>
       <button
         type="button"
         className="world__drop"
@@ -354,6 +372,13 @@ export function WorldPage() {
   const [drawer, setDrawer] = useState<
     | { kind: "relation"; relation: string; subject: { id: string; label: string } | null }
     | { kind: "frontier" }
+    /**
+     * §8.6. Opened on a relation, and carrying the tuple it was opened from
+     * when there was one — the closure is a fact about the relation, the
+     * candidate support is a question about one row, and both belong to the
+     * same reading.
+     */
+    | { kind: "derivation"; relation: string; assertion: string | null }
     | null
   >(null);
   const [demand, setDemand] = useState<WorldDemand | null>(null);
@@ -459,21 +484,33 @@ export function WorldPage() {
    * canvas and *what is it made of* in the panel at once. From the vocabulary
    * this is also how a field starts: the first row placed seeds it.
    */
+  /**
+   * A row, onto the field. The seam of §11, and it is the same seam wherever
+   * the row came from — an extension, or an input tuple offered as candidate
+   * support for a derived one — so the relation is passed rather than read off
+   * whichever drawer happens to be open.
+   */
+  const placeTuple = useCallback(
+    (relation: string, roles: WorldRole[], tuple: WorldTuple) => {
+      const schema = relations.find((item) => item.name === relation);
+      setSet((current) =>
+        place(current, {
+          relation,
+          mode: schema?.mode ?? "BASE",
+          roles,
+          tuple,
+          labels: labels.current,
+        }),
+      );
+      setSelection({ kind: "assertion", id: tuple.assertion_id });
+    },
+    [relations],
+  );
+
   const onFocusRow = useCallback((roles: WorldRole[], tuple: WorldTuple) => {
-    const relation = drawer?.kind === "relation" ? drawer.relation : null;
-    if (!relation) return;
-    const schema = relations.find((item) => item.name === relation);
-    setSet((current) =>
-      place(current, {
-        relation,
-        mode: schema?.mode ?? "BASE",
-        roles,
-        tuple,
-        labels: labels.current,
-      }),
-    );
-    setSelection({ kind: "assertion", id: tuple.assertion_id });
-  }, [relations, drawer]);
+    if (drawer?.kind !== "relation") return;
+    placeTuple(drawer.relation, roles, tuple);
+  }, [drawer, placeTuple]);
 
   /**
    * The obligation set, read once and only when it is asked for.
@@ -660,6 +697,28 @@ export function WorldPage() {
                 onWiden={() =>
                   setDrawer({ kind: "relation", relation: extension.name, subject: null })
                 }
+                onDerivation={() =>
+                  setDrawer({
+                    kind: "derivation",
+                    relation: extension.name,
+                    assertion: null,
+                  })
+                }
+                onClose={() => setDrawer(null)}
+              />
+            ) : drawer?.kind === "derivation" ? (
+              <DerivationView
+                key={`${drawer.relation}\u0000${drawer.assertion ?? ""}`}
+                relation={drawer.relation}
+                assertionId={drawer.assertion}
+                present={present}
+                onOpen={(name) =>
+                  setDrawer({ kind: "derivation", relation: name, assertion: null })
+                }
+                onTable={(name) =>
+                  setDrawer({ kind: "relation", relation: name, subject: null })
+                }
+                onFocus={placeTuple}
                 onClose={() => setDrawer(null)}
               />
             ) : drawer?.kind === "frontier" ? (
@@ -696,6 +755,9 @@ export function WorldPage() {
               <AssertionPanel
                 assertion={assertion}
                 onTable={(name) => setDrawer({ kind: "relation", relation: name, subject: null })}
+                onDerivation={(name, id) =>
+                  setDrawer({ kind: "derivation", relation: name, assertion: id })
+                }
               />
             ) : onField && selection?.kind === "referent" ? (
               <ReferentPanel
@@ -753,6 +815,22 @@ export function WorldPage() {
                   }
                 >
                   open extension
+                </button>
+                {/* Offered on base relations too. "What computation depends on
+                    this" is the question a base relation cannot answer about
+                    itself, and it is the one worth asking of it. */}
+                <button
+                  type="button"
+                  className="world__drop"
+                  onClick={() =>
+                    setDrawer({
+                      kind: "derivation",
+                      relation: relation.name,
+                      assertion: null,
+                    })
+                  }
+                >
+                  dependencies
                 </button>
               </>
             ) : (

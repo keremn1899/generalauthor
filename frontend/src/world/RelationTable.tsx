@@ -45,6 +45,7 @@ export function RelationTable({
   present,
   onFocus,
   onWiden,
+  onDerivation,
   onClose,
 }: {
   relation: WorldRelation;
@@ -62,6 +63,8 @@ export function RelationTable({
   onFocus: (roles: WorldRole[], tuple: WorldTuple) => void;
   /** Drop the subject and read the whole extension. */
   onWiden: () => void;
+  /** §8.6, from where you are actually standing when you want it. */
+  onDerivation: () => void;
   onClose: () => void;
 }) {
   const [order, setOrder] = useState<Order>(null);
@@ -178,6 +181,9 @@ export function RelationTable({
             unsort
           </button>
         ) : null}
+        <button type="button" onClick={onDerivation}>
+          dependencies
+        </button>
         <button type="button" onClick={onClose}>
           close
         </button>

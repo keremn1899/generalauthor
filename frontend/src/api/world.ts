@@ -106,6 +106,76 @@ export type WorldRows = {
   rows: WorldTuple[];
 };
 
+/**
+ * §8.6. What a relation rests on, and what rests on it.
+ *
+ * Adjacency rather than a nested tree, because a relation can sit at more than
+ * one place in the closure — `part_type` feeds both compatibility relations —
+ * and a tree would either duplicate it or drop the second path. The panel
+ * draws a tree from this; the closure is what is true.
+ */
+export type WorldDerivation = {
+  relation: string;
+  mode: "BASE" | "DERIVED";
+  /** relation → the relations it reads, for the whole upward closure. */
+  rests_on: Record<string, string[]>;
+  /** relation → the relations that read it, for the whole downward closure. */
+  supports: Record<string, string[]>;
+  nodes: Record<
+    string,
+    {
+      name: string;
+      mode: "BASE" | "DERIVED";
+      arity: number;
+      count: number;
+      stale: boolean;
+      state: string | null;
+    }
+  >;
+  run: {
+    sql: string;
+    state: string;
+    definition_revision: number;
+    last_run_view_revision: number | null;
+    output_cardinality: number | null;
+    last_error: string;
+    /** Each input as it stood when the derivation last ran, beside now. */
+    inputs: {
+      relation: string;
+      declared: boolean;
+      version_at_run: number | null;
+      count_at_run: number | null;
+      version_now: number | null;
+      count_now: number | null;
+      moved: boolean;
+    }[];
+  } | null;
+};
+
+/**
+ * Tuple-level drill-down, and it is candidates rather than lineage.
+ *
+ * The world records derivation per relation, not per row, so nothing here says
+ * which input rows produced this one. What it says is which input tuples
+ * mention the same referents, and how many of them each mentions. The
+ * derivation's SQL is the recorded truth about how they combine.
+ */
+export type WorldSupport = {
+  assertion_id: string;
+  relation: string;
+  derived: boolean;
+  referents: string[];
+  inputs: {
+    relation: string;
+    mode: "BASE" | "DERIVED";
+    stale: boolean;
+    count: number;
+    matched: number;
+    roles: WorldRole[];
+    tuples: (WorldTuple & { mentions: number })[];
+  }[];
+};
+
 export type WorldDemand = {
   purpose: { id: string; revision: number; statement: string };
   rule: string;
@@ -190,4 +260,8 @@ export const worldApi = {
   assertion: (id: string) =>
     read<WorldAssertion>(`/world/assertion?id=${encodeURIComponent(id)}`),
   demand: () => read<{ demand: WorldDemand | null }>("/world/demand").then((r) => r.demand),
+  derivation: (relation: string) =>
+    read<WorldDerivation>(`/world/derivation?relation=${encodeURIComponent(relation)}`),
+  support: (id: string) =>
+    read<WorldSupport>(`/world/support?id=${encodeURIComponent(id)}`),
 };

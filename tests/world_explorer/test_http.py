@@ -73,6 +73,24 @@ def test_referent_expand_and_assertion_round_trip(client):
     assert len(detail["values"]) == 3
 
 
+def test_derivation_and_support_are_served_and_gated(client):
+    assert client.get("/world/derivation?relation=eligible_part").status_code == 401
+
+    closure = get(client, "/world/derivation?relation=eligible_part").json()
+    assert closure["run"]["state"] == "SUCCEEDED"
+    assert "rated_voltage" in closure["nodes"]
+
+    derived = get(client, "/world/rows?relation=eligible_part&limit=1").json()
+    support = get(
+        client, f"/world/support?id={derived['rows'][0]['assertion_id']}"
+    ).json()
+    assert support["derived"] is True
+    assert len(support["inputs"]) == 3
+
+    assert get(client, "/world/derivation?relation=nope").status_code == 404
+    assert get(client, "/world/derivation").status_code == 400
+
+
 def test_missing_things_are_404_and_bad_input_is_400(client):
     assert get(client, "/world/referent?id=part:nope").status_code == 404
     assert get(client, "/world/rows?relation=nope").status_code == 404

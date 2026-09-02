@@ -537,6 +537,226 @@ class WorldExplorerAdapter:
             }
         return out
 
+    # -- §8.6 the derivation explorer ---------------------------------------
+
+    def derivation(self, relation: str) -> dict[str, Any]:
+        """What a relation rests on, and what rests on it.
+
+        §8.6 draws the upward tree — `eligible_part ↑ voltage_compatible …` —
+        and §21 asks the other question too: *what computation depends on this?*
+        A base relation has no derivation of its own and is still worth asking
+        about, because the answer for `rated_voltage` is that two derived
+        relations read it and one of those feeds a third. Both directions are
+        one edge table read from opposite ends, so both are answered here
+        rather than by two half-endpoints.
+
+        Returned as adjacency plus a node for every relation reached, not as a
+        nested tree. A relation can sit at more than one place in the closure —
+        `part_type` feeds both compatibility relations — and a nested tree would
+        either duplicate it or silently drop the second path. The front end
+        draws a tree; the closure is what is true.
+
+        The run record is where staleness stops being a flag and becomes an
+        account. TaskView remembers the version and cardinality of every input
+        as it stood when the derivation last ran, so each can be compared
+        against the same relation now: an input that has moved since is the
+        reason the output is suspect, named. Inputs the engine snapshotted but
+        the dependency table does not declare are reported as what they are
+        rather than quietly merged, because the difference between "the SQL
+        reads this" and "the run held this" is a fact about the world.
+        """
+        record = self._relation(relation)
+        described = {item["name"]: item for item in self._described()}
+
+        upward: dict[str, list[str]] = {}
+        downward: dict[str, list[str]] = {}
+        for row in self._view.query(
+            "SELECT relation_name, input_relation FROM _tv_derivation_inputs "
+            "ORDER BY relation_name, input_relation"
+        ):
+            upward.setdefault(row["relation_name"], []).append(row["input_relation"])
+            downward.setdefault(row["input_relation"], []).append(row["relation_name"])
+
+        nodes: dict[str, dict[str, Any]] = {}
+
+        def note(name: str) -> None:
+            if name in nodes:
+                return
+            found = described.get(name)
+            derivation = (found or {}).get("derivation") or {}
+            nodes[name] = {
+                "name": name,
+                "mode": found["mode"] if found else "BASE",
+                "arity": len(found["roles"]) if found else 0,
+                "count": found["row_count"] if found else 0,
+                "stale": bool(found["stale"]) if found else False,
+                "state": derivation.get("state"),
+            }
+
+        def walk(
+            name: str,
+            adjacency: Mapping[str, list[str]],
+            into: dict[str, list[str]],
+            seen: set[str],
+        ) -> None:
+            note(name)
+            # Guarded before the edges are written rather than after, so a
+            # relation reached twice is one node with one edge list, and a
+            # cycle — which a derivation graph should not have and might —
+            # terminates instead of recurring.
+            if name in seen:
+                return
+            seen.add(name)
+            reached = adjacency.get(name, [])
+            if reached:
+                into[name] = list(reached)
+            for other in reached:
+                walk(other, adjacency, into, seen)
+
+        rests_on: dict[str, list[str]] = {}
+        supports: dict[str, list[str]] = {}
+        walk(relation, upward, rests_on, set())
+        walk(relation, downward, supports, set())
+
+        run: dict[str, Any] | None = None
+        if record["mode"] == "DERIVED":
+            held = self._view.query(
+                "SELECT sql, definition_revision, execution_status, "
+                "last_run_view_revision, result_fingerprint, output_cardinality, "
+                "last_error FROM _tv_derivations WHERE relation_name = ?",
+                (relation,),
+            )
+            if held:
+                taken = {
+                    row["input_relation"]: row
+                    for row in self._view.query(
+                        "SELECT input_relation, relation_version, cardinality "
+                        "FROM _tv_derivation_run_inputs WHERE relation_name = ?",
+                        (relation,),
+                    )
+                }
+                declared = set(upward.get(relation, []))
+                inputs: list[dict[str, Any]] = []
+                for name in sorted(declared | set(taken)):
+                    note(name)
+                    found = described.get(name)
+                    at_run = taken.get(name)
+                    version_now = found["relation_version"] if found else None
+                    version_at_run = at_run["relation_version"] if at_run else None
+                    inputs.append(
+                        {
+                            "relation": name,
+                            "declared": name in declared,
+                            "version_at_run": version_at_run,
+                            "count_at_run": at_run["cardinality"] if at_run else None,
+                            "version_now": version_now,
+                            "count_now": found["row_count"] if found else None,
+                            "moved": (
+                                version_at_run is not None
+                                and version_now is not None
+                                and version_now != version_at_run
+                            ),
+                        }
+                    )
+                run = {
+                    "sql": held[0]["sql"],
+                    "state": held[0]["execution_status"],
+                    "definition_revision": held[0]["definition_revision"],
+                    "last_run_view_revision": held[0]["last_run_view_revision"],
+                    "output_cardinality": held[0]["output_cardinality"],
+                    "last_error": held[0]["last_error"],
+                    "inputs": inputs,
+                }
+
+        return {
+            "relation": relation,
+            "mode": record["mode"],
+            "rests_on": rests_on,
+            "supports": supports,
+            "nodes": nodes,
+            "run": run,
+        }
+
+    #: Candidate support tuples reported per input relation, before the answer
+    #: stops being an explanation and starts being an extension.
+    MAX_SUPPORT = 8
+
+    def derivation_support(self, assertion_id: str) -> dict[str, Any]:
+        """Input tuples that mention this derived tuple's referents.
+
+        §8.6 asks for drill-down from relation-level dependency into
+        tuple-level provenance *where available* — and here it is not. TaskView
+        records lineage per relation, not per row: no table in this world says
+        which input rows produced this output row. Rather than invent that edge
+        and draw it as if the world had asserted it, this answers the question
+        the store can actually answer — which tuples of each declared input
+        mention the referents this tuple is about — and is named for what it
+        is. They are candidates, ranked by how many of the referents they
+        mention, and the derivation's SQL beside them is the recorded truth
+        about how inputs combine. An exact miss stays an exact miss; a search
+        result stays a candidate.
+        """
+        head = self.assertion(assertion_id)
+        out: dict[str, Any] = {
+            "assertion_id": assertion_id,
+            "relation": head["relation"],
+            "derived": head["mode"] == "DERIVED",
+            "referents": [],
+            "inputs": [],
+        }
+        if not out["derived"]:
+            return out
+
+        wanted = [
+            str(head["values"][role["name"]])
+            for role in head["roles"]
+            if role["referent"] and head["values"].get(role["name"]) is not None
+        ]
+        out["referents"] = wanted
+        if not wanted:
+            return out
+        marks = ",".join("?" * len(wanted))
+
+        for name in self.derivation_inputs(head["relation"]):
+            record = self._relation(name)
+            roles = self._roles(record)
+            referent_roles = [role for role in roles if role.referent]
+            answer: dict[str, Any] = {
+                "relation": name,
+                "mode": record["mode"],
+                "stale": record["stale"],
+                "count": record["row_count"],
+                "matched": 0,
+                "roles": [
+                    {"name": role.name, "type": role.type, "referent": role.referent}
+                    for role in roles
+                ],
+                "tuples": [],
+            }
+            if referent_roles:
+                score = " + ".join(
+                    f'(CASE WHEN "{role.column}" IN ({marks}) THEN 1 ELSE 0 END)'
+                    for role in referent_roles
+                )
+                # The score is repeated rather than referenced by alias: an
+                # alias in WHERE is a SQLite extension, and this file is the
+                # one place a portability accident would be silent.
+                values = wanted * len(referent_roles)
+                answer["matched"] = self._view.query(
+                    f'SELECT COUNT(*) AS n FROM "{name}" WHERE ({score}) > 0', values
+                )[0]["n"]
+                rows = self._view.query(
+                    f'SELECT *, ({score}) AS _support FROM "{name}" '
+                    f"WHERE ({score}) > 0 ORDER BY _support DESC LIMIT ?",
+                    [*values, *values, self.MAX_SUPPORT],
+                )
+                answer["tuples"] = [
+                    {**self._row_out(roles, row), "mentions": int(row["_support"])}
+                    for row in rows
+                ]
+            out["inputs"].append(answer)
+        return out
+
     # -- §8.7 the unresolved frontier --------------------------------------
 
     def demand(self) -> dict[str, Any] | None:

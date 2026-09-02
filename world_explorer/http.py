@@ -168,6 +168,16 @@ def build_app(world: Path | str, *, token: str | None = None):
         assertion_id = _required(request, "id")
         return await session.call(lambda adapter: adapter.assertion(assertion_id))
 
+    async def derivation(request):
+        relation = _required(request, "relation")
+        return await session.call(lambda adapter: adapter.derivation(relation))
+
+    async def support(request):
+        assertion_id = _required(request, "id")
+        return await session.call(
+            lambda adapter: adapter.derivation_support(assertion_id)
+        )
+
     async def demand(request):
         # `null` rather than an empty frontier. A canvas told "no obligations"
         # would draw a world with no open questions; told "no purpose loaded",
@@ -214,6 +224,8 @@ def build_app(world: Path | str, *, token: str | None = None):
             Route("/world/expand", guard(expand)),
             Route("/world/rows", guard(rows)),
             Route("/world/assertion", guard(assertion)),
+            Route("/world/derivation", guard(derivation)),
+            Route("/world/support", guard(support)),
             Route("/world/demand", guard(demand)),
             Route("/world/query", query, methods=["POST"]),
         ],
