@@ -409,6 +409,10 @@ def _jsonl(path: Path) -> list[dict]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
 
 
+@pytest.mark.requires_path(
+    "research/taskview_orientation/results/stage1-cursor-v01/"
+    "taskview-orientation-v01-e01-taskview-r2/provider_trajectory.jsonl"
+)
 def test_preserved_365_608_failure_reconciles_exactly():
     root = Path(
         "research/taskview_orientation/results/stage1-cursor-v01/"
@@ -446,6 +450,9 @@ def test_preserved_365_608_failure_reconciles_exactly():
     assert all(row["provider_call_id"] and row["bridge_execution_id"] for row in rows)
 
 
+@pytest.mark.requires_path(
+    "research/taskview_orientation/results/stage1-cursor-v10/campaign_seal.json"
+)
 def test_sealed_v10_discrepancies_are_executed_errors_not_boundary_calls():
     root = Path("research/taskview_orientation/results/stage1-cursor-v10")
     discrepancy_by_episode_phase: dict[tuple[str, int], int] = {}
@@ -477,6 +484,9 @@ def test_sealed_v10_discrepancies_are_executed_errors_not_boundary_calls():
     assert sum(observed.values()) == 19
 
 
+@pytest.mark.requires_path(
+    "research/taskview_orientation/results/stage1-cursor-v01/campaign_invalid.json"
+)
 def test_harness_v4_manifest_changes_only_runtime_identity_and_is_unauthorized():
     manifest = json.loads(HARNESS_MANIFEST_PATH.read_text(encoding="utf-8"))
     parent = json.loads(AUTHORIZED_MANIFEST_PATH.read_text(encoding="utf-8"))
@@ -506,6 +516,11 @@ def test_harness_v4_manifest_changes_only_runtime_identity_and_is_unauthorized()
         assert manifest[field] == parent[field]
 
 
+@pytest.mark.requires_path(
+    "research/taskview_orientation/results/stage1-cursor-v01/"
+    "taskview-orientation-v01-e01-taskview-r2/provider_trajectory.jsonl",
+    "research/taskview_orientation/results/stage1-cursor-v10/campaign_seal.json",
+)
 def test_v10_exact_byte_counterfactual_does_not_change_sealed_decision():
     from research.taskview_orientation.accounting_diagnosis import build_report
 

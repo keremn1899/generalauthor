@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from research.taskview_orientation.runtime import (
     MCP_SERVER_NAME,
     MODEL,
@@ -104,6 +106,10 @@ def test_provider_validation_rejection_is_recoverable_canonical_tool_attempt():
     ]
 
 
+@pytest.mark.requires_path(
+    "research/taskview_orientation/results/stage1-cursor-v1/"
+    "taskview-orientation-v1-e01-raw-r1/provider_trajectory.jsonl"
+)
 def test_sealed_raw1_failure_replays_as_one_validation_rejection():
     trajectory = Path(
         "research/taskview_orientation/results/stage1-cursor-v1/"

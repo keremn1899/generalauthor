@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pytest
+
 from research.taskview_orientation.read_surface_replay.candidates import replay_episode
 from research.taskview_orientation.read_surface_replay.headroom import (
     BREAK_EVEN_SEARCH,
@@ -18,6 +20,12 @@ from research.taskview_orientation.read_surface_replay.ledger import build_campa
 from research.taskview_orientation.read_surface_replay.serialize import dumps
 
 
+requires_sealed_campaign = pytest.mark.requires_path(
+    "research/taskview_orientation/results/stage1-cursor-v01-v4-searchfix/campaign_seal.json"
+)
+
+
+@requires_sealed_campaign
 def test_answer_support_matches_short_oracle_names_in_r3_phase1():
     ledger = build_campaign_ledger()
     episode = next(item for item in ledger.episodes if item.replicate == 3)
@@ -27,6 +35,7 @@ def test_answer_support_matches_short_oracle_names_in_r3_phase1():
     assert "checkout" in dumps(answers[1]).lower() or "checkout" in str(answers[1]).lower()
 
 
+@requires_sealed_campaign
 def test_shared_identifier_overinclusion_is_mechanical_not_intent():
     ledger = build_campaign_ledger()
     episode = next(item for item in ledger.episodes if item.replicate == 1)
@@ -36,6 +45,7 @@ def test_shared_identifier_overinclusion_is_mechanical_not_intent():
     assert MIN_MATCH_CHARS == 4
 
 
+@requires_sealed_campaign
 def test_base_current_describe_is_contract_redundant_derived_is_not():
     ledger = build_campaign_ledger()
     found = {"contract_redundant": False, "epistemic_bearing": False}
@@ -57,6 +67,7 @@ def test_base_current_describe_is_contract_redundant_derived_is_not():
     assert found["epistemic_bearing"]
 
 
+@requires_sealed_campaign
 def test_observed_headroom_matches_trajectory_preserving_b():
     ledger = build_campaign_ledger()
     report = run_headroom(ledger)
@@ -74,6 +85,7 @@ def test_observed_headroom_matches_trajectory_preserving_b():
         assert sum(item.total for item in observed) == anatomy["observed_acq"]
 
 
+@requires_sealed_campaign
 def test_r4_fixed_overhead_exceeds_budget():
     ledger = build_campaign_ledger()
     report = run_headroom(ledger)

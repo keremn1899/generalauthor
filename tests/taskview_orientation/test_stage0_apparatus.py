@@ -423,6 +423,9 @@ def test_v01_deterministic_preflight_passes_without_participant_calls():
     assert result["telemetry_smoke"]["all_v01_describe_variants_seen"] is True
 
 
+@pytest.mark.requires_path(
+    "research/taskview_orientation/results/stage1-cursor-v01/campaign_invalid.json"
+)
 def test_v01_lineage_note_distinguishes_unavailable_attestation_from_retained_manifests():
     note = LINEAGE_NOTE_PATH.read_text(encoding="utf-8")
     assert "6e3f5498aaafa50da949857d3061525d2aa51afaa4e45a03b47b00af774c83e1" in note

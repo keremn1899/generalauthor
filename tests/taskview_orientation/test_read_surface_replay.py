@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 
+import pytest
+
 from research.taskview_orientation.freeze import sha256_file
 from research.taskview_orientation.read_surface_replay import (
     EXPECTED_SQL_FACTS,
@@ -22,6 +24,9 @@ from research.taskview_orientation.read_surface_replay.sql_parse import (
 
 SEAL = SEALED_RESULTS_ROOT / "campaign_seal.json"
 PROGRESS = SEALED_RESULTS_ROOT / "campaign_progress.json"
+requires_sealed_campaign = pytest.mark.requires_path(
+    "research/taskview_orientation/results/stage1-cursor-v01-v4-searchfix/campaign_seal.json"
+)
 
 
 def test_sql_parse_shapes_and_escape():
@@ -61,6 +66,7 @@ def test_epistemic_states_are_pairwise_distinguishable():
     assert report["candidates"]["F"]["conditional_invalidation_ok"] is True
 
 
+@requires_sealed_campaign
 def test_sealed_campaign_hashes_are_unchanged():
     seal = json.loads(SEAL.read_text(encoding="utf-8"))
     assert seal["status"] == "SEALED"
@@ -70,6 +76,7 @@ def test_sealed_campaign_hashes_are_unchanged():
         assert sha256_file(SEALED_RESULTS_ROOT / episode_id / "seal.json") == digest
 
 
+@requires_sealed_campaign
 def test_ledger_sql_facts_match_preregistered_111():
     ledger = build_campaign_ledger()
     comparable = {key: ledger.sql_facts[key] for key in EXPECTED_SQL_FACTS}
@@ -79,6 +86,7 @@ def test_ledger_sql_facts_match_preregistered_111():
     assert sum(episode.accesses and True for episode in ledger.episodes) == 4
 
 
+@requires_sealed_campaign
 def test_candidate_c_holds_sql_row_bytes_fixed_against_b():
     ledger = build_campaign_ledger()
     episode = ledger.episodes[0]
@@ -89,6 +97,7 @@ def test_candidate_c_holds_sql_row_bytes_fixed_against_b():
     assert [item.body for item in b_rows] == [item.body for item in c_rows]
 
 
+@requires_sealed_campaign
 def test_participant_inference_remains_zero_constant():
     from research.taskview_orientation.read_surface_replay.accounting import run_accounting
 

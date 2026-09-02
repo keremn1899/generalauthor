@@ -2,12 +2,17 @@ from __future__ import annotations
 
 import json
 
+import pytest
+
 from research.taskview_orientation.freeze import sha256_file
 from research.taskview_orientation.read_surface_replay import SEALED_RESULTS_ROOT
 from research.taskview_orientation.trajectory_export import EXPORT_ROOT
 from research.taskview_orientation.trajectory_export.export import run
 
 
+@pytest.mark.requires_path(
+    "research/taskview_orientation/results/stage1-cursor-v01-v4-searchfix/campaign_seal.json"
+)
 def test_verbatim_export_integrity_and_sealed_sources():
     receipt = run()
     assert receipt["participant_inference_calls"] == 0
