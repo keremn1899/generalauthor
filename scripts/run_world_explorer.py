@@ -12,9 +12,14 @@ matches the local product's existing habit so a browser can carry
 
 `--construction` names one frozen constructor run — a trial directory holding
 `passes/p0` … `passes/p8` — and opens the `/construction` plane over it. It is
-optional and read-only; without it those routes answer 404 and the world plane
-is unaffected. There is no default, because a run belongs to a campaign in
-`research/` and guessing which one someone means is worse than asking.
+optional; without it those routes answer 404 and the world plane is unaffected.
+There is no default, because a run belongs to a campaign in `research/` and
+guessing which one someone means is worse than asking.
+
+Human verdicts append to `data/verdicts/<run>.jsonl`, outside the run.
+`--verdicts` names a different file. Nothing is ever written into the campaign
+directory: it is user-owned, usually mid-flight, and a pass artifact is the
+record of what the constructor said.
 """
 
 from __future__ import annotations
@@ -39,6 +44,7 @@ def main() -> int:
     parser.add_argument("--port", type=int, default=8139)
     parser.add_argument("--token", default="devtoken")
     parser.add_argument("--construction", type=Path, default=None)
+    parser.add_argument("--verdicts", type=Path, default=None)
     args = parser.parse_args()
 
     if not args.world.exists():
@@ -48,14 +54,22 @@ def main() -> int:
     if args.construction and not (args.construction / "passes").is_dir():
         parser.error(f"{args.construction} holds no passes/ directory")
     print(f"world explorer: {args.world.name} on http://{args.host}:{args.port}/world")
+    ledger = args.verdicts
     if args.construction:
+        # Resolved here rather than left to the app's cwd-relative fallback, so
+        # the path printed is the path written.
+        ledger = ledger or (
+            REPO / "data" / "verdicts" / f"{args.construction.resolve().name}.jsonl"
+        )
         print(f"construction:   {args.construction} on /construction")
+        print(f"verdicts:       {ledger}")
     serve(
         args.world,
         host=args.host,
         port=args.port,
         token=args.token or None,
         construction=args.construction,
+        verdicts=ledger,
     )
     return 0
 

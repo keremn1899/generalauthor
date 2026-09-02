@@ -23,12 +23,19 @@ That also serialises reads, which matches the repository's existing rule that
 one process owns a graph file at a time.
 
 `/construction` is the same app's second plane: one frozen constructor run,
-read. It shares the bearer guard and the read-only guarantee, and it is a
-separate module (`construction.py`) for the same reason this app is separate
-from `mcp_server` — nothing in it can write, and that is checkable by reading
-its imports rather than by trusting a route. It needs no thread of its own: it
-holds no connection, only files, and its reads are a few milliseconds of local
-JSON.
+read. It shares the bearer guard, and it is a separate module
+(`construction.py`) for the same reason this app is separate from
+`mcp_server` — nothing in the reader can write, and that is checkable by
+reading its imports rather than by trusting a route. It needs no thread of its
+own: it holds no connection, only files, and its reads are a few milliseconds
+of local JSON.
+
+Two routes on that plane do write, and they are the only two in this app:
+`/construction/verdict` and `/construction/revert` append to a ledger
+(`verdicts.py`) held outside both the run and any world. The read-only
+guarantee this app makes is about *worlds*, and it is unchanged — a verdict is
+an input to the next build, and the only path from one to a world tuple is a
+rebuild.
 
 Identifiers travel as query parameters rather than path segments because they
 contain colons — `part:X160`, `assertion:0489b6…` — and a path that has to be
@@ -50,6 +57,7 @@ from typing import Any, Callable
 
 from world_explorer.adapter import WorldExplorerAdapter
 from world_explorer.construction import ConstructionReader
+from world_explorer.verdicts import VerdictLedger, citable
 
 #: The read substrate stays open (§13), but only as a read.
 SELECT_ONLY = re.compile(r"^\s*(SELECT|WITH)\b", re.IGNORECASE)
@@ -78,6 +86,7 @@ def build_app(
     *,
     token: str | None = None,
     construction: Path | str | None = None,
+    verdicts: Path | str | None = None,
 ):
     from starlette.applications import Starlette
     from starlette.requests import Request
@@ -89,6 +98,17 @@ def build_app(
     # request, then read through on every call — it caches nothing, so holding
     # it open costs nothing and changes nothing.
     run = ConstructionReader(construction) if construction else None
+    # The ledger sits beside the *server's* data, not inside the campaign. A
+    # run directory is user-owned and often mid-flight; a surface that appends
+    # to it writes into someone's evidence. Default rather than required so the
+    # docket is never read-only by accident of configuration.
+    ledger = (
+        VerdictLedger(verdicts)
+        if verdicts
+        else VerdictLedger(Path("data/verdicts") / f"{run.path.name}.jsonl")
+        if run
+        else None
+    )
 
     def opened() -> ConstructionReader:
         if run is None:
@@ -215,11 +235,60 @@ def build_app(
     async def construction_pass(request):
         return opened().pass_artifact(_required(request, "id"))
 
+    def standing() -> VerdictLedger:
+        opened()
+        assert ledger is not None
+        return ledger
+
     async def construction_docket(request):
-        return opened().docket()
+        return opened().docket(standing().current())
 
     async def construction_obligation(request):
-        return opened().obligation(_required(request, "id"))
+        obligation_id = _required(request, "id")
+        return opened().obligation(
+            obligation_id, standing().current().get(obligation_id)
+        )
+
+    async def construction_history(request):
+        """Every verdict ever recorded on one obligation, oldest first.
+
+        The reverted ones too. §6.4 — there are no silent edits, so the file
+        is the record and this route is the file."""
+        return {"history": standing().history(_required(request, "id"))}
+
+    async def construction_verdict(request):
+        """§6.1 — record one adjudication, or refuse it.
+
+        The packet is read here and its locations handed to the ledger as the
+        only citable set. That is the enforcement point for
+        citation-by-selection: the front end offers checkboxes, but the reason
+        a location cannot be invented is this line, not the checkbox.
+        """
+        reader = opened()
+        body = await request.json()
+        obligation_id = str(body.get("obligation_id") or "")
+        if not obligation_id:
+            raise ValueError("obligation_id is required")
+        # Raises KeyError → 404 for an obligation this run does not have, so a
+        # verdict can never be filed against nothing.
+        item = reader.obligation(obligation_id)
+        machine = (item.get("judgment") or {}).get("disposition")
+        return standing().record(
+            obligation_id,
+            str(body.get("disposition") or ""),
+            allowed_citations=citable(item.get("packet")),
+            supporting_evidence=body.get("supporting_evidence") or (),
+            support_claim=str(body.get("support_claim") or ""),
+            supersedes=machine,
+            actor=str(body.get("actor") or ""),
+        )
+
+    async def construction_revert(request):
+        body = await request.json()
+        obligation_id = str(body.get("obligation_id") or "")
+        if not obligation_id:
+            raise ValueError("obligation_id is required")
+        return standing().revert(obligation_id, actor=str(body.get("actor") or ""))
 
     async def query(request):
         if not authorized(request):
@@ -269,6 +338,16 @@ def build_app(
             Route("/construction/pass", guard(construction_pass)),
             Route("/construction/docket", guard(construction_docket)),
             Route("/construction/obligation", guard(construction_obligation)),
+            Route("/construction/history", guard(construction_history)),
+            # The only two routes in this app that write, and they write to a
+            # ledger — no compiled world, no pass artifact. A verdict is an
+            # input to the next build.
+            Route(
+                "/construction/verdict",
+                guard(construction_verdict),
+                methods=["POST"],
+            ),
+            Route("/construction/revert", guard(construction_revert), methods=["POST"]),
         ],
     )
 
@@ -280,11 +359,12 @@ def serve(
     port: int = 8139,
     token: str | None = None,
     construction: Path | str | None = None,
+    verdicts: Path | str | None = None,
 ) -> None:
     import uvicorn
 
     uvicorn.run(
-        build_app(world, token=token, construction=construction),
+        build_app(world, token=token, construction=construction, verdicts=verdicts),
         host=host,
         port=port,
         log_level="warning",

@@ -196,13 +196,23 @@ class ConstructionReader:
         return any(relation in claim for claim in claims)
 
     @staticmethod
-    def _is_open(judgment: dict[str, Any] | None) -> bool:
+    def _is_open(
+        judgment: dict[str, Any] | None, verdict: dict[str, Any] | None = None
+    ) -> bool:
         """An obligation with no disposition is open; so is one the
         constructor decided to leave `UNRESOLVED`. The two are different
-        decisions and the docket shows both, but neither is closed."""
-        if judgment is None:
+        decisions and the docket shows both, but neither is closed.
+
+        A standing human verdict decides it instead, and by the same rule —
+        the burdens do not relax for a person (§6.1), so a verdict of
+        `UNRESOLVED` upholds the decline and leaves the obligation open. That
+        is a decision and the docket records it as one; it is simply not a
+        closure.
+        """
+        decisive = verdict if verdict is not None else judgment
+        if decisive is None:
             return True
-        return str(judgment.get("disposition")) not in CLOSING
+        return str(decisive.get("disposition")) not in CLOSING
 
     def _blocks_for(
         self,
@@ -328,8 +338,12 @@ class ConstructionReader:
             "document": _load(path),
         }
 
-    def docket(self) -> dict[str, Any]:
+    def docket(self, verdicts: dict[str, dict[str, Any]] | None = None) -> dict[str, Any]:
         """§8.1 — every obligation, ordered by what it unblocks.
+
+        `verdicts` are handed in rather than read here. The ledger is the write
+        side (`verdicts.py`), and a reader that opened it would be a reader
+        that knows where writes go — the separation is the guarantee.
 
         Not paginated: the frontier is human-scale by construction, and a
         docket that pages is a docket someone stops reaching the bottom of.
@@ -339,13 +353,16 @@ class ConstructionReader:
         obligations = self._obligations()
         dispositions = self._dispositions()
         blocking = self._blocking()
+        standing = verdicts or {}
 
         rows: list[dict[str, Any]] = []
         for obligation in obligations:
             obligation_id = str(obligation.get("obligation_id", ""))
             judgment = dispositions.get(obligation_id)
+            verdict = standing.get(obligation_id)
             packet = self._packet(obligation_id)
             disposition = str(judgment.get("disposition")) if judgment else None
+            open_ = self._is_open(judgment, verdict)
             rows.append(
                 {
                     "obligation_id": obligation_id,
@@ -364,10 +381,12 @@ class ConstructionReader:
                     "known_missing_information": (packet or {}).get(
                         "known_missing_information"
                     ),
-                    "open": self._is_open(judgment),
-                    "blocks": self._blocks_for(
-                        obligation, blocking, open_=self._is_open(judgment)
-                    ),
+                    # Both, always. §15: the machine's judgment remains
+                    # readable beneath a human's, because the disagreement is
+                    # the record worth keeping.
+                    "verdict": verdict,
+                    "open": open_,
+                    "blocks": self._blocks_for(obligation, blocking, open_=open_),
                 }
             )
 
@@ -400,14 +419,17 @@ class ConstructionReader:
         relations = len(row["blocks"]["relations"]) if row["open"] else 0
         return (-purposes, -relations, 0 if row["open"] else 1, row["obligation_id"])
 
-    def obligation(self, obligation_id: str) -> dict[str, Any]:
+    def obligation(
+        self, obligation_id: str, verdict: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
         """§8.2 — one obligation, opened: proposition, packet, judgment.
 
         Three panes and no navigation between them, so all three are one read.
-        `verdict` is always present and always null here: a human verdict is
-        recorded beside the run, and nothing on the read plane produces one.
-        The field is here so the shape of an adjudicated obligation is the
-        shape of an un-adjudicated one, and the surface has no reason to guess.
+        `verdict` is handed in, never found here: a human verdict is recorded
+        beside the run in the ledger, and nothing on the read plane produces
+        one. The field is always present — null when nobody has adjudicated —
+        so the shape of an adjudicated obligation is the shape of an
+        un-adjudicated one and the surface has no reason to guess.
         """
         for obligation in self._obligations():
             if str(obligation.get("obligation_id")) == obligation_id:
@@ -432,7 +454,7 @@ class ConstructionReader:
             "packet": packet,
             "judgment": judgment,
             "blocks": self._blocks_for(
-                obligation, self._blocking(), open_=self._is_open(judgment)
+                obligation, self._blocking(), open_=self._is_open(judgment, verdict)
             ),
-            "verdict": None,
+            "verdict": verdict,
         }
