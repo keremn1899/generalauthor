@@ -17,6 +17,10 @@
  * ringed around what it would attach to, because that placement is a statement
  * about what it connects to.
  *
+ * `settle` takes the slack out of each fold afterwards — see `relax` — but it
+ * is given the old marks as pins rather than asked to leave them alone, so the
+ * rule holds by construction and not by care.
+ *
  * **The field is bounded by count, not by hope.** `MAX_FIELD_NODES` is the
  * cap, checked before an expansion runs, and the caller is expected to offer
  * the table instead rather than to quietly truncate. What makes this workable
@@ -27,6 +31,7 @@
 
 import type { WorldRole, WorldTuple } from "../api/world";
 import { projectionOf } from "./marks";
+import { relax, type RelaxBody, type RelaxLink } from "./relax";
 
 /**
  * How much matter the field will hold.
@@ -42,8 +47,20 @@ export const MAX_FIELD_NODES = 150;
 const RING_RADIUS = 190;
 const RING_TIER = 120;
 const CHIP_INSET = 0.55;
-/** How far apart two plates have to be before they are two plates. */
-const PLATE_CLEARANCE = 34;
+/**
+ * What each kind of mark keeps around itself while the field settles.
+ *
+ * d3 separates two bodies by the sum of their radii, so these three numbers
+ * are really the three clearances the field needs, expressed once each: two
+ * discs end up 104 apart — inside the ring's own chord, which is 145 at eight
+ * slots to a tier, so settling never collapses the fan that placed them — a
+ * plate stays 70 from a disc centre, which is 25 clear of its edge, and two
+ * plates stay 36 apart, which is the gap two chips need to read as two.
+ */
+const DISC_BODY = 52;
+const PLATE_BODY = 18;
+/** How far a plate wants to sit from each mark it joins. */
+const SPOKE_LENGTH = 110;
 
 export type Point = { x: number; y: number };
 
@@ -143,6 +160,35 @@ function clone(set: WorkingSet): WorkingSet {
 }
 
 /**
+ * How much room a mark of each kind needs around its centre.
+ *
+ * Read off `DISC_BODY` and `PLATE_BODY`, which is what makes placement and
+ * settling agree about what "clear" means: a slot placement accepts is a slot
+ * the settle has no reason to push anything out of.
+ */
+function bodyRadius(next: WorkingSet, id: string): number {
+  return next.referents.has(id) ? DISC_BODY : PLATE_BODY;
+}
+
+/** Whether a mark of this size could sit here without landing on anything. */
+function isClear(next: WorkingSet, at: Point, radius: number, ignore?: string): boolean {
+  for (const [id, existing] of next.positions) {
+    if (id === ignore) continue;
+    const apart = Math.hypot(existing.x - at.x, existing.y - at.y);
+    if (apart < radius + bodyRadius(next, id)) return false;
+  }
+  return true;
+}
+
+/**
+ * How far the search will go before it gives up and takes the last slot.
+ *
+ * Eight tiers, which at `RING_TIER` apart is further out than a field capped
+ * at `MAX_FIELD_NODES` can fill.
+ */
+const PROBES = 64;
+
+/**
  * Free space around an anchor.
  *
  * Angles are taken in a fixed order and skipped when something already sits
@@ -150,27 +196,31 @@ function clone(set: WorkingSet): WorkingSet {
  * first left rather than landing on top of it. Deterministic: the same
  * expansions in the same order always produce the same picture, which is what
  * makes a canvas something you can return to.
+ *
+ * The skipping has to happen here rather than be left to the settle, because
+ * pushing marks apart cannot get one *out* of somewhere it should not have
+ * been put. A disc dropped into a pocket of marks that surround it is pushed
+ * equally from every side and stays exactly where it landed — a stable place
+ * to be, and the wrong one. Collision opens a gap; it does not find a door.
+ * So the slot has to be free before anything is placed in it.
  */
 function placeAround(
-  positions: Map<string, Point>,
+  next: WorkingSet,
   anchor: Point,
   taken: number,
   index: number,
 ): Point {
-  const slot = taken + index;
-  const tier = Math.floor(slot / 8);
-  const angle = -Math.PI / 2 + ((slot % 8) * Math.PI * 2) / 8 + tier * 0.4;
-  const radius = RING_RADIUS + tier * RING_TIER;
-  const at = {
-    x: Math.round(anchor.x + Math.cos(angle) * radius),
-    y: Math.round(anchor.y + Math.sin(angle) * radius),
-  };
-  // One nudge if something is already almost exactly there — enough to stop a
-  // stack, not enough to pretend this is a layout engine.
-  for (const existing of positions.values()) {
-    if (Math.hypot(existing.x - at.x, existing.y - at.y) < 60) {
-      return { x: at.x + 54, y: at.y + 34 };
-    }
+  let at = { x: anchor.x, y: anchor.y };
+  for (let probe = 0; probe < PROBES; probe += 1) {
+    const slot = taken + index + probe;
+    const tier = Math.floor(slot / 8);
+    const angle = -Math.PI / 2 + ((slot % 8) * Math.PI * 2) / 8 + tier * 0.4;
+    const radius = RING_RADIUS + tier * RING_TIER;
+    at = {
+      x: Math.round(anchor.x + Math.cos(angle) * radius),
+      y: Math.round(anchor.y + Math.sin(angle) * radius),
+    };
+    if (isClear(next, at, DISC_BODY)) return at;
   }
   return at;
 }
@@ -208,6 +258,7 @@ export function expand(set: WorkingSet, input: ExpansionInput): WorkingSet {
       labels: input.labels,
     }, taken, placed);
   }
+  settle(set, next);
   return next;
 }
 
@@ -241,6 +292,7 @@ export function place(set: WorkingSet, input: PlacementInput): WorkingSet {
   if (!anchor) return set;
 
   fold(next, { ...input, anchor }, countAround(set, anchor), 0);
+  settle(set, next);
   return next;
 }
 
@@ -286,7 +338,71 @@ export function placeDemand(set: WorkingSet, input: DemandPlacement): WorkingSet
       .map((role) => ({ role: role.name, value: input.values[role.name] })),
   });
   next.positions.set(input.key, plateAt(next, anchorAt, spokes));
+  settle(set, next);
   return next;
+}
+
+/**
+ * Take the slack out of what just arrived, and nothing else.
+ *
+ * Placement stays where it was — new marks are fanned onto a ring around what
+ * they came from, which is a statement about where they belong. What the fan
+ * cannot do is know whether the slot it chose was already occupied by material
+ * from some earlier expansion, and the one-nudge answer in `placeAround` was
+ * only ever meant to stop a stack, not to resolve a crowd.
+ *
+ * So: one headless settling pass, every mark already on the field held exactly
+ * where it is, and only the referents that arrived in this fold free to move.
+ * Because the solver is given the pins rather than trusted to respect them,
+ * `existing marks never move` holds by construction — including for a disc a
+ * person dragged, which by the next expansion is simply something already on
+ * the field.
+ *
+ * Plates are not bodies. A plate sits between the marks it joins, so it is
+ * recomputed from its spokes afterwards, and only where a spoke actually
+ * moved: a plate whose referents all stayed put is a mark already on the field
+ * like any other.
+ */
+function settle(before: WorkingSet, next: WorkingSet): void {
+  const arrived = new Set<string>();
+  const held = (id: string) => !arrived.has(id);
+  for (const id of next.referents.keys()) {
+    if (!before.referents.has(id)) arrived.add(id);
+  }
+  for (const id of next.assertions.keys()) {
+    if (!before.assertions.has(id)) arrived.add(id);
+  }
+  for (const id of next.demands.keys()) {
+    if (!before.demands.has(id)) arrived.add(id);
+  }
+  if (!arrived.size) return;
+
+  const bodies: RelaxBody[] = [];
+  const body = (id: string, radius: number) => {
+    const at = next.positions.get(id);
+    if (at) bodies.push({ id, x: at.x, y: at.y, pinned: held(id), radius });
+  };
+  for (const id of next.referents.keys()) body(id, DISC_BODY);
+  for (const id of next.assertions.keys()) body(id, PLATE_BODY);
+  for (const id of next.demands.keys()) body(id, PLATE_BODY);
+
+  // What the field says is joined. A bond is already a line between two
+  // referents. A plate is joined to each mark it gathers, which is both what
+  // holds it between them and what carries its referents toward each other —
+  // so there is no separate pull between co-participants to add.
+  const links: RelaxLink[] = [];
+  for (const bond of next.bonds) {
+    links.push({ source: bond.source, target: bond.target, distance: RING_RADIUS });
+  }
+  const spokesOf = (id: string, spokes: { id: string }[]) => {
+    for (const spoke of spokes) {
+      links.push({ source: id, target: spoke.id, distance: SPOKE_LENGTH });
+    }
+  };
+  for (const [id, assertion] of next.assertions) spokesOf(id, assertion.spokes);
+  for (const [id, demand] of next.demands) spokesOf(id, demand.spokes);
+
+  for (const [id, at] of relax(bodies, links)) next.positions.set(id, at);
 }
 
 /**
@@ -310,7 +426,7 @@ function anchorFor(
   next.positions.set(
     first,
     next.positions.size
-      ? placeAround(next.positions, { x: 0, y: 0 }, next.referents.size, 0)
+      ? placeAround(next, { x: 0, y: 0 }, next.referents.size, 0)
       : { x: 0, y: 0 },
   );
   return first;
@@ -402,7 +518,7 @@ function attach(
       label: labels?.get(spoke.id) ?? spoke.id,
       via: anchor,
     });
-    next.positions.set(spoke.id, placeAround(next.positions, anchorAt, taken, placed));
+    next.positions.set(spoke.id, placeAround(next, anchorAt, taken, placed));
     placed += 1;
   }
   return placed;
@@ -432,20 +548,21 @@ function plateAt(
   };
   // Two tuples over nearly the same referents land in nearly the same place —
   // an obligation and the assertion that would answer it, say, which is exactly
-  // the pair someone opens the frontier to compare. Stepped off each other
-  // deterministically, the same one nudge `placeAround` makes, so the two are
-  // both readable without pretending this is a layout engine.
-  for (let step = 0; step < 6; step += 1) {
-    let clash = false;
-    for (const existing of next.positions.values()) {
-      if (Math.hypot(existing.x - at.x, existing.y - at.y) < PLATE_CLEARANCE) {
-        clash = true;
-        break;
-      }
-    }
-    if (!clash) break;
-    at.x += 26;
-    at.y += 22;
+  // the pair someone opens the frontier to compare. Stepped off each other by
+  // the same rule the discs are placed by: walk out from where the plate wants
+  // to be until the spot is actually free. The path is a phyllotaxis spiral, so
+  // it covers the ring evenly instead of running off in one diagonal, and it is
+  // the same path every time.
+  if (isClear(next, at, PLATE_BODY)) return at;
+  const golden = Math.PI * (3 - Math.sqrt(5));
+  for (let probe = 1; probe <= PROBES; probe += 1) {
+    const radius = 26 * Math.sqrt(probe);
+    const angle = probe * golden;
+    const stepped = {
+      x: Math.round(at.x + Math.cos(angle) * radius),
+      y: Math.round(at.y + Math.sin(angle) * radius),
+    };
+    if (isClear(next, stepped, PLATE_BODY)) return stepped;
   }
   return at;
 }
