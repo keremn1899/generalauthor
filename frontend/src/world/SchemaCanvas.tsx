@@ -32,6 +32,7 @@ export function SchemaCanvas({
   onFocus: (relation: string | null) => void;
 }) {
   const hostRef = useRef<HTMLDivElement>(null);
+  const graphRef = useRef<Graph | null>(null);
 
   const paint = useMemo(() => paintOf(GRAPH_DNA_THEME[mode]), [mode]);
   const stalePaint = useMemo(
@@ -76,9 +77,29 @@ export function SchemaCanvas({
     });
     graph.on("canvas:click", () => onFocus(null));
 
+    graphRef.current = graph;
     void graph.render();
-    return () => graph.destroy();
+    return () => {
+      graphRef.current = null;
+      graph.destroy();
+    };
   }, [layout, paint.canvas, relations.length, onFocus]);
+
+  // The vocabulary refits when its stage changes size — unlike the field, it
+  // has no arrangement to preserve, so following the container is the whole of
+  // the correct behaviour.
+  useEffect(() => {
+    const host = hostRef.current;
+    if (!host) return;
+    const observer = new ResizeObserver(() => {
+      const graph = graphRef.current;
+      if (!graph || !host.clientWidth || !host.clientHeight) return;
+      graph.resize(host.clientWidth, host.clientHeight);
+      void graph.fitView();
+    });
+    observer.observe(host);
+    return () => observer.disconnect();
+  }, []);
 
   return <div className="world__stage" ref={hostRef} style={{ background: paint.canvas }} />;
 }

@@ -152,6 +152,7 @@ def build_app(world: Path | str, *, token: str | None = None):
         offset = _int(request, "offset", 0)
         order = request.query_params.get("order") or None
         descending = request.query_params.get("desc") in ("1", "true", "yes")
+        subject = request.query_params.get("subject") or None
         return await session.call(
             lambda adapter: adapter.rows(
                 relation,
@@ -159,6 +160,7 @@ def build_app(world: Path | str, *, token: str | None = None):
                 offset=offset,
                 order=order,
                 descending=descending,
+                subject=subject,
             )
         )
 

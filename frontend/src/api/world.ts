@@ -96,6 +96,16 @@ export type WorldReferent = {
   }[];
 };
 
+export type WorldRows = {
+  relation: string;
+  mode: "BASE" | "DERIVED";
+  stale: boolean;
+  total: number;
+  offset: number;
+  roles: WorldRole[];
+  rows: WorldTuple[];
+};
+
 export type WorldDemand = {
   purpose: { id: string; revision: number; statement: string };
   rule: string;
@@ -153,15 +163,30 @@ export const worldApi = {
     read<{ relation: string; arity: number; roles: WorldRole[]; tuples: WorldTuple[] }>(
       `/world/expand?id=${encodeURIComponent(id)}&relation=${encodeURIComponent(relation)}`,
     ),
-  rows: (relation: string, limit = 200, offset = 0) =>
-    read<{
-      relation: string;
-      total: number;
-      roles: WorldRole[];
-      rows: WorldTuple[];
-    }>(
-      `/world/rows?relation=${encodeURIComponent(relation)}&limit=${limit}&offset=${offset}`,
-    ),
+  rows: (
+    relation: string,
+    options: {
+      limit?: number;
+      offset?: number;
+      order?: string | null;
+      desc?: boolean;
+      /** Narrow the extension to one referent's tuples. */
+      subject?: string | null;
+    } = {},
+  ) => {
+    const query = new URLSearchParams({
+      relation,
+      limit: String(options.limit ?? 200),
+      offset: String(options.offset ?? 0),
+    });
+    // Ordering is the database's, not the page's: a client-side sort would only
+    // ever reach the rows already fetched, which for a windowed table is a
+    // handful out of thousands.
+    if (options.order) query.set("order", options.order);
+    if (options.desc) query.set("desc", "1");
+    if (options.subject) query.set("subject", options.subject);
+    return read<WorldRows>(`/world/rows?${query}`);
+  },
   assertion: (id: string) =>
     read<WorldAssertion>(`/world/assertion?id=${encodeURIComponent(id)}`),
   demand: () => read<{ demand: WorldDemand | null }>("/world/demand").then((r) => r.demand),

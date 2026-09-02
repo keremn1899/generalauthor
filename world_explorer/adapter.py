@@ -417,12 +417,20 @@ class WorldExplorerAdapter:
         offset: int = 0,
         order: str | None = None,
         descending: bool = False,
+        subject: str | None = None,
     ) -> dict[str, Any]:
         """One page of a relation's extension, ordered in SQL.
 
         Sorting is the database's job, not the table component's. SQLite orders
         the largest relation in this world in well under a millisecond, and a
         client-side sort would only ever see the page it already has.
+
+        `subject` narrows the extension to the tuples one referent takes part
+        in — the same predicate `expand` uses, because it is the same question
+        asked of a surface that pages instead of drawing. A referent's panel
+        offers its own count, so a table opened from there that answered with
+        the whole relation would be answering a question nobody asked. The
+        total is the filtered total for the same reason.
         """
         record = self._relation(relation)
         roles = self._roles(record)
@@ -432,15 +440,41 @@ class WorldExplorerAdapter:
             if order not in columns:
                 raise KeyError(f"{relation!r} has no role {order!r}")
             clause = f' ORDER BY "{columns[order]}" {"DESC" if descending else "ASC"}'
+
+        where = ""
+        subject_values: list[Any] = []
+        total = record["row_count"]
+        if subject is not None:
+            referent_roles = [role for role in roles if role.referent]
+            if not referent_roles:
+                return {
+                    "relation": relation,
+                    "mode": record["mode"],
+                    "stale": record["stale"],
+                    "total": 0,
+                    "offset": offset,
+                    "roles": [
+                        {"name": role.name, "type": role.type, "referent": role.referent}
+                        for role in roles
+                    ],
+                    "rows": [],
+                }
+            predicate = " OR ".join(f'"{role.column}" = ?' for role in referent_roles)
+            where = f" WHERE ({predicate})"
+            subject_values = [subject] * len(referent_roles)
+            total = self._view.query(
+                f'SELECT COUNT(*) AS n FROM "{relation}"{where}', subject_values
+            )[0]["n"]
+
         rows = self._view.query(
-            f'SELECT * FROM "{relation}"{clause} LIMIT ? OFFSET ?',
-            (min(limit, MAX_ROWS), max(0, offset)),
+            f'SELECT * FROM "{relation}"{where}{clause} LIMIT ? OFFSET ?',
+            [*subject_values, min(limit, MAX_ROWS), max(0, offset)],
         )
         return {
             "relation": relation,
             "mode": record["mode"],
             "stale": record["stale"],
-            "total": record["row_count"],
+            "total": total,
             "offset": offset,
             "roles": [
                 {"name": role.name, "type": role.type, "referent": role.referent}

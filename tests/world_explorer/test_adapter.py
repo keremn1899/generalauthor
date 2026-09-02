@@ -191,6 +191,34 @@ def test_rows_page_and_order_in_sql(adapter):
     assert descending["rows"][0]["values"]["part"] >= first["rows"][0]["values"]["part"]
 
 
+def test_rows_narrow_to_one_referent(adapter):
+    """A table opened from a referent answers about that referent.
+
+    The panel offers a relation by the referent's own count, so the extension
+    behind that offer has to be the same set — narrowed *and* counted, since a
+    windowed table sizes itself from the total before a row has arrived.
+    """
+    whole = adapter.rows("temperature_compatible", limit=500)
+    subject = whole["rows"][0]["values"]["part"]
+    narrowed = adapter.rows("temperature_compatible", limit=500, subject=subject)
+
+    assert narrowed["total"] < whole["total"]
+    assert narrowed["total"] == len(narrowed["rows"])
+    assert all(row["values"]["part"] == subject for row in narrowed["rows"])
+    # The same predicate `expand` uses, so the two surfaces cannot disagree
+    # about what a referent takes part in.
+    assert narrowed["total"] == len(
+        adapter.expand(subject, "temperature_compatible")["tuples"]
+    )
+
+
+def test_rows_narrowed_by_a_stranger_are_empty_not_whole(adapter):
+    """The failure that matters is a filter that silently does nothing."""
+    narrowed = adapter.rows("temperature_compatible", subject="part:does-not-exist")
+    assert narrowed["total"] == 0
+    assert narrowed["rows"] == []
+
+
 def test_unknown_names_are_answers_not_faults(adapter):
     with pytest.raises(KeyError):
         adapter.referent("part:does-not-exist")

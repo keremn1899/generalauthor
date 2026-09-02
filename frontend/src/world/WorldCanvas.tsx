@@ -299,6 +299,23 @@ export function WorldCanvas({
     if (graph) graph.setOptions({ background: paint.canvas });
   }, [paint.canvas]);
 
+  // A renderer sized once is sized wrong the moment anything else on the page
+  // takes room: opening the extension drawer halves the stage, and a graph that
+  // does not hear about it keeps drawing at the old size, which reads as the
+  // field having gone blank. The camera is left alone — resizing is not new
+  // matter, so it is not a reason to move what someone arranged.
+  useEffect(() => {
+    const host = hostRef.current;
+    if (!host) return;
+    const observer = new ResizeObserver(() => {
+      const graph = graphRef.current;
+      if (!graph || !host.clientWidth || !host.clientHeight) return;
+      graph.resize(host.clientWidth, host.clientHeight);
+    });
+    observer.observe(host);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div
       className="world__stage"

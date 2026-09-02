@@ -31,6 +31,8 @@ import {
   type WorldOverview,
   type WorldReferent,
   type WorldRelation,
+  type WorldRole,
+  type WorldTuple,
 } from "../api/world";
 import {
   chromeCssVariables,
@@ -38,6 +40,7 @@ import {
   type ThemeMode,
 } from "../styles/graphDna";
 import { MARK_DEFAULTS } from "./marks";
+import { RelationTable } from "./RelationTable";
 import { SchemaCanvas } from "./SchemaCanvas";
 import { WorldCanvas, type CanvasSelection } from "./WorldCanvas";
 import {
@@ -47,6 +50,7 @@ import {
   expansionKey,
   fieldSize,
   MAX_FIELD_NODES,
+  place,
   seed,
   type WorkingSet,
 } from "./workingSet";
@@ -138,7 +142,13 @@ function Grounding({ assertion }: { assertion: WorldAssertion }) {
   );
 }
 
-function AssertionPanel({ assertion }: { assertion: WorldAssertion | null }) {
+function AssertionPanel({
+  assertion,
+  onTable,
+}: {
+  assertion: WorldAssertion | null;
+  onTable: (relation: string) => void;
+}) {
   if (!assertion) return <p className="world__hint">Reading…</p>;
   return (
     <>
@@ -167,6 +177,13 @@ function AssertionPanel({ assertion }: { assertion: WorldAssertion | null }) {
         </>
       ) : null}
       <Grounding assertion={assertion} />
+      <button
+        type="button"
+        className="world__drop"
+        onClick={() => onTable(assertion.relation)}
+      >
+        open {assertion.relation}
+      </button>
     </>
   );
 }
@@ -175,11 +192,13 @@ function ReferentPanel({
   detail,
   set,
   onExpand,
+  onTable,
   onDrop,
 }: {
   detail: WorldReferent | null;
   set: WorkingSet;
   onExpand: (relation: string, count: number) => void;
+  onTable: (relation: string) => void;
   onDrop: () => void;
 }) {
   if (!detail) return <p className="world__hint">Reading…</p>;
@@ -203,17 +222,27 @@ function ReferentPanel({
         {detail.relations.map((relation) => {
           const already = set.expanded.has(expansionKey(detail.id, relation.name));
           // The cost is known before anything is drawn, which is what makes a
-          // bounded canvas workable rather than a truncation.
+          // bounded canvas workable rather than a truncation — and what makes
+          // it a choice rather than a refusal: a relation too big for the field
+          // is exactly the one that belongs in a table (§10), so that is where
+          // the button goes instead of going grey.
           const tooMany = relation.count > room;
           return (
             <li key={relation.name}>
               <button
                 type="button"
-                disabled={already || tooMany}
-                onClick={() => onExpand(relation.name, relation.count)}
+                disabled={already}
+                data-table={tooMany ? true : undefined}
+                onClick={() =>
+                  tooMany
+                    ? onTable(relation.name)
+                    : onExpand(relation.name, relation.count)
+                }
               >
                 <b>{relation.name}</b>
-                <span>{already ? "on field" : tooMany ? "too many" : relation.count}</span>
+                <span>
+                  {already ? "on field" : tooMany ? `${relation.count} · table` : relation.count}
+                </span>
               </button>
             </li>
           );
@@ -241,6 +270,13 @@ export function WorldPage() {
   const [assertion, setAssertion] = useState<WorldAssertion | null>(null);
   const [referent, setReferent] = useState<WorldReferent | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  /**
+   * The extension open under the canvas: a relation, and the referent it was
+   * opened from when it was opened from one.
+   */
+  const [table, setTable] = useState<
+    { relation: string; subject: { id: string; label: string } | null } | null
+  >(null);
 
   const labels = useRef(new Map<string, string | null>());
 
@@ -326,6 +362,38 @@ export function WorldPage() {
     setSet((current) => ({ ...current, positions: new Map([...current.positions, ...positions]) }));
   }, []);
 
+  /**
+   * A row focuses its graph projection (§11).
+   *
+   * The tuple lands beside whichever of its referents is already on the field,
+   * and the assertion it belongs to becomes the selection — so picking a row
+   * out of a ten-thousand-row extension answers *where does this sit* on the
+   * canvas and *what is it made of* in the panel at once. From the vocabulary
+   * this is also how a field starts: the first row placed seeds it.
+   */
+  const onFocusRow = useCallback((roles: WorldRole[], tuple: WorldTuple) => {
+    const relation = table?.relation;
+    if (!relation) return;
+    const schema = relations.find((item) => item.name === relation);
+    setSet((current) =>
+      place(current, {
+        relation,
+        mode: schema?.mode ?? "BASE",
+        roles,
+        tuple,
+        labels: labels.current,
+      }),
+    );
+    setSelection({ kind: "assertion", id: tuple.assertion_id });
+  }, [relations, table]);
+
+  /** Assertion ids on the field, so the table can mark what is already placed. */
+  const present = useMemo(() => {
+    const ids = new Set<string>(set.assertions.keys());
+    for (const bond of set.bonds) ids.add(bond.assertion_id);
+    return ids;
+  }, [set]);
+
   const onDrop = useCallback(() => {
     if (!selection || selection.kind !== "referent") return;
     setSet((current) => drop(current, selection.id));
@@ -335,6 +403,7 @@ export function WorldPage() {
   const style = chromeCssVariables(GRAPH_DNA_CHROME[mode]) as CSSProperties;
   const onField = fieldSize(set) > 0;
   const relation = relations.find((item) => item.name === focusedRelation) ?? null;
+  const extension = relations.find((item) => item.name === table?.relation) ?? null;
 
   return (
     <main className="world" style={style} data-mode={mode}>
@@ -369,36 +438,63 @@ export function WorldPage() {
         </p>
       ) : (
         <div className="world__body">
-          {onField ? (
-            <WorldCanvas
-              set={set}
-              mode={mode}
-              params={MARK_DEFAULTS}
-              hovered={hovered}
-              selection={selection}
-              onHover={setHovered}
-              onSelect={setSelection}
-              onPositions={onPositions}
-            />
-          ) : (
-            <SchemaCanvas
-              relations={relations}
-              mode={mode}
-              namedAtRest={namedAtRest}
-              focused={focusedRelation}
-              onFocus={setFocusedRelation}
-            />
-          )}
+          {/* Canvas and table are one column, not two tabs: §11's rule is that
+              you never choose between them, and a row you select has to land
+              somewhere you can see it land. */}
+          <div className="world__plane">
+            {onField ? (
+              <WorldCanvas
+                set={set}
+                mode={mode}
+                params={MARK_DEFAULTS}
+                hovered={hovered}
+                selection={selection}
+                onHover={setHovered}
+                onSelect={setSelection}
+                onPositions={onPositions}
+              />
+            ) : (
+              <SchemaCanvas
+                relations={relations}
+                mode={mode}
+                namedAtRest={namedAtRest}
+                focused={focusedRelation}
+                onFocus={setFocusedRelation}
+              />
+            )}
+            {extension && table ? (
+              <RelationTable
+                key={extension.name}
+                relation={extension}
+                subject={table.subject}
+                present={present}
+                onFocus={onFocusRow}
+                onWiden={() => setTable({ relation: extension.name, subject: null })}
+                onClose={() => setTable(null)}
+              />
+            ) : null}
+          </div>
 
           <aside className="world__panel">
             {notice ? <p className="world__notice">{notice}</p> : null}
             {onField && selection?.kind === "assertion" ? (
-              <AssertionPanel assertion={assertion} />
+              <AssertionPanel
+                assertion={assertion}
+                onTable={(name) => setTable({ relation: name, subject: null })}
+              />
             ) : onField && selection?.kind === "referent" ? (
               <ReferentPanel
                 detail={referent}
                 set={set}
                 onExpand={onExpand}
+                onTable={(name) =>
+                  setTable({
+                    relation: name,
+                    subject: referent
+                      ? { id: referent.id, label: referent.label || referent.id }
+                      : null,
+                  })
+                }
                 onDrop={onDrop}
               />
             ) : onField ? (
@@ -433,6 +529,13 @@ export function WorldPage() {
                     </ul>
                   </>
                 ) : null}
+                <button
+                  type="button"
+                  className="world__drop"
+                  onClick={() => setTable({ relation: relation.name, subject: null })}
+                >
+                  open extension
+                </button>
               </>
             ) : (
               <>
@@ -465,9 +568,26 @@ export function WorldPage() {
                     No purpose loaded — unresolved obligations cannot be shown.
                   </p>
                 )}
-                <p className="world__hint">
-                  Hover a relation to read it, or find a referent to open a field.
-                </p>
+                <h3>relations</h3>
+                {/* The canvas names a relation when you hover it, which is the
+                    right behaviour for a picture and the wrong one for a list:
+                    you cannot scan a canvas for "the big ones", and a relation
+                    drawn as a filament has no handle to open its extension
+                    from. The index is that handle. */}
+                <ul className="world__expand">
+                  {relations.map((item) => (
+                    <li key={item.name}>
+                      <button
+                        type="button"
+                        onMouseEnter={() => setFocusedRelation(item.name)}
+                        onClick={() => setTable({ relation: item.name, subject: null })}
+                      >
+                        <b>{item.name}</b>
+                        <span>{item.count}</span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
               </>
             )}
           </aside>
