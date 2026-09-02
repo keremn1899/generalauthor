@@ -1,0 +1,37 @@
+{
+  "graph": { "id": "organisation-ops", "domain": "organisation" },
+  "concepts": [
+    { "id": "team:payments", "kind": "team", "label": "Payments", "source_unit_ids": ["source#html:b11579dbe975"] },
+    { "id": "team:platform", "kind": "team", "label": "Platform", "source_unit_ids": ["source#html:e79673590c1f"] },
+    { "id": "person:priya", "kind": "person", "label": "Priya Nair", "source_unit_ids": ["source#html:01ab5e0aa692"] },
+    { "id": "person:sam", "kind": "person", "label": "Sam Okafor", "source_unit_ids": ["source#html:4d70b060a0f2"] },
+    { "id": "person:marco", "kind": "person", "label": "Marco Rossi", "source_unit_ids": ["source#html:c56033970a2e"] },
+    { "id": "service:checkout", "kind": "service", "label": "checkout", "source_unit_ids": ["source#html:5e4c1eaf3223"] },
+    { "id": "service:settlement", "kind": "service", "label": "settlement", "source_unit_ids": ["source#html:b28d2b2cfb24"] },
+    { "id": "service:datastore", "kind": "service", "label": "datastore", "source_unit_ids": ["source#html:5dbb064a8d7c"] },
+    { "id": "service:bus", "kind": "service", "label": "message bus", "source_unit_ids": ["source#html:ed62733cb630"] },
+    { "id": "policy:oncall", "kind": "policy", "label": "On-call ownership policy", "source_unit_ids": ["source#html:77155591af9e"] },
+    { "id": "policy:change", "kind": "policy", "label": "Datastore change policy", "source_unit_ids": ["source#html:b1582fff6506"] }
+  ],
+  "edges": [
+    { "source_id": "person:priya", "target_id": "team:payments", "predicate": "member_of", "sst_type": "CONTAINS", "source_unit_ids": ["source#html:01ab5e0aa692"] },
+    { "source_id": "person:sam", "target_id": "team:payments", "predicate": "member_of", "sst_type": "CONTAINS", "source_unit_ids": ["source#html:4d70b060a0f2"] },
+    { "source_id": "person:marco", "target_id": "team:platform", "predicate": "member_of", "sst_type": "CONTAINS", "source_unit_ids": ["source#html:c56033970a2e"] },
+    { "source_id": "team:payments", "target_id": "service:checkout", "predicate": "owns", "sst_type": "CONTAINS", "source_unit_ids": ["source#html:b11579dbe975"] },
+    { "source_id": "team:payments", "target_id": "service:settlement", "predicate": "owns", "sst_type": "CONTAINS", "source_unit_ids": ["source#html:b11579dbe975"] },
+    { "source_id": "team:platform", "target_id": "service:datastore", "predicate": "owns", "sst_type": "CONTAINS", "source_unit_ids": ["source#html:e79673590c1f"] },
+    { "source_id": "team:platform", "target_id": "service:bus", "predicate": "owns", "sst_type": "CONTAINS", "source_unit_ids": ["source#html:e79673590c1f"] },
+    { "source_id": "person:priya", "target_id": "team:payments", "predicate": "leads", "sst_type": "EXPRESSES", "source_unit_ids": ["source#html:b11579dbe975"] },
+    { "source_id": "person:marco", "target_id": "team:platform", "predicate": "leads", "sst_type": "EXPRESSES", "source_unit_ids": ["source#html:c56033970a2e"] },
+    { "source_id": "person:priya", "target_id": "service:checkout", "predicate": "on_call_for", "sst_type": "EXPRESSES", "source_unit_ids": ["source#html:77155591af9e"] },
+    { "source_id": "person:priya", "target_id": "service:settlement", "predicate": "on_call_for", "sst_type": "EXPRESSES", "source_unit_ids": ["source#html:77155591af9e"] },
+    { "source_id": "person:sam", "target_id": "service:settlement", "predicate": "maintains", "sst_type": "EXPRESSES", "source_unit_ids": ["source#html:4d70b060a0f2"] },
+    { "source_id": "service:checkout", "target_id": "service:settlement", "predicate": "depends_on", "sst_type": "LEADSTO", "source_unit_ids": ["source#html:5e4c1eaf3223"] },
+    { "source_id": "service:checkout", "target_id": "service:datastore", "predicate": "depends_on", "sst_type": "LEADSTO", "source_unit_ids": ["source#html:5e4c1eaf3223"] },
+    { "source_id": "service:settlement", "target_id": "service:datastore", "predicate": "depends_on", "sst_type": "LEADSTO", "source_unit_ids": ["source#html:b28d2b2cfb24"] },
+    { "source_id": "service:settlement", "target_id": "service:bus", "predicate": "publishes_to", "sst_type": "LEADSTO", "source_unit_ids": ["source#html:b28d2b2cfb24"] },
+    { "source_id": "policy:oncall", "target_id": "service:checkout", "predicate": "governs", "sst_type": "NEARTO", "source_unit_ids": ["source#html:77155591af9e"] },
+    { "source_id": "policy:oncall", "target_id": "service:settlement", "predicate": "governs", "sst_type": "NEARTO", "source_unit_ids": ["source#html:77155591af9e"] },
+    { "source_id": "policy:change", "target_id": "service:datastore", "predicate": "governs", "sst_type": "NEARTO", "source_unit_ids": ["source#html:b1582fff6506"] }
+  ]
+}
