@@ -22,6 +22,14 @@ ADAPTER = "cursor-agent-bwrap-isolated-constructor-v2"
 MODEL = "composer-2.5"
 
 
+def _as_text(value: object) -> str:
+    if value is None:
+        return ""
+    if isinstance(value, bytes):
+        return value.decode("utf-8", errors="replace")
+    return str(value)
+
+
 def run_v2_agent(*, workspace: Path, prompt: str, timeout_seconds: int) -> dict[str, Any]:
     refuse_non_cursor_model(MODEL, action="run")
     refuse_expensive_model(MODEL, action="run")
@@ -36,11 +44,11 @@ def run_v2_agent(*, workspace: Path, prompt: str, timeout_seconds: int) -> dict[
         completed = run_isolated(workspace, command, timeout=timeout_seconds)
         timed_out = False
         returncode = completed.returncode
-        stdout, stderr = completed.stdout, completed.stderr
+        stdout, stderr = _as_text(completed.stdout), _as_text(completed.stderr)
     except subprocess.TimeoutExpired as exc:
         timed_out = True
         returncode = -1
-        stdout, stderr = exc.stdout or "", (exc.stderr or "") + "\nTIMEOUT"
+        stdout, stderr = _as_text(exc.stdout), _as_text(exc.stderr) + "\nTIMEOUT"
     events = stream_events(stdout or "", stderr or "")
     usage = usage_from_events(events)
     reported = usage.get("model")

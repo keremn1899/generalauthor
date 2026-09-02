@@ -1,0 +1,117 @@
+{
+  "limitations": [
+    "Purpose-scoped semantic judgments (active_contract_judgment, acquisition_clause_judgment, obligation_kind_judgment) are not materialized in 06_world/world.sqlite; derive_purposes.py loads them from 05_dispositions.json as required external premises.",
+    "Two identity_judgment candidate pairs noted in 06_admission.json (billing:Oakfield Logistik GmbH/registry:HRB 88421 and billing:Vellum Print Co Ltd/contract:SOW-VEL-2022) were never adjudicated and therefore do not participate in derivations.",
+    "active_contract_judgment dispositions in 05_dispositions.json use ACCEPT/REJECT; derivations map ACCEPT→ACTIVE and REJECT→INACTIVE per vocabulary epistemic_contract."
+  ],
+  "derivations": [
+    {
+      "output_relation": "open_invoice",
+      "required_input_relations": [
+        "invoice_record"
+      ],
+      "optional_enrichment_relations": [],
+      "epistemic_behavior": "Mechanical filter on world-grounded invoice status; no unresolved disposition.",
+      "completeness_assumptions": "Universe is invoice_record; every invoice with status=open is included.",
+      "deterministic_computation": "SELECT invoice FROM invoice_record WHERE status = 'open'.",
+      "required_premise": [
+        "invoice_record.status is authoritative billing-source fact"
+      ],
+      "optional_enrichment": [],
+      "blocking_unresolved_state": [],
+      "non_blocking_unresolved_state": []
+    },
+    {
+      "output_relation": "purpose_a_qualifying_invoice",
+      "required_input_relations": [
+        "invoice_record",
+        "contract_record",
+        "identity_judgment",
+        "legal_name_variant"
+      ],
+      "optional_enrichment_relations": [
+        "typed_identifier",
+        "invoice_tax_identifier"
+      ],
+      "epistemic_behavior": "Row inclusion uses identity_judgment or mechanical legal_name_variant to link billing billed_name to contract; association field maps identity_judgment SAME_ENTITY→asserted and any other/missing billing↔contract judgment→unresolved. UNRESOLVED association does not exclude the invoice row.",
+      "completeness_assumptions": "Every represented billed invoice linked (asserted or unresolved) to an ACTIVE contract with at least one ACCEPT acquisition_clause_judgment kind listed in contracts/purpose_a.json is emitted; sorted by invoice_id.",
+      "deterministic_computation": "Cross invoice_record with contract_record where active_contract_judgment=ACTIVE (ACCEPT), acquisition_clause_judgment has ACCEPT on an allowed kind, and billing↔contract link holds via identity_judgment tuple or legal_name_variant(billed_name, counterparty_name); render per contracts/purpose_a.json.",
+      "required_premise": [
+        "active_contract_judgment disposition for each candidate contract (from 05_dispositions.json)",
+        "acquisition_clause_judgment ACCEPT on at least one allowed kind per qualifying contract (from 05_dispositions.json)",
+        "identity_judgment disposition for billing↔contract pairs when present (from world.sqlite groundings / 05_dispositions.json)"
+      ],
+      "optional_enrichment": [
+        "legal_name_variant enables invoice↔contract candidate linkage when no identity_judgment billing↔contract tuple exists",
+        "typed_identifier and invoice_tax_identifier may support connectivity but are not required for row emission"
+      ],
+      "blocking_unresolved_state": [
+        "active_contract_judgment UNRESOLVED blocks contract from qualifying",
+        "no ACCEPT acquisition_clause_judgment on any allowed kind blocks contract from qualifying"
+      ],
+      "non_blocking_unresolved_state": [
+        "identity_judgment UNRESOLVED on billing↔contract still qualifies the invoice row with association=unresolved",
+        "acquisition_clause_judgment UNRESOLVED on individual kinds does not block when another allowed kind is ACCEPT"
+      ]
+    },
+    {
+      "output_relation": "purpose_b_reconciliation_link",
+      "required_input_relations": [
+        "identity_judgment"
+      ],
+      "optional_enrichment_relations": [
+        "typed_identifier",
+        "legal_name_variant"
+      ],
+      "epistemic_behavior": "Epistemic field copies identity_judgment disposition (SAME_ENTITY, DISTINCT, UNRESOLVED) with contracts/purpose_b.json mapping; pairs emitted in class_rank orientation (crm < billing < contract < registry).",
+      "completeness_assumptions": "Emit every identity_judgment tuple admitted to world.sqlite that satisfies Purpose B connectivity (required CRM–billing–contract–registry links for commercially relevant relationships); sorted by left then right.",
+      "deterministic_computation": "Read identity_judgment from world.sqlite; orient (left,right) by class_rank; map disposition to epistemic output field.",
+      "required_premise": [
+        "identity_judgment dispositions recorded in assertion grounding detail (from 05_dispositions.json via P6 admission)"
+      ],
+      "optional_enrichment": [
+        "legal_name_variant informed candidate generation upstream but does not substitute for emitted identity_judgment links"
+      ],
+      "blocking_unresolved_state": [],
+      "non_blocking_unresolved_state": [
+        "identity_judgment UNRESOLVED is a first-class output epistemic value; silence on a pair is not DISTINCT"
+      ]
+    },
+    {
+      "output_relation": "purpose_c_commercial_dependency",
+      "required_input_relations": [
+        "contract_record",
+        "open_invoice",
+        "invoice_record",
+        "identity_judgment",
+        "legal_name_variant"
+      ],
+      "optional_enrichment_relations": [
+        "typed_identifier"
+      ],
+      "epistemic_behavior": "Contract-centric row when ACTIVE and at least one ACCEPT obligation_kind_judgment; status=dependent only when current-relationship leg and qualifying-obligation leg hold and billing↔contract identity_judgment is SAME_ENTITY; otherwise status=unresolved when blocked solely by identity uncertainty.",
+      "completeness_assumptions": "One row per ACTIVE contract with at least one ACCEPT obligation kind in contracts/purpose_c.json allowed set; sorted by contract_id with obligation_kinds sorted ascending.",
+      "deterministic_computation": "For each qualifying contract, collect ACCEPT obligation kinds, open_invoice_ids linked via identity_judgment or legal_name_variant, evaluate current-relationship (open invoice OR auto_renewal/rolling_term ACCEPT), set status from billing↔contract identity disposition; counterparty uses billing: identifier when linkable.",
+      "required_premise": [
+        "active_contract_judgment disposition (from 05_dispositions.json)",
+        "obligation_kind_judgment ACCEPT dispositions for allowed kinds (from 05_dispositions.json)",
+        "open_invoice and invoice_record for current-relationship leg",
+        "identity_judgment disposition for billing↔contract join when asserting dependent"
+      ],
+      "optional_enrichment": [
+        "legal_name_variant supports invoice↔contract linkage and counterparty billing identifier selection",
+        "typed_identifier provides canonical counterparty string forms"
+      ],
+      "blocking_unresolved_state": [
+        "active_contract_judgment REJECT/INACTIVE excludes the contract row",
+        "no ACCEPT obligation_kind_judgment excludes the contract row",
+        "identity_judgment UNRESOLVED on billing↔contract blocks status=dependent"
+      ],
+      "non_blocking_unresolved_state": [
+        "identity_judgment UNRESOLVED still emits a dependency row with status=unresolved when obligation and activity premises are met",
+        "obligation_kind_judgment UNRESOLVED on one kind does not block when another allowed kind is ACCEPT",
+        "open_invoice_ids may be empty when auto_renewal or rolling_term satisfies the current-relationship leg"
+      ]
+    }
+  ]
+}
