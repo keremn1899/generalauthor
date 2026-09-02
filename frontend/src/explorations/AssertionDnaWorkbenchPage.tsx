@@ -133,7 +133,7 @@ const SPECIMENS: Specimen[] = [
         filamentEdge("e", "new", "old", paint, p, {
           label: "acceptable_replacement",
           named: focused || p.namedAtRest,
-          semantic: true,
+          kind: "semantic",
         }),
       ],
     }),
