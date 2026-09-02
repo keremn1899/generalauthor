@@ -42,6 +42,8 @@ export const MAX_FIELD_NODES = 150;
 const RING_RADIUS = 190;
 const RING_TIER = 120;
 const CHIP_INSET = 0.55;
+/** How far apart two plates have to be before they are two plates. */
+const PLATE_CLEARANCE = 34;
 
 export type Point = { x: number; y: number };
 
@@ -63,6 +65,21 @@ export type FieldAssertion = {
   scalars: { role: string; value: unknown }[];
 };
 
+/**
+ * An obligation on the field: a tuple a purpose asked for and the world does
+ * not assert (§8.7).
+ *
+ * It has no assertion id because there is no assertion — that is the whole
+ * content of the mark — so it is keyed by the relation and its values, which is
+ * the only identity an unresolved thing has.
+ */
+export type FieldDemand = {
+  key: string;
+  relation: string;
+  spokes: { role: string; id: string }[];
+  scalars: { role: string; value: unknown }[];
+};
+
 export type FieldBond = {
   assertion_id: string;
   relation: string;
@@ -74,6 +91,7 @@ export type FieldBond = {
 export type WorkingSet = {
   referents: Map<string, FieldReferent>;
   assertions: Map<string, FieldAssertion>;
+  demands: Map<string, FieldDemand>;
   bonds: FieldBond[];
   positions: Map<string, Point>;
   /** relation names already expanded from a given referent, so a second click
@@ -85,6 +103,7 @@ export function emptySet(): WorkingSet {
   return {
     referents: new Map(),
     assertions: new Map(),
+    demands: new Map(),
     bonds: [],
     positions: new Map(),
     expanded: new Set(),
@@ -92,7 +111,7 @@ export function emptySet(): WorkingSet {
 }
 
 export function fieldSize(set: WorkingSet): number {
-  return set.referents.size + set.assertions.size;
+  return set.referents.size + set.assertions.size + set.demands.size;
 }
 
 export function expansionKey(referentId: string, relation: string): string {
@@ -111,6 +130,7 @@ function clone(set: WorkingSet): WorkingSet {
   return {
     referents: new Map(set.referents),
     assertions: new Map(set.assertions),
+    demands: new Map(set.demands),
     bonds: [...set.bonds],
     positions: new Map(set.positions),
     expanded: new Set(set.expanded),
@@ -206,27 +226,83 @@ export function place(set: WorkingSet, input: PlacementInput): WorkingSet {
   const spokes = input.roles
     .filter((role) => role.referent)
     .map((role) => String(input.tuple.values[role.name]));
-  const anchor = spokes.find((id) => next.referents.has(id));
+  const anchor = anchorFor(next, spokes, input.labels);
+  if (!anchor) return set;
 
-  if (!anchor) {
-    const first = spokes[0];
-    if (!first) return set;
-    next.referents.set(first, { id: first, label: input.labels.get(first) ?? first });
-    next.positions.set(
-      first,
-      next.positions.size
-        ? placeAround(next.positions, { x: 0, y: 0 }, next.referents.size, 0)
-        : { x: 0, y: 0 },
-    );
-  }
-
-  fold(
-    next,
-    { ...input, anchor: anchor ?? spokes[0] },
-    countAround(set, anchor ?? spokes[0]),
-    0,
-  );
+  fold(next, { ...input, anchor }, countAround(set, anchor), 0);
   return next;
+}
+
+export type DemandPlacement = {
+  /** The obligation's identity, since an unresolved tuple has no assertion id. */
+  key: string;
+  relation: string;
+  roles: WorldRole[];
+  values: Record<string, unknown>;
+  labels: Map<string, string | null>;
+};
+
+/**
+ * Put one unresolved obligation on the field (§8.7, §9).
+ *
+ * An obligation is drawn as a standing hollow chip with a dotted spoke per
+ * role, at every arity — it never collapses onto a bond the way a binary
+ * assertion does, and that is deliberate rather than a shortcut. A bond is a
+ * line between two referents saying they are joined; there is no such line to
+ * draw here, because nothing has been asserted. Drawing one and marking it
+ * somehow would be the front end implying a connection the world has not made,
+ * which is the same error as implying falsehood from absence.
+ */
+export function placeDemand(set: WorkingSet, input: DemandPlacement): WorkingSet {
+  if (set.demands.has(input.key)) return set;
+  const next = clone(set);
+  const referentRoles = input.roles.filter((role) => role.referent);
+  const spokes = referentRoles.map((role) => ({
+    role: role.name,
+    id: String(input.values[role.name]),
+  }));
+  const anchor = anchorFor(next, spokes.map((spoke) => spoke.id), input.labels);
+  if (!anchor) return set;
+  const anchorAt = next.positions.get(anchor) ?? { x: 0, y: 0 };
+
+  attach(next, spokes, anchor, anchorAt, countAround(set, anchor), 0, input.labels);
+  next.demands.set(input.key, {
+    key: input.key,
+    relation: input.relation,
+    spokes,
+    scalars: input.roles
+      .filter((role) => !role.referent)
+      .map((role) => ({ role: role.name, value: input.values[role.name] })),
+  });
+  next.positions.set(input.key, plateAt(next, anchorAt, spokes));
+  return next;
+}
+
+/**
+ * Which mark this tuple hangs off.
+ *
+ * A referent already on the field when there is one, so a tuple picked out of a
+ * list lands beside the neighborhood being read rather than somewhere else on
+ * the canvas. With nothing to hang off, the first referent takes the middle of
+ * an empty field or a free slot on a busy one, exactly as a seed would.
+ */
+function anchorFor(
+  next: WorkingSet,
+  spokes: string[],
+  labels: Map<string, string | null>,
+): string | null {
+  const present = spokes.find((id) => next.referents.has(id));
+  if (present) return present;
+  const first = spokes[0];
+  if (!first) return null;
+  next.referents.set(first, { id: first, label: labels.get(first) ?? first });
+  next.positions.set(
+    first,
+    next.positions.size
+      ? placeAround(next.positions, { x: 0, y: 0 }, next.referents.size, 0)
+      : { x: 0, y: 0 },
+  );
+  return first;
 }
 
 /**
@@ -259,20 +335,7 @@ function fold(
     value: tuple.values[role.name],
   }));
 
-  // Every referent in the tuple joins the field, including the ones that were
-  // already there — a tuple whose partners are all present adds a bond and no
-  // discs, which is how a neighborhood closes up on itself instead of growing a
-  // second copy of what you can already see.
-  for (const spoke of spokes) {
-    if (next.referents.has(spoke.id)) continue;
-    next.referents.set(spoke.id, {
-      id: spoke.id,
-      label: input.labels.get(spoke.id) ?? spoke.id,
-      via: input.anchor,
-    });
-    next.positions.set(spoke.id, placeAround(next.positions, anchorAt, taken, placed));
-    placed += 1;
-  }
+  placed = attach(next, spokes, input.anchor, anchorAt, taken, placed, input.labels);
 
   if (projection === "bond" && spokes.length === 2) {
     if (!next.bonds.some((bond) => bond.assertion_id === tuple.assertion_id)) {
@@ -295,8 +358,49 @@ function fold(
     spokes,
     scalars,
   });
-  // The plate sits between the marks it joins, pulled in from their centroid so
-  // its spokes read as short and its name does not land on a disc.
+  next.positions.set(tuple.assertion_id, plateAt(next, anchorAt, spokes));
+  return placed;
+}
+
+/**
+ * Bring a tuple's referents onto the field, returning how many were new.
+ *
+ * Every referent in the tuple joins, including the ones that were already there
+ * — a tuple whose partners are all present adds its plate and no discs, which
+ * is how a neighborhood closes up on itself instead of growing a second copy of
+ * what you can already see.
+ */
+function attach(
+  next: WorkingSet,
+  spokes: { role: string; id: string }[],
+  anchor: string,
+  anchorAt: Point,
+  taken: number,
+  placed: number,
+  labels?: Map<string, string | null>,
+): number {
+  for (const spoke of spokes) {
+    if (next.referents.has(spoke.id)) continue;
+    next.referents.set(spoke.id, {
+      id: spoke.id,
+      label: labels?.get(spoke.id) ?? spoke.id,
+      via: anchor,
+    });
+    next.positions.set(spoke.id, placeAround(next.positions, anchorAt, taken, placed));
+    placed += 1;
+  }
+  return placed;
+}
+
+/**
+ * Where a plate sits: between the marks it joins, pulled in from their centroid
+ * so its spokes read as short and its name does not land on a disc.
+ */
+function plateAt(
+  next: WorkingSet,
+  anchorAt: Point,
+  spokes: { id: string }[],
+): Point {
   const points = spokes
     .map((spoke) => next.positions.get(spoke.id))
     .filter((point): point is Point => Boolean(point));
@@ -306,11 +410,28 @@ function fold(
         y: points.reduce((sum, p) => sum + p.y, 0) / points.length,
       }
     : anchorAt;
-  next.positions.set(tuple.assertion_id, {
+  const at = {
     x: Math.round(anchorAt.x + (centre.x - anchorAt.x) * CHIP_INSET),
     y: Math.round(anchorAt.y + (centre.y - anchorAt.y) * CHIP_INSET),
-  });
-  return placed;
+  };
+  // Two tuples over nearly the same referents land in nearly the same place —
+  // an obligation and the assertion that would answer it, say, which is exactly
+  // the pair someone opens the frontier to compare. Stepped off each other
+  // deterministically, the same one nudge `placeAround` makes, so the two are
+  // both readable without pretending this is a layout engine.
+  for (let step = 0; step < 6; step += 1) {
+    let clash = false;
+    for (const existing of next.positions.values()) {
+      if (Math.hypot(existing.x - at.x, existing.y - at.y) < PLATE_CLEARANCE) {
+        clash = true;
+        break;
+      }
+    }
+    if (!clash) break;
+    at.x += 26;
+    at.y += 22;
+  }
+  return at;
 }
 
 /** How many marks already sit around this one, so the next fan starts clear. */
@@ -332,6 +453,12 @@ export function drop(set: WorkingSet, id: string): WorkingSet {
     if (assertion.spokes.some((spoke) => spoke.id === id)) {
       next.assertions.delete(assertionId);
       next.positions.delete(assertionId);
+    }
+  }
+  for (const [key, demand] of next.demands) {
+    if (demand.spokes.some((spoke) => spoke.id === id)) {
+      next.demands.delete(key);
+      next.positions.delete(key);
     }
   }
   for (const key of [...next.expanded]) {

@@ -29,6 +29,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { worldApi, type WorldRelation, type WorldRole, type WorldTuple } from "../api/world";
+import { useRowWindow } from "./rowWindow";
 
 /** Fixed, because a windowed table needs to know where a row is without asking. */
 const ROW_HEIGHT = 26;
@@ -68,9 +69,8 @@ export function RelationTable({
   const [roles, setRoles] = useState<WorldRole[]>(relation.roles);
   const [pages, setPages] = useState<Map<number, WorldTuple[]>>(new Map());
   const [problem, setProblem] = useState<string | null>(null);
-  const [scrollTop, setScrollTop] = useState(0);
-  const [height, setHeight] = useState(320);
-  const scrollerRef = useRef<HTMLDivElement>(null);
+  const window_ = useRowWindow(total, ROW_HEIGHT, OVERSCAN);
+  const { first, last, reset } = window_;
   /** Pages already asked for, so a scroll does not re-ask on every frame. */
   const asked = useRef(new Set<number>());
 
@@ -104,24 +104,8 @@ export function RelationTable({
     asked.current = new Set();
     setPages(new Map());
     setProblem(null);
-    setScrollTop(0);
-    if (scrollerRef.current) scrollerRef.current.scrollTop = 0;
-  }, [buffer]);
-
-  useEffect(() => {
-    const element = scrollerRef.current;
-    if (!element) return;
-    const observer = new ResizeObserver(() => setHeight(element.clientHeight));
-    observer.observe(element);
-    setHeight(element.clientHeight);
-    return () => observer.disconnect();
-  }, []);
-
-  const first = Math.max(0, Math.floor(scrollTop / ROW_HEIGHT) - OVERSCAN);
-  const last = Math.min(
-    total,
-    Math.ceil((scrollTop + height) / ROW_HEIGHT) + OVERSCAN,
-  );
+    reset();
+  }, [buffer, reset]);
 
   // Fetch whatever page the window is standing on, and no other. `asked` is a
   // ref rather than state because wanting a page and holding it are different
@@ -175,9 +159,6 @@ export function RelationTable({
     [roles],
   );
 
-  const window_: number[] = [];
-  for (let index = first; index < last; index += 1) window_.push(index);
-
   return (
     <section className="table" aria-label={`${relation.name} extension`}>
       <header className="table__bar">
@@ -227,13 +208,9 @@ export function RelationTable({
 
       {problem ? <p className="table__problem">{problem}</p> : null}
 
-      <div
-        className="table__scroll"
-        ref={scrollerRef}
-        onScroll={(event) => setScrollTop(event.currentTarget.scrollTop)}
-      >
+      <div className="table__scroll" ref={window_.ref} onScroll={window_.onScroll}>
         <div className="table__spacer" style={{ height: total * ROW_HEIGHT }}>
-          {window_.map((index) => {
+          {window_.indices.map((index) => {
             const tuple = rowAt(index);
             return (
               <div

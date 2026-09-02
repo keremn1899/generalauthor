@@ -78,7 +78,13 @@ export function SchemaCanvas({
     graph.on("canvas:click", () => onFocus(null));
 
     graphRef.current = graph;
-    void graph.render();
+    // Unmounting mid-render is not a failure. Placing the first thing on the
+    // field replaces this canvas with the field's, and G6 rejects whatever draw
+    // was in flight with "the graph instance has been destroyed" — a real
+    // error, reported, only if this graph is still the current one.
+    void graph.render().catch((problem: unknown) => {
+      if (graphRef.current === graph) console.error(problem);
+    });
     return () => {
       graphRef.current = null;
       graph.destroy();
@@ -95,7 +101,9 @@ export function SchemaCanvas({
       const graph = graphRef.current;
       if (!graph || !host.clientWidth || !host.clientHeight) return;
       graph.resize(host.clientWidth, host.clientHeight);
-      void graph.fitView();
+      void graph.fitView().catch((problem: unknown) => {
+        if (graphRef.current === graph) console.error(problem);
+      });
     });
     observer.observe(host);
     return () => observer.disconnect();

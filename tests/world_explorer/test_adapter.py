@@ -171,6 +171,47 @@ def test_unresolved_obligation_is_not_a_denial(adapter):
     assert all(item["assertion_id"] is None for item in unresolved)
 
 
+def test_a_met_obligation_names_the_assertion_that_meets_it(world_path: Path, tmp_path):
+    """A frontier is only readable if it says what has been answered, too.
+
+    The obligation set is a claim about what some purpose wanted, not a second
+    kind of tuple, so an obligation the world does answer has to resolve to the
+    *real* assertion — the one with grounding and an origin — rather than to a
+    second record of the same fact. That is what lets the front end draw a met
+    obligation as an ordinary assertion and an unmet one as a hollow mark.
+    """
+    met = tmp_path / "met.sqlite"
+    met.write_bytes(world_path.read_bytes())
+    origins = world_path.with_suffix(".sqlite.origins.json")
+    if origins.exists():
+        met.with_suffix(".sqlite.origins.json").write_bytes(origins.read_bytes())
+    document = json.loads(world_path.with_suffix(".demand.json").read_text())
+    answered = {
+        "new_part": "part:X110",
+        "old_part": "part:X160",
+        "context": "context:outdoor_enclosure",
+    }
+    document["obligations"].append(
+        {
+            "demanded_by": {"kind": "purpose", "name": "viable_replacement", "revision": 1},
+            "relation": "acceptable_replacement",
+            "values": answered,
+        }
+    )
+    met.with_suffix(".demand.json").write_text(json.dumps(document))
+
+    with WorldExplorerAdapter(met) as opened:
+        obligations = opened.demand()["obligations"]
+        asserted = [item for item in obligations if item["state"] == "ASSERTED"]
+        assert [item["values"] for item in asserted] == [answered]
+        found = opened.assertion(asserted[0]["assertion_id"])
+        assert found["relation"] == "acceptable_replacement"
+        assert found["values"] == answered
+        # And the unmet one is still unmet: answering a sibling case does not
+        # quietly answer the case nobody asserted.
+        assert any(item["state"] == "UNRESOLVED" for item in obligations)
+
+
 def test_demand_is_absent_rather_than_empty_without_a_purpose(world_path: Path, tmp_path):
     bare = tmp_path / "bare.sqlite"
     bare.write_bytes(world_path.read_bytes())

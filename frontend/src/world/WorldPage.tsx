@@ -28,6 +28,7 @@ import {
 import {
   worldApi,
   type WorldAssertion,
+  type WorldDemand,
   type WorldOverview,
   type WorldReferent,
   type WorldRelation,
@@ -39,6 +40,7 @@ import {
   GRAPH_DNA_CHROME,
   type ThemeMode,
 } from "../styles/graphDna";
+import { FrontierTable, type Obligation } from "./FrontierTable";
 import { MARK_DEFAULTS } from "./marks";
 import { RelationTable } from "./RelationTable";
 import { SchemaCanvas } from "./SchemaCanvas";
@@ -51,6 +53,7 @@ import {
   fieldSize,
   MAX_FIELD_NODES,
   place,
+  placeDemand,
   seed,
   type WorkingSet,
 } from "./workingSet";
@@ -188,6 +191,79 @@ function AssertionPanel({
   );
 }
 
+/**
+ * §8.7, the unresolved inspector.
+ *
+ * The one thing this panel must never do is read as a denial. A missing
+ * positive assertion is not a false one — the world has not been asked, or has
+ * been asked and could not answer — so the state line says what is absent, the
+ * evidence line says what is not recorded, and neither is dressed as a result.
+ * §16: no write path, no action, no "resolve this" button. This product reads.
+ */
+function DemandPanel({
+  obligation,
+  demand,
+  roles,
+  onTable,
+}: {
+  obligation: Obligation | null;
+  demand: WorldDemand | null;
+  /** Role order, since an obligation's values are a JSON object. */
+  roles: string[];
+  onTable: (relation: string) => void;
+}) {
+  if (!obligation) return <p className="world__hint">Reading…</p>;
+  const by = obligation.demanded_by as { name?: string; revision?: number };
+  return (
+    <>
+      <h2>{obligation.relation}</h2>
+      <p className="world__mode">
+        {obligation.state === "UNRESOLVED" ? "unresolved" : "asserted"} · demanded
+      </p>
+      <ol className="world__roles">
+        {(roles.length ? roles : Object.keys(obligation.values)).map((role) => (
+          <li key={role}>
+            <b>{role}</b>
+            <span>{String(obligation.values[role] ?? "—")}</span>
+          </li>
+        ))}
+      </ol>
+      <h3>state</h3>
+      <p className="world__note">
+        {obligation.state === "UNRESOLVED"
+          ? "No positive assertion. A missing assertion is not a denial — this world says nothing about this tuple, which is not the same as saying it is false."
+          : "Asserted by this world."}
+      </p>
+      <h3>demanded by</h3>
+      <p className="world__note">
+        {by.name ?? demand?.purpose.id}
+        {by.revision ? ` rev ${by.revision}` : ""}
+      </p>
+      {demand?.purpose.statement ? (
+        <p className="world__note">{demand.purpose.statement}</p>
+      ) : null}
+      {demand?.rule ? (
+        <>
+          <h3>why it exists</h3>
+          <p className="world__note">{demand.rule}</p>
+        </>
+      ) : null}
+      <h3>available evidence</h3>
+      <p className="world__note">
+        None recorded — this world carries no evidence-selection state for
+        obligations.
+      </p>
+      <button
+        type="button"
+        className="world__drop"
+        onClick={() => onTable(obligation.relation)}
+      >
+        open {obligation.relation}
+      </button>
+    </>
+  );
+}
+
 function ReferentPanel({
   detail,
   set,
@@ -271,12 +347,17 @@ export function WorldPage() {
   const [referent, setReferent] = useState<WorldReferent | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   /**
-   * The extension open under the canvas: a relation, and the referent it was
-   * opened from when it was opened from one.
+   * What is open under the canvas. One slot, because the drawer answers one
+   * question at a time: an extension — a relation, and the referent it was
+   * opened from when it was opened from one — or the frontier.
    */
-  const [table, setTable] = useState<
-    { relation: string; subject: { id: string; label: string } | null } | null
+  const [drawer, setDrawer] = useState<
+    | { kind: "relation"; relation: string; subject: { id: string; label: string } | null }
+    | { kind: "frontier" }
+    | null
   >(null);
+  const [demand, setDemand] = useState<WorldDemand | null>(null);
+  const [demandProblem, setDemandProblem] = useState<string | null>(null);
 
   const labels = useRef(new Map<string, string | null>());
 
@@ -303,6 +384,13 @@ export function WorldPage() {
   useEffect(() => {
     setNotice(null);
     if (!selection) {
+      setAssertion(null);
+      setReferent(null);
+      return;
+    }
+    if (selection.kind === "demand") {
+      // Nothing to read: an obligation is not in the world, so there is no
+      // record of it to fetch. The frontier document already holds it.
       setAssertion(null);
       setReferent(null);
       return;
@@ -372,7 +460,7 @@ export function WorldPage() {
    * this is also how a field starts: the first row placed seeds it.
    */
   const onFocusRow = useCallback((roles: WorldRole[], tuple: WorldTuple) => {
-    const relation = table?.relation;
+    const relation = drawer?.kind === "relation" ? drawer.relation : null;
     if (!relation) return;
     const schema = relations.find((item) => item.name === relation);
     setSet((current) =>
@@ -385,12 +473,93 @@ export function WorldPage() {
       }),
     );
     setSelection({ kind: "assertion", id: tuple.assertion_id });
-  }, [relations, table]);
+  }, [relations, drawer]);
 
-  /** Assertion ids on the field, so the table can mark what is already placed. */
+  /**
+   * The obligation set, read once and only when it is asked for.
+   *
+   * Not part of the opening fetch: resolving every obligation against the world
+   * is work nobody has asked for until they open the frontier, and the overview
+   * already carries the counts the vocabulary panel prints.
+   */
+  useEffect(() => {
+    if (drawer?.kind !== "frontier" || demand) return;
+    let cancelled = false;
+    worldApi
+      .demand()
+      .then((found) => !cancelled && setDemand(found))
+      .catch((problem: Error) => !cancelled && setDemandProblem(problem.message));
+    return () => {
+      cancelled = true;
+    };
+  }, [drawer, demand]);
+
+  /** Obligations by the key the field knows them under. */
+  const obligations = useMemo(() => {
+    const out = new Map<string, Obligation>();
+    (demand?.obligations ?? []).forEach((obligation, index) =>
+      out.set(`demand#${index}`, { ...obligation, key: `demand#${index}` }),
+    );
+    return out;
+  }, [demand]);
+
+  /**
+   * An obligation is put on the field (§8.7).
+   *
+   * Unresolved, it lands as a hollow chip: there is no assertion to read, so
+   * the mark *is* the obligation. Resolved, it is an ordinary assertion and is
+   * drawn as one — the frontier's own record of it is a claim about what a
+   * purpose wanted, not a second kind of tuple — so the assertion is read and
+   * placed exactly as a table row would place it.
+   */
+  const onFocusObligation = useCallback(
+    async (obligation: Obligation) => {
+      const schema = relations.find((item) => item.name === obligation.relation);
+      if (!schema) {
+        setNotice(`${obligation.relation} is not in this world's vocabulary.`);
+        return;
+      }
+      if (obligation.state === "ASSERTED" && obligation.assertion_id) {
+        try {
+          const found = await worldApi.assertion(obligation.assertion_id);
+          setSet((current) =>
+            place(current, {
+              relation: found.relation,
+              mode: found.mode,
+              roles: found.roles,
+              tuple: {
+                assertion_id: obligation.assertion_id as string,
+                origin: found.origin,
+                values: found.values,
+              },
+              labels: labels.current,
+            }),
+          );
+          setSelection({ kind: "assertion", id: obligation.assertion_id });
+        } catch (problem) {
+          setNotice((problem as Error).message);
+        }
+        return;
+      }
+      setSet((current) =>
+        placeDemand(current, {
+          key: obligation.key,
+          relation: obligation.relation,
+          roles: schema.roles,
+          values: obligation.values,
+          labels: labels.current,
+        }),
+      );
+      setSelection({ kind: "demand", id: obligation.key });
+    },
+    [relations],
+  );
+
+  /** What is already on the field, so a row can say so — see §11. */
   const present = useMemo(() => {
     const ids = new Set<string>(set.assertions.keys());
     for (const bond of set.bonds) ids.add(bond.assertion_id);
+    for (const key of set.demands.keys()) ids.add(key);
     return ids;
   }, [set]);
 
@@ -403,7 +572,10 @@ export function WorldPage() {
   const style = chromeCssVariables(GRAPH_DNA_CHROME[mode]) as CSSProperties;
   const onField = fieldSize(set) > 0;
   const relation = relations.find((item) => item.name === focusedRelation) ?? null;
-  const extension = relations.find((item) => item.name === table?.relation) ?? null;
+  const extension =
+    drawer?.kind === "relation"
+      ? relations.find((item) => item.name === drawer.relation) ?? null
+      : null;
 
   return (
     <main className="world" style={style} data-mode={mode}>
@@ -411,6 +583,22 @@ export function WorldPage() {
         <span className="world__id">{overview?.world_id ?? "world"}</span>
         <span className="world__rev">{overview ? `rev ${overview.revision}` : ""}</span>
         <Find directory={directory} onPick={onSeed} />
+        {overview?.demand ? (
+          // Reachable from both modes, and from the field especially: the
+          // question "what is this world short of" does not stop being worth
+          // asking once you are reading a neighborhood.
+          <button
+            type="button"
+            data-active={drawer?.kind === "frontier"}
+            onClick={() =>
+              setDrawer((current) =>
+                current?.kind === "frontier" ? null : { kind: "frontier" },
+              )
+            }
+          >
+            frontier
+          </button>
+        ) : null}
         {onField ? (
           <>
             <span className="world__rev">
@@ -462,25 +650,52 @@ export function WorldPage() {
                 onFocus={setFocusedRelation}
               />
             )}
-            {extension && table ? (
+            {extension && drawer?.kind === "relation" ? (
               <RelationTable
                 key={extension.name}
                 relation={extension}
-                subject={table.subject}
+                subject={drawer.subject}
                 present={present}
                 onFocus={onFocusRow}
-                onWiden={() => setTable({ relation: extension.name, subject: null })}
-                onClose={() => setTable(null)}
+                onWiden={() =>
+                  setDrawer({ kind: "relation", relation: extension.name, subject: null })
+                }
+                onClose={() => setDrawer(null)}
+              />
+            ) : drawer?.kind === "frontier" ? (
+              <FrontierTable
+                demand={demand}
+                relations={relations}
+                problem={demandProblem}
+                present={present}
+                onFocus={onFocusObligation}
+                onClose={() => setDrawer(null)}
               />
             ) : null}
           </div>
 
           <aside className="world__panel">
             {notice ? <p className="world__notice">{notice}</p> : null}
-            {onField && selection?.kind === "assertion" ? (
+            {onField && selection?.kind === "demand" ? (
+              <DemandPanel
+                obligation={obligations.get(selection.id) ?? null}
+                demand={demand}
+                roles={
+                  relations
+                    .find(
+                      (item) =>
+                        item.name === obligations.get(selection.id)?.relation,
+                    )
+                    ?.roles.map((role) => role.name) ?? []
+                }
+                onTable={(name) =>
+                  setDrawer({ kind: "relation", relation: name, subject: null })
+                }
+              />
+            ) : onField && selection?.kind === "assertion" ? (
               <AssertionPanel
                 assertion={assertion}
-                onTable={(name) => setTable({ relation: name, subject: null })}
+                onTable={(name) => setDrawer({ kind: "relation", relation: name, subject: null })}
               />
             ) : onField && selection?.kind === "referent" ? (
               <ReferentPanel
@@ -488,7 +703,8 @@ export function WorldPage() {
                 set={set}
                 onExpand={onExpand}
                 onTable={(name) =>
-                  setTable({
+                  setDrawer({
+                    kind: "relation",
                     relation: name,
                     subject: referent
                       ? { id: referent.id, label: referent.label || referent.id }
@@ -532,7 +748,9 @@ export function WorldPage() {
                 <button
                   type="button"
                   className="world__drop"
-                  onClick={() => setTable({ relation: relation.name, subject: null })}
+                  onClick={() =>
+                    setDrawer({ kind: "relation", relation: relation.name, subject: null })
+                  }
                 >
                   open extension
                 </button>
@@ -557,12 +775,16 @@ export function WorldPage() {
                   </dl>
                 ) : null}
                 {overview?.demand ? (
-                  <p className="world__note">
-                    <b>{overview.demand.purpose.id}</b> demands{" "}
+                  <button
+                    type="button"
+                    className="world__drop"
+                    onClick={() => setDrawer({ kind: "frontier" })}
+                  >
+                    {overview.demand.purpose.id} demands{" "}
                     {overview.demand.demanded} case
-                    {overview.demand.demanded === 1 ? "" : "s"};{" "}
-                    {overview.demand.obligations} unresolved.
-                  </p>
+                    {overview.demand.demanded === 1 ? "" : "s"} ·{" "}
+                    {overview.demand.obligations} unresolved
+                  </button>
                 ) : (
                   <p className="world__note">
                     No purpose loaded — unresolved obligations cannot be shown.
@@ -580,7 +802,9 @@ export function WorldPage() {
                       <button
                         type="button"
                         onMouseEnter={() => setFocusedRelation(item.name)}
-                        onClick={() => setTable({ relation: item.name, subject: null })}
+                        onClick={() =>
+                          setDrawer({ kind: "relation", relation: item.name, subject: null })
+                        }
                       >
                         <b>{item.name}</b>
                         <span>{item.count}</span>

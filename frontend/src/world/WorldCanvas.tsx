@@ -46,6 +46,8 @@ import type { WorkingSet } from "./workingSet";
 export type CanvasSelection =
   | { kind: "referent"; id: string }
   | { kind: "assertion"; id: string }
+  /** An obligation, which has no assertion to read — see §8.7. */
+  | { kind: "demand"; id: string }
   | null;
 
 /**
@@ -112,6 +114,13 @@ export function WorldCanvas({
       if (!involved) continue;
       touching.add(assertion.assertion_id);
       for (const spoke of assertion.spokes) touching.add(spoke.id);
+    }
+    for (const demand of set.demands.values()) {
+      const involved =
+        demand.key === active || demand.spokes.some((spoke) => spoke.id === active);
+      if (!involved) continue;
+      touching.add(demand.key);
+      for (const spoke of demand.spokes) touching.add(spoke.id);
     }
     for (const bond of set.bonds) {
       if (bond.source !== active && bond.target !== active && bond.assertion_id !== active) {
@@ -181,6 +190,39 @@ export function WorldCanvas({
       });
     }
 
+    // §8.7 and §9: an obligation is a hollow, dotted chip with dotted spokes —
+    // present enough to be found, unfilled because nothing has filled it. It is
+    // never drawn as a bond, at any arity: a line between two discs is a claim
+    // that they are joined, and the point of this mark is that no such claim
+    // has been made.
+    for (const demand of set.demands.values()) {
+      const at = set.positions.get(demand.key) ?? { x: 0, y: 0 };
+      nodes.push(
+        chipNode(
+          demand.key,
+          at.x,
+          at.y,
+          demand.relation,
+          "unresolved",
+          paintFor(demand.key),
+          params,
+        ),
+      );
+      demand.spokes.forEach((spoke, index) => {
+        if (!set.referents.has(spoke.id)) return;
+        edges.push(
+          spokeEdge(
+            `${demand.key}:${index}`,
+            spoke.id,
+            demand.key,
+            paintFor(demand.key),
+            params,
+            { role: spoke.role, showRole: named(demand.key), dotted: true },
+          ),
+        );
+      });
+    }
+
     for (const bond of set.bonds) {
       if (!set.referents.has(bond.source) || !set.referents.has(bond.target)) continue;
       edges.push(
@@ -234,26 +276,42 @@ export function WorldCanvas({
     };
     const subject = (id: string | null) =>
       id && !id.startsWith("shelf:") ? id : null;
+    /**
+     * The mark an element belongs to.
+     *
+     * A spoke's id is its mark's id with `:index` appended, and cutting at the
+     * *first* colon was wrong for everything: an assertion id is already
+     * `assertion:<digest>`, so a bond's filament resolved to the literal string
+     * "assertion" and hovering or clicking one selected nothing at all. Only
+     * the trailing index is a suffix this surface added, so only that is taken
+     * off.
+     */
+    const markOf = (id: string | null) => (id ? id.replace(/:\d+$/, "") : null);
 
     graph.on("node:pointerenter", (event) => onHover(subject(idOf(event))));
-    graph.on("edge:pointerenter", (event) => {
-      const id = idOf(event);
-      onHover(id ? id.split(":")[0] : null);
-    });
+    graph.on("edge:pointerenter", (event) => onHover(markOf(idOf(event))));
     graph.on("node:pointerleave", () => onHover(null));
     graph.on("edge:pointerleave", () => onHover(null));
     graph.on("node:click", (event) => {
       const id = subject(idOf(event));
       if (!id) return;
+      const current = setRef.current;
       onSelect(
-        setRef.current.assertions.has(id)
+        current.assertions.has(id)
           ? { kind: "assertion", id }
-          : { kind: "referent", id },
+          : current.demands.has(id)
+            ? { kind: "demand", id }
+            : { kind: "referent", id },
       );
     });
     graph.on("edge:click", (event) => {
-      const id = idOf(event);
-      if (id) onSelect({ kind: "assertion", id: id.split(":")[0] });
+      const id = markOf(idOf(event));
+      if (!id) return;
+      onSelect(
+        setRef.current.demands.has(id)
+          ? { kind: "demand", id }
+          : { kind: "assertion", id },
+      );
     });
     graph.on("canvas:click", () => onSelect(null));
     // Dragging is the one interaction that changes state the model owns, so it
@@ -261,7 +319,9 @@ export function WorldCanvas({
     // expansion.
     graph.on("afterdragelement", harvest);
 
-    void graph.render();
+    void graph.render().catch((problem: unknown) => {
+      if (graphRef.current === graph) console.error(problem);
+    });
     // A canvas has no DOM to address, so in development the graph is reachable
     // for driving from the console or a browser-automated check. Synthetic
     // pointer events do not reach the renderer's own picking, which makes this
@@ -283,15 +343,24 @@ export function WorldCanvas({
     if (!graph) return;
     const count = (data.nodes as unknown[]).length;
     graph.setData(data as never);
-    void graph.draw().then(() => {
-      // The *viewport* follows new matter; the marks do not. Growing the field
-      // is the one moment the camera should move — otherwise an expansion
-      // happens somewhere off screen and reads as nothing having happened —
-      // and it is the only moment it does, so an arrangement you made stays
-      // where you left it while you read it.
-      if (count > drawnRef.current) void graph.fitView();
-      drawnRef.current = count;
-    });
+    void graph
+      .draw()
+      .then(() => {
+        if (graphRef.current !== graph) return undefined;
+        // The *viewport* follows new matter; the marks do not. Growing the
+        // field is the one moment the camera should move — otherwise an
+        // expansion happens somewhere off screen and reads as nothing having
+        // happened — and it is the only moment it does, so an arrangement you
+        // made stays where you left it while you read it.
+        const grew = count > drawnRef.current;
+        drawnRef.current = count;
+        return grew ? graph.fitView() : undefined;
+      })
+      .catch((problem: unknown) => {
+        // Same as at mount: a draw in flight when the canvas is torn down is
+        // not something to report.
+        if (graphRef.current === graph) console.error(problem);
+      });
   }, [data]);
 
   useEffect(() => {
