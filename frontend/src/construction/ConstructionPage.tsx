@@ -36,6 +36,7 @@ import {
   type ThemeMode,
 } from "../styles/graphDna";
 import { Docket } from "./Docket";
+import { ArtifactView } from "./ArtifactView";
 import { Obligation } from "./Obligation";
 import { Spine } from "./Spine";
 import "./ConstructionPage.css";
@@ -197,13 +198,23 @@ export function ConstructionPage() {
           selected={pass}
           onSelect={setPass}
         />
-        <Docket
-          docket={docket}
-          selected={selected}
-          problem={problem}
-          onOpen={(id) => setSelected(id === selected ? null : id)}
-        />
-        {opened ? (
+        {pass ? (
+          <ArtifactView
+            pass={pass}
+            actor={actor}
+            onActor={setActor}
+            onClose={() => setPass(null)}
+            onChanged={loadDocket}
+          />
+        ) : (
+          <Docket
+            docket={docket}
+            selected={selected}
+            problem={problem}
+            onOpen={(id) => setSelected(id === selected ? null : id)}
+          />
+        )}
+        {!pass && opened ? (
           <Obligation
             opened={opened}
             actor={actor}
@@ -214,7 +225,7 @@ export function ConstructionPage() {
             onRevert={revert}
             onActor={setActor}
           />
-        ) : (
+        ) : !pass ? (
           <section className="construction__empty">
             <p>
               {problem
@@ -222,7 +233,7 @@ export function ConstructionPage() {
                 : "Open an obligation. The top of the docket is what deciding unblocks the most."}
             </p>
           </section>
-        )}
+        ) : null}
       </div>
     </div>
   );

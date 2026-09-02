@@ -27,11 +27,12 @@ read. It shares the bearer guard, and it is a separate module
 (`construction.py`) for the same reason this app is separate from
 `mcp_server` — nothing in the reader can write, and that is checkable by
 reading its imports rather than by trusting a route. It needs no thread of its
-own: it holds no connection, only files, and its reads are a few milliseconds
-of local JSON.
+own: it holds no long-lived connection; P2's SQLite coverage account opens in
+URI read-only mode and closes in the same call.
 
-Two routes on that plane do write, and they are the only two in this app:
-`/construction/verdict` and `/construction/revert` append to a ledger
+Three routes on that plane do write, and they are the only three in this app:
+`/construction/verdict`, `/construction/admission`, and
+`/construction/revert` append to a ledger
 (`verdicts.py`) held outside both the run and any world. The read-only
 guarantee this app makes is about *worlds*, and it is unchanged — a verdict is
 an input to the next build, and the only path from one to a world tuple is a
@@ -257,11 +258,17 @@ def build_app(
         return {"demand": await session.call(lambda adapter: adapter.demand())}
 
     async def construction_overview(request):
-        return opened().overview(standing().current(), scored())
+        return opened().overview(
+            standing().current(), scored(), standing().current_admissions()
+        )
 
     async def construction_cost(request):
         """§5 — what an intervention here costs, before it is made."""
-        return opened().cost(_required(request, "at"), standing().current())
+        return opened().cost(
+            _required(request, "at"),
+            standing().current(),
+            standing().current_admissions(),
+        )
 
     async def construction_pass(request):
         return opened().pass_artifact(_required(request, "id"))
@@ -286,6 +293,38 @@ def build_app(
         The reverted ones too. §6.4 — there are no silent edits, so the file
         is the record and this route is the file."""
         return {"history": standing().history(_required(request, "id"))}
+
+    async def construction_admissions(request):
+        return {"admissions": standing().current_admissions()}
+
+    async def construction_admission(request):
+        """§6.2 — stage an admission proposal; never mutate the World."""
+        body = await request.json()
+        relation = str(body.get("relation") or "")
+        artifact = opened().pass_artifact("p6").get("document") or {}
+        records = artifact.get("relations") if isinstance(artifact, dict) else []
+        current = next(
+            (
+                item
+                for item in records or []
+                if isinstance(item, dict) and str(item.get("name")) == relation
+            ),
+            None,
+        )
+        if current is None:
+            raise KeyError(f"no relation {relation!r} in P6 admission")
+        proposal = standing().current_admissions().get(relation)
+        supersedes = (proposal or current).get("admission")
+        return standing().admit(
+            relation,
+            str(body.get("admission") or ""),
+            reason=str(body.get("reason") or ""),
+            purpose_independence_test=str(
+                body.get("purpose_independence_test") or ""
+            ),
+            supersedes=str(supersedes) if supersedes else None,
+            actor=str(body.get("actor") or ""),
+        )
 
     async def construction_verdict(request):
         """§6.1 — record one adjudication, or refuse it.
@@ -371,12 +410,18 @@ def build_app(
             Route("/construction/docket", guard(construction_docket)),
             Route("/construction/obligation", guard(construction_obligation)),
             Route("/construction/history", guard(construction_history)),
-            # The only two routes in this app that write, and they write to a
+            Route("/construction/admissions", guard(construction_admissions)),
+            # The only routes in this app that write, and they write to a
             # ledger — no compiled world, no pass artifact. A verdict is an
             # input to the next build.
             Route(
                 "/construction/verdict",
                 guard(construction_verdict),
+                methods=["POST"],
+            ),
+            Route(
+                "/construction/admission",
+                guard(construction_admission),
                 methods=["POST"],
             ),
             Route("/construction/revert", guard(construction_revert), methods=["POST"]),

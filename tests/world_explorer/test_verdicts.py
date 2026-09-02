@@ -163,6 +163,32 @@ def test_the_ledger_is_lines_of_json(ledger):
     assert all(json.loads(line)["actor"] == "kerem" for line in lines)
 
 
+def test_an_admission_change_is_append_only_and_separate(ledger):
+    proposal = ledger.admit(
+        "identity_judgment",
+        "PURPOSE",
+        reason="This relation encodes the active purpose's threshold.",
+        purpose_independence_test="Withdraw the purpose and the threshold disappears.",
+        supersedes="WORLD",
+        actor="kerem",
+    )
+    assert proposal["kind"] == "ADMISSION"
+    assert ledger.current() == {}
+    assert ledger.current_admissions()["identity_judgment"] == proposal
+
+
+def test_an_admission_change_needs_its_test(ledger):
+    with pytest.raises(ValueError, match="purpose_independence_test"):
+        ledger.admit(
+            "identity_judgment",
+            "PURPOSE",
+            reason="Purpose-bound.",
+            purpose_independence_test="",
+            supersedes="WORLD",
+            actor="kerem",
+        )
+
+
 # -- through the app --------------------------------------------------------
 
 
@@ -256,3 +282,26 @@ def test_history_survives_the_revert(client):
 def test_the_write_routes_are_gated(client):
     assert client.post("/construction/verdict", json={}).status_code == 401
     assert client.post("/construction/revert", json={}).status_code == 401
+    assert client.post("/construction/admission", json={}).status_code == 401
+
+
+def test_admission_is_a_proposal_and_stales_only_downstream(client):
+    response = post(
+        client,
+        "/construction/admission",
+        {
+            "relation": "identity_judgment",
+            "admission": "PURPOSE",
+            "reason": "The active purpose supplies this threshold.",
+            "purpose_independence_test": "Withdraw A and the threshold disappears.",
+            "actor": "kerem",
+        },
+    )
+    assert response.status_code == 200
+    assert response.json()["supersedes"] == "WORLD"
+    assert get(client, "/construction/admissions").json()["admissions"][
+        "identity_judgment"
+    ]["admission"] == "PURPOSE"
+    passes = get(client, "/construction").json()["passes"]
+    stale = [entry["pass"] for entry in passes if entry["state"] == "STALE"]
+    assert stale == ["p7", "p8"]

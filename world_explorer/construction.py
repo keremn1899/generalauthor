@@ -35,6 +35,7 @@ absence of a score is itself worth seeing on the spine.
 from __future__ import annotations
 
 import json
+import sqlite3
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -371,12 +372,21 @@ class ConstructionReader:
         return moved
 
     @staticmethod
-    def _intervened(verdicts: dict[str, dict[str, Any]] | None) -> set[str]:
-        """Which passes a human has intervened in. Today a verdict is an
-        adjudication and adjudications are P5's; §6.2's admission change lands
-        at P6 and will arrive here as a second kind rather than a second
-        mechanism."""
-        return {"p5"} if verdicts else set()
+    def _intervened(
+        verdicts: dict[str, dict[str, Any]] | None,
+        admissions: dict[str, dict[str, Any]] | None = None,
+    ) -> set[str]:
+        """Which passes a human has intervened in.
+
+        Adjudications stand at P5 and admission proposals at P6. Both use the
+        same positional staleness mechanism; only their address differs.
+        """
+        intervened: set[str] = set()
+        if verdicts:
+            intervened.add("p5")
+        if admissions:
+            intervened.add("p6")
+        return intervened
 
     def _pass_state(
         self,
@@ -421,7 +431,12 @@ class ConstructionReader:
             return None, ["the scorers did not pass it"]
         return None, ["no scorer has spoken"]
 
-    def cost(self, at: str, verdicts: dict[str, dict[str, Any]] | None = None) -> dict[str, Any]:
+    def cost(
+        self,
+        at: str,
+        verdicts: dict[str, dict[str, Any]] | None = None,
+        admissions: dict[str, dict[str, Any]] | None = None,
+    ) -> dict[str, Any]:
         """§5 — what an intervention at one pass costs, before it is made.
 
         The invalidation rule is positional, not a lookup table: an
@@ -456,7 +471,7 @@ class ConstructionReader:
             "unmeasured": [
                 pass_id for pass_id in invalidates if elapsed.get(pass_id) is None
             ],
-            "standing": sorted(self._intervened(verdicts)),
+            "standing": sorted(self._intervened(verdicts, admissions)),
         }
 
     # -- §12 the routes -----------------------------------------------------
@@ -465,6 +480,7 @@ class ConstructionReader:
         self,
         verdicts: dict[str, dict[str, Any]] | None = None,
         scores: dict[str, Any] | None = None,
+        admissions: dict[str, dict[str, Any]] | None = None,
     ) -> dict[str, Any]:
         """§12's `GET /construction` — passes, states, artifact presence, counts.
 
@@ -473,7 +489,7 @@ class ConstructionReader:
         a campaign keeps its report. A pass with no score is reported unscored,
         never certified.
         """
-        intervened = self._intervened(verdicts)
+        intervened = self._intervened(verdicts, admissions)
         elapsed = self._elapsed()
         graded = scores or {}
 
@@ -570,10 +586,87 @@ class ConstructionReader:
                 "artifact": PASS_ARTIFACTS[pass_id],
                 "items": {item.stem: _load(item) for item in sorted(path.glob("*.json"))},
             }
-        return {
+        answer = {
             "pass": pass_id,
             "artifact": PASS_ARTIFACTS[pass_id],
             "document": _load(path),
+        }
+        if pass_id == "p2":
+            answer["intake"] = self._intake_account()
+        return answer
+
+    def _intake_account(self) -> dict[str, Any] | None:
+        """P2's coverage and grounding account, read from its frozen World.
+
+        ``02_mechanical_report.json`` carries the aggregate counts but not the
+        source ledger §8.4 needs. The database beside it does: assertions and
+        SOURCE groundings are joined here read-only so an ungrounded BASE tuple
+        becomes a named finding rather than an aggregate a client has to infer.
+        """
+        world = self._snapshot("p2") / "02_mechanical_world" / "world.sqlite"
+        if not world.exists():
+            return None
+        connection: sqlite3.Connection | None = None
+        try:
+            connection = sqlite3.connect(f"file:{world}?mode=ro", uri=True)
+            connection.row_factory = sqlite3.Row
+            assertions = connection.execute(
+                """
+                SELECT a.assertion_id, a.relation_name
+                FROM _tv_assertions a
+                JOIN _tv_relations r ON r.name = a.relation_name
+                WHERE r.mode = 'BASE'
+                ORDER BY a.relation_name, a.assertion_id
+                """
+            ).fetchall()
+            grounded = {
+                row["subject_id"]
+                for row in connection.execute(
+                    """
+                    SELECT DISTINCT subject_id
+                    FROM _tv_groundings
+                    WHERE subject_type = 'ASSERTION' AND kind = 'SOURCE'
+                      AND trim(reference) != '' AND trim(detail) != ''
+                    """
+                )
+            }
+            sources = [
+                dict(row)
+                for row in connection.execute(
+                    """
+                    SELECT g.reference AS source,
+                           count(DISTINCT a.assertion_id) AS assertions
+                    FROM _tv_assertions a
+                    JOIN _tv_relations r ON r.name = a.relation_name
+                    JOIN _tv_groundings g
+                      ON g.subject_type = 'ASSERTION'
+                     AND g.subject_id = a.assertion_id
+                     AND g.kind = 'SOURCE'
+                    WHERE r.mode = 'BASE'
+                    GROUP BY g.reference
+                    ORDER BY assertions DESC, source
+                    """
+                )
+            ]
+        except sqlite3.Error:
+            # A run still being written may have created the file but not its
+            # schema. The JSON coverage report remains readable; its deeper
+            # grounding account is simply not available yet.
+            return None
+        finally:
+            if connection is not None:
+                connection.close()
+        missing = [
+            {"assertion_id": row["assertion_id"], "relation": row["relation_name"]}
+            for row in assertions
+            if row["assertion_id"] not in grounded
+        ]
+        return {
+            "base_assertions": len(assertions),
+            "grounded": len(assertions) - len(missing),
+            "complete": not missing,
+            "ungrounded": missing,
+            "sources": sources,
         }
 
     def docket(self, verdicts: dict[str, dict[str, Any]] | None = None) -> dict[str, Any]:

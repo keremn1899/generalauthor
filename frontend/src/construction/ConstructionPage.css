@@ -68,6 +68,398 @@
   text-align: center;
 }
 
+/* -- pass artifacts ------------------------------------------------------- */
+
+.artifact {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  background: var(--canvas);
+}
+
+.artifact__bar,
+.artifact__columnbar,
+.artifact__sectionbar,
+.admission-gate > section > header,
+.admission-card header,
+.relation-card header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.artifact__bar {
+  flex: 0 0 auto;
+  padding: 8px 12px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--rule);
+}
+
+.artifact__bar > div,
+.artifact__bar label {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+}
+
+.artifact__bar b,
+.artifact h3 {
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.artifact__bar span,
+.artifact__bar label,
+.artifact__sectionbar span {
+  color: var(--ink-muted);
+}
+
+.artifact button,
+.artifact input,
+.artifact select,
+.artifact textarea {
+  padding: 3px 8px;
+  font: inherit;
+  color: var(--ink);
+  background: var(--canvas);
+  border: 1px solid var(--rule);
+}
+
+.artifact button,
+.artifact select {
+  cursor: pointer;
+}
+
+.artifact button:disabled {
+  color: var(--ink-muted);
+  cursor: default;
+}
+
+.artifact__scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+
+.artifact__loading,
+.artifact__problem,
+.artifact__handoff {
+  margin: 0;
+  padding: 20px;
+}
+
+.artifact__problem {
+  color: var(--attention);
+  border-bottom: 1px solid var(--rule);
+}
+
+.artifact__columns,
+.artifact__review,
+.admission-gate {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  min-height: 100%;
+}
+
+.artifact__column,
+.artifact__review > section,
+.admission-gate > section {
+  min-width: 0;
+  padding: 14px;
+  border-right: 1px solid var(--rule);
+}
+
+.artifact__column:last-child,
+.artifact__review > section:last-child,
+.admission-gate > section:last-child {
+  border-right: none;
+}
+
+.artifact h3,
+.artifact h4,
+.artifact p {
+  margin-top: 0;
+}
+
+.artifact h4 {
+  font-size: 0.76rem;
+  font-weight: 500;
+}
+
+.artifact__finding {
+  padding: 8px 10px;
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--attention);
+  background: var(--panel);
+}
+
+.artifact__absent {
+  color: var(--ink-muted);
+  font-style: italic;
+}
+
+.artifact__fields,
+.relation-card dl {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+}
+
+.artifact__field dt {
+  color: var(--ink-muted);
+  font-size: 0.58rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.artifact__field dd {
+  margin: 2px 0 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.artifact__list,
+.artifact__findings {
+  margin: 0 0 16px;
+  padding-left: 18px;
+}
+
+.artifact__list li,
+.artifact__findings li {
+  margin-bottom: 5px;
+}
+
+.artifact__requirements,
+.artifact__relations {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.artifact__purpose {
+  padding-top: 8px;
+  border-top: 1px solid var(--rule);
+}
+
+.artifact__distinction {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.artifact__distinction[data-missing] {
+  padding-left: 9px;
+  border-left: 3px solid var(--attention);
+}
+
+.artifact__distinction b,
+.artifact__distinction span {
+  color: var(--ink-muted);
+  font-size: 0.6rem;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.artifact__distinction p {
+  margin: 3px 0;
+}
+
+.relation-card,
+.admission-card,
+.answer-rows > li,
+.answer-rows__empty {
+  padding: 10px;
+  background: var(--panel);
+  border: 1px solid var(--rule);
+}
+
+.relation-card header span,
+.admission-card header span,
+.admission-card__proposal {
+  color: var(--ink-muted);
+  font-size: 0.62rem;
+}
+
+.relation-card details,
+.admission-card details,
+.answer-rows details {
+  margin: 9px 0;
+  padding-top: 7px;
+  border-top: 1px solid var(--rule);
+}
+
+.relation-card summary,
+.admission-card summary,
+.answer-rows summary {
+  cursor: pointer;
+  color: var(--ink-muted);
+}
+
+.relation-card a,
+.artifact__handoff a {
+  color: var(--ink);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.artifact__metrics,
+.answers__account {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 8px 0 18px;
+  border: 1px solid var(--rule);
+}
+
+.artifact__metrics div,
+.answers__account div {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  border-right: 1px solid var(--rule);
+}
+
+.artifact__metrics div:last-child,
+.answers__account div:last-child {
+  border-right: none;
+}
+
+.artifact__metrics b,
+.answers__account b {
+  overflow-wrap: anywhere;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.artifact__metrics span,
+.answers__account span {
+  color: var(--ink-muted);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+}
+
+.artifact__grounding {
+  padding: 10px;
+  border: 1px solid var(--attention);
+}
+
+.artifact__grounding[data-complete] {
+  border-color: var(--ink);
+}
+
+.artifact__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.artifact__table th,
+.artifact__table td {
+  padding: 5px 7px;
+  text-align: left;
+  border-bottom: 1px solid var(--rule);
+}
+
+.artifact__table th:last-child,
+.artifact__table td:last-child {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.admission-gate > section {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.admission-gate > section > header {
+  border-bottom: 2px solid var(--ink);
+}
+
+.admission-card[data-finding] {
+  border-left: 3px solid var(--attention);
+}
+
+.admission-card button {
+  margin-top: 5px;
+}
+
+.admission-card__form,
+.admission-card__form label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.admission-card__form {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--rule);
+}
+
+.admission-card__form label {
+  color: var(--ink-muted);
+  font-size: 0.62rem;
+}
+
+.admission-card__form textarea {
+  min-height: 58px;
+  resize: vertical;
+  color: var(--ink);
+}
+
+.admission-card__form > div {
+  display: flex;
+  gap: 6px;
+}
+
+.answers {
+  padding: 14px;
+}
+
+.answer-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: answer-row;
+}
+
+.answer-rows > li {
+  counter-increment: answer-row;
+}
+
+.answer-rows > li::before {
+  content: counter(answer-row);
+  float: right;
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.artifact__handoff {
+  max-width: 620px;
+}
+
+@media (max-width: 980px) {
+  .artifact__columns,
+  .artifact__review,
+  .admission-gate {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .artifact__column,
+  .artifact__review > section,
+  .admission-gate > section {
+    border-right: none;
+    border-bottom: 1px solid var(--rule);
+  }
+}
+
 /* -- the docket ----------------------------------------------------------- */
 
 .docket {

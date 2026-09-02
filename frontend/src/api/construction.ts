@@ -2,12 +2,12 @@
  * The `/construction` plane, typed.
  *
  * What `world_explorer.construction` reads out of one frozen constructor run,
- * and the two routes that append a human verdict beside it. Unlike `world.ts`
+ * and the routes that append a human proposal beside it. Unlike `world.ts`
  * this file imports `send`, and that is the honest signal: this is the surface
  * where writes exist.
  *
  * The writes go to a ledger, never to a pass artifact and never to a compiled
- * world. A verdict is an input to the next build.
+ * world. A verdict or admission proposal is an input to the next build.
  */
 
 import { read, send } from "./plane";
@@ -54,6 +54,33 @@ export type Verdict = {
   reverts?: string | null;
   actor: string;
   at: string;
+};
+
+export type AdmissionProposal = {
+  kind: "ADMISSION";
+  relation: string;
+  admission: "WORLD" | "PURPOSE";
+  reason: string;
+  purpose_independence_test: string;
+  supersedes: string | null;
+  actor: string;
+  at: string;
+};
+
+export type IntakeAccount = {
+  base_assertions: number;
+  grounded: number;
+  complete: boolean;
+  ungrounded: { assertion_id: string; relation: string }[];
+  sources: { source: string; assertions: number }[];
+};
+
+export type PassArtifact = {
+  pass: string;
+  artifact: string;
+  document?: unknown;
+  items?: Record<string, unknown>;
+  intake?: IntakeAccount | null;
 };
 
 /** What an obligation holds up. The lists say what it *would* hold up; the
@@ -163,9 +190,11 @@ export const constructionApi = {
     ),
   cost: (at: string) => read<Cost>(`/construction/cost?at=${encodeURIComponent(at)}`),
   pass: (id: string) =>
-    read<{ pass: string; artifact: string; document?: unknown; items?: Record<string, unknown> }>(
-      `/construction/pass?id=${encodeURIComponent(id)}`,
-    ),
+    read<PassArtifact>(`/construction/pass?id=${encodeURIComponent(id)}`),
+  admissions: () =>
+    read<{ admissions: Record<string, AdmissionProposal> }>(
+      "/construction/admissions",
+    ).then((r) => r.admissions),
   history: (id: string) =>
     read<{ history: Verdict[] }>(
       `/construction/history?id=${encodeURIComponent(id)}`,
@@ -189,4 +218,12 @@ export const constructionApi = {
 
   revert: (obligation_id: string, actor: string) =>
     send<Verdict>("/construction/revert", { obligation_id, actor }),
+
+  admit: (proposal: {
+    relation: string;
+    admission: "WORLD" | "PURPOSE";
+    reason: string;
+    purpose_independence_test: string;
+    actor: string;
+  }) => send<AdmissionProposal>("/construction/admission", proposal),
 };

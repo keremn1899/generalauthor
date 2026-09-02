@@ -1,0 +1,581 @@
+/**
+ * The artifact reading views — constructor spec §8.3–§8.7.
+ *
+ * These are projections of frozen pass documents, not editors. The sole write
+ * is P6's admission proposal, recorded beside the run and made visibly
+ * provisional here; it never changes the card's source artifact.
+ */
+
+import { useEffect, useMemo, useState } from "react";
+import {
+  constructionApi,
+  type AdmissionProposal,
+  type IntakeAccount,
+  type PassArtifact,
+} from "../api/construction";
+import { tokenFromLocation } from "../api/plane";
+
+type Json = Record<string, unknown>;
+
+function object(value: unknown): Json {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? (value as Json)
+    : {};
+}
+
+function list(value: unknown): unknown[] {
+  return Array.isArray(value) ? value : [];
+}
+
+function hasObjectKey(value: unknown, key: string): boolean {
+  if (Array.isArray(value)) return value.some((item) => hasObjectKey(item, key));
+  if (!value || typeof value !== "object") return false;
+  return Object.entries(value as Json).some(
+    ([name, item]) => name === key || hasObjectKey(item, key),
+  );
+}
+
+function words(value: unknown): string {
+  if (value === null || value === undefined || value === "") return "—";
+  if (typeof value === "string") return value;
+  if (typeof value === "number" || typeof value === "boolean") return String(value);
+  return JSON.stringify(value);
+}
+
+function worldHref(relation?: string): string {
+  const query = new URLSearchParams();
+  const token = tokenFromLocation();
+  if (token) query.set("apiToken", token);
+  if (relation) query.set("relation", relation);
+  const suffix = query.toString();
+  return `#/world${suffix ? `?${suffix}` : ""}`;
+}
+
+function StringList({ values }: { values: unknown }) {
+  const items = list(values);
+  if (!items.length) return <p className="artifact__absent">none recorded</p>;
+  return (
+    <ul className="artifact__list">
+      {items.map((item, index) => (
+        <li key={`${words(item)}-${index}`}>{words(item)}</li>
+      ))}
+    </ul>
+  );
+}
+
+function Field({ name, value }: { name: string; value: unknown }) {
+  return (
+    <div className="artifact__field">
+      <dt>{name.replaceAll("_", " ")}</dt>
+      <dd>{words(value)}</dd>
+    </div>
+  );
+}
+
+function JsonFields({ value, omit = [] }: { value: unknown; omit?: string[] }) {
+  const document = object(value);
+  return (
+    <dl className="artifact__fields">
+      {Object.entries(document)
+        .filter(([key]) => !omit.includes(key))
+        .map(([key, item]) => (
+          <Field key={key} name={key} value={item} />
+        ))}
+    </dl>
+  );
+}
+
+function Brief({ contract }: { contract: Json }) {
+  const purposes = object(contract.purposes);
+  const [selected, setSelected] = useState(Object.keys(purposes)[0] ?? "");
+  const purpose = object(purposes[selected]);
+
+  return (
+    <div className="artifact__columns artifact__columns--brief">
+      <section className="artifact__column">
+        <h3>source purpose</h3>
+        <p className="artifact__finding">
+          The source purpose file was not copied into P0&apos;s frozen workspace
+          snapshot. This run can show the compiled contract, but cannot prove
+          from its own artifact whether compilation dropped or invented text.
+        </p>
+        <p className="artifact__absent">source unavailable in this run</p>
+      </section>
+      <section className="artifact__column">
+        <header className="artifact__columnbar">
+          <h3>compiled contract</h3>
+          <select value={selected} onChange={(event) => setSelected(event.target.value)}>
+            {Object.keys(purposes).map((name) => (
+              <option key={name} value={name}>purpose {name}</option>
+            ))}
+          </select>
+        </header>
+        <h4>{words(purpose.objective)}</h4>
+        <JsonFields value={purpose} omit={["objective"]} />
+      </section>
+    </div>
+  );
+}
+
+type VocabularyRelation = Json & {
+  name?: string;
+  required_by?: string[];
+  construction_class?: string;
+};
+
+function relationClaims(relations: VocabularyRelation[], purpose: string) {
+  return relations.filter((relation) =>
+    list(relation.required_by).map(String).includes(purpose),
+  );
+}
+
+function Vocabulary({ vocabulary, contract }: { vocabulary: Json; contract: Json }) {
+  const relations = list(vocabulary.relations).map(object) as VocabularyRelation[];
+  const purposes = object(contract.purposes);
+  const [filter, setFilter] = useState("");
+  const shown = relations.filter((relation) =>
+    words(relation.name).toLowerCase().includes(filter.toLowerCase()),
+  );
+
+  return (
+    <div className="artifact__review">
+      <section className="artifact__requirements">
+        <header className="artifact__sectionbar">
+          <h3>purpose distinctions</h3>
+          <span>claim is purpose-level; the artifacts record no finer mapping</span>
+        </header>
+        {Object.entries(purposes).map(([purposeName, rawPurpose]) => {
+          const distinctions = object(object(rawPurpose).required_semantic_distinctions);
+          const claims = relationClaims(relations, purposeName);
+          return (
+            <div className="artifact__purpose" key={purposeName}>
+              <h4>purpose {purposeName}</h4>
+              {Object.entries(distinctions).flatMap(([kind, entries]) =>
+                list(entries).map((entry, index) => (
+                  <article
+                    className="artifact__distinction"
+                    data-missing={!claims.length || undefined}
+                    key={`${kind}-${index}`}
+                  >
+                    <b>{kind.replaceAll("_", " ")}</b>
+                    <p>{words(entry)}</p>
+                    <span>
+                      {claims.length
+                        ? `${claims.length} relation${claims.length === 1 ? "" : "s"} claim purpose ${purposeName}`
+                        : "no relation claims this purpose"}
+                    </span>
+                  </article>
+                )),
+              )}
+            </div>
+          );
+        })}
+      </section>
+
+      <section className="artifact__relations">
+        <header className="artifact__sectionbar">
+          <h3>relations</h3>
+          <input
+            value={filter}
+            onChange={(event) => setFilter(event.target.value)}
+            placeholder="find a relation"
+            aria-label="find a relation"
+          />
+        </header>
+        {shown.map((relation) => {
+          const semantic = relation.construction_class === "SEMANTIC";
+          return (
+            <article className="relation-card" key={words(relation.name)}>
+              <header>
+                <h4>{words(relation.name)}</h4>
+                <span>{words(relation.construction_class)} · {words(relation.admission)}</span>
+              </header>
+              <p>{words(relation.meaning)}</p>
+              <dl>
+                <Field name="roles" value={relation.roles} />
+                <Field name="required by" value={relation.required_by} />
+                <Field name="grounding contract" value={relation.grounding_contract} />
+                <Field name="construction rule" value={relation.construction_rule} />
+              </dl>
+              {semantic ? (
+                <details>
+                  <summary>RelationContract</summary>
+                  <JsonFields
+                    value={relation}
+                    omit={[
+                      "name", "meaning", "admission", "construction_class",
+                      "required_by", "grounding_contract", "construction_rule",
+                    ]}
+                  />
+                </details>
+              ) : null}
+              <a href={worldHref(words(relation.name))}>
+                open extension in World
+              </a>
+            </article>
+          );
+        })}
+      </section>
+    </div>
+  );
+}
+
+function Intake({ report, intake }: { report: Json; intake: IntakeAccount | null | undefined }) {
+  return (
+    <div className="artifact__review artifact__review--intake">
+      <section>
+        <h3>coverage</h3>
+        <div className="artifact__metrics">
+          {(["referents", "base_tuples", "candidate_tuples"] as const).map((name) => (
+            <div key={name}><b>{words(report[name])}</b><span>{name.replaceAll("_", " ")}</span></div>
+          ))}
+        </div>
+        <h3>compiler notes</h3>
+        <StringList values={report.notes} />
+      </section>
+      <section>
+        <h3>grounding completeness</h3>
+        {intake ? (
+          <>
+            <p className="artifact__grounding" data-complete={intake.complete || undefined}>
+              <b>{intake.grounded} of {intake.base_assertions}</b> BASE assertions have a SOURCE grounding.
+            </p>
+            {intake.ungrounded.length ? (
+              <ul className="artifact__findings">
+                {intake.ungrounded.map((item) => (
+                  <li key={item.assertion_id}>{item.relation} · {item.assertion_id}</li>
+                ))}
+              </ul>
+            ) : <p className="artifact__absent">no ungrounded BASE tuple found</p>}
+            <h3>sources and contribution</h3>
+            <p className="artifact__absent">
+              The frozen P2 workspace has no source inventory. Contributions
+              are countable; a source that contributed nothing is not.
+            </p>
+            <table className="artifact__table">
+              <thead><tr><th>source</th><th>BASE assertions</th></tr></thead>
+              <tbody>
+                {intake.sources.map((source) => (
+                  <tr key={source.source}><td>{source.source}</td><td>{source.assertions}</td></tr>
+                ))}
+              </tbody>
+            </table>
+          </>
+        ) : (
+          <p className="artifact__finding">P2 wrote no readable mechanical World from which to audit grounding.</p>
+        )}
+      </section>
+    </div>
+  );
+}
+
+type AdmissionRecord = Json & { name?: string; admission?: "WORLD" | "PURPOSE" };
+
+function AdmissionCard({
+  record,
+  column,
+  proposal,
+  appearsInOutput,
+  actor,
+  busy,
+  onAdmit,
+}: {
+  record: AdmissionRecord;
+  column: "WORLD" | "PURPOSE";
+  proposal: AdmissionProposal | undefined;
+  appearsInOutput: boolean;
+  actor: string;
+  busy: boolean;
+  onAdmit: (
+    record: AdmissionRecord,
+    target: "WORLD" | "PURPOSE",
+    reason: string,
+    test: string,
+  ) => Promise<void>;
+}) {
+  const [editing, setEditing] = useState(false);
+  const [reason, setReason] = useState("");
+  const [test, setTest] = useState("");
+  const name = words(record.name);
+  const target = column === "WORLD" ? "PURPOSE" : "WORLD";
+  return (
+    <article
+      className="admission-card"
+      data-finding={column === "WORLD" && appearsInOutput || undefined}
+    >
+      <header><h4>{name}</h4><span>{words(record.construction_class)}</span></header>
+      {proposal ? <p className="admission-card__proposal">proposed by {proposal.actor} · artifact says {words(record.admission)}</p> : null}
+      {column === "WORLD" && appearsInOutput ? (
+        <p className="artifact__finding">
+          Finding: this WORLD relation&apos;s name also appears in a P8 output shape.
+        </p>
+      ) : null}
+      <p>{words(proposal?.reason ?? record.reason)}</p>
+      <details><summary>purpose-independence test</summary><p>{words(proposal?.purpose_independence_test ?? record.purpose_independence_test)}</p></details>
+      {editing ? (
+        <div className="admission-card__form">
+          <label>
+            reason for moving to {target}
+            <textarea value={reason} onChange={(event) => setReason(event.target.value)} />
+          </label>
+          <label>
+            purpose-independence test you applied
+            <textarea value={test} onChange={(event) => setTest(event.target.value)} />
+          </label>
+          <div>
+            <button
+              type="button"
+              disabled={busy || !actor.trim() || !reason.trim() || !test.trim()}
+              onClick={() => void onAdmit(record, target, reason, test)}
+            >
+              record proposal
+            </button>
+            <button type="button" disabled={busy} onClick={() => setEditing(false)}>cancel</button>
+          </div>
+        </div>
+      ) : (
+        <button type="button" disabled={busy || !actor.trim()} onClick={() => setEditing(true)}>
+          propose {target}
+        </button>
+      )}
+    </article>
+  );
+}
+
+function AdmissionGate({
+  document,
+  outputs,
+  proposals,
+  actor,
+  busy,
+  onAdmit,
+}: {
+  document: Json;
+  outputs: Record<string, unknown>;
+  proposals: Record<string, AdmissionProposal>;
+  actor: string;
+  busy: boolean;
+  onAdmit: (
+    record: AdmissionRecord,
+    target: "WORLD" | "PURPOSE",
+    reason: string,
+    test: string,
+  ) => Promise<void>;
+}) {
+  const relations = list(document.relations).map(object) as AdmissionRecord[];
+  const appearsInOutput = (name: string) => hasObjectKey(outputs, name);
+  const effective = (record: AdmissionRecord) =>
+    proposals[words(record.name)]?.admission ?? record.admission ?? "PURPOSE";
+
+  return (
+    <div className="admission-gate">
+      {(["WORLD", "PURPOSE"] as const).map((column) => (
+        <section key={column}>
+          <header><h3>{column}</h3><span>{relations.filter((item) => effective(item) === column).length}</span></header>
+          {relations.filter((item) => effective(item) === column).map((record) => {
+            const name = words(record.name);
+            const proposal = proposals[name];
+            return (
+              <AdmissionCard
+                key={name}
+                record={record}
+                column={column}
+                proposal={proposal}
+                appearsInOutput={appearsInOutput(name)}
+                actor={actor}
+                busy={busy}
+                onAdmit={onAdmit}
+              />
+            );
+          })}
+        </section>
+      ))}
+    </div>
+  );
+}
+
+function outputRows(document: Json): { label: string; rows: unknown[] } {
+  const entry = Object.entries(document).find(([key, value]) => key !== "purpose" && Array.isArray(value));
+  return entry ? { label: entry[0], rows: entry[1] as unknown[] } : { label: "rows", rows: [] };
+}
+
+function Answers({
+  outputs,
+  derivations,
+  obligations,
+}: {
+  outputs: Record<string, unknown>;
+  derivations: Json;
+  obligations: unknown[];
+}) {
+  const [selected, setSelected] = useState(Object.keys(outputs)[0] ?? "");
+  const document = object(outputs[selected]);
+  const rows = outputRows(document);
+  const derivation = list(derivations.derivations).map(object).find(
+    (item) => words(item.output_relation).toLowerCase() === `purpose_ir/${selected.toLowerCase()}/output.json`,
+  );
+  const demanded = obligations.map(object).filter((item) =>
+    list(item.required_by).map((value) => words(value).toUpperCase()).includes(selected.toUpperCase()),
+  );
+
+  return (
+    <div className="answers">
+      <header className="artifact__sectionbar">
+        <h3>purpose answer</h3>
+        <select value={selected} onChange={(event) => setSelected(event.target.value)}>
+          {Object.keys(outputs).map((name) => <option key={name} value={name}>purpose {name.toUpperCase()}</option>)}
+        </select>
+      </header>
+      <div className="answers__account">
+        <div><b>{rows.rows.length}</b><span>{rows.label}</span></div>
+        <div><b>{demanded.length}</b><span>premise obligations</span></div>
+        <div><b>{words(document.purpose)}</b><span>declared shape</span></div>
+      </div>
+      {rows.rows.length ? (
+        <ol className="answer-rows">
+          {rows.rows.map((row, index) => (
+            <li key={index}>
+              <JsonFields value={row} />
+              <details>
+                <summary>derivation and obligations</summary>
+                {derivation ? <JsonFields value={derivation} /> : <p className="artifact__absent">no matching P7 derivation</p>}
+                <p>{demanded.length} P3 obligation{demanded.length === 1 ? "" : "s"} name this purpose.</p>
+                <p className="artifact__absent">The run records relation-level derivation, not row lineage; this is the strongest link the frozen artifacts support.</p>
+              </details>
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <div className="answer-rows__empty">
+          <p>This answer contains no rows.</p>
+          {derivation ? <JsonFields value={derivation} /> : null}
+          <p>{demanded.length} premise obligation{demanded.length === 1 ? "" : "s"} name this purpose.</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export function ArtifactView({
+  pass,
+  actor,
+  onActor,
+  onClose,
+  onChanged,
+}: {
+  pass: string;
+  actor: string;
+  onActor: (actor: string) => void;
+  onClose: () => void;
+  onChanged: () => Promise<void>;
+}) {
+  const [artifacts, setArtifacts] = useState<Record<string, PassArtifact>>({});
+  const [proposals, setProposals] = useState<Record<string, AdmissionProposal>>({});
+  const [problem, setProblem] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  const needed = useMemo(() => {
+    if (pass === "p1") return ["p0", "p1"];
+    if (pass === "p6") return ["p6", "p8"];
+    if (pass === "p8") return ["p3", "p7", "p8"];
+    return [pass];
+  }, [pass]);
+
+  useEffect(() => {
+    let current = true;
+    setArtifacts({});
+    setProblem(null);
+    void Promise.all([
+      Promise.all(needed.map((id) => constructionApi.pass(id))),
+      constructionApi.admissions(),
+    ]).then(([loaded, admissions]) => {
+      if (!current) return;
+      setArtifacts(Object.fromEntries(loaded.map((item) => [item.pass, item])));
+      setProposals(admissions);
+    }).catch((error: unknown) => {
+      if (current) setProblem(error instanceof Error ? error.message : String(error));
+    });
+    return () => { current = false; };
+  }, [needed]);
+
+  const admit = async (
+    record: AdmissionRecord,
+    target: "WORLD" | "PURPOSE",
+    reason: string,
+    test: string,
+  ) => {
+    setBusy(true);
+    try {
+      const proposal = await constructionApi.admit({
+        relation: words(record.name),
+        admission: target,
+        reason,
+        purpose_independence_test: test,
+        actor,
+      });
+      setProposals((held) => ({ ...held, [proposal.relation]: proposal }));
+      setProblem(null);
+      await onChanged();
+    } catch (error) {
+      setProblem(error instanceof Error ? error.message : String(error));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const current = artifacts[pass];
+  return (
+    <section className="artifact" aria-label={`${pass} artifact`}>
+      <header className="artifact__bar">
+        <div><b>{pass.toUpperCase()}</b><span>{current?.artifact ?? "opening artifact…"}</span></div>
+        {pass === "p6" ? (
+          <label>
+            reviewer
+            <input value={actor} onChange={(event) => onActor(event.target.value)} />
+          </label>
+        ) : null}
+        <button type="button" onClick={onClose}>back to docket</button>
+      </header>
+      {problem ? <p className="artifact__problem">{problem}</p> : null}
+      {!current && !problem ? <p className="artifact__loading">Opening the frozen artifact…</p> : null}
+      {current ? (
+        <div className="artifact__scroll">
+          {pass === "p0" ? <Brief contract={object(current.document)} /> : null}
+          {pass === "p1" ? <Vocabulary vocabulary={object(current.document)} contract={object(artifacts.p0?.document)} /> : null}
+          {pass === "p2" ? <Intake report={object(current.document)} intake={current.intake} /> : null}
+          {pass === "p6" ? (
+            <AdmissionGate
+              document={object(current.document)}
+              outputs={artifacts.p8?.items ?? {}}
+              proposals={proposals}
+              actor={actor}
+              busy={busy}
+              onAdmit={admit}
+            />
+          ) : null}
+          {pass === "p8" ? (
+            <Answers
+              outputs={current.items ?? {}}
+              derivations={object(artifacts.p7?.document)}
+              obligations={list(artifacts.p3?.document)}
+            />
+          ) : null}
+          {["p3", "p4", "p5"].includes(pass) ? (
+            <div className="artifact__handoff">
+              <h3>This artifact is read through the docket.</h3>
+              <p>P3 supplies the proposition, P4 its packet, and P5 the machine judgment. Keeping them side by side is the review unit.</p>
+              <button type="button" onClick={onClose}>open the docket</button>
+            </div>
+          ) : null}
+          {pass === "p7" ? (
+            <div className="artifact__handoff">
+              <h3>Derivations are read in the World explorer.</h3>
+              <p>The read-side derivation view shows what each relation rests on, what it supports, and whether an input moved.</p>
+              <a href={worldHref()}>open World derivations</a>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+    </section>
+  );
+}

@@ -478,6 +478,14 @@ function ReferentPanel({
 
 const READER_WIDTH_KEY = "graphauthor.worldReaderWidth";
 
+/** A seam from construction's vocabulary card to this relation's extension.
+ * Hash routing owns the path, so its query lives in the hash as well. */
+function linkedRelationFromHash(): string | null {
+  const hash = window.location.hash;
+  const query = hash.includes("?") ? hash.slice(hash.indexOf("?") + 1) : "";
+  return new URLSearchParams(query).get("relation");
+}
+
 export function WorldPage() {
   const [mode, setMode] = useState<ThemeMode>(storedTheme);
   const [overview, setOverview] = useState<WorldOverview | null>(null);
@@ -520,6 +528,7 @@ export function WorldPage() {
   const [demandProblem, setDemandProblem] = useState<string | null>(null);
 
   const labels = useRef(new Map<string, string | null>());
+  const linkedRelation = useRef(linkedRelationFromHash());
 
   useEffect(() => {
     try {
@@ -551,6 +560,19 @@ export function WorldPage() {
       cancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+    const name = linkedRelation.current;
+    if (!name || !relations.length) return;
+    linkedRelation.current = null;
+    if (!relations.some((relation) => relation.name === name)) {
+      setNotice(`${name} is not in this world's vocabulary.`);
+      return;
+    }
+    setFocusedRelation(name);
+    setReaderOpen(true);
+    setDrawer({ kind: "relation", relation: name, subject: null });
+  }, [relations]);
 
   // Selection drives one fetch, and only one: a chip reads its assertion, a
   // disc reads its neighborhood costs.

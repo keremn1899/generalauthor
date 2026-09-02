@@ -15,6 +15,7 @@ from __future__ import annotations
 import inspect
 import json
 import re
+import sqlite3
 from pathlib import Path
 
 import pytest
@@ -122,7 +123,17 @@ def build_run(root: Path) -> Path:
         "p2": {"referents": 3},
         "p3": obligations,
         "p5": dispositions,
-        "p6": {"admission": []},
+        "p6": {
+            "relations": [
+                {
+                    "name": "identity_judgment",
+                    "admission": "WORLD",
+                    "construction_class": "SEMANTIC",
+                    "reason": "Identity is reusable beyond one purpose.",
+                    "purpose_independence_test": "Its truth conditions survive withdrawal of A.",
+                }
+            ]
+        },
         "p7": derivations,
     }
     for index, (pass_id, artifact) in enumerate(PASS_ARTIFACTS.items()):
@@ -240,6 +251,21 @@ def test_a_verdict_makes_the_downstream_passes_stale(reader):
     assert by_id["p6"]["because"] == ["intervened in upstream: p5"]
 
 
+def test_an_admission_proposal_makes_only_p7_and_p8_stale(reader):
+    overview = reader.overview(
+        admissions={"identity_judgment": {"admission": "PURPOSE"}}
+    )
+    by_id = {entry["pass"]: entry for entry in overview["passes"]}
+    assert [name for name, entry in by_id.items() if entry["state"] == "STALE"] == [
+        "p7",
+        "p8",
+    ]
+    assert by_id["p6"]["state"] is None
+    assert reader.cost(
+        "p6", admissions={"identity_judgment": {"admission": "PURPOSE"}}
+    )["standing"] == ["p6"]
+
+
 def test_a_pass_that_wrote_nothing_is_failed(reader, tmp_path):
     """§5's FAILED: ran and did not produce a valid artifact."""
     (reader.path / "passes" / "p7" / "workspace_snapshot" / "07_derivations.json").unlink()
@@ -292,6 +318,64 @@ def test_the_agent_record_carries_no_narration(reader):
         "timed_out": False,
         "finished_at": "2026-09-02T08:05:00+00:00",
     }
+
+
+def test_p2_names_each_ungrounded_base_tuple_and_source_contribution(reader):
+    world = (
+        reader.path
+        / "passes"
+        / "p2"
+        / "workspace_snapshot"
+        / "02_mechanical_world"
+        / "world.sqlite"
+    )
+    world.parent.mkdir(parents=True)
+    connection = sqlite3.connect(world)
+    connection.executescript(
+        """
+        CREATE TABLE _tv_relations (name TEXT PRIMARY KEY, mode TEXT);
+        CREATE TABLE _tv_assertions (
+          assertion_id TEXT PRIMARY KEY, relation_name TEXT, origin TEXT
+        );
+        CREATE TABLE _tv_groundings (
+          subject_type TEXT, subject_id TEXT, kind TEXT, reference TEXT, detail TEXT
+        );
+        INSERT INTO _tv_relations VALUES ('invoice_amount', 'BASE');
+        INSERT INTO _tv_assertions VALUES ('grounded', 'invoice_amount', 'ASSERTED');
+        INSERT INTO _tv_assertions VALUES ('missing', 'invoice_amount', 'ASSERTED');
+        INSERT INTO _tv_groundings VALUES (
+          'ASSERTION', 'grounded', 'SOURCE', 'sources/invoices.json', 'invoice INV-1'
+        );
+        """
+    )
+    connection.commit()
+    connection.close()
+
+    account = reader.pass_artifact("p2")["intake"]
+    assert account["complete"] is False
+    assert account["grounded"] == 1
+    assert account["ungrounded"] == [
+        {"assertion_id": "missing", "relation": "invoice_amount"}
+    ]
+    assert account["sources"] == [
+        {"source": "sources/invoices.json", "assertions": 1}
+    ]
+
+
+def test_a_half_written_p2_world_does_not_hide_the_report(reader):
+    world = (
+        reader.path
+        / "passes"
+        / "p2"
+        / "workspace_snapshot"
+        / "02_mechanical_world"
+        / "world.sqlite"
+    )
+    world.parent.mkdir(parents=True)
+    sqlite3.connect(world).close()
+    artifact = reader.pass_artifact("p2")
+    assert artifact["document"] == {"referents": 3}
+    assert artifact["intake"] is None
 
 
 # -- the docket -------------------------------------------------------------
@@ -399,8 +483,11 @@ def test_the_reader_cannot_write(reader):
     source = Path(inspect.getsourcefile(ConstructionReader)).read_text()
     # Word-bounded, because `_is_open` is a question and `open()` is a door.
     for forbidden in (r"\bopen\(", r"\bwrite_text\b", r"\bmkdir\b",
-                      r"\bunlink\b", r"\brmtree\b", r"\bsqlite3\b"):
+                      r"\bunlink\b", r"\brmtree\b"):
         assert re.search(forbidden, source) is None, forbidden
+    # P2's intake account reads the frozen mechanical World. URI read-only is
+    # the structural boundary: SQLite cannot create a journal or mutate it.
+    assert "mode=ro" in source
 
 
 # -- over HTTP --------------------------------------------------------------

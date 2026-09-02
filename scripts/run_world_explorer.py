@@ -16,7 +16,8 @@ optional; without it those routes answer 404 and the world plane is unaffected.
 There is no default, because a run belongs to a campaign in `research/` and
 guessing which one someone means is worse than asking.
 
-Human verdicts append to `data/verdicts/<run>.jsonl`, outside the run.
+Human verdicts and admission proposals append to
+`data/verdicts/<run>.jsonl`, outside the run.
 `--verdicts` names a different file. Nothing is ever written into the campaign
 directory: it is user-owned, usually mid-flight, and a pass artifact is the
 record of what the constructor said.

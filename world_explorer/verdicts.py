@@ -1,4 +1,4 @@
-"""Human verdicts — appended beside a run, never into it.
+"""Human construction proposals — appended beside a run, never into it.
 
 This is the write half of the construction plane, and it is a separate module
 from `construction.py` for the reason that module's docstring gives: the reader
@@ -20,7 +20,7 @@ transcript of a conversation that never happened. And the campaign directory is
 user-owned — a surface that writes into someone's in-flight trial is a surface
 that corrupts evidence.
 
-**A verdict is an input to the next build.** Nothing here changes a world.
+**A proposal is an input to the next build.** Nothing here changes a world.
 `THE ONLY PATH FROM A VERDICT TO A WORLD TUPLE IS A REBUILD`, and this ledger is
 what the rebuild reads.
 
@@ -49,6 +49,7 @@ VERDICTS = frozenset(
 CLOSING = VERDICTS - {"UNRESOLVED"}
 
 ADJUDICATION = "ADJUDICATION"
+ADMISSION = "ADMISSION"
 REVERT = "REVERT"
 
 
@@ -137,6 +138,22 @@ class VerdictLedger:
                 standing[obligation_id] = record
         return standing
 
+    def current_admissions(self) -> dict[str, dict[str, Any]]:
+        """The latest proposed admission for each relation.
+
+        Admission changes share this ledger because they have the same audit
+        and ownership boundary as adjudications: append-only, beside the run,
+        and inert until a rebuild. They do not share ``current()`` because an
+        obligation id and a relation name are different namespaces and, more
+        importantly, intervene at different passes.
+        """
+        standing: dict[str, dict[str, Any]] = {}
+        for record in self.entries():
+            relation = str(record.get("relation", ""))
+            if record.get("kind") == ADMISSION and relation:
+                standing[relation] = record
+        return standing
+
     # -- writing ------------------------------------------------------------
 
     def _append(self, record: dict[str, Any]) -> dict[str, Any]:
@@ -221,6 +238,49 @@ class VerdictLedger:
                 "kind": REVERT,
                 "obligation_id": obligation_id,
                 "reverts": standing.get("disposition"),
+                "actor": actor.strip(),
+                "at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            }
+        )
+
+    def admit(
+        self,
+        relation: str,
+        admission: str,
+        *,
+        reason: str,
+        purpose_independence_test: str,
+        supersedes: str | None,
+        actor: str,
+    ) -> dict[str, Any]:
+        """Stage one WORLD/PURPOSE admission change.
+
+        This changes no artifact and no compiled World. The explanatory fields
+        are mandatory because moving a card without the test would record a
+        conclusion while dropping the argument §6.2 says the reviewer owns.
+        """
+        relation = relation.strip()
+        admission = admission.strip().upper()
+        if not relation:
+            raise ValueError("relation is required")
+        if admission not in {"WORLD", "PURPOSE"}:
+            raise ValueError("admission must be WORLD or PURPOSE")
+        if not reason.strip():
+            raise ValueError("an admission change needs a reason")
+        if not purpose_independence_test.strip():
+            raise ValueError("an admission change needs a purpose_independence_test")
+        if not actor.strip():
+            raise ValueError("an admission change is someone's; actor is required")
+        if supersedes == admission:
+            raise ValueError(f"{relation} is already admitted {admission}")
+        return self._append(
+            {
+                "kind": ADMISSION,
+                "relation": relation,
+                "admission": admission,
+                "reason": reason.strip(),
+                "purpose_independence_test": purpose_independence_test.strip(),
+                "supersedes": supersedes,
                 "actor": actor.strip(),
                 "at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             }

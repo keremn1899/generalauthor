@@ -19,8 +19,7 @@
  *
  * Opening a pass states the cost of intervening there **before** anything is
  * triggered — which passes re-run, which survive, and how long it took last
- * time. §8.3–§8.7's artifact views are the other half of that click and are
- * not built yet; the row says so rather than offering a dead affordance.
+ * time — and opens the corresponding frozen artifact in the body.
  */
 
 import { useEffect, useState } from "react";
@@ -155,10 +154,6 @@ export function Spine({
                       <CostStatement cost={cost} />
                     </>
                   ) : null}
-                  <p className="spine__unbuilt">
-                    The artifact view for this pass is §8.3–§8.7 and is not
-                    built yet.
-                  </p>
                 </div>
               ) : null}
             </li>
