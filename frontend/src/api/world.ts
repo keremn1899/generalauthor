@@ -3,8 +3,10 @@
  *
  * Every shape here is what `world_explorer.adapter` returns, named once so a
  * surface cannot invent a field the server does not send. Nothing writes:
- * there is no route to write to.
+ * there is no route to write to, and this file imports only `read`.
  */
+
+import { read } from "./plane";
 
 export type RoleKindList = string[];
 
@@ -206,36 +208,6 @@ export type WorldDemand = {
     assertion_id: string | null;
   }[];
 };
-
-/**
- * The token, read from the URL the way the rest of the product reads it.
- *
- * `#/world?apiToken=devtoken` — same habit as the operator plane, so one dev
- * server and one bookmark serve both while both exist.
- */
-function tokenFromLocation(): string | null {
-  const hash = window.location.hash;
-  const query = hash.includes("?") ? hash.slice(hash.indexOf("?") + 1) : "";
-  const params = new URLSearchParams(query || window.location.search);
-  return params.get("apiToken");
-}
-
-async function read<T>(path: string): Promise<T> {
-  const token = tokenFromLocation();
-  const response = await fetch(path, {
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
-  });
-  if (!response.ok) {
-    let detail = `${response.status}`;
-    try {
-      detail = ((await response.json()) as { error?: string }).error ?? detail;
-    } catch {
-      /* a body that is not JSON is still a failure worth reporting */
-    }
-    throw new Error(detail);
-  }
-  return (await response.json()) as T;
-}
 
 export const worldApi = {
   overview: () => read<WorldOverview>("/world/overview"),

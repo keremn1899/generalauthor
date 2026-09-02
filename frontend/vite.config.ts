@@ -22,6 +22,13 @@ export default defineConfig({
         target: process.env.VITE_WORLD_TARGET ?? "http://127.0.0.1:8139",
         changeOrigin: true,
       },
+      // `/construction` is the same server's second plane: one constructor
+      // run, read, plus the two routes that append a human verdict to a
+      // ledger beside it. Same port, same bearer.
+      "/construction": {
+        target: process.env.VITE_WORLD_TARGET ?? "http://127.0.0.1:8139",
+        changeOrigin: true,
+      },
       // `/graph` is the read-only map plane the ambient canvas reads.
       "/graph": {
         target: process.env.VITE_OPERATOR_TARGET ?? "http://127.0.0.1:8137",
