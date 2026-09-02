@@ -47,6 +47,7 @@ import { FrontierTable, type Obligation } from "./FrontierTable";
 import { MARK_DEFAULTS } from "./marks";
 import { RelationTable } from "./RelationTable";
 import { SchemaCanvas } from "./SchemaCanvas";
+import { readField, writeField } from "./fieldMemory";
 import { chipKind } from "./schemaGraph";
 import { WorldCanvas, type CanvasSelection } from "./WorldCanvas";
 import {
@@ -542,6 +543,15 @@ export function WorldPage() {
 
   const labels = useRef(new Map<string, string | null>());
   const linkedRelation = useRef(linkedRelationFromHash());
+  /**
+   * Whether the stored field has been looked for yet.
+   *
+   * The world arrives one render after the page does, so there is a window in
+   * which the field is legitimately empty and not yet known to be. Writing
+   * during it would store that emptiness over the field someone left behind —
+   * so nothing is written until the restore has been attempted.
+   */
+  const restored = useRef(false);
 
   useEffect(() => {
     try {
@@ -550,6 +560,27 @@ export function WorldPage() {
       /* private mode */
     }
   }, [mode]);
+
+  /**
+   * Put back the field this browser last held for this world.
+   *
+   * Only onto an empty canvas, and only once: someone who arrived through a
+   * link and has already started building keeps what they built. A revision
+   * this browser has no field for restores nothing, which is the intended
+   * answer after a rebuild.
+   */
+  useEffect(() => {
+    if (!overview || restored.current) return;
+    restored.current = true;
+    const stored = readField(overview.world_id, overview.revision);
+    if (stored) setSet((current) => (fieldSize(current) ? current : stored));
+  }, [overview]);
+
+  /** Keep the stored field level with the one on screen. */
+  useEffect(() => {
+    if (!overview || !restored.current) return;
+    writeField(overview.world_id, overview.revision, set);
+  }, [overview, set]);
 
   const onReaderWidth = useCallback((width: number) => {
     setReaderWidth(width);

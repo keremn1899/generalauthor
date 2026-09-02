@@ -115,6 +115,13 @@ Things the World canvases have that the product page had no reason to:
   under a line to reveal; here the roles are the whole content of a named typed
   n-ary relation, and a labelled line cannot show them. Semantic zoom, not
   decluttering. An obligation has no second form at any arity.
+- **The field, remembered.** `fieldMemory.ts` keeps which marks someone put on
+  the field and where they stand, in this browser, keyed by world **and
+  revision** — an assertion id means something only within the revision it was
+  read from, so a rebuild starts from an empty field rather than a
+  plausible-looking old one. The product persisted display *preferences*
+  (`product/graphPrefs.ts`), which is the same argument for the same storage;
+  what is new is that here the arrangement itself is work worth keeping.
 - **A note on element ids.** The plate keeps the assertion id; the filament is
   drawn under `bond:<assertion id>`. G6 keys nodes and edges in one namespace,
   so sharing the id makes `open` reuse the edge's `path` instead of building
