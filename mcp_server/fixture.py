@@ -10,6 +10,8 @@ from pathlib import Path
 
 import real_ladybug as lb
 
+from graph_storage.database import database_connection
+
 _REL_MAP = {
     "leadsto": "LEADSTO",
     "contains": "CONTAINS",
@@ -123,37 +125,34 @@ def build_fixture(db_path: Path | str) -> Path:
 
 
 def _write_graph(nodes, edges, db_path: Path) -> Path:
-    db = lb.Database(str(db_path))
-    conn = lb.Connection(db)
-    _create_schema(conn)
+    with database_connection(db_path) as conn:
+        _create_schema(conn)
 
-    for i, node in enumerate(nodes):
-        node_id, label, content, token_count = node[0], node[1], node[2], node[3]
-        anchor = node[4] if len(node) > 4 else content[:180]
-        conn.execute(
-            "CREATE (:Concept {id: $id, label: $label, text_content: $tc, "
-            "semantic_anchor: $anchor, embedding: $emb, token_count: $tok, "
-            "centrality_score: 0.0, is_metanode: false, linked_graph_id: ''})",
-            {
-                "id": node_id,
-                "label": label,
-                "tc": content,
-                "anchor": anchor,
-                "emb": _unit_vector(i),
-                "tok": int(token_count),
-            },
-        )
+        for i, node in enumerate(nodes):
+            node_id, label, content, token_count = node[0], node[1], node[2], node[3]
+            anchor = node[4] if len(node) > 4 else content[:180]
+            conn.execute(
+                "CREATE (:Concept {id: $id, label: $label, text_content: $tc, "
+                "semantic_anchor: $anchor, embedding: $emb, token_count: $tok, "
+                "centrality_score: 0.0, is_metanode: false, linked_graph_id: ''})",
+                {
+                    "id": node_id,
+                    "label": label,
+                    "tc": content,
+                    "anchor": anchor,
+                    "emb": _unit_vector(i),
+                    "tok": int(token_count),
+                },
+            )
 
-    for src, tgt, rel_type, rel_label in edges:
-        tbl = _REL_MAP[rel_type.lower()]
-        conn.execute(
-            f"MATCH (a:Concept {{id: $src}}), (b:Concept {{id: $tgt}}) "
-            f"CREATE (a)-[:{tbl} {{label: $lbl}}]->(b)",
-            {"src": src, "tgt": tgt, "lbl": rel_label},
-        )
+        for src, tgt, rel_type, rel_label in edges:
+            tbl = _REL_MAP[rel_type.lower()]
+            conn.execute(
+                f"MATCH (a:Concept {{id: $src}}), (b:Concept {{id: $tgt}}) "
+                f"CREATE (a)-[:{tbl} {{label: $lbl}}]->(b)",
+                {"src": src, "tgt": tgt, "lbl": rel_label},
+            )
 
-    del conn
-    del db
     return db_path
 
 
@@ -162,11 +161,9 @@ def ensure_fixture(db_path: Path | str) -> Path:
     db_path = Path(db_path)
     if db_path.exists():
         try:
-            db = lb.Database(str(db_path))
-            conn = lb.Connection(db)
-            res = conn.execute("MATCH (c:Concept) RETURN count(c)")
-            count = res.get_next()[0] if res.has_next() else 0
-            del conn, db
+            with database_connection(db_path) as conn:
+                res = conn.execute("MATCH (c:Concept) RETURN count(c)")
+                count = res.get_next()[0] if res.has_next() else 0
             if count > 0:
                 return db_path
         except Exception:

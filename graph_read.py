@@ -36,6 +36,8 @@ from typing import Any
 
 import real_ladybug as lb
 
+from graph_storage.database import DatabaseConnection, open_database_connection
+
 REL_TYPES = ("LEADSTO", "CONTAINS", "EXPRESSES", "NEARTO")
 
 #: Bumped when the sidecar shape changes. An older sidecar is a cache miss.
@@ -110,11 +112,11 @@ def topology_version(nodes: list[dict[str, Any]],
 # ------------------------------------------------------------------- reading
 
 
-def _open(db_path: Path) -> lb.Connection:
+def _open(db_path: Path) -> DatabaseConnection:
     """Read-only open. Never `engine.get_connection` — that seeds empty files."""
     global open_count
     open_count += 1
-    return lb.Connection(lb.Database(str(db_path)))
+    return open_database_connection(db_path)
 
 
 #: Node columns in widest-first order. Older graphs lack the newer ones, and
@@ -217,8 +219,7 @@ def read_node(db_path: Path, node_id: str) -> dict[str, Any]:
     nid = (node_id or "").strip()
     if not nid:
         return {"error": "missing node id"}
-    conn = _open(db_path)
-    try:
+    with _open(db_path) as conn:
         rows, columns = _select_widest(
             conn, "WHERE n.id = $id", {"id": nid}, extra=("text_content",)
         )
@@ -228,11 +229,6 @@ def read_node(db_path: Path, node_id: str) -> dict[str, Any]:
         record = _node_record(values, columns)
         record["text_content"] = dict(zip(columns, values)).get("text_content") or ""
         return record
-    finally:
-        try:
-            conn.close()
-        except Exception:
-            pass
 
 def structural_facts(db_path: Path, conn: lb.Connection,
                      node_count: int) -> tuple[dict[str, dict[str, Any]], str]:
@@ -477,17 +473,10 @@ def read_map(db_path: Path, lens: str | None = None) -> dict[str, Any]:
     if not db_path.exists():
         return {"error": f"no such graph: {db_path.name}"}
 
-    conn = _open(db_path)
-    try:
+    with _open(db_path) as conn:
         nodes = read_nodes(conn)
         edges = read_edges(conn)
         facts, structural_mode = structural_facts(db_path, conn, len(nodes))
-    finally:
-        # Catalogue/map reads are short-lived. Leaving Ladybug connections
-        # open here eventually exhausts handles (and can leave a graph looking
-        # locked to a later request), which used to surface as an intermittent
-        # `/graph/graphs` 500 after navigating between maps.
-        conn.close()
     version = graph_version(db_path)
     topo = topology_version(nodes, edges)
     layout = load_or_build_layout(db_path, topo, nodes, edges, lens)
