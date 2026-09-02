@@ -27,9 +27,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Graph } from "@antv/g6";
 import {
+  chipKindOf,
   chipNode,
   discNode,
   filamentEdge,
+  isAuthored,
+  isDecoration,
   paintOf,
   shelfNode,
   spokeEdge,
@@ -183,12 +186,14 @@ export function WorldCanvas({
       if (!assertionShown(assertion.origin, assertion.mode, show)) continue;
       const at = set.positions.get(assertion.assertion_id) ?? { x: 0, y: 0 };
       const overlay = unsettled(assertion.stale, assertion.completeness);
+      // Authored by a judgment rather than compiled — the constructor's or a
+      // person's. Both take the provisional palette when something else on the
+      // field is lit, because both are claims someone made.
+      const kind = chipKindOf(assertion.origin);
       const chipPaint =
         overlay
           ? paintFor(assertion.assertion_id, true)
-          : assertion.origin === "SEMANTIC" &&
-              lit &&
-              !lit.has(assertion.assertion_id)
+          : isAuthored(kind) && lit && !lit.has(assertion.assertion_id)
             ? provisional
             : paintFor(assertion.assertion_id);
       nodes.push(
@@ -197,11 +202,15 @@ export function WorldCanvas({
           at.x,
           at.y,
           assertion.relation,
-          assertion.origin === "SEMANTIC" ? "semantic" : "mechanical",
+          kind,
           chipPaint,
           params,
         ),
       );
+      // A shelf beneath says the assertion rests on other relations; a crown
+      // above says a person put it there. Both can be true of one chip — a
+      // human verdict is still maintained by whatever derives from it — so
+      // these are independent tests rather than a chain.
       if (assertion.mode === "DERIVED") {
         nodes.push(
           shelfNode(
@@ -211,6 +220,19 @@ export function WorldCanvas({
             assertion.relation,
             chipPaint,
             params,
+          ),
+        );
+      }
+      if (kind === "adjudicated") {
+        nodes.push(
+          shelfNode(
+            `crown:${assertion.assertion_id}`,
+            at.x,
+            at.y,
+            assertion.relation,
+            chipPaint,
+            params,
+            "over",
           ),
         );
       }
@@ -277,7 +299,7 @@ export function WorldCanvas({
           {
             label: bond.relation,
             named: named(bond.assertion_id),
-            semantic: bond.origin === "SEMANTIC",
+            kind: chipKindOf(bond.origin),
           },
         ),
       );
@@ -302,7 +324,7 @@ export function WorldCanvas({
     const out = new Map<string, { x: number; y: number }>();
     for (const node of graph.getNodeData()) {
       const id = String(node.id);
-      if (id.startsWith("shelf:")) continue;
+      if (isDecoration(id)) continue;
       const position = graph.getElementPosition(id);
       if (position) out.set(id, { x: Math.round(position[0]), y: Math.round(position[1]) });
     }
@@ -362,7 +384,7 @@ export function WorldCanvas({
       return typeof target?.id === "string" ? target.id : null;
     };
     const subject = (id: string | null) =>
-      id && !id.startsWith("shelf:") ? id : null;
+      id && !isDecoration(id) ? id : null;
     /**
      * The mark an element belongs to.
      *

@@ -15,20 +15,33 @@
 
 import type { WorldRelation } from "../api/world";
 
-export type ShowLayer = "semantic" | "derived" | "mechanical" | "unresolved";
+export type ShowLayer =
+  | "semantic"
+  | "derived"
+  | "mechanical"
+  | "unresolved"
+  | "adjudicated";
 
 export type ShowState = Record<ShowLayer, boolean>;
 
 export const SHOW_LAYERS: ShowLayer[] = [
   "semantic",
+  "adjudicated",
   "derived",
   "mechanical",
   "unresolved",
 ];
 
-/** The spec's useful defaults. Mechanical is the one that starts off. */
+/**
+ * The spec's useful defaults. Mechanical is the one that starts off.
+ *
+ * `adjudicated` is on and should stay on. A person must never have to opt in
+ * to seeing which parts of a world a person decided — a hidden human judgment
+ * reads as the machine's, which is the whole reason the origin exists.
+ */
 export const SHOW_DEFAULT: ShowState = {
   semantic: true,
+  adjudicated: true,
   derived: true,
   mechanical: false,
   unresolved: true,
@@ -38,11 +51,18 @@ export type CompletenessStatus = "COMPLETE" | "INCOMPLETE" | "UNKNOWN";
 
 /**
  * One layer for one assertion. A tuple is not in two layers at once: origin
- * SEMANTIC is authored even if it later feeds a derivation, origin DERIVED
- * (or a derived relation whose origin was not recorded) is computed, and
- * everything else — MECHANICAL, UNKNOWN, an empty BASE — is mechanical.
+ * ADJUDICATED is a person's, origin SEMANTIC is the constructor's even if it
+ * later feeds a derivation, origin DERIVED (or a derived relation whose origin
+ * was not recorded) is computed, and everything else — MECHANICAL, UNKNOWN, an
+ * empty BASE — is mechanical.
+ *
+ * ADJUDICATED is tested before the derivation mode, unlike SEMANTIC, and the
+ * asymmetry is deliberate: a human verdict that later feeds a derivation is
+ * still a human verdict, and folding it into `derived` would hide the one fact
+ * this axis exists to keep visible.
  */
 export function layerOf(origin: string, mode: string): ShowLayer {
+  if (origin === "ADJUDICATED") return "adjudicated";
   if (origin === "SEMANTIC") return "semantic";
   if (origin === "DERIVED" || mode === "DERIVED") return "derived";
   return "mechanical";

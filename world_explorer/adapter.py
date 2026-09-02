@@ -194,24 +194,28 @@ class WorldExplorerAdapter:
             "known_gaps": list(gaps) if isinstance(gaps, list) else [],
         }
 
-    def _origins_of(self, name: str, mode: str) -> list[str]:
-        """Construction origins of one relation, sampled rather than counted.
+    def _origins_seen(self) -> dict[str, list[str]]:
+        """Every construction origin present in each relation.
 
-        SHOW classifies a relation by who decided its tuples, and relations in
-        this world are homogeneous — `listing_of` is mechanical, 
-        `acceptable_replacement` is semantic, derived relations are derived.
-        One assertion is enough to say which, and sampling keeps schema() off
-        the full assertion scan overview() already pays for.
+        This was a sample — one assertion per relation, on the ground that a
+        world's relations are homogeneous. Adjudication ends that: a person's
+        verdict lands on single tuples inside relations the machine otherwise
+        built, so the origin worth seeing is the rare one, and any sample large
+        enough to miss it is a sample that reports a human decision as the
+        machine's. It is a whole scan for that reason, not for tidiness.
+
+        One pass for the whole schema rather than a query per relation, and
+        nothing kept between calls — the adapter reads through.
         """
-        if mode == "DERIVED":
-            return ["DERIVED"]
-        rows = self._view.query(
-            "SELECT assertion_id FROM _tv_assertions WHERE relation_name = ? LIMIT 1",
-            (name,),
-        )
-        if not rows:
-            return []
-        return [self._origin(rows[0]["assertion_id"])]
+        seen: dict[str, list[str]] = {}
+        for row in self._view.query(
+            "SELECT relation_name, assertion_id FROM _tv_assertions"
+        ):
+            origins = seen.setdefault(row["relation_name"], [])
+            origin = self._origin(row["assertion_id"])
+            if origin not in origins:
+                origins.append(origin)
+        return {name: sorted(origins) for name, origins in seen.items()}
 
     # -- §7.1 world and schema ---------------------------------------------
 
@@ -259,6 +263,7 @@ class WorldExplorerAdapter:
         node at all. That is a rule about the world, not about the renderer.
         """
         out: list[dict[str, Any]] = []
+        origins_seen = self._origins_seen()
         for record in self._described():
             roles = self._roles(record)
             item: dict[str, Any] = {
@@ -281,7 +286,7 @@ class WorldExplorerAdapter:
                 "referent_arity": sum(1 for role in roles if role.referent),
                 "count": record["row_count"],
                 "stale": record["stale"],
-                "origins": self._origins_of(record["name"], record["mode"]),
+                "origins": origins_seen.get(record["name"], []),
                 "completeness": self._completeness_out(record["completeness"]),
             }
             if record.get("derivation"):

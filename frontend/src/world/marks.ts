@@ -120,7 +120,11 @@ export function chipWidth(text: string, p: MarkParams): number {
   );
 }
 
-export type ChipKind = "mechanical" | "semantic" | "unresolved";
+export type ChipKind =
+  | "mechanical"
+  | "semantic"
+  | "unresolved"
+  | "adjudicated";
 
 /**
  * Which mark a relation gets, decided by how many of its roles are referents.
@@ -173,6 +177,31 @@ export function discNode(
   };
 }
 
+/**
+ * The plate a construction origin gets.
+ *
+ * `unresolved` is not reachable from here: it is a state of a claim, not an
+ * account of who made it, so it is applied by whoever knows that — never by
+ * reading an origin.
+ */
+export function chipKindOf(origin: string): ChipKind {
+  if (origin === "ADJUDICATED") return "adjudicated";
+  if (origin === "SEMANTIC") return "semantic";
+  return "mechanical";
+}
+
+/**
+ * Whether a plate is filled rather than outlined.
+ *
+ * Filled means a person authored the claim — the constructor for SEMANTIC, a
+ * human for ADJUDICATED — and the two forms the plate can take, standing on
+ * the field and riding a filament, both ask here so they cannot drift into
+ * disagreeing about the same tuple.
+ */
+export function isAuthored(kind: ChipKind | undefined): boolean {
+  return kind === "semantic" || kind === "adjudicated";
+}
+
 /** The plate. One tuple of one relation, standing on the field. */
 export function chipNode(
   id: string,
@@ -183,7 +212,7 @@ export function chipNode(
   paint: Paint,
   p: MarkParams,
 ) {
-  const filled = kind === "semantic";
+  const filled = isAuthored(kind);
   const outlined =
     kind === "unresolved" || (kind === "mechanical" && p.mechanicalOutline);
   return {
@@ -217,15 +246,44 @@ export function chipNode(
 }
 
 /**
- * The shelf under a derived chip.
+ * Which side of the chip a rule sits on, and therefore what it means.
  *
- * Measured from the word, not from the plate: a shelf the width of the box
+ * `under` is the derived shelf: this rests on something. `over` is the
+ * adjudicated crown: someone stood over this. The two are deliberately the
+ * same shape mirrored, because they are the same claim about a chip pointed
+ * in opposite directions — one names what the assertion leans on, the other
+ * names who put it there.
+ */
+export type RuleSide = "under" | "over";
+
+/**
+ * Nodes that draw a mark's state rather than being a mark.
+ *
+ * The derived shelf and the adjudicated crown are separate nodes because a
+ * rect cannot carry a second rule, but neither is a thing on the field: they
+ * have no position of their own to harvest and nothing to select. Every guard
+ * that cares — reading dragged positions back, resolving a click to a subject,
+ * refusing a drag — asks this rather than testing prefixes, so the next piece
+ * of chip furniture is one line here instead of a bug in whichever site was
+ * missed. It lives beside `shelfNode` because that is what emits them.
+ */
+const DECORATION = /^(shelf|crown):/;
+
+export function isDecoration(id: string): boolean {
+  return DECORATION.test(id);
+}
+
+/**
+ * The rule under a derived chip, or over an adjudicated one.
+ *
+ * Measured from the word, not from the plate: a rule the width of the box
  * reads as a second edge of the box, where the width of the name plus a little
- * air reads as the name resting on something.
+ * air reads as the name resting on — or being held down by — something.
  *
  * A separate element rather than part of the plate, because the plate is a
- * `rect` and a second rule is a second shape. Both surfaces place it through
- * this function, so the two can only ever be apart by the gap they are given.
+ * `rect` and a second rule is a second shape. Both surfaces and both sides
+ * place it through this function, so a shelf and a crown can only ever be
+ * apart by the gap they are given.
  */
 export function shelfNode(
   id: string,
@@ -234,15 +292,17 @@ export function shelfNode(
   text: string,
   paint: Paint,
   p: MarkParams,
+  side: RuleSide = "under",
 ) {
   const width =
     textWidth(text, p.chipLabelSize, p.chipLabelWeight) + p.shelfOverhang * 2;
+  const offset = p.chipHeight / 2 + p.shelfGap;
   return {
     id,
     type: "rect",
     style: {
       x,
-      y: y + p.chipHeight / 2 + p.shelfGap,
+      y: side === "under" ? y + offset : y - offset,
       size: [Math.max(4, Math.round(width)), p.shelfLine] as [number, number],
       radius: 0,
       fill: paint.ink,
@@ -310,9 +370,14 @@ export function filamentEdge(
   target: string,
   paint: Paint,
   p: MarkParams,
-  options: { label?: string; named: boolean; semantic?: boolean },
+  options: { label?: string; named: boolean; kind?: ChipKind },
 ) {
   const named = options.named && Boolean(options.label);
+  // A bond's plate is the same plate, so it fills on the same rule. What it
+  // cannot carry is furniture: a label background has no side to hang a shelf
+  // or a crown from, so a derived or adjudicated binary is drawn detached —
+  // see `schemaGraph`, which takes exactly that exception.
+  const filled = isAuthored(options.kind);
   return {
     id,
     source,
@@ -327,7 +392,7 @@ export function filamentEdge(
       labelFontFamily: FONT_SANS_FAMILY,
       labelFontSize: p.chipLabelSize,
       labelFontWeight: p.chipLabelWeight,
-      labelFill: options.semantic ? paint.field : paint.ink,
+      labelFill: filled ? paint.field : paint.ink,
       // The plate on a filament is the same plate, so it is centred the same
       // way. Letting the edge label fall back to the renderer's own placement
       // is how the collapsed and detached forms stop being one object.
@@ -337,7 +402,7 @@ export function filamentEdge(
       labelOpacity: 1,
       labelBackground: named,
       labelBackgroundOpacity: 1,
-      labelBackgroundFill: options.semantic ? paint.ink : paint.chip,
+      labelBackgroundFill: filled ? paint.ink : paint.chip,
       labelBackgroundLineWidth: 0,
       labelBackgroundRadius: p.chipRadius,
       labelPadding: [p.chipPaddingY, p.chipPaddingX] as [number, number],

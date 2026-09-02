@@ -47,6 +47,7 @@ import { FrontierTable, type Obligation } from "./FrontierTable";
 import { MARK_DEFAULTS } from "./marks";
 import { RelationTable } from "./RelationTable";
 import { SchemaCanvas } from "./SchemaCanvas";
+import { chipKind } from "./schemaGraph";
 import { WorldCanvas, type CanvasSelection } from "./WorldCanvas";
 import {
   drop,
@@ -995,9 +996,11 @@ export function WorldPage() {
                     <ReaderHeader
                       title={relation.name}
                       kind={
-                        (relation.origins ?? []).includes("SEMANTIC")
-                          ? "semantic"
-                          : relation.mode.toLowerCase()
+                        // A relation the machine built reads by its mode; one
+                        // someone decided reads by who decided it.
+                        chipKind(relation) === "mechanical"
+                          ? relation.mode.toLowerCase()
+                          : chipKind(relation)
                       }
                       meta={`${relation.count} tuple${relation.count === 1 ? "" : "s"} · ${relation.arity} roles${conditionOf(relation.stale, relation.completeness)}`}
                       onClose={() => setReaderOpen(false)}

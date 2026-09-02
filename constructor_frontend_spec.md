@@ -297,6 +297,18 @@ not.
 `ShowLayer` gains `adjudicated`, default **on**. A person must never have to
 opt in to seeing which parts of the world a person decided.
 
+### 7.5 Where the mark does not reach
+
+A relation of one referent role and a scalar — `listing_availability`,
+`rated_voltage` — is projected as a field on the referent's card, not as a
+chip. It has no plate, so it has no plate to crown, and an adjudicated scalar
+currently reads on the card exactly as a compiled one does.
+
+Recorded here rather than in §10 because it is a hole in the mark, not a
+missing link: the reader's field rows carry no construction origin at all
+today. Closing it means origin per field row in the reader, and it is owed
+before any purpose answer rests on an adjudicated scalar.
+
 ---
 
 ## 8. Views

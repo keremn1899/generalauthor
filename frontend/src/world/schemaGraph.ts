@@ -55,9 +55,54 @@ function kindOf(role: { kinds?: string[] }): string | null {
   return role.kinds && role.kinds.length ? role.kinds[0] : null;
 }
 
-/** Construction origin decides the plate; derived still gets the shelf. */
-function chipKind(relation: WorldRelation): ChipKind {
-  return (relation.origins ?? []).includes("SEMANTIC") ? "semantic" : "mechanical";
+/** Construction origin decides the plate; derived still gets the shelf.
+ *
+ * A relation carries the origins of every tuple under it, so the test is
+ * whether any of them was adjudicated, not whether all of them were: one human
+ * verdict in a relation is the fact worth seeing from the schema, and reading
+ * it as machine-made because its neighbours were is the error that matters.
+ *
+ * Exported because the reader header names the same fact in words, and a
+ * panel that disagreed with the canvas beside it would be worse than either.
+ */
+export function chipKind(relation: WorldRelation): ChipKind {
+  const origins = relation.origins ?? [];
+  if (origins.includes("ADJUDICATED")) return "adjudicated";
+  return origins.includes("SEMANTIC") ? "semantic" : "mechanical";
+}
+
+/**
+ * The rules a chip carries: a shelf under a derivation, a crown over a human
+ * verdict. Both can be true of one relation, and the two are the same shape
+ * mirrored, so they are emitted from one place rather than tested twice.
+ */
+function furniture(
+  relation: WorldRelation,
+  kind: ChipKind,
+  at: Point,
+  paint: Paint,
+  params: MarkParams,
+): unknown[] {
+  const marks: unknown[] = [];
+  if (relation.mode === "DERIVED") {
+    marks.push(
+      shelfNode(`shelf:${relation.name}`, at.x, at.y, relation.name, paint, params),
+    );
+  }
+  if (kind === "adjudicated") {
+    marks.push(
+      shelfNode(
+        `crown:${relation.name}`,
+        at.x,
+        at.y,
+        relation.name,
+        paint,
+        params,
+        "over",
+      ),
+    );
+  }
+  return marks;
 }
 
 /** Every referent namespace the schema mentions, in a stable order. */
@@ -187,10 +232,11 @@ export function schemaLayout(
     const kind = chipKind(relation);
 
     if (projection === "bond" && distinct) {
-      // The chip rides the filament — unless the relation is derived, because a
-      // shelf cannot sit under an edge label. That is the one exception, and it
-      // is why a derived binary is legible at rest while a base one is not.
-      if (relation.mode === "DERIVED") {
+      // The chip rides the filament — unless the relation carries furniture,
+      // because neither a shelf nor a crown can sit against an edge label. That
+      // is the one exception, and it is why a derived or adjudicated binary is
+      // legible at rest while a base one is not.
+      if (relation.mode === "DERIVED" || kind === "adjudicated") {
         nodes.push(
           chipNode(
             `rel:${relation.name}`,
@@ -201,14 +247,7 @@ export function schemaLayout(
             chipPaint,
             params,
           ),
-          shelfNode(
-            `shelf:${relation.name}`,
-            at.x,
-            at.y,
-            relation.name,
-            chipPaint,
-            params,
-          ),
+          ...furniture(relation, kind, at, chipPaint, params),
         );
         edges.push(
           filamentEdge(
@@ -237,7 +276,7 @@ export function schemaLayout(
           `kind:${roleKinds[1]}`,
           chipPaint,
           params,
-          { label: relation.name, named, semantic: kind === "semantic" },
+          { label: relation.name, named, kind },
         ),
       );
       continue;
@@ -256,11 +295,7 @@ export function schemaLayout(
         params,
       ),
     );
-    if (relation.mode === "DERIVED") {
-      nodes.push(
-        shelfNode(`shelf:${relation.name}`, at.x, at.y, relation.name, chipPaint, params),
-      );
-    }
+    nodes.push(...furniture(relation, kind, at, chipPaint, params));
     referentRoles.forEach((role, roleIndex) => {
       const kind = kindOf(role);
       if (!kind) return;

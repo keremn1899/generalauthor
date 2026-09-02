@@ -10,9 +10,19 @@ from enum import StrEnum
 
 
 class ConstructionOrigin(StrEnum):
+    """How a live semantic tuple came to be in the world.
+
+    ``ADJUDICATED`` is a person's judgment, superseding or supplying one the
+    constructor made.  It is its own member rather than a flavour of
+    ``SEMANTIC`` because a human decision entering as the machine's launders
+    it: every downstream claim about how the world was constructed becomes
+    untrue, and the frontier stops being computable mechanically.
+    """
+
     MECHANICAL = "MECHANICAL"
     SEMANTIC = "SEMANTIC"
     DERIVED = "DERIVED"
+    ADJUDICATED = "ADJUDICATED"
 
 
 class OriginMetadataError(ValueError):

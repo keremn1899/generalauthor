@@ -15,7 +15,7 @@ import {
   GRAPH_DNA_THEME,
   type ThemeMode,
 } from "../styles/graphDna";
-import { MARK_DEFAULTS, paintOf } from "./marks";
+import { isDecoration, MARK_DEFAULTS, paintOf } from "./marks";
 import { schemaLayout } from "./schemaGraph";
 
 export function SchemaCanvas({
@@ -80,7 +80,7 @@ export function SchemaCanvas({
   );
 
   const relationOf = (id: string | null): string | null => {
-    if (!id || id.startsWith("kind:") || id.startsWith("shelf:")) return null;
+    if (!id || id.startsWith("kind:") || isDecoration(id)) return null;
     if (id.startsWith("rel:")) return id.slice(4);
     return id.split(":")[0] || null;
   };
@@ -145,7 +145,7 @@ export function SchemaCanvas({
           animation: false,
           enable: (event: unknown) => {
             const id = (event as { target?: { id?: unknown } })?.target?.id;
-            return typeof id === "string" && !id.startsWith("shelf:");
+            return typeof id === "string" && !isDecoration(id);
           },
         },
       ],
