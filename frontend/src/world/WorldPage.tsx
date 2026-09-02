@@ -566,7 +566,13 @@ export function WorldPage() {
     if (!name || !relations.length) return;
     linkedRelation.current = null;
     if (!relations.some((relation) => relation.name === name)) {
+      // The notice lives inside the reader, and this effect runs on arrival
+      // with the reader shut — so the miss has to open it or the seam fails
+      // silently. A link from construction naming a relation this world does
+      // not have is the normal case when the run and the world are different
+      // domains, not an edge one.
       setNotice(`${name} is not in this world's vocabulary.`);
+      setReaderOpen(true);
       return;
     }
     setFocusedRelation(name);

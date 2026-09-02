@@ -224,6 +224,60 @@
   white-space: pre-wrap;
 }
 
+/* A list nested in a field is the field's value, not a section of its own, so
+   it drops the block spacing `.artifact__list` carries when it stands alone. */
+.artifact__field dd .artifact__list {
+  margin: 0;
+}
+
+/* A set of short terms. Separated by rule, not by punctuation the artifact
+   never contained. */
+.artifact__terms {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 2px 10px;
+}
+
+.artifact__terms > span + span {
+  border-left: 1px solid var(--rule);
+  padding-left: 10px;
+}
+
+/* One record of a list — a role, a premise — laid out as its own named parts.
+   The label is the same muted small-caps the field labels use, one level in. */
+.artifact__pairs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 14px;
+}
+
+.artifact__pair {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.artifact__pair i {
+  color: var(--ink-muted);
+  /* The label names the part; it never wraps into a column of single letters,
+     however wide the value beside it grows. */
+  flex: none;
+  font-size: 0.55rem;
+  font-style: normal;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* A pair whose value is itself a list stops being a phrase and becomes a
+   stanza: the label sits above its items rather than beside them. */
+.artifact__pair:has(> .artifact__list) {
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+}
+
 .artifact__list,
 .artifact__findings {
   margin: 0 0 16px;

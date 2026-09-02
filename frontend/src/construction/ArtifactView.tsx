@@ -63,11 +63,61 @@ function StringList({ values }: { values: unknown }) {
   );
 }
 
+/** A scalar reads as a sentence; a list reads as a list.
+ *
+ * `words` falls back to `JSON.stringify`, which is the right last resort for a
+ * shape nobody anticipated and the wrong first answer for the two shapes these
+ * artifacts are mostly made of. P1's roles are the clearest case: a named typed
+ * role is the frozen calculus, and rendering it as `[{"name":…,"type":…}]`
+ * hands the reviewer the punctuation and makes them do the parsing. */
+function Value({ value }: { value: unknown }) {
+  if (!Array.isArray(value)) {
+    const scalar = value === null || typeof value !== "object";
+    if (scalar) return <>{words(value)}</>;
+    return (
+      <span className="artifact__pairs">
+        {Object.entries(object(value)).map(([key, item]) => (
+          <span key={key} className="artifact__pair">
+            <i>{key.replaceAll("_", " ")}</i>
+            <Value value={item} />
+          </span>
+        ))}
+      </span>
+    );
+  }
+  if (!value.length) return <span className="artifact__absent">none recorded</span>;
+  // Short scalars — purpose letters, clause kinds — are a set, and a set reads
+  // as a run. Bullets are for items long enough to need their own line.
+  const terse = value.every(
+    (item) => item !== null && typeof item !== "object" && words(item).length <= 32,
+  );
+  if (terse) {
+    return (
+      <span className="artifact__terms">
+        {value.map((item, index) => (
+          <span key={index}>{words(item)}</span>
+        ))}
+      </span>
+    );
+  }
+  return (
+    <ul className="artifact__list">
+      {value.map((item, index) => (
+        <li key={index}>
+          <Value value={item} />
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 function Field({ name, value }: { name: string; value: unknown }) {
   return (
     <div className="artifact__field">
       <dt>{name.replaceAll("_", " ")}</dt>
-      <dd>{words(value)}</dd>
+      <dd>
+        <Value value={value} />
+      </dd>
     </div>
   );
 }
