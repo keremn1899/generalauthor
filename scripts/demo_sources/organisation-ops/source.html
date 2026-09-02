@@ -1,0 +1,22 @@
+<html><body>
+<h1>Acme Payments — Operations Handbook</h1>
+
+<h2>Teams</h2>
+<p id="t-payments">The Payments team owns the checkout and settlement services. Priya Nair leads Payments and is the primary on-call escalation for settlement incidents.</p>
+<p id="t-platform">The Platform team owns the shared datastore and the internal message bus. Marco Rossi leads Platform.</p>
+
+<h2>People</h2>
+<p id="p-priya">Priya Nair is a staff engineer on the Payments team. She is accountable for the checkout service and is first on the settlement on-call rotation.</p>
+<p id="p-sam">Sam Okafor is a senior engineer on the Payments team and maintains the settlement service.</p>
+<p id="p-marco">Marco Rossi is the Platform team lead and owns the datastore service.</p>
+
+<h2>Services</h2>
+<p id="s-checkout">The checkout service accepts customer orders. It depends on the settlement service to capture funds and on the datastore to persist orders.</p>
+<p id="s-settlement">The settlement service captures funds from the payment processor. It depends on the datastore and publishes settlement events to the message bus.</p>
+<p id="s-datastore">The datastore service is the shared Postgres cluster owned by Platform. Losing the datastore takes down both checkout and settlement.</p>
+<p id="s-bus">The message bus distributes settlement events to downstream consumers.</p>
+
+<h2>Operational policy</h2>
+<p id="pol-oncall">Policy: every customer-facing service must have a named on-call owner. Checkout and settlement on-call escalates to Priya Nair.</p>
+<p id="pol-change">Policy: changes to the datastore require sign-off from the Platform lead because checkout and settlement both depend on it.</p>
+</body></html>
