@@ -265,7 +265,6 @@ name = "graphauthor"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
-    { name = "cursor-sdk" },
     { name = "httpx" },
     { name = "pydantic" },
     { name = "python-dotenv" },
@@ -277,6 +276,7 @@ dependencies = [
 [package.optional-dependencies]
 all = [
     { name = "beautifulsoup4" },
+    { name = "cursor-sdk" },
     { name = "mcp" },
     { name = "pypdf" },
     { name = "starlette" },
@@ -288,10 +288,12 @@ construct = [
 ]
 cursor = [
     { name = "beautifulsoup4" },
+    { name = "cursor-sdk" },
     { name = "mcp" },
     { name = "pypdf" },
 ]
 dev = [
+    { name = "cursor-sdk" },
     { name = "pytest" },
 ]
 http = [
@@ -308,7 +310,9 @@ requires-dist = [
     { name = "beautifulsoup4", marker = "extra == 'all'", specifier = ">=4.12.0" },
     { name = "beautifulsoup4", marker = "extra == 'construct'", specifier = ">=4.12.0" },
     { name = "beautifulsoup4", marker = "extra == 'cursor'", specifier = ">=4.12.0" },
-    { name = "cursor-sdk", specifier = ">=1.0.30" },
+    { name = "cursor-sdk", marker = "extra == 'all'", specifier = ">=1.0.30" },
+    { name = "cursor-sdk", marker = "extra == 'cursor'", specifier = ">=1.0.30" },
+    { name = "cursor-sdk", marker = "extra == 'dev'", specifier = ">=1.0.30" },
     { name = "httpx", specifier = ">=0.27.0" },
     { name = "mcp", marker = "extra == 'all'", specifier = ">=1.0,<2" },
     { name = "mcp", marker = "extra == 'cursor'", specifier = ">=1.0,<2" },
