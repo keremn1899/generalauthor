@@ -104,6 +104,22 @@ as a local styling choice rather than as drift:
 - **Existing marks never move.** Layout settles at load; expansion places new
   marks around what is already standing (`world/relax.ts`, `world/workingSet.ts`).
 
+## New here
+
+Things the World canvases have that the product page had no reason to:
+
+- **Folding a bond open.** A binary tuple is drawn either as the filament
+  between its referents or as a plate standing between them with a named spoke
+  to each — `foldingOf` / `open` / `collapse` in `workingSet.ts`, offered from
+  the reader. The product's edges were binary and unnamed, so there was nothing
+  under a line to reveal; here the roles are the whole content of a named typed
+  n-ary relation, and a labelled line cannot show them. Semantic zoom, not
+  decluttering. An obligation has no second form at any arity.
+- **A note on element ids.** The plate keeps the assertion id; the filament is
+  drawn under `bond:<assertion id>`. G6 keys nodes and edges in one namespace,
+  so sharing the id makes `open` reuse the edge's `path` instead of building
+  the plate's `rect`.
+
 ## Not carried over at all
 
 Named so their absence is a decision on the record rather than an oversight:

@@ -99,6 +99,15 @@ export type FieldDemand = {
   scalars: { role: string; value: unknown }[];
 };
 
+/**
+ * A binary tuple drawn as the line it makes.
+ *
+ * It carries its roles and scalars even though a filament draws neither. A
+ * bond is not a different kind of thing from a plate — it is the same tuple
+ * folded onto the line between its two referents — and `open` unfolds it in
+ * place. Keeping the folded form complete is what makes that a change of
+ * drawing rather than a refetch.
+ */
 export type FieldBond = {
   assertion_id: string;
   relation: string;
@@ -108,6 +117,10 @@ export type FieldBond = {
   completeness: "COMPLETE" | "INCOMPLETE" | "UNKNOWN" | null;
   source: string;
   target: string;
+  /** Referent role values in role order — the spokes the open form would have. */
+  spokes: { role: string; id: string }[];
+  /** Scalar role values, which the filament has nowhere to put. */
+  scalars: { role: string; value: unknown }[];
 };
 
 export type WorkingSet = {
@@ -464,19 +477,31 @@ function fold(
 
   placed = attach(next, spokes, input.anchor, anchorAt, taken, placed, input.labels);
 
+  // Already standing, in either form. A second fold would overwrite the record
+  // and recompute its position, which is `existing marks never move` broken by
+  // the one path that is allowed to add marks. This is also what lets a bond
+  // stay open across later expansions: its plate is not a bond any more, so the
+  // `bonds` check alone would not have found it.
+  if (
+    next.assertions.has(tuple.assertion_id) ||
+    next.bonds.some((bond) => bond.assertion_id === tuple.assertion_id)
+  ) {
+    return placed;
+  }
+
   if (projection === "bond" && spokes.length === 2) {
-    if (!next.bonds.some((bond) => bond.assertion_id === tuple.assertion_id)) {
-      next.bonds.push({
-        assertion_id: tuple.assertion_id,
-        relation: input.relation,
-        origin: tuple.origin,
-        mode: input.mode,
-        stale: input.stale,
-        completeness: input.completeness,
-        source: spokes[0].id,
-        target: spokes[1].id,
-      });
-    }
+    next.bonds.push({
+      assertion_id: tuple.assertion_id,
+      relation: input.relation,
+      origin: tuple.origin,
+      mode: input.mode,
+      stale: input.stale,
+      completeness: input.completeness,
+      source: spokes[0].id,
+      target: spokes[1].id,
+      spokes,
+      scalars,
+    });
     return placed;
   }
 
@@ -576,12 +601,103 @@ function countAround(set: WorkingSet, anchor: string): number {
   return count;
 }
 
+/**
+ * Whether a mark on the field has a second form, and which way it would go.
+ *
+ * A binary assertion is drawn two ways: as the filament between its referents,
+ * or as a plate standing between them with a named spoke to each. Both are the
+ * same tuple. The line is the reading where the relation is the connection; the
+ * plate is the reading where the relation is a thing that has roles — and roles
+ * are precisely what a named typed n-ary relation adds and what a labelled line
+ * cannot show. So this is semantic zoom and not decluttering: opening a bond
+ * reveals `part` and `bom_item`, and any scalar the line had nowhere to put.
+ *
+ * Two things deliberately have no second form.
+ *
+ * An assertion with three or more referents has no line to fold onto, so it is
+ * only ever a plate. And an **obligation never collapses onto a bond at any
+ * arity** — a line between two discs asserts that they are joined, and the
+ * entire content of an unresolved mark is that no such claim has been made.
+ * That is why this reads the field's own collections rather than arity: a
+ * demand is not in either of them.
+ */
+export function foldingOf(
+  set: WorkingSet,
+  id: string,
+): "open" | "collapse" | null {
+  if (set.bonds.some((bond) => bond.assertion_id === id)) return "open";
+  const assertion = set.assertions.get(id);
+  if (assertion && assertion.spokes.length === 2) return "collapse";
+  return null;
+}
+
+/**
+ * Unfold a bond into the plate it is.
+ *
+ * The plate lands on the midpoint of the line it replaces, so the line appears
+ * to open rather than to be swapped for something elsewhere, and neither disc
+ * moves — this changes how a tuple is drawn and nothing about where the field
+ * stands. `plateAt` still probes outward if the midpoint is already occupied,
+ * by the same phyllotaxis walk every other plate is placed with.
+ */
+export function open(set: WorkingSet, assertionId: string): WorkingSet {
+  const bond = set.bonds.find((edge) => edge.assertion_id === assertionId);
+  if (!bond) return set;
+  const next = clone(set);
+  next.bonds = next.bonds.filter((edge) => edge.assertion_id !== assertionId);
+  next.assertions.set(assertionId, {
+    assertion_id: bond.assertion_id,
+    relation: bond.relation,
+    origin: bond.origin,
+    mode: bond.mode,
+    stale: bond.stale,
+    completeness: bond.completeness,
+    spokes: bond.spokes,
+    scalars: bond.scalars,
+  });
+  const ends = [bond.source, bond.target]
+    .map((id) => next.positions.get(id))
+    .filter((point): point is Point => Boolean(point));
+  const middle = ends.length
+    ? {
+        x: ends.reduce((sum, p) => sum + p.x, 0) / ends.length,
+        y: ends.reduce((sum, p) => sum + p.y, 0) / ends.length,
+      }
+    : { x: 0, y: 0 };
+  next.positions.set(assertionId, plateAt(next, middle, bond.spokes));
+  return next;
+}
+
+/** Fold a two-referent plate back onto the line between its referents. */
+export function collapse(set: WorkingSet, assertionId: string): WorkingSet {
+  const assertion = set.assertions.get(assertionId);
+  if (!assertion || assertion.spokes.length !== 2) return set;
+  const next = clone(set);
+  next.assertions.delete(assertionId);
+  next.positions.delete(assertionId);
+  next.bonds.push({
+    assertion_id: assertion.assertion_id,
+    relation: assertion.relation,
+    origin: assertion.origin,
+    mode: assertion.mode,
+    stale: assertion.stale,
+    completeness: assertion.completeness,
+    source: assertion.spokes[0].id,
+    target: assertion.spokes[1].id,
+    spokes: assertion.spokes,
+    scalars: assertion.scalars,
+  });
+  return next;
+}
+
 /** Take a mark and everything that only existed because of it. */
 export function drop(set: WorkingSet, id: string): WorkingSet {
   const next = clone(set);
   next.referents.delete(id);
   next.positions.delete(id);
-  next.bonds = next.bonds.filter((bond) => bond.source !== id && bond.target !== id);
+  next.bonds = next.bonds.filter(
+    (bond) => bond.source !== id && bond.target !== id,
+  );
   for (const [assertionId, assertion] of next.assertions) {
     if (assertion.spokes.some((spoke) => spoke.id === id)) {
       next.assertions.delete(assertionId);

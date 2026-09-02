@@ -61,6 +61,26 @@ import {
   type ShowState,
 } from "./show";
 
+/**
+ * The element id a bond's filament is drawn under.
+ *
+ * A tuple that folds is the same assertion in two drawings, but G6 keys nodes
+ * and edges in **one** namespace, so the plate and the filament cannot share
+ * the assertion's id: on `open`, G6 sees an element by that id already in the
+ * scene and keeps the edge's `path` rather than building the plate's `rect`.
+ * The plate keeps the assertion id — it is the form the shelf, the crown and
+ * the spokes all hang off — and the filament is namespaced. Everything the
+ * reader deals in is still the assertion id; `subjectOfBond` is where the
+ * drawing's id turns back into the tuple's.
+ */
+function bondElementId(assertionId: string): string {
+  return `bond:${assertionId}`;
+}
+
+function subjectOfBond(elementId: string): string {
+  return elementId.startsWith("bond:") ? elementId.slice(5) : elementId;
+}
+
 export type CanvasSelection =
   | { kind: "referent"; id: string }
   | { kind: "assertion"; id: string }
@@ -196,7 +216,11 @@ export function WorldCanvas({
     if (bond && assertionShown(bond.origin, bond.mode, show)) {
       // The filament is the mark. Beads start clear of the discs it runs
       // between, or the selection reads as belonging to one of them.
-      return { shape: "line", id, trim: params.discDiameter / 2 };
+      return {
+        shape: "line",
+        id: bondElementId(id),
+        trim: params.discDiameter / 2,
+      };
     }
     return null;
   }, [params.discDiameter, selection, set, show]);
@@ -342,7 +366,7 @@ export function WorldCanvas({
       const overlay = unsettled(bond.stale, bond.completeness);
       edges.push(
         filamentEdge(
-          bond.assertion_id,
+          bondElementId(bond.assertion_id),
           bond.source,
           bond.target,
           paintFor(bond.assertion_id, overlay),
@@ -416,7 +440,8 @@ export function WorldCanvas({
      * the trailing index is a suffix this surface added, so only that is taken
      * off.
      */
-    const markOf = (id: string | null) => (id ? id.replace(/:\d+$/, "") : null);
+    const markOf = (id: string | null) =>
+      id ? subjectOfBond(id.replace(/:\d+$/, "")) : null;
 
     graph.on("node:pointerenter", (event) => onHover(subject(idOf(event))));
     graph.on("edge:pointerenter", (event) => onHover(markOf(idOf(event))));

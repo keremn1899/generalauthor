@@ -50,12 +50,15 @@ import { SchemaCanvas } from "./SchemaCanvas";
 import { chipKind } from "./schemaGraph";
 import { WorldCanvas, type CanvasSelection } from "./WorldCanvas";
 import {
+  collapse,
   drop,
   emptySet,
   expand,
   expansionKey,
   fieldSize,
+  foldingOf,
   MAX_FIELD_NODES,
+  open as openBond,
   place,
   placeDemand,
   seed,
@@ -217,11 +220,16 @@ function Grounding({ assertion }: { assertion: WorldAssertion }) {
 
 function AssertionPanel({
   assertion,
+  folding,
+  onFold,
   onTable,
   onDerivation,
   onClose,
 }: {
   assertion: WorldAssertion | null;
+  /** Which way this tuple's second drawing lies, or null if it has none. */
+  folding: "open" | "collapse" | null;
+  onFold: () => void;
   onTable: (relation: string) => void;
   onDerivation: (relation: string, assertion: string | null) => void;
   onClose: () => void;
@@ -272,6 +280,11 @@ function AssertionPanel({
         </section>
       </div>
       <footer className="world-reader__actions">
+        {folding ? (
+          <button type="button" className="node-reader__link" onClick={onFold}>
+            {folding === "open" ? "Open on the field" : "Fold onto the line"}
+          </button>
+        ) : null}
         <button
           type="button"
           className="node-reader__link"
@@ -799,6 +812,35 @@ export function WorldPage() {
     return ids;
   }, [set]);
 
+  /**
+   * Whether the open assertion has a second drawing, and which way.
+   *
+   * Asked of the field rather than of the tuple: the same assertion is
+   * foldable when it is standing on the field and nothing at all when it is
+   * only a row in a table, because there is no line to open.
+   */
+  const folding = useMemo(
+    () =>
+      selection?.kind === "assertion" ? foldingOf(set, selection.id) : null,
+    [selection, set],
+  );
+
+  /**
+   * Redraw one tuple in its other form.
+   *
+   * No refetch and no re-layout: both forms are already on the field, and the
+   * plate lands on the line's own midpoint. The reader does not change either
+   * — it was showing the tuple's roles all along, which is the argument for
+   * the feature: opening puts on the field what the panel already knew.
+   */
+  const onFold = useCallback(() => {
+    if (!selection || selection.kind !== "assertion") return;
+    const id = selection.id;
+    setSet((current) =>
+      foldingOf(current, id) === "open" ? openBond(current, id) : collapse(current, id),
+    );
+  }, [selection]);
+
   const onDrop = useCallback(() => {
     if (!selection || selection.kind !== "referent") return;
     setSet((current) => drop(current, selection.id));
@@ -983,6 +1025,8 @@ export function WorldPage() {
                 ) : onField && selection?.kind === "assertion" ? (
                   <AssertionPanel
                     assertion={assertion}
+                    folding={folding}
+                    onFold={onFold}
                     onTable={(name) =>
                       setDrawer({
                         kind: "relation",
