@@ -18,9 +18,17 @@
 }
 
 .world__stage {
+  position: relative;
   flex: 1;
   min-height: 0;
   overflow: hidden;
+}
+
+/* The renderer's own container, so the selection ants can be a sibling over it
+   rather than a child of the element G6 owns. */
+.world__surface {
+  position: absolute;
+  inset: 0;
 }
 
 /* The World reader follows the Graph reader's title/body/footer anatomy, but

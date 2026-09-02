@@ -307,6 +307,15 @@ export function createMotionPlans(
   });
 }
 
+/**
+ * The spine at its defaults.
+ *
+ * Surfaces that do not tune the motion field share this rather than each
+ * calling the factory, so "the kernel's timings" is one object and not a
+ * convention several files are trusted to keep.
+ */
+export const DEFAULT_MOTION_PLANS = createMotionPlans();
+
 function poseTransform(pose: MotionPose) {
   const transforms: string[] = [];
   if (pose.x || pose.y) {

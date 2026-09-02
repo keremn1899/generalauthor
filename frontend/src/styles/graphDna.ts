@@ -501,6 +501,15 @@ export const GRAPH_DNA_INTERACTION = {
   dragEdgePresence: 0.08,
   selectionSpeed: 8,
   selectionClearance: 11,
+  /**
+   * The same air, off a plate instead of a disc.
+   *
+   * Selection stands off the mark it rings, and how far is a question about the
+   * mark's own scale: 11 is a quarter of a disc's radius and more than a plate
+   * is tall. One value each, rather than one value that is wrong for one of
+   * them.
+   */
+  selectionPlateClearance: 5,
   selectionDotGap: 4.5,
   selectionLine: 1.5,
   /**

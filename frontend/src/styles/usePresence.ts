@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { createMotionPlans } from "./motion";
+import { DEFAULT_MOTION_PLANS } from "./motion";
 
 /**
  * Leave time for anything that must stay mounted through absorb.
@@ -8,7 +8,7 @@ import { createMotionPlans } from "./motion";
  * has no transition to run, which is why OverlayPanel's reader used to snap
  * while the library beside it slid.
  */
-const SPINE = createMotionPlans();
+const SPINE = DEFAULT_MOTION_PLANS;
 
 export function presenceLeaveMs() {
   return SPINE.absorb.durationMs;

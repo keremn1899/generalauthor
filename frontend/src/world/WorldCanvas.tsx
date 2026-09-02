@@ -18,6 +18,13 @@
  * diagram — as well as the mechanical reason a chip is legible at all, since a
  * label takes the opacity of the element it belongs to.
  *
+ * **Selection is marching ants.** The mark the reader is open on is ringed by
+ * travelling beads — the product canvas's selection, brought over whole. It
+ * replaces a translucent halo, which on a field of discs read as a smudge
+ * rather than as a choice, and it generalises: a disc takes a circle, a plate
+ * takes a square-cornered box, and a bond — which has no mark of its own — has
+ * the beads march along the filament itself.
+ *
  * **Focus dims the rest.** Hovering does not just add a name, it takes presence
  * away from everything the named thing does not touch. The lit/dim pair is how
  * the product's canvas answers "what is this connected to" without moving
@@ -40,10 +47,13 @@ import {
   type Paint,
 } from "./marks";
 import {
+  GRAPH_DNA_INTERACTION,
   GRAPH_DNA_PROVISIONAL_THEME,
   GRAPH_DNA_THEME,
   type ThemeMode,
 } from "../styles/graphDna";
+import { DEFAULT_MOTION_PLANS } from "../styles/motion";
+import { SelectionAnts, type AntTarget } from "../styles/SelectionAnts";
 import type { WorkingSet } from "./workingSet";
 import {
   assertionShown,
@@ -109,8 +119,8 @@ export function WorldCanvas({
    */
   const setRef = useRef(set);
   setRef.current = set;
-  const selectionRef = useRef(selection);
-  selectionRef.current = selection;
+  /** Whether the renderer exists yet, so the ants can be handed a live graph. */
+  const [ready, setReady] = useState(false);
   const paint = useMemo(() => paintOf(GRAPH_DNA_THEME[mode]), [mode]);
   const provisional = useMemo(
     () => paintOf(GRAPH_DNA_PROVISIONAL_THEME[mode]),
@@ -149,6 +159,47 @@ export function WorldCanvas({
     }
     return touching;
   }, [hovered, selection, set]);
+
+  /**
+   * What the ants trace: the geometry the selected mark already has.
+   *
+   * Nothing is traced around a mark a filter is hiding — the ants are a mark's
+   * outline, and an outline with nothing inside it is a claim that something is
+   * there. Selection survives the filter; only its drawing does not.
+   */
+  const antTarget = useMemo<AntTarget | null>(() => {
+    if (!selection) return null;
+    const id = selection.id;
+    if (set.referents.has(id)) {
+      return { shape: "circle", id, diameter: params.discDiameter };
+    }
+    const assertion = set.assertions.get(id);
+    if (assertion) {
+      return assertionShown(assertion.origin, assertion.mode, show)
+        ? {
+            shape: "rect",
+            id,
+            clearance: GRAPH_DNA_INTERACTION.selectionPlateClearance,
+          }
+        : null;
+    }
+    if (set.demands.has(id)) {
+      return show.unresolved
+        ? {
+            shape: "rect",
+            id,
+            clearance: GRAPH_DNA_INTERACTION.selectionPlateClearance,
+          }
+        : null;
+    }
+    const bond = set.bonds.find((edge) => edge.assertion_id === id);
+    if (bond && assertionShown(bond.origin, bond.mode, show)) {
+      // The filament is the mark. Beads start clear of the discs it runs
+      // between, or the selection reads as belonging to one of them.
+      return { shape: "line", id, trim: params.discDiameter / 2 };
+    }
+    return null;
+  }, [params.discDiameter, selection, set, show]);
 
   const data = useMemo(() => {
     const nodes: unknown[] = [];
@@ -331,22 +382,6 @@ export function WorldCanvas({
     if (out.size) onPositions(out);
   }, [onPositions]);
 
-  const applySelection = useCallback(() => {
-    const graph = graphRef.current;
-    if (!graph || graph.destroyed || drawnRef.current === 0) return;
-    const selected = selectionRef.current?.id ?? null;
-    const states: Record<string, string[]> = {};
-    for (const node of graph.getNodeData()) {
-      const id = String(node.id);
-      states[id] = id === selected ? ["selected"] : [];
-    }
-    for (const edge of graph.getEdgeData()) {
-      const id = String(edge.id);
-      states[id] = id === selected ? ["selected"] : [];
-    }
-    void graph.setElementState(states, false).catch(() => {});
-  }, []);
-
   useEffect(() => {
     const host = hostRef.current;
     if (!host) return;
@@ -356,25 +391,11 @@ export function WorldCanvas({
       animation: false,
       padding: 60,
       background: paint.canvas,
-      node: {
-        style: { cursor: "grab" },
-        state: {
-          selected: {
-            halo: true,
-            haloLineWidth: 9,
-            haloStroke: paint.ink,
-            haloStrokeOpacity: 0.16,
-          },
-        },
-      },
-      edge: {
-        state: {
-          selected: {
-            lineWidth: Math.max(1.5, params.edgeWidth * 1.8),
-            opacity: 1,
-          },
-        },
-      },
+      // No `selected` element state. Selection is drawn over the canvas by the
+      // ants, so the renderer is not also asked to thicken a line or lay a
+      // halo under a disc — two marks for one fact, and the quieter one was
+      // the only one anybody read.
+      node: { style: { cursor: "grab" } },
       behaviors: ["zoom-canvas", "drag-canvas", "drag-element"],
     });
     graphRef.current = graph;
@@ -428,9 +449,14 @@ export function WorldCanvas({
     // expansion.
     graph.on("afterdragelement", harvest);
 
-    void graph.render().catch((problem: unknown) => {
-      if (graphRef.current === graph) console.error(problem);
-    });
+    void graph
+      .render()
+      .then(() => {
+        if (graphRef.current === graph) setReady(true);
+      })
+      .catch((problem: unknown) => {
+        if (graphRef.current === graph) console.error(problem);
+      });
     // A canvas has no DOM to address, so in development the graph is reachable
     // for driving from the console or a browser-automated check. Synthetic
     // pointer events do not reach the renderer's own picking, which makes this
@@ -440,6 +466,7 @@ export function WorldCanvas({
     }
     return () => {
       graphRef.current = null;
+      setReady(false);
       graph.destroy();
     };
     // The graph is created once. Data changes go through the effect below, so
@@ -471,35 +498,20 @@ export function WorldCanvas({
         } else if (grew) {
           await graph.fitView();
         }
-        applySelection();
+        return undefined;
       })
       .catch((problem: unknown) => {
         // Same as at mount: a draw in flight when the canvas is torn down is
         // not something to report.
         if (graphRef.current === graph) console.error(problem);
       });
-  }, [applySelection, data]);
-
-  useEffect(() => {
-    applySelection();
-  }, [applySelection, selection]);
+  }, [data]);
 
   useEffect(() => {
     const graph = graphRef.current;
     if (!graph) return;
     graph.setOptions({ background: paint.canvas });
-    graph.setNode({
-      style: { cursor: "grab" },
-      state: {
-        selected: {
-          halo: true,
-          haloLineWidth: 9,
-          haloStroke: paint.ink,
-          haloStrokeOpacity: 0.16,
-        },
-      },
-    });
-  }, [paint.canvas, paint.ink]);
+  }, [paint.canvas]);
 
   // A renderer sized once is sized wrong the moment anything else on the page
   // takes room: opening the extension drawer halves the stage, and a graph that
@@ -522,13 +534,26 @@ export function WorldCanvas({
     });
     observer.observe(host);
     return () => observer.disconnect();
-  }, [applySelection]);
+  }, []);
 
   return (
-    <div
-      className="world__stage"
-      ref={hostRef}
-      style={{ background: paint.canvas }}
-    />
+    <div className="world__stage" style={{ background: paint.canvas }}>
+      <div className="world__surface" ref={hostRef} />
+      <SelectionAnts
+        graph={ready ? graphRef.current : null}
+        target={antTarget}
+        clearance={GRAPH_DNA_INTERACTION.selectionClearance}
+        dotGap={GRAPH_DNA_INTERACTION.selectionDotGap}
+        lineWidth={GRAPH_DNA_INTERACTION.selectionLine}
+        speed={
+          GRAPH_DNA_INTERACTION.selectionMotion
+            ? GRAPH_DNA_INTERACTION.selectionSpeed
+            : 0
+        }
+        color={paint.ink}
+        motion={DEFAULT_MOTION_PLANS}
+        animated={GRAPH_DNA_INTERACTION.selectionMotion}
+      />
+    </div>
   );
 }
