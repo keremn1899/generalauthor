@@ -37,6 +37,9 @@ import {
   type CanvasSelection,
 } from "./WorldCanvas";
 import { SchemaCanvas } from "./SchemaCanvas";
+import { Spine } from "../construction/Spine";
+import { Docket } from "../construction/Docket";
+import { LabTransitions } from "./LabTransitions";
 import { OverlayPanel } from "../product/OverlayPanel";
 import { chromeClass } from "../product/overlayChrome";
 import { WorldTable } from "./WorldTable";
@@ -57,7 +60,9 @@ import {
   MOCK_ASSERTION_MECHANICAL,
   MOCK_DEMAND,
   MOCK_DIRECTORY,
+  MOCK_DOCKET,
   MOCK_OBLIGATION,
+  MOCK_PASSES,
   MOCK_OVERVIEW,
   MOCK_REFERENT,
   MOCK_RELATIONS,
@@ -65,6 +70,7 @@ import {
 import type { CameraInsets } from "./canvasFocus";
 import type { WorldRole, WorldTuple } from "../api/world";
 import "./WorldLabPage.css";
+import "../construction/ConstructionPage.css";
 import "./WorldPage.css";
 import "../product/ProductShell.css";
 import "../product/NodeFinder.css";
@@ -101,7 +107,9 @@ export type ComponentSection =
   | "panels"
   | "tables"
   | "reader"
-  | "instrument";
+  | "instrument"
+  | "construction"
+  | "transitions";
 
 const SPEED_OPTIONS = [1, 0.5, 0.25, 0.1] as const;
 
@@ -145,6 +153,8 @@ export function WorldLabPage() {
   const [tableRelation, setTableRelation] = useState<string>("temperature_compatible");
   const [focus, setFocus] = useState<{ id: string; token: number } | null>(null);
   const [demoTableKind, setDemoTableKind] = useState<"world" | "frontier" | "relation" | "derivation">("world");
+  const [demoPass, setDemoPass] = useState<string | null>(null);
+  const [demoObligation, setDemoObligation] = useState<string | null>("ob:supply_c303");
 
   // Mark tuner parameters in Components studio
   const [markKnobs, setMarkKnobs] = useState<MarkParams>({
@@ -578,6 +588,13 @@ export function WorldLabPage() {
                     <DemandPanel obligation={MOCK_OBLIGATION} demand={MOCK_DEMAND} roles={["new_part", "old_part", "context"]} onTable={() => {}} onRemove={() => {}} onClose={() => {}} />
                   </div>
                 </div>
+              ) : componentSection === "construction" ? (
+                <div className="lab-construction-demo">
+                  <Spine passes={MOCK_PASSES} open={MOCK_DOCKET.counts.open} selected={demoPass} onSelect={setDemoPass} />
+                  <Docket docket={MOCK_DOCKET} selected={demoObligation} problem={null} onOpen={setDemoObligation} />
+                </div>
+              ) : componentSection === "transitions" ? (
+                <LabTransitions />
               ) : componentSection === "instrument" ? (
                 <div className="lab-instrument-demo">
                   <div className={chromeClass("instrument")}>
@@ -807,9 +824,9 @@ export function WorldLabPage() {
             <div className="ctrl-section">
               <span className="ctrl-label">COMPONENT</span>
               <div className="ctrl-group ctrl-group--stack">
-                {(["marks", "ants", "panels", "tables", "reader", "instrument"] as ComponentSection[]).map((s) => (
+                {(["marks", "ants", "panels", "tables", "reader", "instrument", "construction", "transitions"] as ComponentSection[]).map((s) => (
                   <button key={s} type="button" data-active={componentSection === s} onClick={() => setComponentSection(s)}>
-                    {s === "marks" ? "Marks & Plates" : s === "ants" ? "Marching Ants" : s === "panels" ? "Overlay Panels" : s === "tables" ? "Tables & Data" : s === "reader" ? "Reader Cards" : "Instrument"}
+                    {s === "marks" ? "Marks & Plates" : s === "ants" ? "Marching Ants" : s === "panels" ? "Overlay Panels" : s === "tables" ? "Tables & Data" : s === "reader" ? "Reader Cards" : s === "instrument" ? "Instrument" : s === "construction" ? "Spine & Docket" : "Transitions"}
                   </button>
                 ))}
               </div>

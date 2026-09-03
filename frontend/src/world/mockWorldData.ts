@@ -6,6 +6,7 @@
  * inspected, and refined in isolation without requiring a live backend.
  */
 
+import type { Docket, PassEntry } from "../api/construction";
 import type {
   WorldAssertion,
   WorldDemand,
@@ -563,3 +564,109 @@ export function createSpecimenSet(): WorkingSet {
 
   return { referents, assertions, demands, bonds, positions, expanded: new Set() };
 }
+
+/**
+ * The constructor's nine passes, in the five states the spine can draw.
+ *
+ * The spine encodes state as *geometry* — filled, half, dashed, struck,
+ * dotted — so a gallery that showed only the happy run would be showing one
+ * fifth of the vocabulary. `null` is the fifth and the important one: it means
+ * no scorer has spoken, and the surface reports that rather than filling in
+ * the blank, because a front end that inferred certification would be
+ * certifying passes.
+ */
+export const MOCK_PASSES: PassEntry[] = [
+  { pass: "p0", artifact: "00_intention_contract.json", present: true, ran: true, scored: null, seconds: null, question: "", agent: null, state: "CERTIFIED", because: [] },
+  { pass: "p1", artifact: "01_vocabulary.json", present: true, ran: true, scored: null, seconds: null, question: "", agent: null, state: "CERTIFIED", because: [] },
+  { pass: "p2", artifact: "02_mechanical_world/", present: true, ran: true, scored: null, seconds: null, question: "", agent: null, state: "PROVISIONAL", because: ["an input moved under it"] },
+  { pass: "p3", artifact: "03_obligations.json", present: true, ran: true, scored: null, seconds: null, question: "", agent: null, state: "CERTIFIED", because: [] },
+  { pass: "p4", artifact: "04_packets/", present: true, ran: true, scored: null, seconds: null, question: "", agent: null, state: "STALE", because: ["an intervention stands upstream"] },
+  { pass: "p5", artifact: "05_dispositions.json", present: true, ran: true, scored: null, seconds: null, question: "", agent: null, state: null, because: ["no scorer has spoken"] },
+  { pass: "p6", artifact: "06_admission.json", present: true, ran: true, scored: null, seconds: null, question: "", agent: null, state: "FAILED", because: ["the artifact is absent"] },
+  { pass: "p7", artifact: "07_derivations.json", present: false, ran: false, scored: null, seconds: null, question: "", agent: null, state: null, because: [] },
+  { pass: "p8", artifact: "08_outputs/", present: false, ran: false, scored: null, seconds: null, question: "", agent: null, state: null, because: [] },
+];
+
+/**
+ * A docket with one row of each kind, because the docket's whole job is telling
+ * three states apart: a machine judgment standing, a human verdict superseding
+ * one, and a question nobody has answered. The blocking row is the only one
+ * whose status colour changes under a person, so it is the row you tune.
+ */
+export const MOCK_DOCKET: Docket = {
+  counts: { total: 4, open: 2, decided: 2, blocking: 1 },
+  obligations: [
+    {
+      obligation_id: "ob:temp_c300_bom_d",
+      relation: "temperature_compatible",
+      values: { new_part: "C300", old_part: "BOM-D" },
+      why_demanded: "purpose (a) cannot answer without a temperature verdict",
+      required_by: ["a"],
+      state: "decided",
+      disposition: "HOLDS",
+      rationale: "datasheet range covers the stated envelope",
+      verification: "packet 04/ob:temp_c300_bom_d",
+      observations: 3,
+      known_missing_information: null,
+      verdict: null,
+      open: false,
+      blocks: { purposes: ["a"], relations: ["acceptable_replacement"], blocking: false },
+    },
+    {
+      obligation_id: "ob:temp_c301_bom_d",
+      relation: "temperature_compatible",
+      values: { new_part: "C301", old_part: "BOM-D" },
+      why_demanded: "purpose (a) cannot answer without a temperature verdict",
+      required_by: ["a"],
+      state: "decided",
+      disposition: "FAILS",
+      rationale: "upper bound is 5°C short of the envelope",
+      verification: "packet 04/ob:temp_c301_bom_d",
+      observations: 2,
+      known_missing_information: null,
+      verdict: {
+        kind: "ADJUDICATION",
+        obligation_id: "ob:temp_c301_bom_d",
+        disposition: "HOLDS",
+        support_claim: "derating curve applies; the envelope is transient",
+        supersedes: "FAILS",
+        actor: "j.mercer",
+        at: "2026-08-31T09:14:00Z",
+      },
+      open: false,
+      blocks: { purposes: ["a"], relations: ["acceptable_replacement"], blocking: false },
+    },
+    {
+      obligation_id: "ob:pkg_c302_bom_e",
+      relation: "package_compatible",
+      values: { new_part: "C302", old_part: "BOM-E" },
+      why_demanded: "purpose (b) needs a footprint decision",
+      required_by: ["b"],
+      state: null,
+      disposition: null,
+      rationale: null,
+      verification: null,
+      observations: 0,
+      known_missing_information: "no footprint drawing in the packet",
+      verdict: null,
+      open: true,
+      blocks: { purposes: ["b"], relations: [], blocking: false },
+    },
+    {
+      obligation_id: "ob:supply_c303",
+      relation: "second_source_exists",
+      values: { part: "C303" },
+      why_demanded: "purpose (c) answers nothing while this is open",
+      required_by: ["c"],
+      state: null,
+      disposition: null,
+      rationale: null,
+      verification: null,
+      observations: 1,
+      known_missing_information: null,
+      verdict: null,
+      open: true,
+      blocks: { purposes: ["c"], relations: ["acceptable_replacement"], blocking: true },
+    },
+  ],
+};

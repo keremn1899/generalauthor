@@ -455,3 +455,141 @@
   font-weight: 400;
   color: var(--ink-muted);
 }
+
+/* --- Spine & Docket bench --------------------------------------------------
+   The construction lineage rendered against a mock trial, so the five spine
+   states and the three docket marks can be looked at without a live host and
+   without POSTing a verdict into someone's campaign. */
+
+.lab-construction-demo {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 420px;
+  border: 1px solid var(--rule);
+  background: var(--panel);
+  overflow: hidden;
+}
+
+.lab-construction-demo .docket {
+  border-right: none;
+}
+
+/* --- Transition bench ------------------------------------------------------
+   Every specimen is driven by the shipping primitive, so what you time here is
+   what the product does. Every one has a button, because nothing moves that a
+   person did not cause. */
+
+.lab-bench {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+}
+
+.lab-bench__case {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.9rem 1rem 1.1rem;
+  background: var(--panel);
+}
+
+.lab-bench__case--wide {
+  grid-column: 1 / -1;
+}
+
+.lab-bench__case header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.lab-bench__case h4 {
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.lab-bench__case header button {
+  font: inherit;
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  padding: 0.2rem 0.55rem;
+  color: var(--ink-muted);
+  background: transparent;
+  border: 1px solid var(--rule);
+  cursor: pointer;
+}
+
+.lab-bench__case header button:hover {
+  color: var(--ink);
+  border-color: var(--ink-muted);
+}
+
+.lab-bench__note {
+  margin: 0;
+  font-size: 0.66rem;
+  line-height: 1.5;
+  color: var(--ink-muted);
+}
+
+/* Fixed so a specimen arriving or leaving does not reflow the bench around it —
+   the point is to watch one transition, not the page absorbing it. */
+.lab-bench__stage {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  min-height: 96px;
+  padding: 0.7rem;
+  background: var(--ground);
+  border: 1px solid var(--rule);
+}
+
+.lab-bench__card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.5rem 0.7rem;
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  font-size: 0.7rem;
+}
+
+.lab-bench__card span {
+  font-size: 0.62rem;
+  color: var(--ink-muted);
+}
+
+.lab-bench__rules {
+  margin: 0;
+  display: grid;
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+}
+
+.lab-bench__rules > div {
+  display: grid;
+  grid-template-columns: minmax(160px, 200px) 1fr;
+  gap: 1rem;
+  padding: 0.45rem 0.7rem;
+  background: var(--ground);
+}
+
+.lab-bench__rules dt {
+  font-size: 0.64rem;
+  font-family: var(--mono, ui-monospace, monospace);
+  color: var(--ink);
+}
+
+.lab-bench__rules dd {
+  margin: 0;
+  font-size: 0.64rem;
+  line-height: 1.5;
+  color: var(--ink-muted);
+}
