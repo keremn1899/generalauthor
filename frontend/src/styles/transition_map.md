@@ -15,6 +15,51 @@ first is the decision procedure, not the curves.
 
 ---
 
+## 0. Two laws
+
+The surfaces obey two, and both are code rather than description. That is the
+point: a document is a *second* statement of something, and the second one
+drifts. These are the first.
+
+**Gravity — `motion.ts`.** `MotionField` is `{ gravity, travel, absorbPull }`.
+`absorb` is constant acceleration from rest, `x(t) = ½at²`, and its
+cubic-bezier is not an approximation but the exact quadratic. `emit` is the
+time reverse: a body given precisely the escape impulse gravity spends at its
+authored home. `settle` is an analytic under-damped spring. Retune the field
+and every intent moves together, because they are all consequences of it.
+
+**Light — `light.ts`.** A world is dark until someone looks at it. Pointing at
+a mark makes it a source; `luminance` falls off inverse-square from it, over
+**graph distance** — hops, not pixels, because the field is a graph and that is
+what near means here. Light is opacity, never colour, since colour is status
+and geometry is origin. With nothing acted on, every mark is at 1 and the law
+changes nothing; that is the difference between a lamp and a vignette.
+
+Two consequences worth stating, because they are otherwise argued about twice:
+
+- **While held, physics is suspended.** A drag is `hold` — 90ms, linear, no
+  easing — because the mark is not moving, you are moving it. On release,
+  **still**: a settle would take the mark off the spot the person chose.
+- **The camera is not matter.** Nothing about pan or zoom obeys either law.
+  That disposes of panning, scrolling and zoom together, and explains why
+  fit-to-view is the one exception — it moves matter into view because it was
+  asked to.
+
+And the invariant the two laws share, which is what makes the surface read as
+a place rather than a screensaver:
+
+> **Nothing moves, and nothing is lit, that a person did not cause.**
+
+One exception, `flow`, which is the machine making you wait. An animation with
+no originating act is a bug, not a flourish.
+
+`scripts/check_field_laws.py` is the half of this that has teeth: no stylesheet
+on a live surface may write a duration of its own, so the spine is the only
+place a duration exists. It runs in the pre-commit hook when a live stylesheet
+is staged.
+
+---
+
 ## 1. The method
 
 Every piece of component state is classified on two axes. The first says what

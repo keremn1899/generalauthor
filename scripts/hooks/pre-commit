@@ -34,3 +34,21 @@ if [ -n "$staged" ]; then
     echo "    ALLOW_GRAPH_COMMIT=1 git commit ..." >&2
     exit 1
 fi
+
+# A duration written by hand where the motion spine has one.
+#
+# Only when a live-surface stylesheet is actually staged, so this costs nothing
+# on every other commit. The point is not tidiness: if no stylesheet on these
+# surfaces writes its own duration, the spine is the only place a duration
+# exists, and "the transitions are the spine" is a fact about the repository
+# rather than a claim in a document that will drift away from it.
+styled=$(git diff --cached --name-only --diff-filter=ACM \
+         | grep -E '^frontend/src/(world|construction|styles)/.*\.css$' || true)
+
+if [ -n "$styled" ] && [ "${ALLOW_LOOSE_MOTION:-}" != "1" ]; then
+    if ! python3 scripts/check_field_laws.py >&2; then
+        echo >&2
+        echo "To commit anyway: ALLOW_LOOSE_MOTION=1 git commit ..." >&2
+        exit 1
+    fi
+fi

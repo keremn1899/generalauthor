@@ -138,6 +138,15 @@ trial outputs, or database fixtures.
 - **Meaning is carried structurally, never decoratively.** Construction origin
   is geometry — filled, outlined, shelf, hollow. Colour is for status only.
   Anything encoded as colour alone will be retuned away.
+- **Two laws, both code, neither a metaphor.** `styles/motion.ts` is gravity:
+  `emit` is a body given the escape impulse gravity spends at its home,
+  `absorb` its time reverse, `settle` an analytic damped spring.
+  `styles/light.ts` is illumination: a source is whatever a person acted on,
+  falling off inverse-square over *graph* distance, expressed as opacity —
+  never colour. **Nothing moves, and nothing is lit, that a person did not
+  cause**; `flow` is the one exception, and it is the machine making you wait.
+  `styles/transition_map.md` §0 is the argument; `scripts/check_field_laws.py`
+  is the enforcement.
 - Anything you would be sad to rebuild goes in `frontend/src/styles/`, not in
   a page. Motion and DNA carried across surfaces; things that lived inside a
   canvas component did not.
@@ -176,6 +185,9 @@ uv run --extra all --extra dev pytest tests/world_explorer tests/taskview -q
 
 # frontend typecheck — there is no tsconfig.app.json
 cd frontend && npx tsc -p tsconfig.json --noEmit
+
+# the field laws: no live stylesheet writes a duration the spine already has
+uv run python scripts/check_field_laws.py
 ```
 
 `npx tsc` reports pre-existing failures in `src/app`, `src/field`, `src/inbox`
