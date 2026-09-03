@@ -156,6 +156,32 @@ menu, the write timeline — had been a plain emit rather than absorb ∘ emit.
 lineage looks, and it is the intended behaviour its own docstring describes,
 not a retune.
 
+## The design lab, and why it renders the product rather than a picture of it
+
+`WorldLabPage` is a World-only surface: the product page had no equivalent. Its
+rule is that **every specimen is the shipping component**, driven by fixtures
+from `mockWorldData.ts` rather than by the read plane.
+
+That was already true of the canvases, the tables and the reader panels. It was
+not true of three things, and each had drifted:
+
+- The **mark gallery** drew origin geometry by hand in SVG — with a corner
+  radius, which the product does not have. It now renders `WorldCanvas` over
+  `createSpecimenSet()`: one mark of every construction origin, tuned through
+  the same `MarkParams` object the field ships with.
+- The **ant gallery** hand-computed `stroke-dasharray`, so it showed a ring
+  the product never draws. `SelectionAnts` locks the bead count to *graph-space*
+  path length with `pathLength={100}`, which a fixed dasharray cannot
+  reproduce. Same canvas, same component; `WorldCanvas` gained an optional
+  `ants` prop so the lab can tune the real ring instead of drawing a copy.
+- The **show band**, the **shell tokens** and the **speed control** are covered
+  under `ShowBand`, `worldChrome.ts` and `scaleMotionPlans` above.
+
+The rule worth keeping: a design surface that can show something the product
+cannot is worse than no design surface, because it reports a look that does not
+exist. If a specimen needs a knob the component has no prop for, the prop is
+the change — not a second drawing.
+
 ## Not carried over at all
 
 Named so their absence is a decision on the record rather than an oversight:
