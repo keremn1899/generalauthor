@@ -36,6 +36,7 @@ import {
   type ThemeMode,
 } from "../styles/graphDna";
 import { DEFAULT_MOTION_PLANS, motionCssVariables } from "../styles/motion";
+import { typeCssVariables } from "../styles/type";
 import { Swap } from "../styles/Swap";
 import { Docket } from "./Docket";
 import { ArtifactView } from "./ArtifactView";
@@ -176,6 +177,7 @@ export function ConstructionPage() {
       style={
         {
           ...motionCssVariables(DEFAULT_MOTION_PLANS),
+          ...typeCssVariables(),
           ...chromeCssVariables(GRAPH_DNA_CHROME[theme]),
           ...statusCssVariables(GRAPH_DNA_STATUS[theme]),
         } as CSSProperties

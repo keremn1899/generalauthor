@@ -28,6 +28,7 @@ import {
   motionCssVariables,
   type MotionPlans,
 } from "../styles/motion";
+import { typeCssVariables } from "../styles/type";
 
 /**
  * The clearance a camera move leaves around a mark it brings into view.
@@ -66,6 +67,7 @@ export function worldShellStyle(
   const focusVars = options.focus ? focusCssVariables(GRAPH_DNA_FOCUS) : null;
   return {
     ...motionCssVariables(options.motion ?? DEFAULT_MOTION_PLANS),
+    ...typeCssVariables(),
     ...chromeCssVariables(GRAPH_DNA_CHROME[mode]),
     "--matter-canvas": radixValue(GRAPH_DNA_THEME[mode].canvas),
     "--matter-surface": radixValue(GRAPH_DNA_THEME[mode].surface),

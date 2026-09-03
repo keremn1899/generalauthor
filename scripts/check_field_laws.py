@@ -1,19 +1,22 @@
 #!/usr/bin/env python3
-"""Refuse a hand-rolled duration where the spine has a value for it.
+"""Refuse a hand-rolled value where a module already has one.
 
-The design language of the live surfaces is two laws, and both are code:
+The design language of the live surfaces is code, not documentation.
 `styles/motion.ts` is gravity — emit, absorb, settle, flow, hold, with their
-real durations and analytically derived curves — and `styles/light.ts` is
+real durations and analytically derived curves. `styles/light.ts` is
 illumination, falling off through the graph from whatever a person acted on.
+`styles/type.ts` is the type scale — five steps, because before it there were
+seventeen sizes and nobody had chosen any of them.
 
 Neither is enforceable by a document, because a document is a *second*
 statement of something and the second one drifts. What is enforceable is the
 absence of a first: if no stylesheet on a live surface ever writes a duration
-of its own, the spine is the only place a duration exists, and the reference
-cannot go stale because there is nothing to disagree with.
+or a font size of its own, the modules are the only place those values exist,
+and the reference cannot go stale because there is nothing to disagree with.
 
 So this is not a style check. It is what makes "the transitions are the spine"
-a fact about the repository rather than a claim in a markdown file.
+and "the type is the scale" facts about the repository rather than claims in a
+markdown file.
 
     uv run python scripts/check_field_laws.py
 
@@ -46,6 +49,13 @@ DECLARATION = re.compile(
 )
 LITERAL_TIME = re.compile(r"(?<![\w-])(\d+(?:\.\d+)?)(ms|s)(?![\w-])")
 
+# A `font-size` written as a length rather than read from the scale. `em` and
+# `%` are relative to the inherited size, so they compose with a step instead
+# of replacing it — a `0.9em` sub-label still moves when its step does. `rem`
+# and `px` do not, and they are what produced the seventeen.
+FONT_SIZE = re.compile(r"font-size\s*:[^;{}]*", re.IGNORECASE)
+LITERAL_SIZE = re.compile(r"(?<![\w-])(\d+(?:\.\d+)?)(rem|px)(?![\w-])")
+
 # A literal inside `var(--motion-…, 280ms)` is the fallback for the spine's own
 # value, which is the one place a number is allowed to be written twice: CSS
 # needs it when the variable has not reached the element yet.
@@ -59,6 +69,9 @@ ALLOW = "field-laws: allow"
 # comment directly above it, which is where a reader looks for it.
 ALLOW_REACH = 6
 
+MOTION_USE = "use var(--motion-<intent>-duration) / -curve"
+TYPE_USE = "use var(--type-<step>); the five steps are in styles/type.ts"
+
 
 def offences(path: Path) -> list[tuple[int, str]]:
     text = path.read_text(encoding="utf-8")
@@ -69,24 +82,35 @@ def offences(path: Path) -> list[tuple[int, str]]:
         if ALLOW in line
     }
 
-    found: list[tuple[int, str]] = []
-    for match in DECLARATION.finditer(COMMENT.sub(lambda m: " " * len(m.group(0)), text)):
-        declaration = match.group(0)
-        number = text.count("\n", 0, match.start()) + 1
-        # The exception may be on the declaration, or in the comment above it.
-        if any(number - reach in allowed_after for reach in range(0, ALLOW_REACH)):
-            continue
-        # Zero is not a duration, it is the absence of one — `visibility 0s`.
-        stripped = FALLBACK.sub(" ", declaration)
-        times = [
-            f"{value}{unit}"
-            for value, unit in LITERAL_TIME.findall(stripped)
-            if float(value) != 0
-        ]
-        if times:
-            flat = " ".join(declaration.split())
-            found.append((number, f"{', '.join(times)} in `{flat}`"))
-    return found
+    blanked = COMMENT.sub(lambda m: " " * len(m.group(0)), text)
+
+    def scan(
+        declarations: re.Pattern[str],
+        literals: re.Pattern[str],
+        use: str,
+    ) -> list[tuple[int, str]]:
+        out: list[tuple[int, str]] = []
+        for match in declarations.finditer(blanked):
+            declaration = match.group(0)
+            number = text.count("\n", 0, match.start()) + 1
+            # The exception may be on the declaration, or in the comment above.
+            if any(number - reach in allowed_after for reach in range(0, ALLOW_REACH)):
+                continue
+            # Zero is not a value, it is the absence of one — `visibility 0s`.
+            stripped = FALLBACK.sub(" ", declaration)
+            values = [
+                f"{value}{unit}"
+                for value, unit in literals.findall(stripped)
+                if float(value) != 0
+            ]
+            if values:
+                flat = " ".join(declaration.split())
+                out.append((number, f"{', '.join(values)} in `{flat}` — {use}"))
+        return out
+
+    found = scan(DECLARATION, LITERAL_TIME, MOTION_USE)
+    found += scan(FONT_SIZE, LITERAL_SIZE, TYPE_USE)
+    return sorted(found)
 
 
 def main() -> int:
@@ -99,13 +123,13 @@ def main() -> int:
     if not problems:
         return 0
 
-    print("A duration written by hand where the spine has one.\n")
+    print("A value written by hand where a module already has one.\n")
     for problem in problems:
         print(f"  {problem}")
     print(
-        "\nUse var(--motion-<intent>-duration) and var(--motion-<intent>-curve).\n"
-        "The five intents and what causes each are in styles/transition_map.md §1.\n"
-        f"A deliberate exception carries `/* {ALLOW}: <reason> */` on the declaration."
+        "\nThe five motion intents and what causes each are in\n"
+        "styles/transition_map.md §1; the five type steps are in styles/type.ts.\n"
+        f"A deliberate exception carries `/* {ALLOW}: <reason> */` above the declaration."
     )
     return 1
 

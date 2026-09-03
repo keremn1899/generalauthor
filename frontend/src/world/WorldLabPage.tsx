@@ -17,6 +17,7 @@ import {
   luminance,
   type LightField,
 } from "../styles/light";
+import { Swap } from "../styles/Swap";
 import { worldCameraInsets, worldShellStyle } from "./worldChrome";
 import {
   MARK_DEFAULTS,
@@ -224,6 +225,17 @@ export function WorldLabPage() {
     [readerOpen, readerWidth, tablesOpen, tablesWidth, vocabularyFocus],
   );
 
+  /**
+   * What each dock is *about*, which is what decides whether a change is a
+   * replacement or an update. Same keys the product builds, so the lab swaps
+   * on exactly the occasions the product swaps on.
+   */
+  const readerSubject = selection
+    ? `${selection.kind}:${selection.id}`
+    : "reader:empty";
+  const tableSubject =
+    activeTable === "relation" ? `relation:${tableRelation}` : activeTable;
+
   const tableChrome = useMemo<TableChrome>(
     () => ({
       current: activeTable === "relation" ? "other" : activeTable,
@@ -245,11 +257,25 @@ export function WorldLabPage() {
     [],
   );
 
+  /**
+   * Take one named mark off the field.
+   *
+   * The canvas passes the mark that was right-clicked, which is not
+   * necessarily the selected one — the lab used to ignore the argument and
+   * drop `selection` instead, so right-clicking an unselected mark removed
+   * the wrong thing, and right-clicking with nothing selected did nothing at
+   * all. It read as a missing absorb; it was a missing argument.
+   */
+  const removeMark = useCallback((mark: NonNullable<CanvasSelection>) => {
+    setSet((curr) => dropMark(curr, mark.id));
+    setSelection((curr) => (curr?.id === mark.id ? null : curr));
+  }, []);
+
+  /** The reader's "take off the field", which acts on what is being read. */
   const onRemove = useCallback(() => {
     if (!selection) return;
-    setSet((curr) => dropMark(curr, selection.id));
-    setSelection(null);
-  }, [selection]);
+    removeMark(selection);
+  }, [removeMark, selection]);
 
   // Actions for the Motion Director
   const spawnNode = () => {
@@ -346,6 +372,7 @@ export function WorldLabPage() {
                           reserve={readerOpen ? readerWidth : 0}
                           flush
                         >
+                          <Swap id={tableSubject} className="motion-swap--fill">
                           {activeTable === "world" ? (
                             <WorldTable
                               overview={MOCK_OVERVIEW}
@@ -375,6 +402,7 @@ export function WorldLabPage() {
                               chrome={tableChrome}
                             />
                           )}
+                          </Swap>
                         </OverlayPanel>
 
                         <div className="gm__stage world__plane">
@@ -394,7 +422,7 @@ export function WorldLabPage() {
                                 onHover={setHovered}
                                 onSelect={setSelection}
                                 onPositions={onPositions}
-                                onRemove={onRemove}
+                                onRemove={removeMark}
                               />
                             </div>
                           ) : null}
@@ -429,7 +457,15 @@ export function WorldLabPage() {
                           reserve={tablesOpen ? tablesWidth : 34}
                           flush
                         >
-                          <div className="world-reader">
+                          {/* `node-reader`, not `world-reader`. The reader's
+                              own tokens — `--reader-size`, `--reader-inset`,
+                              `--reader-leading` — are defined on this class,
+                              so the lab's copy left every one of them unset:
+                              the panel's h2 fell back to 16px in a product
+                              whose largest type is 12px, and the insets
+                              collapsed. It is the class the product uses. */}
+                          <div className="node-reader">
+                            <Swap id={readerSubject} className="motion-swap--fill">
                             {selection?.kind === "assertion" ? (
                               <AssertionPanel
                                 assertion={MOCK_ASSERTION_DERIVED}
@@ -460,6 +496,7 @@ export function WorldLabPage() {
                                 onClose={() => setReaderOpen(false)}
                               />
                             )}
+                            </Swap>
                           </div>
                         </OverlayPanel>
                       </div>
