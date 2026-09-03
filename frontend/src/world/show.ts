@@ -24,11 +24,15 @@ export type ShowLayer =
 
 export type ShowState = Record<ShowLayer, boolean>;
 
-export const SHOW_LAYERS: ShowLayer[] = [
+export const SHOW_ORIGIN_LAYERS: ShowLayer[] = [
   "semantic",
   "adjudicated",
   "derived",
   "mechanical",
+];
+
+export const SHOW_LAYERS: ShowLayer[] = [
+  ...SHOW_ORIGIN_LAYERS,
   "unresolved",
 ];
 

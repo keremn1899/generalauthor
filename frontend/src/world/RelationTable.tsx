@@ -29,7 +29,9 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { worldApi, type WorldRelation, type WorldRole, type WorldTuple } from "../api/world";
+import { still } from "../styles/motion";
 import { useRowWindow } from "./rowWindow";
+import { TableBar, type TableChrome } from "./tableChrome";
 
 /** Fixed, because a windowed table needs to know where a row is without asking. */
 const ROW_HEIGHT = 26;
@@ -46,7 +48,7 @@ export function RelationTable({
   onFocus,
   onWiden,
   onDerivation,
-  onClose,
+  chrome,
 }: {
   relation: WorldRelation;
   /**
@@ -65,7 +67,7 @@ export function RelationTable({
   onWiden: () => void;
   /** §8.6, from where you are actually standing when you want it. */
   onDerivation: () => void;
-  onClose: () => void;
+  chrome: TableChrome;
 }) {
   const [order, setOrder] = useState<Order>(null);
   const [total, setTotal] = useState(subject ? 0 : relation.count);
@@ -164,16 +166,20 @@ export function RelationTable({
 
   return (
     <section className="table" aria-label={`${relation.name} extension`}>
-      <header className="table__bar">
-        <b>{relation.name}</b>
-        <span>
-          {total} tuple{total === 1 ? "" : "s"}
-          {subject ? ` of ${subject.label}` : ""} · {relation.mode.toLowerCase()}
-          {relation.stale ? " · stale" : ""}
-          {relation.completeness && relation.completeness.status !== "COMPLETE"
-            ? ` · ${relation.completeness.status.toLowerCase()}`
-            : ""}
-        </span>
+      <TableBar
+        chrome={chrome}
+        title={relation.name}
+        meta={
+          <>
+            {total} tuple{total === 1 ? "" : "s"}
+            {subject ? ` of ${subject.label}` : ""} · {relation.mode.toLowerCase()}
+            {relation.stale ? " · stale" : ""}
+            {relation.completeness && relation.completeness.status !== "COMPLETE"
+              ? ` · ${relation.completeness.status.toLowerCase()}`
+              : ""}
+          </>
+        }
+      >
         {subject ? (
           <button type="button" onClick={onWiden}>
             whole relation
@@ -187,10 +193,7 @@ export function RelationTable({
         <button type="button" onClick={onDerivation}>
           dependencies
         </button>
-        <button type="button" onClick={onClose}>
-          close
-        </button>
-      </header>
+      </TableBar>
 
       <div className="table__head" style={{ gridTemplateColumns: columns }}>
         {roles.map((role) => (
@@ -225,6 +228,7 @@ export function RelationTable({
               <div
                 key={index}
                 className="table__row"
+                {...still("rowsNeverFly")}
                 data-loaded={tuple ? true : undefined}
                 data-present={tuple && present.has(tuple.assertion_id) ? true : undefined}
                 style={{

@@ -47,6 +47,7 @@
  */
 
 import {
+  type CSSProperties,
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
   useCallback,
@@ -70,12 +71,14 @@ export function OverlayPanel({
   onToggle,
   note = "",
   handle = true,
+  handleWhen = "always",
   dismissOnOutsideClick = false,
   width,
   onWidthChange,
   minWidth = 300,
   maxWidth = 720,
   flush = false,
+  reserve = 0,
   children,
 }: {
   id: string;
@@ -96,6 +99,16 @@ export function OverlayPanel({
    */
   handle?: boolean;
   /**
+   * When the handle is drawn.
+   *
+   * `always` is the library: the tab stays on the map-facing edge while the
+   * drawer is open, because the drawer is a place you leave and come back to
+   * and the tab is how you find it. `closed` is a drawer whose open state is
+   * the panel itself — the tab would only repeat the close control already in
+   * the body — so it stands on the edge only while the body is off-screen.
+   */
+  handleWhen?: "always" | "closed";
+  /**
    * Whether clicking the map closes this panel.
    *
    * Right for a picker: you came to choose one thing, and clicking away means
@@ -112,6 +125,14 @@ export function OverlayPanel({
   maxWidth?: number;
   /** Let one child own the whole body box — no padding, no stacking. */
   flush?: boolean;
+  /**
+   * Width already claimed by a sibling dock on the opposite edge.
+   *
+   * The panel is over the map, not in a column, so two open drawers will
+   * overlap unless each treats the other as already spent. Written to
+   * `--ov-reserve` so the CSS width and the drag ceiling share one number.
+   */
+  reserve?: number;
   children: ReactNode;
 }) {
   const rootRef = useRef<HTMLDivElement | null>(null);
@@ -143,11 +164,15 @@ export function OverlayPanel({
   /** The widest this panel may get and still leave the map worth looking at. */
   const maxForViewport = useCallback(() => {
     const available = rootRef.current?.parentElement?.clientWidth ?? 0;
+    const claimed = Math.max(0, reserve);
     return Math.max(
       minWidth,
-      Math.min(maxWidth, available ? available - 160 : maxWidth),
+      Math.min(
+        maxWidth,
+        available ? Math.max(minWidth, available - 160 - claimed) : maxWidth,
+      ),
     );
-  }, [maxWidth, minWidth]);
+  }, [maxWidth, minWidth, reserve]);
 
   const onResizePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (event.button !== 0) return;
@@ -191,12 +216,13 @@ export function OverlayPanel({
       ref={rootRef}
       className={`ov ov--${side}${shown ? " is-open" : ""}${
         handle ? "" : " ov--handleless"
-      }`}
+      }${handle && handleWhen === "closed" ? " ov--handle-closed" : ""}`}
       data-overlay={id}
       style={
-        resizable
-          ? ({ "--ov-preferred-width": `${width}px` } as React.CSSProperties)
-          : undefined
+        {
+          ...(resizable ? { "--ov-preferred-width": `${width}px` } : {}),
+          "--ov-reserve": `${Math.max(0, reserve)}px`,
+        } as CSSProperties
       }
     >
       {/* The handle is chrome: a control you act *with*, not the thing you came
@@ -208,6 +234,8 @@ export function OverlayPanel({
           className="chrome ov__handle"
           aria-expanded={open}
           aria-controls={id}
+          aria-hidden={handleWhen === "closed" && open ? true : undefined}
+          tabIndex={handleWhen === "closed" && open ? -1 : undefined}
           onClick={() => onToggle(!open)}
           title={open ? `Hide ${title}` : `Show ${title}`}
         >

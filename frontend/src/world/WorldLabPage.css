@@ -1,0 +1,421 @@
+/* ==========================================================================
+   World Design & Motion Lab — CSS — v3 no top bar
+   ==========================================================================
+
+   TYPE HIERARCHY (lab-only; product surfaces stay unchanged)
+   ──────────────────────────────────────────────────────────
+   Every typographic decision in this file flows from one ladder.
+   The root font-size is 16px; all sizes are rem so they scale together.
+
+     .lab-eyebrow   0.58rem / 400 / mono  +0.10em tracking   section titles, HUD labels
+     .lab-label     0.68rem / 400 / sans  +0.01em            button copy, knob labels
+     .lab-caption   0.62rem / 400 / sans  0                  meta, specimen tags, sub-labels
+     .lab-body      0.72rem / 400 / sans  0                  paragraph / hint copy
+     .lab-heading-sm  0.82rem / 500 / sans  0                card titles (h4)
+     .lab-heading-md  0.96rem / 500 / sans  0                section controls titles (h3)
+     .lab-heading-lg  1.10rem / 400 / sans  0                page-section labels (h2/h3 top-level)
+
+   Weights: 400 for copy, 500 for headings — never 600 inside the lab itself.
+   Mono is reserved for labels that name something technical (intents, layer
+   names, component identifiers, pixel values). Everything else is sans.
+   ========================================================================== */
+
+/* Utility classes so markup can apply the hierarchy without duplicating CSS */
+.lab-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 400;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.lab-label {
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+.lab-caption {
+  font-family: var(--font-sans);
+  font-size: 0.62rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--ink-muted);
+}
+
+.lab-body {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.5;
+}
+
+.lab-heading-sm {
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.lab-heading-md {
+  font-family: var(--font-sans);
+  font-size: 0.96rem;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.lab-heading-lg {
+  font-family: var(--font-sans);
+  font-size: 1.10rem;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.world-lab {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.world-lab .product-shell__top {
+  display: none;
+}
+
+/* ─────────────────────────── Two-column lab split ─────────────────────── */
+
+.lab-split {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+/* Left: stage fills all remaining space */
+.lab-stage {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--canvas);
+}
+
+/* product-shell__body inside the stage must fill the stage */
+.lab-stage .product-shell__body {
+  flex: 1;
+  min-height: 0;
+}
+
+/* Right: fixed-width scrollable controls panel */
+.lab-controls {
+  width: 280px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--panel);
+  border-left: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Control section ── */
+.ctrl-section {
+  padding: 1rem 1rem 0.9rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.ctrl-section:last-child {
+  border-bottom: none;
+}
+
+.ctrl-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  font-weight: 400;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: 0.6rem;
+}
+
+.ctrl-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.ctrl-group--stack {
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.ctrl-group button {
+  background: var(--canvas);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  font-weight: 400;
+  padding: 0.25rem 0.6rem;
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    background var(--motion-hold-duration, 90ms) linear,
+    border-color var(--motion-hold-duration, 90ms) linear;
+  text-align: left;
+}
+
+.ctrl-group button:hover {
+  border-color: var(--ink);
+}
+
+.ctrl-group--stack button {
+  width: 100%;
+}
+
+.ctrl-group button[data-active="true"] {
+  background: var(--ink);
+  color: var(--field);
+  border-color: var(--ink);
+}
+
+.ctrl-link {
+  background: var(--canvas);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  font-weight: 400;
+  padding: 0.25rem 0.6rem;
+  color: var(--ink);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.ctrl-sliders {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ctrl-sliders label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-family: var(--font-sans);
+  font-size: 0.62rem;
+  font-weight: 400;
+  color: var(--ink-muted);
+}
+
+.ctrl-sliders input[type="range"] {
+  width: 100%;
+  accent-color: var(--ink);
+}
+
+.ctrl-checkbox {
+  flex-direction: row !important;
+  align-items: center;
+  gap: 0.5rem !important;
+}
+
+.ctrl-prose {
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--ink-muted);
+  margin: 0;
+}
+
+/* ── Component studio stage ── */
+/* A column, not a block: `.lab-full-stage` below claims its height with
+   `flex`, and in a block parent that resolves to nothing. The canvas stage
+   inside is absolutely positioned and clips, so a collapsed parent does not
+   look like a layout bug — it looks like an empty studio. */
+.lab-component-stage {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 1.5rem;
+}
+
+/* A specimen stage holds a real canvas or a real table, so it needs a size of
+   its own rather than one borrowed from its contents. */
+.lab-full-stage {
+  flex: 1 1 auto;
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.lab-instrument-demo {
+  padding: 2rem 1.5rem;
+}
+
+/* ── Motion DNA stage ── */
+.lab-motion-stage {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+}
+
+/* ── Specimen cards ── */
+.specimens-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+.specimen-card {
+  padding: 1.25rem;
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.specimen-card h4 {
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 500;
+  margin: 0;
+  color: var(--ink);
+}
+
+.specimen-tag {
+  font-family: var(--font-mono);
+  font-size: 0.60rem;
+  font-weight: 400;
+  color: var(--ink-muted);
+}
+
+.specimen-render {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 0;
+  min-height: 140px;
+  background: var(--canvas);
+  border-radius: 2px;
+}
+
+/* ── Reader specimens ── */
+.reader-specimen-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.25rem;
+  padding: 1.5rem;
+}
+
+.reader-specimen-card {
+  border: 1px solid var(--rule);
+  background: var(--canvas);
+}
+
+.reader-specimen-card h4 {
+  padding: 0.7rem 1rem;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  border-bottom: 1px solid var(--rule);
+  background: var(--panel);
+}
+
+/* ── Motion DNA plan cards ── */
+.motion-plans-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.25rem;
+}
+
+.motion-plan-card {
+  padding: 1.25rem;
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.motion-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.motion-card-header h4 {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.09em;
+  color: var(--ink);
+}
+
+.motion-badge {
+  font-family: var(--font-mono);
+  font-size: 0.60rem;
+  font-weight: 400;
+  padding: 0.13rem 0.4rem;
+  background: var(--canvas);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  color: var(--ink-muted);
+}
+
+.motion-css-code {
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  font-weight: 400;
+  color: var(--ink-muted);
+  margin: 0;
+  word-break: break-all;
+  line-height: 1.4;
+}
+
+.motion-curve-graph {
+  padding: 0.25rem 0;
+}
+
+.motion-curve-graph svg {
+  display: block;
+  width: 100%;
+}
+
+.motion-runner-track {
+  height: 22px;
+  background: var(--canvas);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+}
+
+.motion-runner-bead {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--ink);
+  transition: none;
+}

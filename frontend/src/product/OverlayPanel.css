@@ -28,9 +28,12 @@
 }
 
 .ov {
+  /* `100cqi` is `.gm__main`, the map column. `100%` here would be the drawer
+     measuring itself — `--ov-width` feeds the body's width, which feeds the
+     drawer's size — and the panel collapses. `--ov-reserve` is the sibling. */
   --ov-width: min(
     var(--ov-preferred-width, 320px),
-    calc(100vw - var(--ov-handle) - var(--ov-float) - 3rem)
+    calc(100cqi - var(--ov-reserve, 0px) - var(--ov-handle) - var(--ov-float) - 3rem)
   );
   position: absolute;
   z-index: 30;
@@ -248,6 +251,11 @@ html.is-panel-resizing .ov__resize::after {
   transform: translateX(calc(-1 * var(--ov-float)));
 }
 
+.ov--handleless,
+.ov--handle-closed.is-open {
+  --ov-handle: 0px;
+}
+
 /* The handle and its body are one object, so the edge between them is not
    drawn — but only once the body is there to share it. Closed, the handle
    closes its own box. */
@@ -261,6 +269,19 @@ html.is-panel-resizing .ov__resize::after {
 
 .ov.is-open .ov__handle {
   color: var(--ink);
+}
+
+/* Open, the body *is* the panel. The tab would sit on the map-facing edge
+   repeating a close the body already has, so it collapses to nothing until
+   the drawer is off-screen again. */
+.ov--handle-closed.is-open > .ov__handle {
+  visibility: hidden;
+  width: 0;
+  min-width: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  pointer-events: none;
 }
 
 .ov__handle:hover {
@@ -328,7 +349,10 @@ html.is-panel-resizing .ov__resize::after {
 
 @media (max-width: 560px) {
   .ov {
-    --ov-width: calc(100vw - var(--ov-handle) - var(--ov-float));
+    --ov-width: min(
+      var(--ov-preferred-width, 320px),
+      calc(100cqi - var(--ov-reserve, 0px) - var(--ov-handle) - var(--ov-float))
+    );
   }
 
   .ov__handle {

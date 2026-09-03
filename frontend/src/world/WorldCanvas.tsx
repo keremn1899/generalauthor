@@ -25,10 +25,9 @@
  * takes a square-cornered box, and a bond — which has no mark of its own — has
  * the beads march along the filament itself.
  *
- * **Focus dims the rest.** Hovering does not just add a name, it takes presence
- * away from everything the named thing does not touch. The lit/dim pair is how
- * the product's canvas answers "what is this connected to" without moving
- * anything.
+ * **Focus only names.** Hover and selection reveal the labels belonging to the
+ * subject without fading unrelated matter. This matches the product canvas and
+ * keeps scanning the wider neighborhood possible while a relation is named.
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -38,13 +37,12 @@ import {
   chipNode,
   discNode,
   filamentEdge,
-  isAuthored,
+  furnitureOf,
   isDecoration,
   paintOf,
   shelfNode,
   spokeEdge,
   type MarkParams,
-  type Paint,
 } from "./marks";
 import {
   GRAPH_DNA_INTERACTION,
@@ -54,6 +52,12 @@ import {
 } from "../styles/graphDna";
 import { DEFAULT_MOTION_PLANS } from "../styles/motion";
 import { SelectionAnts, type AntTarget } from "../styles/SelectionAnts";
+import { observeHostSize } from "./canvasHost";
+import { transitionCanvasData, type CanvasDatum } from "./canvasMotion";
+import {
+  useFocusPan,
+  type CameraInsets,
+} from "./canvasFocus";
 import type { WorkingSet } from "./workingSet";
 import {
   assertionShown,
@@ -81,24 +85,90 @@ function subjectOfBond(elementId: string): string {
   return elementId.startsWith("bond:") ? elementId.slice(5) : elementId;
 }
 
+function liveAt(
+  live: Map<string, { x: number; y: number }>,
+  stored: Map<string, { x: number; y: number }>,
+  id: string,
+  fallback: { x: number; y: number } = { x: 0, y: 0 },
+) {
+  return live.get(id) ?? stored.get(id) ?? fallback;
+}
+
+/**
+ * Shift the camera just enough that new matter is on screen.
+ *
+ * Existing marks stay where they were put. `fitView` would reframe the whole
+ * neighborhood, which is a translation of everything the person already
+ * arranged even when their graph coordinates have not moved.
+ */
+async function panToReveal(
+  graph: Graph,
+  ids: string[],
+  insets: CameraInsets,
+) {
+  if (!ids.length) return;
+  const [width, height] = graph.getSize();
+  if (!width || !height) return;
+  const padLeft = insets.left;
+  const padRight = insets.right;
+  const padTop = insets.top;
+  const padBottom = insets.bottom;
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+  for (const id of ids) {
+    const position = graph.getElementPosition(id);
+    if (!position) continue;
+    const view = graph.getViewportByCanvas(position);
+    minX = Math.min(minX, view[0]);
+    minY = Math.min(minY, view[1]);
+    maxX = Math.max(maxX, view[0]);
+    maxY = Math.max(maxY, view[1]);
+  }
+  if (!Number.isFinite(minX)) return;
+  let dx = 0;
+  let dy = 0;
+  if (maxX - minX > width - padLeft - padRight) {
+    dx = (padLeft + width - padRight) / 2 - (minX + maxX) / 2;
+  } else if (minX < padLeft) {
+    dx = padLeft - minX;
+  } else if (maxX > width - padRight) {
+    dx = width - padRight - maxX;
+  }
+  if (maxY - minY > height - padTop - padBottom) {
+    dy = (padTop + height - padBottom) / 2 - (minY + maxY) / 2;
+  } else if (minY < padTop) {
+    dy = padTop - minY;
+  } else if (maxY > height - padBottom) {
+    dy = height - padBottom - maxY;
+  }
+  if (dx || dy) await graph.translateBy([dx, dy], false);
+}
+
+/** What a selection ring is drawn with. The DNA is the product's answer. */
+export type AntTuning = {
+  clearance: number;
+  dotGap: number;
+  lineWidth: number;
+  speed: number;
+  animated: boolean;
+};
+
+export const ANT_DEFAULTS: AntTuning = {
+  clearance: GRAPH_DNA_INTERACTION.selectionClearance,
+  dotGap: GRAPH_DNA_INTERACTION.selectionDotGap,
+  lineWidth: GRAPH_DNA_INTERACTION.selectionLine,
+  speed: GRAPH_DNA_INTERACTION.selectionSpeed,
+  animated: GRAPH_DNA_INTERACTION.selectionMotion,
+};
+
 export type CanvasSelection =
   | { kind: "referent"; id: string }
   | { kind: "assertion"; id: string }
   /** An obligation, which has no assertion to read — see §8.7. */
   | { kind: "demand"; id: string }
   | null;
-
-/**
- * A palette one step down, for matter the pointer is not on.
- *
- * Dimming by opacity would fade the labels and any state drawn over the top
- * with it, which inverts the emphasis — the same reason the provisional theme
- * is a palette rather than an alpha. Here the dim is the theme's own muted ink,
- * so a lit mark is the only full-strength thing on the field.
- */
-function dimmed(paint: Paint): Paint {
-  return { ...paint, ink: paint.muted };
-}
 
 export function WorldCanvas({
   set,
@@ -107,9 +177,14 @@ export function WorldCanvas({
   hovered,
   selection,
   show,
+  focusId = null,
+  focusToken = 0,
+  insets,
+  ants,
   onHover,
   onSelect,
   onPositions,
+  onRemove,
 }: {
   set: WorkingSet;
   mode: ThemeMode;
@@ -117,12 +192,32 @@ export function WorldCanvas({
   hovered: string | null;
   selection: CanvasSelection;
   show: ShowState;
+  /** A table-named mark to fly to. Canvas clicks do not set this. */
+  focusId?: string | null;
+  focusToken?: number;
+  insets: CameraInsets;
+  /**
+   * The selection ring's tuning, for a surface that exists to tune it.
+   *
+   * Defaults to the DNA, which is what the product ships. It is a prop rather
+   * than a second set of constants so the design lab drives the *same*
+   * component the field draws: hand-drawn ant specimens had already grown
+   * their own dash arithmetic and stopped matching what a selection looks
+   * like.
+   */
+  ants?: Partial<AntTuning>;
   onHover: (id: string | null) => void;
   onSelect: (selection: CanvasSelection) => void;
   onPositions: (positions: Map<string, { x: number; y: number }>) => void;
+  /** Right-click takes a mark off the field. */
+  onRemove: (selection: NonNullable<CanvasSelection>) => void;
 }) {
   const hostRef = useRef<HTMLDivElement>(null);
   const graphRef = useRef<Graph | null>(null);
+  const insetsRef = useRef(insets);
+  insetsRef.current = insets;
+  const focusIdRef = useRef(focusId);
+  focusIdRef.current = focusId;
   const [stageSize, setStageSize] = useState({ width: 0, height: 0 });
   /** Marks on the field last time we drew, so growth can be noticed. */
   const drawnRef = useRef(0);
@@ -139,18 +234,36 @@ export function WorldCanvas({
    */
   const setRef = useRef(set);
   setRef.current = set;
+  const onHoverRef = useRef(onHover);
+  const onSelectRef = useRef(onSelect);
+  const onRemoveRef = useRef(onRemove);
+  onHoverRef.current = onHover;
+  onSelectRef.current = onSelect;
+  onRemoveRef.current = onRemove;
+  /**
+   * Positions the renderer currently has, including a drag in flight.
+   *
+   * Hover rebuilds the element data (to name a bond) and used to read
+   * `set.positions`, which is a render behind the pointer. That is the snap
+   * back. This map is written on every drag tick so a redraw mid-gesture keeps
+   * the mark under the hand.
+   */
+  const liveRef = useRef(set.positions);
+  const draggingRef = useRef(false);
   /** Whether the renderer exists yet, so the ants can be handed a live graph. */
   const [ready, setReady] = useState(false);
   const paint = useMemo(() => paintOf(GRAPH_DNA_THEME[mode]), [mode]);
+  const tuning = useMemo<AntTuning>(
+    () => ({ ...ANT_DEFAULTS, ...ants }),
+    [ants],
+  );
   const provisional = useMemo(
     () => paintOf(GRAPH_DNA_PROVISIONAL_THEME[mode]),
     [mode],
   );
-  const dim = useMemo(() => dimmed(paint), [paint]);
-  const dimProvisional = useMemo(() => dimmed(provisional), [provisional]);
 
-  /** Which ids the pointer's subject touches, including itself. */
-  const lit = useMemo(() => {
+  /** Which marks should name their edges, including the active mark itself. */
+  const namedMarks = useMemo(() => {
     const active = hovered ?? (selection ? selection.id : null);
     if (!active) return null;
     const touching = new Set<string>([active]);
@@ -214,12 +327,11 @@ export function WorldCanvas({
     }
     const bond = set.bonds.find((edge) => edge.assertion_id === id);
     if (bond && assertionShown(bond.origin, bond.mode, show)) {
-      // The filament is the mark. Beads start clear of the discs it runs
-      // between, or the selection reads as belonging to one of them.
       return {
-        shape: "line",
+        shape: "edge-label",
         id: bondElementId(id),
-        trim: params.discDiameter / 2,
+        text: bond.relation,
+        clearance: GRAPH_DNA_INTERACTION.selectionPlateClearance,
       };
     }
     return null;
@@ -233,18 +345,18 @@ export function WorldCanvas({
       set.assertions.size === 0 &&
       set.demands.size === 0 &&
       set.bonds.length === 0;
-    const paintFor = (id: string, overlay = false) => {
-      if (overlay) return lit && !lit.has(id) ? dimProvisional : provisional;
-      return lit && !lit.has(id) ? dim : paint;
-    };
-    const named = (id: string) => Boolean(lit?.has(id));
+    const paintFor = (_id: string, overlay = false) =>
+      overlay ? provisional : paint;
+    const named = (id: string) => Boolean(namedMarks?.has(id));
+    const at = (id: string, fallback: { x: number; y: number } = { x: 0, y: 0 }) =>
+      liveAt(liveRef.current, set.positions, id, fallback);
 
     for (const referent of set.referents.values()) {
-      const stored = set.positions.get(referent.id) ?? { x: 0, y: 0 };
+      const stored = at(referent.id);
       // Give a new seed a real field position instead of distorting the camera
       // with a single-element fit. Once moved, its stored position wins and
       // this convenience disappears.
-      const at =
+      const placed =
         loneSeed &&
         stored.x === 0 &&
         stored.y === 0 &&
@@ -253,29 +365,21 @@ export function WorldCanvas({
           ? { x: stageSize.width / 2, y: stageSize.height / 2 }
           : stored;
       nodes.push(
-        discNode(referent.id, at.x, at.y, referent.label, paintFor(referent.id), params),
+        discNode(referent.id, placed.x, placed.y, referent.label, paintFor(referent.id), params),
       );
     }
 
     for (const assertion of set.assertions.values()) {
       if (!assertionShown(assertion.origin, assertion.mode, show)) continue;
-      const at = set.positions.get(assertion.assertion_id) ?? { x: 0, y: 0 };
+      const atChip = at(assertion.assertion_id);
       const overlay = unsettled(assertion.stale, assertion.completeness);
-      // Authored by a judgment rather than compiled — the constructor's or a
-      // person's. Both take the provisional palette when something else on the
-      // field is lit, because both are claims someone made.
       const kind = chipKindOf(assertion.origin);
-      const chipPaint =
-        overlay
-          ? paintFor(assertion.assertion_id, true)
-          : isAuthored(kind) && lit && !lit.has(assertion.assertion_id)
-            ? provisional
-            : paintFor(assertion.assertion_id);
+      const chipPaint = paintFor(assertion.assertion_id, overlay);
       nodes.push(
         chipNode(
           assertion.assertion_id,
-          at.x,
-          at.y,
+          atChip.x,
+          atChip.y,
           assertion.relation,
           kind,
           chipPaint,
@@ -290,8 +394,8 @@ export function WorldCanvas({
         nodes.push(
           shelfNode(
             `shelf:${assertion.assertion_id}`,
-            at.x,
-            at.y,
+            atChip.x,
+            atChip.y,
             assertion.relation,
             chipPaint,
             params,
@@ -302,8 +406,8 @@ export function WorldCanvas({
         nodes.push(
           shelfNode(
             `crown:${assertion.assertion_id}`,
-            at.x,
-            at.y,
+            atChip.x,
+            atChip.y,
             assertion.relation,
             chipPaint,
             params,
@@ -333,12 +437,12 @@ export function WorldCanvas({
     // has been made.
     for (const demand of set.demands.values()) {
       if (!show.unresolved) continue;
-      const at = set.positions.get(demand.key) ?? { x: 0, y: 0 };
+      const atDemand = at(demand.key);
       nodes.push(
         chipNode(
           demand.key,
-          at.x,
-          at.y,
+          atDemand.x,
+          atDemand.y,
           demand.relation,
           "unresolved",
           paintFor(demand.key),
@@ -383,11 +487,9 @@ export function WorldCanvas({
   }, [
     set,
     paint,
-    dim,
     provisional,
-    dimProvisional,
     params,
-    lit,
+    namedMarks,
     show,
     stageSize,
   ]);
@@ -403,24 +505,55 @@ export function WorldCanvas({
       const position = graph.getElementPosition(id);
       if (position) out.set(id, { x: Math.round(position[0]), y: Math.round(position[1]) });
     }
-    if (out.size) onPositions(out);
+    if (!out.size) return;
+    liveRef.current = new Map([...liveRef.current, ...out]);
+    onPositions(out);
   }, [onPositions]);
+
+  useEffect(() => {
+    if (!draggingRef.current) liveRef.current = set.positions;
+  }, [set.positions]);
 
   useEffect(() => {
     const host = hostRef.current;
     if (!host) return;
+    const blockMenu = (event: Event) => event.preventDefault();
+    host.addEventListener("contextmenu", blockMenu);
     const graph = new Graph({
       container: host,
       data: data as never,
       animation: false,
       padding: 60,
-      background: paint.canvas,
+      // Transparent on purpose. G6's `setOptions({ background })` stores the
+      // colour but never paints it, so an opaque field set at mount stuck
+      // through every theme flip. The live field is `--matter-canvas` on the
+      // stage, the same path the product canvas uses.
+      background: "transparent",
       // No `selected` element state. Selection is drawn over the canvas by the
       // ants, so the renderer is not also asked to thicken a line or lay a
       // halo under a disc — two marks for one fact, and the quieter one was
       // the only one anybody read.
       node: { style: { cursor: "grab" } },
-      behaviors: ["zoom-canvas", "drag-canvas", "drag-element"],
+      behaviors: [
+        "zoom-canvas",
+        {
+          type: "drag-canvas",
+          enable: (event: { targetType?: string }) => event.targetType === "canvas",
+        },
+        {
+          type: "drag-element",
+          key: "drag-element",
+          // Product nodes are not combo containers. G6's default `move`
+          // effect refreshes combo data on every pointer event, which is pure
+          // bookkeeping here and makes the held object trail the pointer.
+          dropEffect: "none",
+          animation: false,
+          enable: (event: unknown) => {
+            const id = (event as { target?: { id?: unknown } })?.target?.id;
+            return typeof id === "string" && !isDecoration(id);
+          },
+        },
+      ],
     });
     graphRef.current = graph;
 
@@ -443,36 +576,101 @@ export function WorldCanvas({
     const markOf = (id: string | null) =>
       id ? subjectOfBond(id.replace(/:\d+$/, "")) : null;
 
-    graph.on("node:pointerenter", (event) => onHover(subject(idOf(event))));
-    graph.on("edge:pointerenter", (event) => onHover(markOf(idOf(event))));
-    graph.on("node:pointerleave", () => onHover(null));
-    graph.on("edge:pointerleave", () => onHover(null));
+    const followFurniture = (id: string) => {
+      const position = graph.getElementPosition(id);
+      if (!position) return;
+      liveRef.current.set(id, { x: position[0], y: position[1] });
+      const present = new Set(graph.getNodeData().map((node) => String(node.id)));
+      const offset = params.chipHeight / 2 + params.shelfGap;
+      const moved: Record<string, [number, number]> = {};
+      for (const furniture of furnitureOf(id)) {
+        if (!present.has(furniture)) continue;
+        moved[furniture] = [
+          position[0],
+          furniture.startsWith("crown:")
+            ? position[1] - offset
+            : position[1] + offset,
+        ];
+      }
+      if (Object.keys(moved).length) {
+        void graph.translateElementTo(moved, false);
+      }
+    };
+
+    let ignoreClickUntil = 0;
+    const hovering = (id: string | null) => {
+      if (draggingRef.current) return;
+      onHoverRef.current(id);
+    };
+    const pickNode = (id: string): NonNullable<CanvasSelection> => {
+      const current = setRef.current;
+      if (current.assertions.has(id)) return { kind: "assertion", id };
+      if (current.demands.has(id)) return { kind: "demand", id };
+      return { kind: "referent", id };
+    };
+    const pickEdge = (id: string): NonNullable<CanvasSelection> =>
+      setRef.current.demands.has(id)
+        ? { kind: "demand", id }
+        : { kind: "assertion", id };
+    const swallowMenu = (event: unknown) => {
+      const e = event as {
+        preventDefault?: () => void;
+        nativeEvent?: Event;
+      };
+      e.preventDefault?.();
+      e.nativeEvent?.preventDefault?.();
+    };
+
+    graph.on("node:pointerenter", (event) => hovering(subject(idOf(event))));
+    graph.on("edge:pointerenter", (event) => hovering(markOf(idOf(event))));
+    graph.on("node:pointerleave", () => hovering(null));
+    graph.on("edge:pointerleave", () => hovering(null));
     graph.on("node:click", (event) => {
+      if (performance.now() < ignoreClickUntil) return;
       const id = subject(idOf(event));
       if (!id) return;
-      const current = setRef.current;
-      onSelect(
-        current.assertions.has(id)
-          ? { kind: "assertion", id }
-          : current.demands.has(id)
-            ? { kind: "demand", id }
-            : { kind: "referent", id },
-      );
+      onSelectRef.current(pickNode(id));
     });
     graph.on("edge:click", (event) => {
+      if (performance.now() < ignoreClickUntil) return;
       const id = markOf(idOf(event));
       if (!id) return;
-      onSelect(
-        setRef.current.demands.has(id)
-          ? { kind: "demand", id }
-          : { kind: "assertion", id },
-      );
+      onSelectRef.current(pickEdge(id));
     });
-    graph.on("canvas:click", () => onSelect(null));
+    graph.on("canvas:click", () => {
+      if (performance.now() < ignoreClickUntil) return;
+      onSelectRef.current(null);
+    });
+    graph.on("node:contextmenu", (event) => {
+      swallowMenu(event);
+      const id = subject(idOf(event));
+      if (id) onRemoveRef.current(pickNode(id));
+    });
+    graph.on("edge:contextmenu", (event) => {
+      swallowMenu(event);
+      const id = markOf(idOf(event));
+      if (id) onRemoveRef.current(pickEdge(id));
+    });
+    graph.on("node:dragstart", (event) => {
+      draggingRef.current = true;
+      const id = subject(idOf(event));
+      if (id) followFurniture(id);
+    });
+    graph.on("node:drag", (event) => {
+      const id = subject(idOf(event));
+      if (id) followFurniture(id);
+    });
     // Dragging is the one interaction that changes state the model owns, so it
     // is written back rather than left in the renderer to be lost on the next
-    // expansion.
-    graph.on("afterdragelement", harvest);
+    // expansion. The product canvas also swallows the click that fires after
+    // a real drag, or the reader opens on a mark you were only moving.
+    graph.on("node:dragend", (event) => {
+      const id = subject(idOf(event));
+      if (id) followFurniture(id);
+      draggingRef.current = false;
+      ignoreClickUntil = performance.now() + 240;
+      harvest();
+    });
 
     void graph
       .render()
@@ -490,6 +688,7 @@ export function WorldCanvas({
       (window as unknown as { __worldGraph?: Graph }).__worldGraph = graph;
     }
     return () => {
+      host.removeEventListener("contextmenu", blockMenu);
       graphRef.current = null;
       setReady(false);
       graph.destroy();
@@ -501,83 +700,76 @@ export function WorldCanvas({
 
   useEffect(() => {
     const graph = graphRef.current;
-    if (!graph) return;
-    const count = (data.nodes as unknown[]).length;
-    graph.setData(data as never);
-    void graph
-      .draw()
-      .then(async () => {
-        if (graphRef.current !== graph) return undefined;
-        // The *viewport* follows new matter; the marks do not. Growing the
-        // field is the one moment the camera should move — otherwise an
-        // expansion happens somewhere off screen and reads as nothing having
-        // happened — and it is the only moment it does, so an arrangement you
-        // made stays where you left it while you read it.
+    if (!graph || draggingRef.current) return;
+    let cancelled = false;
+    const next = {
+      nodes: data.nodes as CanvasDatum[],
+      edges: data.edges as CanvasDatum[],
+    };
+
+    void (async () => {
+      try {
+        const transition = await transitionCanvasData(
+          graph,
+          next,
+          () => cancelled || graphRef.current !== graph,
+        );
+        if (cancelled || graphRef.current !== graph) return;
+        const count = next.nodes.length;
         const grew = count > drawnRef.current;
         drawnRef.current = count;
         if (grew && count === 1) {
-          // `fitView` magnifies a single disc to fill the whole stage. A seed
-          // is an entry point, not a hero image. Its datum is centred from the
-          // measured field height above, so the viewport stays at scale 1.
           await graph.zoomTo(1, { duration: 0 });
-        } else if (grew) {
-          await graph.fitView();
+        } else if (grew && !focusIdRef.current) {
+          const reveal = transition.bornNodes
+            .map((node) => node.id)
+            .filter((id) => !isDecoration(id));
+          await panToReveal(graph, reveal, insetsRef.current);
         }
-        return undefined;
-      })
-      .catch((problem: unknown) => {
-        // Same as at mount: a draw in flight when the canvas is torn down is
-        // not something to report.
+      } catch (problem: unknown) {
         if (graphRef.current === graph) console.error(problem);
-      });
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, [data]);
 
-  useEffect(() => {
-    const graph = graphRef.current;
-    if (!graph) return;
-    graph.setOptions({ background: paint.canvas });
-  }, [paint.canvas]);
-
   // A renderer sized once is sized wrong the moment anything else on the page
-  // takes room: opening the extension drawer halves the stage, and a graph that
-  // does not hear about it keeps drawing at the old size, which reads as the
-  // field having gone blank. The camera is left alone — resizing is not new
-  // matter, so it is not a reason to move what someone arranged.
+  // takes room. The camera is left alone — resizing is not new matter.
+  // Panel drags are the exception: the CSS grid follows the pointer, but G6
+  // waits for pointer-up. Redrawing every move is both expensive and the
+  // jitter. Existing marks stay put; there is no fitView here.
   useEffect(() => {
     const host = hostRef.current;
     if (!host) return;
-    const observer = new ResizeObserver(() => {
+    return observeHostSize(host, (width, height) => {
       const graph = graphRef.current;
-      if (!graph || !host.clientWidth || !host.clientHeight) return;
-      graph.resize(host.clientWidth, host.clientHeight);
+      if (!graph) return;
+      graph.resize(width, height);
       setStageSize((current) =>
-        current.width === host.clientWidth &&
-        current.height === host.clientHeight
+        current.width === width && current.height === height
           ? current
-          : { width: host.clientWidth, height: host.clientHeight },
+          : { width, height },
       );
     });
-    observer.observe(host);
-    return () => observer.disconnect();
   }, []);
 
+  useFocusPan(graphRef, ready, focusId, focusToken, insetsRef);
+
   return (
-    <div className="world__stage" style={{ background: paint.canvas }}>
+    <div className="world__stage">
       <div className="world__surface" ref={hostRef} />
       <SelectionAnts
         graph={ready ? graphRef.current : null}
         target={antTarget}
-        clearance={GRAPH_DNA_INTERACTION.selectionClearance}
-        dotGap={GRAPH_DNA_INTERACTION.selectionDotGap}
-        lineWidth={GRAPH_DNA_INTERACTION.selectionLine}
-        speed={
-          GRAPH_DNA_INTERACTION.selectionMotion
-            ? GRAPH_DNA_INTERACTION.selectionSpeed
-            : 0
-        }
+        clearance={tuning.clearance}
+        dotGap={tuning.dotGap}
+        lineWidth={tuning.lineWidth}
+        speed={tuning.animated ? tuning.speed : 0}
         color={paint.ink}
         motion={DEFAULT_MOTION_PLANS}
-        animated={GRAPH_DNA_INTERACTION.selectionMotion}
+        animated={tuning.animated}
       />
     </div>
   );

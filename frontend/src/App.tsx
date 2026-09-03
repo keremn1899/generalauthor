@@ -16,6 +16,11 @@ import type { LabRoute } from "./LabRoutes";
 const WorldPage = lazy(() =>
   import("./world/WorldPage").then((module) => ({ default: module.WorldPage })),
 );
+const WorldLabPage = lazy(() =>
+  import("./world/WorldLabPage").then((module) => ({
+    default: module.WorldLabPage,
+  })),
+);
 /**
  * Construction — the review surface over one constructor run. A second product
  * route beside World: same lineage, other half. World shows what is true;
@@ -55,6 +60,7 @@ type Route =
   | "product-graph"
   | "product-review"
   | "world"
+  | "world-lab"
   | "construction"
   | LabRoute;
 
@@ -68,6 +74,7 @@ function normalizeHash() {
 function routeFromHash(): Route {
   const h = window.location.hash.replace(/^#\/?/, "").split("?")[0];
 
+  if (h === "world-lab" || h.startsWith("world-lab/")) return "world-lab";
   if (h === "world" || h.startsWith("world/")) return "world";
   if (h === "construction" || h.startsWith("construction/")) return "construction";
   if (h === "graph" || h === "ask") return "product-graph";
@@ -159,6 +166,7 @@ export default function App() {
 
   let page;
   if (route === "world") page = <WorldPage />;
+  else if (route === "world-lab") page = <WorldLabPage />;
   else if (route === "construction") page = <ConstructionPage />;
   else if (route === "product-graph") page = <ProductHost surface="graph" />;
   else if (route === "product-review") page = <ProductHost surface="log" />;

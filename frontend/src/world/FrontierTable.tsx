@@ -23,7 +23,9 @@
 
 import { useMemo, useState } from "react";
 import type { WorldDemand, WorldRelation } from "../api/world";
+import { still } from "../styles/motion";
 import { useRowWindow } from "./rowWindow";
+import { TableBar, type TableChrome } from "./tableChrome";
 
 const ROW_HEIGHT = 26;
 const OVERSCAN = 8;
@@ -36,8 +38,8 @@ export function FrontierTable({
   relations,
   problem,
   present,
+  chrome,
   onFocus,
-  onClose,
 }: {
   demand: WorldDemand | null;
   /** The vocabulary, so a tuple prints in role order rather than JSON order. */
@@ -45,8 +47,8 @@ export function FrontierTable({
   problem: string | null;
   /** Obligation keys and assertion ids already on the field. */
   present: Set<string>;
+  chrome: TableChrome;
   onFocus: (obligation: Obligation) => void;
-  onClose: () => void;
 }) {
   const [resolved, setResolved] = useState(false);
 
@@ -76,10 +78,10 @@ export function FrontierTable({
 
   return (
     <section className="table" aria-label="unresolved frontier">
-      <header className="table__bar">
-        <b>frontier</b>
-        <span>
-          {demand ? (
+      <TableBar
+        chrome={chrome}
+        meta={
+          demand ? (
             <>
               {open} unresolved of {all.length} obligation
               {all.length === 1 ? "" : "s"} · {demand.purpose.id} rev{" "}
@@ -87,15 +89,17 @@ export function FrontierTable({
             </>
           ) : (
             "no purpose loaded"
-          )}
-        </span>
-        <button type="button" data-active={resolved} onClick={() => setResolved((on) => !on)}>
+          )
+        }
+      >
+        <button
+          type="button"
+          data-active={resolved}
+          onClick={() => setResolved((on) => !on)}
+        >
           {resolved ? "unresolved only" : "show resolved"}
         </button>
-        <button type="button" onClick={onClose}>
-          close
-        </button>
-      </header>
+      </TableBar>
 
       <div className="table__head" style={{ gridTemplateColumns: COLUMNS }}>
         <span>relation</span>
@@ -123,6 +127,7 @@ export function FrontierTable({
               <div
                 key={item.key}
                 className="table__row"
+                {...still("rowsNeverFly")}
                 data-loaded
                 data-present={placed ? true : undefined}
                 data-resolved={item.state === "ASSERTED" ? true : undefined}

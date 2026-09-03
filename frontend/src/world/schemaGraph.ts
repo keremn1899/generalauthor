@@ -84,15 +84,16 @@ function furniture(
   params: MarkParams,
 ): unknown[] {
   const marks: unknown[] = [];
+  const plate = `rel:${relation.name}`;
   if (relation.mode === "DERIVED") {
     marks.push(
-      shelfNode(`shelf:${relation.name}`, at.x, at.y, relation.name, paint, params),
+      shelfNode(`shelf:${plate}`, at.x, at.y, relation.name, paint, params),
     );
   }
   if (kind === "adjudicated") {
     marks.push(
       shelfNode(
-        `crown:${relation.name}`,
+        `crown:${plate}`,
         at.x,
         at.y,
         relation.name,

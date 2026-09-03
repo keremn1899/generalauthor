@@ -20,6 +20,12 @@ type ResizableDividerProps = {
    * every move frame. Preview still reflows the grid via the variable.
    */
   cssVariable?: string;
+  /**
+   * Where to write `cssVariable` during a drag. Defaults to the divider's
+   * parent. A ref is read at paint time so the host can be the shell that
+   * mounts after the first render.
+   */
+  cssVariableHost?: HTMLElement | null | { current: HTMLElement | null };
   className?: string;
 };
 
@@ -54,6 +60,7 @@ export function ResizableDivider({
   minTrailingSize,
   onResize,
   cssVariable,
+  cssVariableHost,
   className = "",
 }: ResizableDividerProps) {
   const availableMax = (element: HTMLElement) => {
@@ -66,7 +73,14 @@ export function ResizableDivider({
 
   const paintPreview = (element: HTMLElement, value: number) => {
     if (!cssVariable) return;
-    element.parentElement?.style.setProperty(cssVariable, `${value}px`);
+    const host =
+      cssVariableHost && "current" in cssVariableHost
+        ? cssVariableHost.current
+        : cssVariableHost;
+    (host ?? element.parentElement)?.style.setProperty(
+      cssVariable,
+      `${value}px`,
+    );
   };
 
   const apply = (

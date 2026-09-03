@@ -17,15 +17,31 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Graph } from "@antv/g6";
 import type { WorldRelation } from "../api/world";
 import {
+  GRAPH_DNA_FOCUS,
+  GRAPH_DNA_INTERACTION,
   GRAPH_DNA_PROVISIONAL_THEME,
   GRAPH_DNA_THEME,
+  type GraphDnaTheme,
   type ThemeMode,
 } from "../styles/graphDna";
 import { DEFAULT_MOTION_PLANS } from "../styles/motion";
-import { GRAPH_DNA_INTERACTION } from "../styles/graphDna";
 import { SelectionAnts, type AntTarget } from "../styles/SelectionAnts";
-import { isDecoration, MARK_DEFAULTS, paintOf } from "./marks";
+import { furnitureOf, isDecoration, MARK_DEFAULTS, paintOf } from "./marks";
+import { observeHostSize } from "./canvasHost";
+import { transitionCanvasData, type CanvasDatum } from "./canvasMotion";
+import { useFocusPan, type CameraInsets } from "./canvasFocus";
 import { schemaLayout } from "./schemaGraph";
+
+const FOCUS_THEME: GraphDnaTheme = {
+  surface: GRAPH_DNA_FOCUS.field,
+  canvas: GRAPH_DNA_FOCUS.field,
+  filament: GRAPH_DNA_FOCUS.lit,
+  node: GRAPH_DNA_FOCUS.lit,
+  nodeLabel: GRAPH_DNA_FOCUS.litLabel,
+  chip: GRAPH_DNA_FOCUS.chip,
+  lensLabel: GRAPH_DNA_FOCUS.lensLabel,
+  bondLabel: GRAPH_DNA_FOCUS.bondLabel,
+};
 
 export function SchemaCanvas({
   relations,
@@ -33,6 +49,10 @@ export function SchemaCanvas({
   namedAtRest,
   active,
   selected,
+  inverted = false,
+  focusId = null,
+  focusToken = 0,
+  insets,
   onHover,
   onSelect,
 }: {
@@ -43,22 +63,37 @@ export function SchemaCanvas({
   active: string | null;
   /** Click chooses what the reader opens. */
   selected: string | null;
+  /** Vocabulary as a focus room — inverted field, same marks. */
+  inverted?: boolean;
+  /** A table-named relation to fly to. Canvas clicks do not set this. */
+  focusId?: string | null;
+  focusToken?: number;
+  insets: CameraInsets;
   onHover: (relation: string | null) => void;
   onSelect: (relation: string | null) => void;
 }) {
   const hostRef = useRef<HTMLDivElement>(null);
   const graphRef = useRef<Graph | null>(null);
+  const insetsRef = useRef(insets);
+  insetsRef.current = insets;
+  const focusIdRef = useRef(focusId);
+  focusIdRef.current = focusId;
   const [ready, setReady] = useState(false);
-  const drawnSizeRef = useRef(0);
+  const fittedRef = useRef(false);
   const [positions, setPositions] = useState(
     () => new Map<string, { x: number; y: number }>(),
   );
+  const liveRef = useRef(positions);
+  const draggingRef = useRef(false);
   const onHoverRef = useRef(onHover);
   const onSelectRef = useRef(onSelect);
   onHoverRef.current = onHover;
   onSelectRef.current = onSelect;
 
-  const paint = useMemo(() => paintOf(GRAPH_DNA_THEME[mode]), [mode]);
+  const paint = useMemo(
+    () => paintOf(inverted ? FOCUS_THEME : GRAPH_DNA_THEME[mode]),
+    [inverted, mode],
+  );
   const stalePaint = useMemo(
     () => paintOf(GRAPH_DNA_PROVISIONAL_THEME[mode]),
     [mode],
@@ -78,7 +113,9 @@ export function SchemaCanvas({
         id?: string;
         style?: Record<string, unknown>;
       }>).map((node) => {
-        const at = node.id ? positions.get(node.id) : null;
+        const at = node.id
+          ? (liveRef.current.get(node.id) ?? positions.get(node.id))
+          : null;
         return at
           ? { ...node, style: { ...node.style, x: at.x, y: at.y } }
           : node;
@@ -113,7 +150,12 @@ export function SchemaCanvas({
           id: plate,
           clearance: GRAPH_DNA_INTERACTION.selectionPlateClearance,
         }
-      : { shape: "line", id: selected, trim: MARK_DEFAULTS.discDiameter / 2 };
+      : {
+          shape: "edge-label",
+          id: selected,
+          text: selected,
+          clearance: GRAPH_DNA_INTERACTION.selectionPlateClearance,
+        };
   }, [base.data.nodes, selected]);
 
   useEffect(() => {
@@ -125,15 +167,20 @@ export function SchemaCanvas({
       animation: false,
       autoFit: { type: "view", options: { direction: "both" } },
       padding: 48,
-      background: paint.canvas,
+      background: "transparent",
       // Selection is the ants, over the canvas — see `WorldCanvas`. No halo
       // under the plate and no thickened filament: one fact, one mark.
       node: { style: { cursor: "grab" } },
       behaviors: [
         "zoom-canvas",
-        "drag-canvas",
+        {
+          type: "drag-canvas",
+          enable: (event: { targetType?: string }) => event.targetType === "canvas",
+        },
         {
           type: "drag-element",
+          key: "drag-element",
+          dropEffect: "none",
           animation: false,
           enable: (event: unknown) => {
             const id = (event as { target?: { id?: unknown } })?.target?.id;
@@ -147,14 +194,49 @@ export function SchemaCanvas({
       const target = (event as { target?: { id?: unknown } } | undefined)?.target;
       return typeof target?.id === "string" ? target.id : null;
     };
+    const harvest = () => {
+      const next = new Map<string, { x: number; y: number }>();
+      for (const node of graph.getNodeData()) {
+        const id = String(node.id);
+        const at = graph.getElementPosition(id);
+        if (at) next.set(id, { x: Math.round(at[0]), y: Math.round(at[1]) });
+      }
+      liveRef.current = next;
+      setPositions(next);
+    };
+    const followFurniture = (id: string) => {
+      const position = graph.getElementPosition(id);
+      if (!position) return;
+      liveRef.current.set(id, { x: position[0], y: position[1] });
+      const present = new Set(graph.getNodeData().map((node) => String(node.id)));
+      const offset = MARK_DEFAULTS.chipHeight / 2 + MARK_DEFAULTS.shelfGap;
+      const moved: Record<string, [number, number]> = {};
+      for (const furniture of furnitureOf(id)) {
+        if (!present.has(furniture)) continue;
+        moved[furniture] = [
+          position[0],
+          furniture.startsWith("crown:")
+            ? position[1] - offset
+            : position[1] + offset,
+        ];
+      }
+      if (Object.keys(moved).length) void graph.translateElementTo(moved, false);
+    };
+
     graph.on("node:pointerenter", (event) => {
+      if (draggingRef.current) return;
       onHoverRef.current(relationOf(idOf(event)));
     });
     graph.on("edge:pointerenter", (event) => {
+      if (draggingRef.current) return;
       onHoverRef.current(relationOf(idOf(event)));
     });
-    graph.on("node:pointerleave", () => onHoverRef.current(null));
-    graph.on("edge:pointerleave", () => onHoverRef.current(null));
+    graph.on("node:pointerleave", () => {
+      if (!draggingRef.current) onHoverRef.current(null);
+    });
+    graph.on("edge:pointerleave", () => {
+      if (!draggingRef.current) onHoverRef.current(null);
+    });
     graph.on("node:click", (event) => {
       const relation = relationOf(idOf(event));
       if (relation) onSelectRef.current(relation);
@@ -164,14 +246,20 @@ export function SchemaCanvas({
       if (relation) onSelectRef.current(relation);
     });
     graph.on("canvas:click", () => onSelectRef.current(null));
-    graph.on("afterdragelement", () => {
-      const next = new Map<string, { x: number; y: number }>();
-      for (const node of graph.getNodeData()) {
-        const id = String(node.id);
-        const at = graph.getElementPosition(id);
-        if (at) next.set(id, { x: Math.round(at[0]), y: Math.round(at[1]) });
-      }
-      setPositions(next);
+    graph.on("node:dragstart", (event) => {
+      draggingRef.current = true;
+      const id = idOf(event);
+      if (id && !isDecoration(id)) followFurniture(id);
+    });
+    graph.on("node:drag", (event) => {
+      const id = idOf(event);
+      if (id && !isDecoration(id)) followFurniture(id);
+    });
+    graph.on("node:dragend", (event) => {
+      const id = idOf(event);
+      if (id && !isDecoration(id)) followFurniture(id);
+      draggingRef.current = false;
+      harvest();
     });
 
     graphRef.current = graph;
@@ -207,49 +295,67 @@ export function SchemaCanvas({
 
   useEffect(() => {
     const graph = graphRef.current;
-    if (!graph) return;
-    const size = data.nodes.length + data.edges.length;
-    graph.setData(data as never);
-    void graph
-      .draw()
-      .then(async () => {
-        if (graphRef.current !== graph) return;
-        if (size !== drawnSizeRef.current) {
-          drawnSizeRef.current = size;
-          await graph.fitView();
+    if (!graph || draggingRef.current) return;
+    let cancelled = false;
+    const next = {
+      nodes: data.nodes as CanvasDatum[],
+      edges: data.edges as CanvasDatum[],
+    };
+    void (async () => {
+      try {
+        await transitionCanvasData(
+          graph,
+          next,
+          () => cancelled || graphRef.current !== graph,
+        );
+        if (cancelled || graphRef.current !== graph) return;
+        // Establish the vocabulary's camera once. A SHOW change is a lens over
+        // the same map and must not reframe whatever remains.
+        if (!fittedRef.current && next.nodes.length && !focusIdRef.current) {
+          fittedRef.current = true;
+          const settle = DEFAULT_MOTION_PLANS.settle;
+          await graph.fitView(undefined, {
+            duration: settle.durationMs,
+            easing: settle.easing.g6,
+          });
         }
-      })
-      .catch((problem: unknown) => {
+      } catch (problem: unknown) {
         if (graphRef.current === graph) console.error(problem);
-      });
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, [data]);
 
-  useEffect(() => {
-    const graph = graphRef.current;
-    if (!graph) return;
-    graph.setOptions({ background: paint.canvas });
-  }, [paint.canvas]);
-
   // The vocabulary refits when its stage changes size — unlike the field, it
-  // has no arrangement to preserve, so following the container is the whole of
-  // the correct behaviour.
+  // has no arrangement to preserve. Panel drags still only redraw on release:
+  // the fit is the settle, not a live chase of the handle.
   useEffect(() => {
     const host = hostRef.current;
     if (!host) return;
-    const observer = new ResizeObserver(() => {
+    return observeHostSize(host, (width, height, cause) => {
       const graph = graphRef.current;
-      if (!graph || !host.clientWidth || !host.clientHeight) return;
-      graph.resize(host.clientWidth, host.clientHeight);
-      void graph.fitView().catch((problem: unknown) => {
-        if (graphRef.current === graph) console.error(problem);
-      });
+      if (!graph) return;
+      graph.resize(width, height);
+      const settle = DEFAULT_MOTION_PLANS.settle;
+      void graph
+        .fitView(
+          undefined,
+          cause === "release"
+            ? { duration: settle.durationMs, easing: settle.easing.g6 }
+            : false,
+        )
+        .catch((problem: unknown) => {
+          if (graphRef.current === graph) console.error(problem);
+        });
     });
-    observer.observe(host);
-    return () => observer.disconnect();
   }, []);
 
+  useFocusPan(graphRef, ready, focusId, focusToken, insetsRef);
+
   return (
-    <div className="world__stage" style={{ background: paint.canvas }}>
+    <div className="world__stage">
       <div className="world__surface" ref={hostRef} />
       <SelectionAnts
         graph={ready ? graphRef.current : null}

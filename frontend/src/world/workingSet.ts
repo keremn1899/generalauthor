@@ -129,8 +129,9 @@ export type WorkingSet = {
   demands: Map<string, FieldDemand>;
   bonds: FieldBond[];
   positions: Map<string, Point>;
-  /** relation names already expanded from a given referent, so a second click
-   *  is a no-op rather than a pile of duplicate marks. */
+  /** Expansions that completed, including empty expansions. This is completion
+   *  provenance, not the source of truth for whether their tuples are still on
+   *  the field; `expansionOnField` derives that from the material itself. */
   expanded: Set<string>;
 };
 
@@ -151,6 +152,53 @@ export function fieldSize(set: WorkingSet): number {
 
 export function expansionKey(referentId: string, relation: string): string {
   return `${referentId}\u0000${relation}`;
+}
+
+/** How many positive tuples of this relation involving this referent stand here. */
+export function expansionTupleCount(
+  set: WorkingSet,
+  referentId: string,
+  relation: string,
+): number {
+  const ids = new Set<string>();
+  for (const assertion of set.assertions.values()) {
+    if (
+      assertion.relation === relation &&
+      assertion.spokes.some((spoke) => spoke.id === referentId)
+    ) {
+      ids.add(assertion.assertion_id);
+    }
+  }
+  for (const bond of set.bonds) {
+    if (
+      bond.relation === relation &&
+      bond.spokes.some((spoke) => spoke.id === referentId)
+    ) {
+      ids.add(bond.assertion_id);
+    }
+  }
+  return ids.size;
+}
+
+/**
+ * Whether expanding this relation would add any tuple matter.
+ *
+ * Presence is derived from the field rather than from the route by which a
+ * tuple arrived. A row focus or an expansion from the tuple's other referent
+ * can put exactly the same assertion here, and the panel must still say "on
+ * field". The completion record matters only for a legitimately empty
+ * expansion, where there is no material from which to derive the answer.
+ */
+export function expansionOnField(
+  set: WorkingSet,
+  referentId: string,
+  relation: string,
+  expectedCount: number,
+): boolean {
+  if (expectedCount === 0) {
+    return set.expanded.has(expansionKey(referentId, relation));
+  }
+  return expansionTupleCount(set, referentId, relation) >= expectedCount;
 }
 
 /** Put the first referent on an empty field, at the middle. */
@@ -254,7 +302,16 @@ export type ExpansionInput = {
 export function expand(set: WorkingSet, input: ExpansionInput): WorkingSet {
   const next = clone(set);
   const key = expansionKey(input.anchor, input.relation);
-  if (next.expanded.has(key)) return set;
+  // `expanded` records that a request once completed; it cannot prove its
+  // material is still present after a related referent was dropped. Only skip
+  // when every tuple returned by this request still has one of its two field
+  // drawings.
+  const materialComplete = input.tuples.every(
+    (tuple) =>
+      next.assertions.has(tuple.assertion_id) ||
+      next.bonds.some((bond) => bond.assertion_id === tuple.assertion_id),
+  );
+  if (next.expanded.has(key) && materialComplete) return set;
   next.expanded.add(key);
 
   const taken = countAround(set, input.anchor);
@@ -713,5 +770,22 @@ export function drop(set: WorkingSet, id: string): WorkingSet {
   for (const key of [...next.expanded]) {
     if (key.startsWith(`${id}\u0000`)) next.expanded.delete(key);
   }
+  return next;
+}
+
+/**
+ * Take a mark off the field.
+ *
+ * A referent still takes everything that only existed because of it. An
+ * assertion, bond, or obligation leaves on its own — the discs it joined stay,
+ * which is what makes Delete a small verb rather than a neighbourhood wipe.
+ */
+export function dropMark(set: WorkingSet, id: string): WorkingSet {
+  if (set.referents.has(id)) return drop(set, id);
+  const next = clone(set);
+  next.assertions.delete(id);
+  next.demands.delete(id);
+  next.positions.delete(id);
+  next.bonds = next.bonds.filter((bond) => bond.assertion_id !== id);
   return next;
 }

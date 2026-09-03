@@ -32,6 +32,7 @@ import { useEffect, useRef, useState } from "react";
 import type { Graph } from "@antv/g6";
 import { motionPoseKeyframes, type MotionPlans } from "./motion";
 import { useMotion } from "./useMotion";
+import { chipWidth, MARK_DEFAULTS } from "../world/marks";
 import "./selectionAnts.css";
 
 /**
@@ -52,6 +53,13 @@ import "./selectionAnts.css";
 export type AntTarget =
   | { shape: "circle"; id: string; diameter: number; clearance?: number }
   | { shape: "rect"; id: string; clearance?: number }
+  | {
+      shape: "edge-label";
+      id: string;
+      text?: string;
+      trim?: number;
+      clearance?: number;
+    }
   /** An edge: `trim` is how much of each end is inside the mark it leaves. */
   | { shape: "line"; id: string; trim: number; clearance?: number };
 
@@ -100,13 +108,42 @@ function trace(
     return { d, screenLength, graphLength: screenLength / zoom };
   }
 
+  if (target.shape === "edge-label") {
+    const edge = graph.getEdgeData(target.id);
+    if (!edge) return null;
+    const from = at(String(edge.source));
+    const to = at(String(edge.target));
+    if (!from || !to) return null;
+    const text =
+      target.text ||
+      (typeof edge.style?.labelText === "string" ? edge.style.labelText : "") ||
+      "";
+    if (text) {
+      const midX = (from.x + to.x) / 2;
+      const midY = (from.y + to.y) / 2;
+      const plateWidth = chipWidth(text, MARK_DEFAULTS) * zoom;
+      const plateHeight = MARK_DEFAULTS.chipHeight * zoom;
+      const x0 = midX - plateWidth / 2 - gap;
+      const x1 = midX + plateWidth / 2 + gap;
+      const y0 = midY - plateHeight / 2 - gap;
+      const y1 = midY + plateHeight / 2 + gap;
+      const d = `M ${x0} ${y0} H ${x1} V ${y1} H ${x0} Z`;
+      const screenLength = 2 * (x1 - x0 + (y1 - y0));
+      return { d, screenLength, graphLength: screenLength / zoom };
+    }
+  }
+
   const edge = graph.getEdgeData(target.id);
   if (!edge) return null;
   const from = at(String(edge.source));
   const to = at(String(edge.target));
   if (!from || !to) return null;
   const span = Math.hypot(to.x - from.x, to.y - from.y);
-  const inset = target.trim * zoom + gap;
+  const trim =
+    target.shape === "line"
+      ? target.trim
+      : (target.trim ?? MARK_DEFAULTS.discDiameter / 2);
+  const inset = trim * zoom + gap;
   // A filament shorter than the two discs it joins has no free length to march
   // along, and beads drawn on it would sit inside the marks. Nothing is drawn
   // rather than something wrong; the lit palette still says what is selected.
@@ -195,7 +232,7 @@ export function SelectionAnts({
     lifecycle.play(
       motionPoseKeyframes({ scale: 0.86, opacity: 0 }, { scale: 1, opacity: 1 }),
       motion.emit,
-      { fill: "backwards" },
+      { fill: "both" },
     );
   }, [animated, arrival, drawn, key, lifecycle, motion.emit]);
 
@@ -204,6 +241,7 @@ export function SelectionAnts({
     if (!graph || graph.destroyed || !drawn || !path) return;
 
     let frame = 0;
+    let misses = 0;
     const update = () => {
       if (graph.destroyed) return;
       let traced: Traced | null = null;
@@ -214,8 +252,19 @@ export function SelectionAnts({
       }
       if (!traced) {
         path.style.visibility = "hidden";
+        // Placement often selects before the mark has been drawn. afterdraw
+        // will retry; a few frames cover the gap when that event has already
+        // fired with the node still missing.
+        if (misses < 12) {
+          misses += 1;
+          frame = requestAnimationFrame(() => {
+            frame = 0;
+            update();
+          });
+        }
         return;
       }
+      misses = 0;
       // Beads are counted on the path as it exists in the world, not as it is
       // currently magnified, so zooming moves the ants closer together on
       // screen without ever re-spacing them. The screen length only decides
@@ -235,6 +284,9 @@ export function SelectionAnts({
     };
 
     const schedule = () => {
+      if (document.documentElement.classList.contains("is-panel-resizing")) {
+        return;
+      }
       if (frame) return;
       frame = requestAnimationFrame(() => {
         frame = 0;
@@ -259,11 +311,22 @@ export function SelectionAnts({
     graph.on("node:drag", schedule);
     graph.on("aftertransform", schedule);
     graph.on("afterdraw", schedule);
+    const classes = new MutationObserver(() => {
+      if (document.documentElement.classList.contains("is-panel-resizing")) {
+        return;
+      }
+      schedule();
+    });
+    classes.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
     update();
 
     return () => {
       cancelAnimationFrame(frame);
       observer.disconnect();
+      classes.disconnect();
       graph.off("node:dragstart", grab);
       graph.off("node:dragend", release);
       graph.off("node:drag", schedule);

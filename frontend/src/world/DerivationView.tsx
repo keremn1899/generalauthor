@@ -32,6 +32,7 @@ import {
   type WorldSupport,
   type WorldTuple,
 } from "../api/world";
+import { TableBar, type TableChrome } from "./tableChrome";
 
 /** Deep enough to read a real dependency chain; shallow enough to stay a tree. */
 const MAX_DEPTH = 6;
@@ -115,7 +116,7 @@ export function DerivationView({
   onOpen,
   onTable,
   onFocus,
-  onClose,
+  chrome,
 }: {
   relation: string;
   /** Set when this was opened from one tuple, which is what candidates need. */
@@ -126,7 +127,7 @@ export function DerivationView({
   /** The input relation is passed with the row: role names repeat across
    *  relations, and guessing the owner from them picks the wrong one. */
   onFocus: (relation: string, roles: WorldRole[], tuple: WorldTuple) => void;
-  onClose: () => void;
+  chrome: TableChrome;
 }) {
   const [closure, setClosure] = useState<WorldDerivation | null>(null);
   const [support, setSupport] = useState<WorldSupport | null>(null);
@@ -168,13 +169,17 @@ export function DerivationView({
 
   return (
     <section className="table deriv" aria-label={`${relation} derivation`}>
-      <header className="table__bar">
-        <b>{relation}</b>
-        <span>
-          {self ? `${self.mode.toLowerCase()} · ${self.count}` : ""}
-          {run ? ` · ${run.state.toLowerCase()}` : ""}
-          {self?.stale ? " · stale" : ""}
-        </span>
+      <TableBar
+        chrome={chrome}
+        title={relation}
+        meta={
+          <>
+            {self ? `${self.mode.toLowerCase()} · ${self.count}` : ""}
+            {run ? ` · ${run.state.toLowerCase()}` : ""}
+            {self?.stale ? " · stale" : ""}
+          </>
+        }
+      >
         {run ? (
           <button
             type="button"
@@ -187,10 +192,7 @@ export function DerivationView({
         <button type="button" onClick={() => onTable(relation)}>
           extension
         </button>
-        <button type="button" onClick={onClose}>
-          close
-        </button>
-      </header>
+      </TableBar>
 
       {problem ? <p className="table__problem">{problem}</p> : null}
 

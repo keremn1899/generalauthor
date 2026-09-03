@@ -1,27 +1,138 @@
 /**
  * World-only remainder. Chrome (identity bar, instrument, finder, overlay,
  * reader type) is imported from the graph page. This file keeps the canvas
- * column, the table/derivation/frontier drawers, and inspector copy that has
- * no graph equivalent.
+ * column, the table overlay, and inspector copy that has no graph equivalent.
  */
 
 .world * {
   border-radius: 0;
 }
 
-/* The canvas and the extension under it are one column: §11 says you never
-   choose between them, so the table takes room from the canvas rather than
-   replacing it. `.gm__stage` is already the filling field; this only stacks. */
-.world__plane {
+/* Top bar monospace utilities: theme toggle and lab link */
+.world .product-shell__theme,
+.world .product-shell__lab-link {
+  font-family: var(--font-mono);
+}
+
+.world .product-shell__lab-link {
+  font-size: 0.62rem;
+  letter-spacing: 0.05em;
+  padding: 0 0.8rem;
+  color: var(--ink-muted);
+  text-decoration: none;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  border-left: 1px solid var(--rule);
+  transition:
+    color var(--motion-emit-duration, 280ms) var(--motion-emit-curve, ease-out);
+}
+
+.world .product-shell__lab-link:hover {
+  color: var(--ink);
+}
+
+.world-show__filter {
+  --world-show-key-width: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.world-show__key {
+  position: relative;
+  display: block;
+  width: var(--world-show-key-width);
+  height: 6px;
+  box-sizing: border-box;
+  border: 1px solid currentColor;
+  background: transparent;
+  opacity: 1;
+  transition:
+    opacity var(--motion-hold-duration, 90ms)
+      var(--motion-hold-curve, linear),
+    transform var(--motion-hold-duration, 90ms)
+      var(--motion-hold-curve, linear);
+}
+
+.world-show__filter[data-layer="semantic"] .world-show__key,
+.world-show__filter[data-layer="adjudicated"] .world-show__key {
+  background: currentColor;
+}
+
+/* The same furniture as the map: a human verdict carries a crown; a derived
+   assertion rests on a shelf. */
+.world-show__filter[data-layer="adjudicated"] .world-show__key::before,
+.world-show__filter[data-layer="derived"] .world-show__key::after {
+  position: absolute;
+  right: 1px;
+  left: 1px;
+  height: 1px;
+  background: currentColor;
+  content: "";
+}
+
+.world-show__filter[data-layer="adjudicated"] .world-show__key::before {
+  top: -4px;
+}
+
+.world-show__filter[data-layer="derived"] .world-show__key::after {
+  bottom: -4px;
+}
+
+.world-show__filter[data-layer="unresolved"] .world-show__key {
+  border-style: dotted;
+}
+
+.world-show__filter[data-layer="names"] .world-show__key {
+  width: auto;
+  height: auto;
+  border: 0;
+  font-size: 0.54rem;
+  line-height: 1;
+}
+
+.world-show__filter[data-layer="names"] .world-show__key::before {
+  content: "ab";
+}
+
+.world-show__filter[aria-pressed="false"] .world-show__key {
+  opacity: 0.28;
+  transform: scale(0.86);
+}
+
+/* The canvas fills the plane. Tables overlay it from the left — the Graphs
+   drawer, over this world's extensions — so a neighborhood does not give up
+   width while someone reads a relation. Width is capped against the reader
+   (`--ov-reserve`) so the two docks cannot occupy the same strip of map. */
+.world .gm.gm--product,
+.world .gm__main {
+  position: absolute;
+  inset: 0;
+  height: auto;
+}
+
+.world__plane {
+  position: absolute;
+  inset: 0;
+}
+
+.world__layer {
+  position: absolute;
+  inset: 0;
+}
+
+.world__layer.is-parked {
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .world__stage {
-  position: relative;
-  flex: 1;
-  min-height: 0;
+  position: absolute;
+  inset: 0;
   overflow: hidden;
+  background: var(--matter-canvas, var(--canvas));
+  touch-action: none;
+  isolation: isolate;
 }
 
 /* The renderer's own container, so the selection ants can be a sibling over it
@@ -29,6 +140,7 @@
 .world__surface {
   position: absolute;
   inset: 0;
+  z-index: 0;
 }
 
 /* The World reader follows the Graph reader's title/body/footer anatomy, but
@@ -303,15 +415,26 @@
   text-underline-offset: 0.18em;
 }
 
-/* -- Relation extension --------------------------------------------------- */
+.product-shell__local.world__occupancy {
+  text-transform: none;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Tables overlay: same flush OverlayPanel as Graphs, filled by one table. */
+.world [data-overlay="world-tables"] .ov__body--flush {
+  background: var(--panel);
+}
+
+.world [data-overlay="world-tables"] .table,
+.world [data-overlay="world-tables"] .deriv {
+  height: 100%;
+}
 
 .table {
   display: flex;
   flex-direction: column;
-  height: 42%;
   min-height: 0;
-  background: var(--panel);
-  border-top: 1px solid var(--rule);
   font-size: 0.66rem;
 }
 
@@ -321,6 +444,26 @@
   gap: 10px;
   padding: 7px 12px;
   border-bottom: 1px solid var(--rule);
+}
+
+.table__subjects {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 6px;
+}
+
+.table__meta {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.table__actions {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 6px;
+  margin-left: auto;
 }
 
 .table__bar b {
@@ -342,17 +485,13 @@
   cursor: pointer;
 }
 
-.table__bar button {
-  margin-left: auto;
-}
-
-/* Only the first of the trailing buttons takes the gap; the rest sit beside it. */
-.table__bar button ~ button {
-  margin-left: 0;
-}
-
-.table__bar button:hover {
+.table__bar button:hover,
+.table__bar button[aria-pressed="true"] {
   color: var(--ink);
+}
+
+.table__bar button[aria-pressed="true"] {
+  border-color: var(--ink);
 }
 
 .table__head {
@@ -477,8 +616,8 @@
 }
 
 /* -- §8.6 the derivation explorer ----------------------------------------
-   Same drawer as the tables — the plane below the canvas answers one question
-   at a time — but it scrolls as a document rather than a window, because a
+   Same overlay as the tables — the left panel answers one question at a
+   time — but it scrolls as a document rather than a window, because a
    dependency closure is a handful of rows and a run record is four. */
 
 .deriv__scroll {

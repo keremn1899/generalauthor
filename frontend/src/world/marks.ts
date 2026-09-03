@@ -48,7 +48,7 @@ export const MARK_DEFAULTS: MarkParams = {
   edgeWidth: GRAPH_DNA_GEOMETRY.edgeWidth,
   edgeOpacity: GRAPH_DNA_GEOMETRY.edgeOpacity,
   dottedGap: GRAPH_DNA_GEOMETRY.dottedGap,
-  mechanicalOutline: false,
+  mechanicalOutline: true,
 };
 
 /** The DNA palette, resolved to paint. */
@@ -157,6 +157,7 @@ export function discNode(
       x,
       y,
       size: p.discDiameter,
+      opacity: 1,
       fill: paint.ink,
       stroke: paint.ink,
       lineWidth: GRAPH_DNA_GEOMETRY.nodeLine,
@@ -223,6 +224,7 @@ export function chipNode(
       y,
       size: [chipWidth(text, p), p.chipHeight] as [number, number],
       radius: p.chipRadius,
+      opacity: 1,
       // A knockout, not a card: the plate is the field exactly, so filaments
       // running under it stop being read rather than being covered by a
       // second colour.
@@ -273,6 +275,11 @@ export function isDecoration(id: string): boolean {
   return DECORATION.test(id);
 }
 
+/** Shelf and crown hanging off a chip, keyed from the chip's own id. */
+export function furnitureOf(id: string): string[] {
+  return [`shelf:${id}`, `crown:${id}`];
+}
+
 /**
  * The rule under a derived chip, or over an adjudicated one.
  *
@@ -305,6 +312,7 @@ export function shelfNode(
       y: side === "under" ? y + offset : y - offset,
       size: [Math.max(4, Math.round(width)), p.shelfLine] as [number, number],
       radius: 0,
+      opacity: 1,
       fill: paint.ink,
       lineWidth: 0,
       labelText: "",
