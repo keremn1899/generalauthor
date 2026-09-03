@@ -316,6 +316,30 @@ export function createMotionPlans(
  */
 export const DEFAULT_MOTION_PLANS = createMotionPlans();
 
+/**
+ * The same spine, slowed or sped for inspection.
+ *
+ * A design surface needs to be able to watch a 90ms `hold` happen. Scaling
+ * every intent by one factor is what keeps this the same design at a
+ * different speed rather than a different design: the ratios — emit against
+ * absorb, hold against both — are the part of the spine that carries meaning,
+ * and a factor that reached only some of them would quietly retune it.
+ *
+ * `factor` is a speed, so 0.25 is quarter speed. The field is untouched:
+ * travel and gravity are distances, and a slow motion still moves 8.6px.
+ */
+export function scaleMotionPlans(factor: number): MotionPlans {
+  if (factor === 1) return DEFAULT_MOTION_PLANS;
+  const stretch = 1 / Math.max(0.01, factor);
+  const durations = Object.fromEntries(
+    Object.entries(MOTION_DURATION_MS).map(([intent, ms]) => [
+      intent,
+      Math.round(ms * stretch),
+    ]),
+  ) as Record<MotionIntent, number>;
+  return createMotionPlans(DEFAULT_MOTION_FIELD, durations);
+}
+
 function poseTransform(pose: MotionPose) {
   const transforms: string[] = [];
   if (pose.x || pose.y) {
