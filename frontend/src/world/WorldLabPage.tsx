@@ -12,6 +12,11 @@
 import { useCallback, useMemo, useState } from "react";
 import { type ThemeMode } from "../styles/graphDna";
 import { scaleMotionPlans, type MotionIntent } from "../styles/motion";
+import {
+  DEFAULT_LIGHT_FIELD,
+  luminance,
+  type LightField,
+} from "../styles/light";
 import { worldCameraInsets, worldShellStyle } from "./worldChrome";
 import {
   MARK_DEFAULTS,
@@ -163,6 +168,12 @@ export function WorldLabPage() {
     }),
     [antAnimated, antClearance, antDotGap, antLineWidth, antSpeed],
   );
+
+  /**
+   * The light field. Two numbers: how far light reaches through the graph,
+   * and how much of the world stays readable where it does not.
+   */
+  const [lightField, setLightField] = useState<LightField>(DEFAULT_LIGHT_FIELD);
 
   /**
    * The specimen field: one mark of every construction origin, plus the three
@@ -369,6 +380,7 @@ export function WorldLabPage() {
                                 focusId={vocabularyFocus ? null : focus?.id ?? null}
                                 focusToken={focus?.token ?? 0}
                                 insets={cameraInsets}
+                                light={lightField}
                                 onHover={setHovered}
                                 onSelect={setSelection}
                                 onPositions={onPositions}
@@ -503,6 +515,7 @@ export function WorldLabPage() {
                     show={SPECIMEN_SHOW}
                     insets={SPECIMEN_INSETS}
                     ants={antTuning}
+                    light={lightField}
                     onHover={() => {}}
                     onSelect={setSpecimenSelection}
                     onPositions={() => {}}
@@ -527,6 +540,7 @@ export function WorldLabPage() {
                     show={SPECIMEN_SHOW}
                     insets={SPECIMEN_INSETS}
                     ants={antTuning}
+                    light={lightField}
                     onHover={() => {}}
                     onSelect={setSpecimenSelection}
                     onPositions={() => {}}
@@ -691,6 +705,50 @@ export function WorldLabPage() {
             </div>
           </div>
 
+          <div className="ctrl-section">
+            <span className="ctrl-label">LIGHT</span>
+            {/* The law, plotted. A number for `falloff` means nothing on its
+                own; the fifth bar going dark is the thing you are choosing. */}
+            <div className="light-ladder" aria-hidden>
+              {[0, 1, 2, 3, 4, 5].map((hops) => (
+                <div key={hops} className="light-ladder__step">
+                  <span
+                    className="light-ladder__mark"
+                    style={{ opacity: luminance(hops, lightField) }}
+                  />
+                  <b>{hops}</b>
+                </div>
+              ))}
+            </div>
+            <div className="ctrl-sliders">
+              <label>
+                <span>Falloff — {lightField.falloff.toFixed(1)} hops</span>
+                <input
+                  type="range"
+                  min={0.4}
+                  max={4}
+                  step={0.1}
+                  value={lightField.falloff}
+                  onChange={(e) =>
+                    setLightField((f) => ({ ...f, falloff: Number(e.target.value) }))
+                  }
+                />
+              </label>
+              <label>
+                <span>Ambient — {lightField.ambient.toFixed(2)}</span>
+                <input
+                  type="range"
+                  min={0}
+                  max={0.9}
+                  step={0.01}
+                  value={lightField.ambient}
+                  onChange={(e) =>
+                    setLightField((f) => ({ ...f, ambient: Number(e.target.value) }))
+                  }
+                />
+              </label>
+            </div>
+          </div>
           {labTab === "sandbox" ? (<>
 
             <div className="ctrl-section">

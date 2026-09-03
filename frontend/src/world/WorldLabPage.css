@@ -419,3 +419,39 @@
   background: var(--ink);
   transition: none;
 }
+
+
+/* -- the light ladder --------------------------------------------------- *
+   Luminance at 0..5 hops, drawn rather than stated. `falloff` is a number
+   nobody can picture; the step where the mark goes dark is the actual choice
+   being made, so the control shows that instead of the parameter. */
+
+.light-ladder {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  margin: 0 0 0.75rem;
+}
+
+.light-ladder__step {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.light-ladder__mark {
+  display: block;
+  width: 100%;
+  height: 20px;
+  background: var(--ink);
+}
+
+.light-ladder__step b {
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  font-weight: 400;
+  color: var(--ink-muted);
+}

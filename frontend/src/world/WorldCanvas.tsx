@@ -51,6 +51,14 @@ import {
   type ThemeMode,
 } from "../styles/graphDna";
 import { DEFAULT_MOTION_PLANS } from "../styles/motion";
+import {
+  DEFAULT_LIGHT_FIELD,
+  luminance,
+  namingCut,
+  reflected,
+  type LightField,
+} from "../styles/light";
+import { hopsFrom } from "./hops";
 import { SelectionAnts, type AntTarget } from "../styles/SelectionAnts";
 import { observeHostSize } from "./canvasHost";
 import { transitionCanvasData, type CanvasDatum } from "./canvasMotion";
@@ -79,6 +87,23 @@ import {
  */
 function bondElementId(assertionId: string): string {
   return `bond:${assertionId}`;
+}
+
+/**
+ * The mark an element belongs to.
+ *
+ * Three suffixes and prefixes this surface adds on its own: a spoke carries
+ * its index (`demand#0:1`), a filament is namespaced (`bond:…`), and furniture
+ * hangs off its chip (`shelf:…`, `crown:…`). None of them are marks a reader
+ * deals in, so anything asking *what is this part of* — a click, a hover, or
+ * how much light falls on it — goes through here.
+ */
+export function markOfElement(elementId: string): string {
+  const withoutIndex = elementId.replace(/:\d+$/, "");
+  const withoutBond = subjectOfBond(withoutIndex);
+  return isDecoration(withoutBond)
+    ? withoutBond.slice(withoutBond.indexOf(":") + 1)
+    : withoutBond;
 }
 
 function subjectOfBond(elementId: string): string {
@@ -181,6 +206,7 @@ export function WorldCanvas({
   focusToken = 0,
   insets,
   ants,
+  light,
   onHover,
   onSelect,
   onPositions,
@@ -206,6 +232,13 @@ export function WorldCanvas({
    * like.
    */
   ants?: Partial<AntTuning>;
+  /**
+   * The light field's tuning, for a surface that exists to tune it.
+   *
+   * Defaults to the kernel's. Two numbers — how far light reaches, and how
+   * much of the world remains readable where it does not.
+   */
+  light?: Partial<LightField>;
   onHover: (id: string | null) => void;
   onSelect: (selection: CanvasSelection) => void;
   onPositions: (positions: Map<string, { x: number; y: number }>) => void;
@@ -262,36 +295,54 @@ export function WorldCanvas({
     [mode],
   );
 
-  /** Which marks should name their edges, including the active mark itself. */
+  /**
+   * The light on the field.
+   *
+   * One source — what the pointer is on, or failing that what is selected —
+   * and `luminance` falls off from it through the graph. Hover outranks
+   * selection because the pointer is the more recent act, and light follows
+   * acts.
+   *
+   * With nothing acted on there is no source, every mark is at 1, and the law
+   * changes nothing. That is deliberate: this is a lamp, not a vignette.
+   */
+  const lightField = useMemo(
+    () => ({ ...DEFAULT_LIGHT_FIELD, ...light }),
+    [light],
+  );
+  const incident = useMemo(() => {
+    const source = hovered ?? (selection ? selection.id : null);
+    if (!source) return null;
+    const hops = hopsFrom(set, source);
+    const cut = namingCut(lightField);
+    // Furniture takes the light of the chip it hangs off, and a spoke the
+    // light of the plate it belongs to — otherwise the rule under a derived
+    // plate fades out of step with the plate it is part of.
+    const at = (elementId: string) => {
+      const mark = markOfElement(elementId);
+      return luminance(hops.has(mark) ? (hops.get(mark) as number) : null, lightField);
+    };
+    return { at, named: (id: string) => at(id) >= cut };
+  }, [hovered, lightField, selection, set]);
+
+  /**
+   * Which marks name themselves.
+   *
+   * Not a second rule — the same light, read at a threshold. `namingCut` is
+   * defined as the light on a neighbour, so this stays *the mark you touched
+   * and what it is joined to* however the field is tuned.
+   */
   const namedMarks = useMemo(() => {
-    const active = hovered ?? (selection ? selection.id : null);
-    if (!active) return null;
-    const touching = new Set<string>([active]);
-    for (const assertion of set.assertions.values()) {
-      const involved =
-        assertion.assertion_id === active ||
-        assertion.spokes.some((spoke) => spoke.id === active);
-      if (!involved) continue;
-      touching.add(assertion.assertion_id);
-      for (const spoke of assertion.spokes) touching.add(spoke.id);
-    }
-    for (const demand of set.demands.values()) {
-      const involved =
-        demand.key === active || demand.spokes.some((spoke) => spoke.id === active);
-      if (!involved) continue;
-      touching.add(demand.key);
-      for (const spoke of demand.spokes) touching.add(spoke.id);
-    }
+    if (!incident) return null;
+    const named = new Set<string>();
+    for (const id of set.referents.keys()) if (incident.named(id)) named.add(id);
+    for (const id of set.assertions.keys()) if (incident.named(id)) named.add(id);
+    for (const id of set.demands.keys()) if (incident.named(id)) named.add(id);
     for (const bond of set.bonds) {
-      if (bond.source !== active && bond.target !== active && bond.assertion_id !== active) {
-        continue;
-      }
-      touching.add(bond.source);
-      touching.add(bond.target);
-      touching.add(bond.assertion_id);
+      if (incident.named(bond.assertion_id)) named.add(bond.assertion_id);
     }
-    return touching;
-  }, [hovered, selection, set]);
+    return named;
+  }, [incident, set]);
 
   /**
    * What the ants trace: the geometry the selected mark already has.
@@ -483,12 +534,32 @@ export function WorldCanvas({
         ),
       );
     }
+    /**
+     * Light applied last, over everything the marks authored.
+     *
+     * Reflected rather than replaced: a filament authored quiet stays quieter
+     * than the disc beside it, because illumination scales what a thing is
+     * instead of overwriting it. With no source `incident` is null and this
+     * loop does not run, so at rest the field draws exactly as it did before
+     * there was a law.
+     */
+    if (incident) {
+      for (const mark of [...nodes, ...edges] as {
+        id: string;
+        style?: Record<string, unknown>;
+      }[]) {
+        if (!mark.style) continue;
+        const albedo = (mark.style.opacity as number | undefined) ?? 1;
+        mark.style.opacity = reflected(albedo, incident.at(mark.id));
+      }
+    }
     return { nodes, edges };
   }, [
     set,
     paint,
     provisional,
     params,
+    incident,
     namedMarks,
     show,
     stageSize,
@@ -573,8 +644,7 @@ export function WorldCanvas({
      * the trailing index is a suffix this surface added, so only that is taken
      * off.
      */
-    const markOf = (id: string | null) =>
-      id ? subjectOfBond(id.replace(/:\d+$/, "")) : null;
+    const markOf = (id: string | null) => (id ? markOfElement(id) : null);
 
     const followFurniture = (id: string) => {
       const position = graph.getElementPosition(id);
