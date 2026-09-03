@@ -19,6 +19,7 @@
 
 import { useMemo, useState } from "react";
 import type { Docket as DocketData, DocketRow } from "../api/construction";
+import { still } from "../styles/motion";
 import { useRowWindow } from "../world/rowWindow";
 
 const ROW_HEIGHT = 62;
@@ -142,7 +143,14 @@ export function Docket({
                 data-selected={row.obligation_id === selected || undefined}
                 onClick={() => onOpen(row.obligation_id)}
               >
-                <span className="docket__mark" aria-hidden="true" />
+                {/* Construction origin, drawn as shape. `meaningIsStructural`:
+                    a mark caught between outlined and filled draws an origin
+                    that does not exist. */}
+                <span
+                  className="docket__mark"
+                  aria-hidden="true"
+                  {...still("meaningIsStructural")}
+                />
                 <span className="docket__title">{tuple(row)}</span>
                 <span className="docket__facts">
                   {disposition} · {held(row)} · {row.observations} observation

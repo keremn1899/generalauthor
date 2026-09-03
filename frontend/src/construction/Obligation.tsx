@@ -34,6 +34,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { constructionApi } from "../api/construction";
+import { useArrivals } from "../styles/usePresence";
+import { Waiting } from "./Waiting";
 import type {
   Citation,
   Cost,
@@ -138,6 +140,9 @@ export function Obligation({
   );
 
   const closing = CLOSING.has(disposition);
+  /* A recorded verdict is appended to a record already on screen, so only
+     the new line arrives. The ones above it did not just happen. */
+  const arrived = useArrivals(history, (entry, index) => `${entry.at}:${index}`);
   const unmet = !disposition
     ? "choose a verdict"
     : closing && citations.length === 0
@@ -302,6 +307,7 @@ export function Obligation({
               <button type="button" onClick={onRevert} disabled={busy}>
                 revert
               </button>
+              {busy ? <Waiting label="withdrawing" /> : null}
             </div>
           ) : (
             <div className="verdict">
@@ -369,6 +375,7 @@ export function Obligation({
                 </button>
                 {unmet ? <span className="verdict__unmet">{unmet}</span> : null}
               </div>
+              {busy ? <Waiting label="recording" /> : null}
               {problem ? <p className="verdict__problem">{problem}</p> : null}
             </div>
           )}
@@ -379,7 +386,10 @@ export function Obligation({
             // record rather than an embarrassment to hide.
             <ol className="verdict__history">
               {history.map((entry, index) => (
-                <li key={`${entry.at}:${index}`}>
+                <li
+                  key={`${entry.at}:${index}`}
+                  className={arrived.has(`${entry.at}:${index}`) ? "motion-emit" : undefined}
+                >
                   {entry.kind === "REVERT"
                     ? `reverted ${entry.reverts}`
                     : entry.disposition}{" "}

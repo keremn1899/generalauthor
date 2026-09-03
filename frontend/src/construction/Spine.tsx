@@ -23,6 +23,7 @@
  */
 
 import { useEffect, useState } from "react";
+import { still } from "../styles/motion";
 import { constructionApi, type Cost, type PassEntry } from "../api/construction";
 
 /** The word for a state, including the one that is an absence. */
@@ -122,7 +123,15 @@ export function Spine({
                 aria-expanded={chosen}
                 onClick={() => onSelect(chosen ? null : entry.pass)}
               >
-                <span className="spine__bar" aria-hidden="true" />
+                {/* Pass state is geometry here — filled, half, dashed, struck,
+                    dotted — not colour, so there is nothing to cross-fade.
+                    `meaningIsStructural`: a bar halfway between dashed and
+                    filled reports a state the run was never in. */}
+                <span
+                  className="spine__bar"
+                  aria-hidden="true"
+                  {...still("meaningIsStructural")}
+                />
                 <span className="spine__id">{entry.pass.toUpperCase()}</span>
                 <span className="spine__state">{stateWord(entry)}</span>
                 {entry.pass === "p5" && open ? (

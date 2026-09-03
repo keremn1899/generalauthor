@@ -58,6 +58,16 @@
   min-height: 0;
 }
 
+/* The docket's width, stated once. The column it lives in is a swap slot, so
+   the measurement is on the slot and the docket fills what it is given. */
+.construction {
+  --docket-width: clamp(320px, 34%, 520px);
+}
+
+.construction__body > .construction__docket-slot {
+  flex: 0 0 var(--docket-width);
+}
+
 .construction__empty {
   display: flex;
   flex: 1 1 auto;
@@ -527,7 +537,7 @@
 
 .docket {
   display: flex;
-  flex: 0 0 clamp(320px, 34%, 520px);
+  flex: 1 1 auto;
   flex-direction: column;
   min-height: 0;
   background: var(--panel);
@@ -628,7 +638,17 @@
 }
 
 /* Status, and only status, is colour. Blocking a purpose is the one fact on
-   this row that is about urgency rather than about who decided. */
+   this row that is about urgency rather than about who decided.
+
+   It cross-fades, and at `hold` length only. A verdict can stop an obligation
+   blocking, and that is worth seeing happen — but the midpoint between
+   blocking and not is neither, so the window has to be too short to read as a
+   value and just long enough to notice as an event. */
+.docket__row {
+  transition: box-shadow var(--motion-hold-duration, 90ms)
+    var(--motion-hold-curve, linear);
+}
+
 .docket__row[data-blocking] {
   box-shadow: inset 3px 0 0 var(--attention);
 }
@@ -1274,4 +1294,54 @@
 .premises__superseded {
   flex: none;
   font-size: 0.62rem;
+}
+
+
+/* -- waiting ---------------------------------------------------------- *
+   The sweep is `flow`: linear, looping, indeterminate. Linear because any
+   easing would imply a shape to the wait, and nothing here knows one. */
+
+.waiting {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0.55rem 0 0;
+  font-size: 0.66rem;
+  color: var(--ink-muted);
+}
+
+.waiting__rule {
+  position: relative;
+  display: block;
+  flex: 1 1 auto;
+  height: 1px;
+  overflow: hidden;
+  background: var(--rule);
+}
+
+.waiting__rule::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 32%;
+  background: var(--ink-muted);
+  animation: waiting-sweep var(--motion-flow-duration, 1000ms)
+    var(--motion-flow-curve, linear) infinite;
+}
+
+@keyframes waiting-sweep {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(calc(100% / 0.32));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .waiting__rule::after {
+    animation: none;
+    width: 100%;
+    opacity: 0.35;
+  }
 }

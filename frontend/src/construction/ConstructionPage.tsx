@@ -35,10 +35,13 @@ import {
   statusCssVariables,
   type ThemeMode,
 } from "../styles/graphDna";
+import { DEFAULT_MOTION_PLANS, motionCssVariables } from "../styles/motion";
+import { Swap } from "../styles/Swap";
 import { Docket } from "./Docket";
 import { ArtifactView } from "./ArtifactView";
 import { Obligation } from "./Obligation";
 import { Spine } from "./Spine";
+import "../styles/presence.css";
 import "./ConstructionPage.css";
 
 function storedTheme(): ThemeMode {
@@ -167,9 +170,12 @@ export function ConstructionPage() {
       className="construction"
       // Both palettes: chrome for the surface, status for the one thing on it
       // that is allowed to be a colour — whether an obligation blocks a
-      // purpose. Everything else here is geometry.
+      // purpose. Everything else here is geometry. The motion spine rides
+      // along because timing is design language too: a review surface that
+      // settles at its own speed reads as a different product.
       style={
         {
+          ...motionCssVariables(DEFAULT_MOTION_PLANS),
           ...chromeCssVariables(GRAPH_DNA_CHROME[theme]),
           ...statusCssVariables(GRAPH_DNA_STATUS[theme]),
         } as CSSProperties
@@ -198,6 +204,19 @@ export function ConstructionPage() {
           selected={pass}
           onSelect={setPass}
         />
+        {/* The middle column always has a subject — a pass, or the docket you
+            came from — so every change here is REPLACED rather than an arrival.
+            One `Swap` covers all three of null→id, id→null and A→B. */}
+        <Swap
+          id={pass ?? "docket"}
+          // The slot fills, except when it holds the docket, which is a fixed
+          // column. The width lives on `--docket-width`, once.
+          className={
+            pass
+              ? "motion-swap--fill"
+              : "motion-swap--fill construction__docket-slot"
+          }
+        >
         {pass ? (
           <ArtifactView
             pass={pass}
@@ -222,8 +241,21 @@ export function ConstructionPage() {
             onOpen={(id) => setSelected(id === selected ? null : id)}
           />
         )}
-        {!pass && opened ? (
+        </Swap>
+        {/* The third column belongs to the docket reading; a pass takes the
+            whole width, so it is unmounted rather than emptied. What this
+            `Swap` is for is obligation A → obligation B, which is a change of
+            subject in a column that stays exactly where it is. */}
+        {pass ? null : (
+        <Swap
+          id={opened ? `obligation:${opened.obligation_id}` : "obligation:none"}
+          className="motion-swap--fill"
+        >
+        {opened ? (
           <Obligation
+            // Keyed so a second obligation opens as a second reading rather
+            // than as the first one's form with new text in it.
+            key={opened.obligation_id}
             opened={opened}
             actor={actor}
             history={history}
@@ -233,7 +265,7 @@ export function ConstructionPage() {
             onRevert={revert}
             onActor={setActor}
           />
-        ) : !pass ? (
+        ) : (
           <section className="construction__empty">
             <p>
               {problem
@@ -241,7 +273,9 @@ export function ConstructionPage() {
                 : "Open an obligation. The top of the docket is what deciding unblocks the most."}
             </p>
           </section>
-        ) : null}
+        )}
+        </Swap>
+        )}
       </div>
     </div>
   );

@@ -14,7 +14,9 @@ import {
   type IntakeAccount,
   type PassArtifact,
 } from "../api/construction";
+import { Swap } from "../styles/Swap";
 import { markOf } from "./Docket";
+import { Waiting } from "./Waiting";
 import { tokenFromLocation } from "../api/plane";
 
 type Json = Record<string, unknown>;
@@ -350,6 +352,10 @@ function AdmissionCard({
   const [editing, setEditing] = useState(false);
   const [reason, setReason] = useState("");
   const [test, setTest] = useState("");
+  /* The form and the actions row are one slot with two subjects, so this is
+     REPLACED rather than an arrival next to a departure. `Swap` parks the
+     outgoing copy absolutely, which is also what keeps the card from doubling
+     in height for the length of the change. */
   const name = words(record.name);
   const target = column === "WORLD" ? "PURPOSE" : "WORLD";
   // Named, not merely disabled. A dead button is a puzzle; the obligation
@@ -375,6 +381,7 @@ function AdmissionCard({
       ) : null}
       <p>{words(proposal?.reason ?? record.reason)}</p>
       <details><summary>purpose-independence test</summary><p>{words(proposal?.purpose_independence_test ?? record.purpose_independence_test)}</p></details>
+      <Swap id={editing ? "editing" : "resting"}>
       {editing ? (
         <div className="admission-card__form">
           <label>
@@ -396,6 +403,7 @@ function AdmissionCard({
             <button type="button" disabled={busy} onClick={() => setEditing(false)}>cancel</button>
             {unmet ? <span className="verdict__unmet">{unmet}</span> : null}
           </div>
+          {busy ? <Waiting label="proposing" /> : null}
         </div>
       ) : (
         <div className="admission-card__actions">
@@ -413,6 +421,7 @@ function AdmissionCard({
           ) : null}
         </div>
       )}
+      </Swap>
     </article>
   );
 }
