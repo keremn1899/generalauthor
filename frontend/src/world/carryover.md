@@ -127,6 +127,35 @@ Things the World canvases have that the product page had no reason to:
   so sharing the id makes `open` reuse the edge's `path` instead of building
   the plate's `rect`.
 
+## Motion: shared, extended, and one thing fixed for both
+
+The motion kernel is **shared, not forked** — `styles/motion.ts`,
+`styles/presence.css`, `styles/usePresence.ts`, `styles/Swap.tsx`. World IR
+extended it rather than copying it, so what follows lands on the product's
+surfaces too. That is intended: this is the visual kernel, and a second copy of
+a duration is a second thing that drifts.
+
+Added to the kernel here:
+
+- **`still()` and `STILL_RULES`** — a decision *not* to animate, with its
+  reason, as an attribute the stylesheet enforces. See
+  `styles/transition_map.md` §6.
+- **`staggerWaves`** — arrivals ordered by distance from what they grew out of.
+  The product's graph arrived whole; a World field grows one expansion at a
+  time, and a ring of new marks should read as a wave front rather than a flash.
+- **`useArrivals`** and `.motion-emit` — emit on the appended row only.
+- **`motion-swap--fill`** — a swap that fills its parent's column. It
+  generalises two bespoke selectors that already existed for
+  `.ov__body--flush` and `.traversal-modal`; those stay as they are, because
+  changing them would move the frozen surfaces for no gain.
+
+Fixed for both: **`useOutgoing` never mounted the outgoing copy in time**, so
+every `Swap` in the product — the graph reader, the logs pane, the traversal
+menu, the write timeline — had been a plain emit rather than absorb ∘ emit.
+`mounted` is now settled during render. This is a change to how the frozen
+lineage looks, and it is the intended behaviour its own docstring describes,
+not a retune.
+
 ## Not carried over at all
 
 Named so their absence is a decision on the record rather than an oversight:
