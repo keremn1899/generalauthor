@@ -80,21 +80,27 @@ export function useHeld<T>(
 /**
  * Start shown, then absorb. Swap uses this so the previous subject has a
  * leave to run instead of unmounting on the same frame the new one arrives.
+ *
+ * `mounted` is settled during **render**, not in the mount effect, and that
+ * is the whole of it. `Swap` clears its own `leaving` in an effect that reads
+ * this value, and effects within a component run in hook order: an effect here
+ * that only queued `setMounted(true)` was still reporting `false` when Swap's
+ * cleanup ran in the same commit, so the outgoing copy was discarded before it
+ * had ever been rendered. Every swap in the product was silently a plain emit.
  */
 export function useOutgoing(token: string | null) {
-  const [mounted, setMounted] = useState(() => Boolean(token));
+  const [live, setLive] = useState<{ token: string | null; mounted: boolean }>(
+    () => ({ token, mounted: Boolean(token) }),
+  );
   const [shown, setShown] = useState(true);
+  // A render-phase update, so the new token is already mounted on this pass.
+  if (live.token !== token) setLive({ token, mounted: Boolean(token) });
 
   useEffect(() => {
-    if (!token) {
-      setMounted(false);
-      setShown(true);
-      return;
-    }
-    setMounted(true);
     setShown(true);
+    if (!token) return;
     if (prefersReducedMotion()) {
-      setMounted(false);
+      setLive({ token, mounted: false });
       return;
     }
     let inner = 0;
@@ -102,7 +108,10 @@ export function useOutgoing(token: string | null) {
       inner = requestAnimationFrame(() => setShown(false));
     });
     const timer = window.setTimeout(
-      () => setMounted(false),
+      () =>
+        setLive((current) =>
+          current.token === token ? { token, mounted: false } : current,
+        ),
       SPINE.absorb.durationMs + 16,
     );
     return () => {
@@ -112,5 +121,44 @@ export function useOutgoing(token: string | null) {
     };
   }, [token]);
 
-  return { mounted, shown };
+  return { mounted: live.mounted, shown };
+}
+
+/**
+ * Which items appeared since the last render, for the length of one `emit`.
+ *
+ * A verdict is appended to a record that is already on screen, and the map
+ * says `emit` **on the new row only** — the rows above it did not arrive, and
+ * animating them would restate history every time someone decides something.
+ * The set empties itself once the arrival is over, so a re-render for an
+ * unrelated reason does not replay it.
+ */
+export function useArrivals<T>(
+  items: readonly T[],
+  idOf: (item: T, index: number) => string,
+): ReadonlySet<string> {
+  const known = useRef<Set<string> | null>(null);
+  const [fresh, setFresh] = useState<ReadonlySet<string>>(() => new Set());
+
+  useEffect(() => {
+    const ids = items.map(idOf);
+    // The first list is not an arrival — it was already there when you looked.
+    if (known.current === null) {
+      known.current = new Set(ids);
+      return;
+    }
+    const seen = known.current;
+    const added = ids.filter((id) => !seen.has(id));
+    known.current = new Set(ids);
+    if (!added.length) return;
+    setFresh(new Set(added));
+    const timer = window.setTimeout(
+      () => setFresh(new Set()),
+      SPINE.emit.durationMs + 16,
+    );
+    return () => window.clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items]);
+
+  return fresh;
 }

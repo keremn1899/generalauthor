@@ -198,3 +198,60 @@ Cheapest first, and each step is independently visible:
 4. Canvas emit + stagger. Needs the stagger primitive first.
 5. Status cross-fades at `hold` length, everywhere, last — they are the easiest
    to get wrong and the least missed.
+
+---
+
+## 6. What was applied, and what the application changed about the map
+
+All five steps are in. Three things the map got wrong only became visible once
+it was built, and they are recorded here rather than quietly fixed, because a
+map that is edited to match the code stops being able to disagree with it.
+
+**The kernel's `Swap` never ran an absorb.** Not a gap in the map — a defect in
+`usePresence.ts`. `useOutgoing` settled `mounted` in its mount effect, and
+`Swap` clears its own `leaving` in an effect that reads that value; effects run
+in hook order within one commit, so the cleanup always saw `false` and dropped
+the outgoing copy before it had ever rendered. Every `Swap` in the product —
+`GraphWorkspace`, `LogsWorkspace`, `TraversalMenu`, `WriteTimeline` — has been
+a plain emit since it was written. `mounted` is now settled during render.
+
+**The spine's pass state is geometry, not colour.** §3.E says *"spine pass
+certified → stale — `hold` cross-fade on colour"*. It is not: `.spine__bar`
+draws state as filled / half / dashed / struck / dotted. So rule 2 governs and
+the correct treatment is **still**, not a cross-fade. The one place in the
+product where status really is colour, and really can change under a person,
+is `.docket__row[data-blocking]` — that is where §5.5's cross-fade went.
+
+**`editing` is REPLACED, not ARRIVES.** §3.E lists `editing` false→true as an
+arrival and true→false as a departure. In `AdmissionCard` the form and the
+actions row are one slot with two subjects; treating them as an arrival beside
+a departure doubles the card's height for the length of the change. It is a
+`Swap`.
+
+### Where each thing lives
+
+| step | where |
+|---|---|
+| spine variables | `WorldPage.tsx`'s `style`, `ConstructionPage.tsx`'s root |
+| reader subject | `Swap` on `readerSubject`, inside `.node-reader` |
+| tables subject | `Swap` on `tableSubject`, the TABLES dock's body |
+| notice | `usePresence` + `useHeld`, `motion-layer--rise` |
+| canvas stagger | `staggerWaves` in `motion.ts`, driven by `canvasMotion.ts` |
+| `busy` → `flow` | `construction/Waiting.tsx` |
+| appended verdict | `useArrivals` + `.motion-emit` |
+| pass / obligation | two `Swap`s in `ConstructionPage.tsx` |
+| status cross-fade | `.docket__row`, `hold` length |
+| **still** | `still()` + `STILL_RULES` in `motion.ts`, `[data-still]` in `presence.css` |
+
+`still()` writes `data-still="<rule>"` and `presence.css` turns that into
+`transition: none` on the element. The citation is therefore load-bearing: a
+transition added to a marked element is overridden rather than silently
+winning, so the attribute has to be removed to make the thing move. It is on
+the table rows (`rowsNeverFly`), the finder's results (`answersDoNotTween`) and
+the two origin marks (`meaningIsStructural`).
+
+### Still open
+
+- §3.B's *unpinned neighbours during a local relax* — there is no local relax.
+- §3.C's `settle` on the schema canvas — waiting on a layout decision.
+- §3.A's `namedAtRest` and `show` per-mark emit/absorb.

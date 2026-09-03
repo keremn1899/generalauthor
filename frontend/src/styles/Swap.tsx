@@ -11,9 +11,12 @@ import "./presence.css";
  */
 export function Swap({
   id,
+  className,
   children,
 }: {
   id: string;
+  /** Extra classes on the swap root — `motion-swap--fill` to fill a column. */
+  className?: string;
   children: ReactNode;
 }) {
   const [shownId, setShownId] = useState(id);
@@ -37,7 +40,7 @@ export function Swap({
   }, [leaving, outgoing.mounted]);
 
   return (
-    <div className="motion-swap">
+    <div className={className ? `motion-swap ${className}` : "motion-swap"}>
       {leaving && outgoing.mounted ? (
         <div
           className={`motion-swap__was motion-layer motion-layer--fade${outgoing.shown ? " is-in" : ""}`}

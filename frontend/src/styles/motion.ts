@@ -362,3 +362,112 @@ export function motionCssVariables(plans: MotionPlans) {
     "--motion-travel": `${plans.emit.field.travel}px`,
   } as const;
 }
+
+/* ------------------------------------------------------------------ *
+ * Stillness
+ * ------------------------------------------------------------------ */
+
+/**
+ * The seven rules that produce stillness, as citations.
+ *
+ * Every one is a quotation from something already decided — the spec, the
+ * canvas contract, or CLAUDE.md — not a taste. They live here so a decision
+ * *not* to animate can point at its reason in code instead of being an
+ * absence that the next person fills in with something that looks nice.
+ */
+export const STILL_RULES = {
+  marksNeverMove:
+    "Existing marks never move. The field must not re-layout under animation.",
+  meaningIsStructural:
+    "Meaning is carried structurally, never decoratively. Geometry never tweens — a mark caught between filled and outlined draws an origin that does not exist.",
+  colourIsStatus:
+    "Colour is for status only. It may cross-fade, but only at hold length: the midpoint between certified and stale is neither.",
+  rowsNeverFly:
+    "Windowed rows, fixed height, SQL-side sorting. A row entering the window is not an arrival; re-sorting is a re-query.",
+  answersDoNotTween:
+    "Exact misses stay exact misses; search results stay candidates. A changed result set is a new answer, not a rearranged one.",
+  nothingIsIndeterminate:
+    "Retrieval and traversal do not call a model, so nothing on the read plane is indeterminate and flow is never correct there.",
+  themeSnaps:
+    "The theme is not a transition. It changes every colour on every surface at once; tweening it makes the whole product briefly untrue.",
+} as const;
+
+export type StillRule = keyof typeof STILL_RULES;
+
+/**
+ * Mark an element as deliberately unanimated, citing the rule.
+ *
+ * Spread onto the element: `<p {...still("rowsNeverFly")}>`. The attribute is
+ * the citation — greppable, and visible in devtools next to the thing it
+ * governs — and `presence.css` turns it into enforcement, so a transition
+ * added to that element later is overridden rather than silently winning.
+ * Descendants are untouched: stillness is a claim about this element's own
+ * properties, not about everything under it.
+ */
+export function still(because: StillRule) {
+  return { "data-still": because } as const;
+}
+
+/* ------------------------------------------------------------------ *
+ * Stagger
+ * ------------------------------------------------------------------ */
+
+export type StaggerOptions = {
+  /** Total spread from the first wave's start to the last's. */
+  windowMs?: number;
+  /** Ceiling on waves, so a large arrival does not become a queue. */
+  maxWaves?: number;
+};
+
+/**
+ * How long an arrival may be spread over.
+ *
+ * One `absorb`. The reading: the last mark of an expansion lands within a
+ * departure's length of the first, so the group still reads as one event
+ * rather than as a sequence of separate ones. It is deliberately shorter than
+ * `emit` — the waves overlap, and what you see is a wave front crossing the
+ * new matter, not marks queueing.
+ */
+export const STAGGER_WINDOW_MS = MOTION_DURATION_MS.absorb;
+
+const STAGGER_MAX_WAVES = 5;
+
+/**
+ * Split arrivals into waves by rank, lowest first.
+ *
+ * `rank` is a distance — from the anchor an expansion grew out of, usually.
+ * Ties share a wave, which is what makes a ring arrive as a ring. The count
+ * is capped rather than one-wave-per-item: past a handful of steps the eye
+ * stops reading order and starts reading lag.
+ */
+export function staggerWaves<T>(
+  items: readonly T[],
+  rank: (item: T) => number,
+  options: StaggerOptions = {},
+): { waves: T[][]; stepMs: number } {
+  const maxWaves = Math.max(1, options.maxWaves ?? STAGGER_MAX_WAVES);
+  const windowMs = Math.max(0, options.windowMs ?? STAGGER_WINDOW_MS);
+  if (items.length <= 1) return { waves: items.length ? [[...items]] : [], stepMs: 0 };
+
+  const ranked = [...items].sort((a, b) => rank(a) - rank(b));
+  const lowest = rank(ranked[0]);
+  const highest = rank(ranked[ranked.length - 1]);
+  const spread = highest - lowest;
+
+  // Everything the same distance out is one event, however many marks it is.
+  if (spread <= 0) return { waves: [ranked], stepMs: 0 };
+
+  const count = Math.min(maxWaves, ranked.length);
+  const waves: T[][] = Array.from({ length: count }, () => []);
+  for (const item of ranked) {
+    const share = (rank(item) - lowest) / spread;
+    const index = Math.min(count - 1, Math.floor(share * count));
+    waves[index].push(item);
+  }
+
+  const occupied = waves.filter((wave) => wave.length > 0);
+  return {
+    waves: occupied,
+    stepMs: occupied.length > 1 ? windowMs / (occupied.length - 1) : 0,
+  };
+}
