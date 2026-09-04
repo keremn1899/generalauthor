@@ -32,6 +32,8 @@ export type MarkParams = typeof GRAPH_DNA_CHIP & {
   discDiameter: number;
   edgeWidth: number;
   edgeOpacity: number;
+  /** What a node rests at, so light has room. See `GRAPH_DNA_GEOMETRY`. */
+  nodeAlbedo: number;
   dottedGap: number;
   /**
    * Whether a mechanical chip carries its own outline.
@@ -47,6 +49,7 @@ export const MARK_DEFAULTS: MarkParams = {
   discDiameter: GRAPH_DNA_GEOMETRY.nodeDiameter,
   edgeWidth: GRAPH_DNA_GEOMETRY.edgeWidth,
   edgeOpacity: GRAPH_DNA_GEOMETRY.edgeOpacity,
+  nodeAlbedo: GRAPH_DNA_GEOMETRY.nodeAlbedo,
   dottedGap: GRAPH_DNA_GEOMETRY.dottedGap,
   mechanicalOutline: true,
 };
@@ -160,8 +163,13 @@ export function discNode(
       x,
       y,
       size: p.discDiameter,
+      // Presence, not brightness — see `spokeEdge` for the same split on a
+      // line. A disc's material is its fill, and it rests below full so the
+      // light law has somewhere to take it. Sending `opacity` down instead
+      // would take the label with it: a name is not lit, it is read.
       opacity: 1,
       fill: paint.ink,
+      fillOpacity: p.nodeAlbedo,
       /**
        * No stroke. A referent is a mass, not an outline.
        *
@@ -241,8 +249,13 @@ export function chipNode(
       // running under it stop being read rather than being covered by a
       // second colour.
       fill: filled ? paint.ink : paint.chip,
-      fillOpacity: kind === "unresolved" ? 0 : 1,
+      // Hollow stays hollow; everything else rests at the albedo. Both
+      // channels, because an outlined plate carries its meaning in the stroke
+      // and lighting only the fill would leave it dark while its neighbours
+      // brightened.
+      fillOpacity: kind === "unresolved" ? 0 : p.nodeAlbedo,
       stroke: paint.ink,
+      strokeOpacity: p.nodeAlbedo,
       lineWidth: outlined ? p.chipLine : 0,
       lineDash:
         kind === "unresolved" ? ([0, p.dottedGap] as [number, number]) : undefined,

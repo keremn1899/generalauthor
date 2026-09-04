@@ -554,26 +554,37 @@ export function WorldCanvas({
      */
     if (incident) {
       /**
-       * Each mark reflects on the channel it is made of.
+       * Each mark reflects on the channels it is made of, and never on
+       * `opacity`.
        *
-       * A node's material is its `opacity`; an edge's is `strokeOpacity`,
-       * because an edge's `opacity` is its presence — the channel birth and
-       * absorption own — and lighting a name is not the same act as lighting
-       * the line beneath it. See `spokeEdge`.
+       * `opacity` is presence — the channel birth and absorption own, and the
+       * one G6 composites into the label group. Lighting it would light the
+       * names too, and a name is not lit, it is read. So a disc reflects on
+       * its fill, an outlined plate on its stroke, a filament on its stroke,
+       * and every one of them keeps its label at the strength it was stated
+       * at. See `discNode` and `spokeEdge`.
+       *
+       * A channel absent from the datum is not lit into existence: a hollow
+       * plate has `fillOpacity: 0` on purpose, and `reflected` leaves a zero
+       * where it found one — nothing is what an obligation is made of.
        */
       const reflect = (
         mark: { id: string; style?: Record<string, unknown> },
-        channel: "opacity" | "strokeOpacity",
+        channels: readonly ("fillOpacity" | "strokeOpacity")[],
       ) => {
         if (!mark.style) return;
-        const albedo = (mark.style[channel] as number | undefined) ?? 1;
-        mark.style[channel] = reflected(albedo, incident(mark.id));
+        const incidentHere = incident(mark.id);
+        for (const channel of channels) {
+          const albedo = mark.style[channel] as number | undefined;
+          if (albedo === undefined || albedo === 0) continue;
+          mark.style[channel] = reflected(albedo, incidentHere);
+        }
       };
       for (const node of nodes as { id: string; style?: Record<string, unknown> }[]) {
-        reflect(node, "opacity");
+        reflect(node, ["fillOpacity", "strokeOpacity"]);
       }
       for (const edge of edges as { id: string; style?: Record<string, unknown> }[]) {
-        reflect(edge, "strokeOpacity");
+        reflect(edge, ["strokeOpacity"]);
       }
     }
     /**

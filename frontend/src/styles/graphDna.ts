@@ -62,12 +62,17 @@ export type GraphDnaFocusTheme = {
 
 export const GRAPH_DNA_THEME: Record<ThemeMode, GraphDnaTheme> = {
   light: {
-    surface: token("gray", 3),
-    canvas: token("gray", 3),
+    // Step 2, not step 3. A mark that reflects light has to rest below full
+    // strength, and what it rests *against* sets how much of that reading
+    // survives: on a step 3 ground a disc at 0.78 and the same disc at 0.84
+    // were four levels apart, which is nothing. A lighter field is not a
+    // lighter look — it is the room the third law needs to be seen at all.
+    surface: token("gray", 2),
+    canvas: token("gray", 2),
     filament: token("gray", 12),
     node: token("gray", 12),
-    nodeLabel: token("gray", 3),
-    chip: token("gray", 3),
+    nodeLabel: token("gray", 2),
+    chip: token("gray", 2),
     lensLabel: token("gray", 9),
     bondLabel: token("gray", 12),
   },
@@ -182,8 +187,10 @@ export type GraphDnaChrome = {
 /** Shell chrome tokens — kept in step with graph matter on the same Radix scales. */
 export const GRAPH_DNA_CHROME: Record<ThemeMode, GraphDnaChrome> = {
   light: {
-    canvas: token("gray", 3),
-    panel: token("gray", 4),
+    // Moved with the field above, and for the same reason. Chrome that stayed
+    // at step 3/4 would have been darker than the canvas it frames.
+    canvas: token("gray", 2),
+    panel: token("gray", 3),
     ink: token("gray", 12),
     inkMuted: token("gray", 9),
     rule: token("gray", 6),
@@ -336,6 +343,19 @@ export const GRAPH_DNA_GEOMETRY = {
   labelMaxLines: 2,
   /** The disc itself. Below 1 the field shows through node matter. */
   nodeFillOpacity: 1,
+  /**
+   * What a mark rests at, so that light has somewhere to take it.
+   *
+   * A disc used to be drawn at full strength, which meant the light law could
+   * not touch it: `reflected` adds a share of what is *left*, and nothing was
+   * left. Every visible lift was happening on the filaments, which are one
+   * pixel wide.
+   *
+   * Lower than it sounds, because a mark is an area and a filament is a line.
+   * A disc moving four levels of grey reads louder than a hairline moving
+   * twelve, so equal numbers here would not be equal to a person.
+   */
+  nodeAlbedo: 0.78,
   /** The name inside the disc, independent of the disc. */
   nodeLabelOpacity: 1,
   edgeWidth: 1,
