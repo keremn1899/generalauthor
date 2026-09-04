@@ -1,9 +1,9 @@
 /**
  * Element lifecycle for World canvases.
  *
- * A mark enters by emitting from the same 0.86 pose as its selection ants and
- * leaves by being absorbed back into it. Edges have no centre to scale around,
- * so they only change opacity. Both consume the shared motion plans.
+ * A mark enters from a 4% nucleation pin at its authored position and leaves
+ * by being absorbed back into it. Edges have no centre to scale around, so
+ * they release through opacity. Both consume the shared motion plans.
  *
  * Only identity arriving or leaving is animated. Marks that were already on
  * the field are written directly, because `STILL_RULES.marksNeverMove`: a
@@ -38,6 +38,19 @@ export type CanvasTransition = {
   bornEdges: CanvasDatum[];
   diedNodeIds: string[];
   diedEdgeIds: string[];
+};
+
+export type CanvasMotionOptions = {
+  /** Retained for callers that want the canonical massive-node plans. */
+  stellarNodes?: boolean;
+  /** Lab-scaled forms of the same laws, when supplied. */
+  birthPlan?: MotionPlan;
+  collapsePlan?: MotionPlan;
+  releasePlan?: MotionPlan;
+  /** Shared-spine time before a newly nucleated body can bind constraints. */
+  bindingDelayMs?: number;
+  /** Lab-scaled window across an expansion's distance waves. */
+  staggerWindowMs?: number;
 };
 
 const LIFECYCLE_SCALE = 0.04;
@@ -147,7 +160,7 @@ export async function transitionCanvasData(
   graph: Graph,
   next: CanvasData,
   cancelled: () => boolean,
-  options: { stellarNodes?: boolean } = {},
+  options: CanvasMotionOptions = {},
 ): Promise<CanvasTransition> {
   const previousNodes = new Set(
     graph.getNodeData().map((node) => String(node.id)),
@@ -172,12 +185,13 @@ export async function transitionCanvasData(
     return { bornNodes, bornEdges, diedNodeIds, diedEdgeIds };
   }
 
-  const dyingNodes = diedNodeIds
+  const departingNodes = diedNodeIds
     .map((id) => graph.getNodeData(id))
     .filter(Boolean)
-    .map((node) =>
-      nodePose(node as CanvasDatum, 0, LIFECYCLE_SCALE),
-    );
+    .map((node) => node as CanvasDatum);
+  const collapsedNodes = departingNodes.map((node) =>
+    nodePose(node, 0, LIFECYCLE_SCALE),
+  );
   const dyingEdges = diedEdgeIds
     .map((id) => graph.getEdgeData(id))
     .filter(Boolean)
@@ -205,17 +219,37 @@ export async function transitionCanvasData(
   const gone = () => cancelled() || graph.destroyed;
   if (gone()) return { bornNodes, bornEdges, diedNodeIds, diedEdgeIds };
 
-  if (dyingNodes.length || dyingEdges.length) {
+  /**
+   * Withdrawal has an order because a constraint cannot remain visibly bound
+   * to matter that has already ceased to occupy the field. Release the
+   * departing constraints first while their endpoints still stand.
+   */
+  if (dyingEdges.length) {
+    graph.setOptions({
+      animation: planOptions(options.releasePlan ?? DEFAULT_MOTION_PLANS.absorb),
+    });
+    graph.setData({
+      nodes: [...entering.nodes, ...departingNodes],
+      edges: [...entering.edges, ...dyingEdges],
+    } as never);
+    await graph.draw();
+    if (gone()) return { bornNodes, bornEdges, diedNodeIds, diedEdgeIds };
+    graph.setOptions({ animation: false });
+  }
+
+  /** Only after its constraints have released may a departing mass collapse. */
+  if (collapsedNodes.length) {
     graph.setOptions({
       animation: planOptions(
-        options.stellarNodes
-          ? NODE_COLLAPSE_PLAN
-          : DEFAULT_MOTION_PLANS.absorb,
+        options.collapsePlan ??
+          (options.stellarNodes
+            ? NODE_COLLAPSE_PLAN
+            : DEFAULT_MOTION_PLANS.absorb),
       ),
     });
     graph.setData({
-      nodes: [...entering.nodes, ...dyingNodes],
-      edges: [...entering.edges, ...dyingEdges],
+      nodes: [...entering.nodes, ...collapsedNodes],
+      edges: entering.edges,
     } as never);
     await graph.draw();
     if (gone()) return { bornNodes, bornEdges, diedNodeIds, diedEdgeIds };
@@ -238,7 +272,7 @@ export async function transitionCanvasData(
   const settling =
     !bornNodes.length &&
     !bornEdges.length &&
-    !dyingNodes.length &&
+    !collapsedNodes.length &&
     !dyingEdges.length;
   if (settling) {
     graph.setOptions({ animation: planOptions(DEFAULT_MOTION_PLANS.hold) });
@@ -251,7 +285,10 @@ export async function transitionCanvasData(
   if (bornNodes.length || bornEdges.length) {
     graph.setOptions({
       animation: planOptions(
-        options.stellarNodes ? NODE_BIRTH_PLAN : DEFAULT_MOTION_PLANS.emit,
+        options.birthPlan ??
+          (options.stellarNodes
+            ? NODE_BIRTH_PLAN
+            : DEFAULT_MOTION_PLANS.emit),
       ),
     });
 
@@ -264,7 +301,15 @@ export async function transitionCanvasData(
       if (!point || !anchor) return 0;
       return Math.hypot(point.x - anchor.x, point.y - anchor.y);
     };
-    const { waves, stepMs } = staggerWaves(bornNodes, distance);
+    const { waves, stepMs } = staggerWaves(bornNodes, distance, {
+      windowMs: options.staggerWindowMs,
+    });
+    const waveStepMs = Math.max(
+      stepMs,
+      bornNodes.length
+        ? options.bindingDelayMs ?? DEFAULT_MOTION_PLANS.hold.durationMs
+        : 0,
+    );
 
     /**
      * An edge is drawn in the wave after the later of its ends.
@@ -283,7 +328,10 @@ export async function transitionCanvasData(
         waveOfNode.get(edge.target ?? "") ?? -1,
       ) + 1;
     const edgeWaves: CanvasDatum[][] = Array.from(
-      { length: Math.max(waves.length, 1) },
+      // One final wave lets a constraint bind only after its latest arriving
+      // endpoint has become present. With no born nodes, a new edge between
+      // standing bodies still belongs to the first and only wave.
+      { length: waves.length ? waves.length + 1 : 1 },
       () => [],
     );
     for (const edge of bornEdges) {
@@ -301,7 +349,7 @@ export async function transitionCanvasData(
      */
     const drawn: Promise<unknown>[] = [];
     for (let index = 0; index < edgeWaves.length; index += 1) {
-      if (index > 0 && stepMs > 0) await sleep(stepMs);
+      if (index > 0 && waveStepMs > 0) await sleep(waveStepMs);
       if (gone()) break;
       const nodeWave = waves[index] ?? [];
       if (nodeWave.length) {

@@ -325,6 +325,23 @@ export const NODE_BIRTH_PLAN = createMotionPlan("emit", { travel: 18 });
 export const NODE_COLLAPSE_PLAN = createMotionPlan("absorb", { travel: 28 });
 
 /**
+ * Slow or accelerate one authored plan without changing its physical family.
+ *
+ * This exists for specialised plans such as massive-node birth/collapse,
+ * which are not members of the five-intent `MotionPlans` record but must still
+ * follow the lab's inspection speed. Distance, gravity, pull and curve remain
+ * the same; only the clock is stretched.
+ */
+export function scaleMotionPlan(plan: MotionPlan, factor: number): MotionPlan {
+  if (factor === 1) return plan;
+  return createMotionPlan(plan.intent, {
+    ...plan.field,
+    pull: plan.pull,
+    durationMs: plan.durationMs / Math.max(0.01, factor),
+  });
+}
+
+/**
  * The same spine, slowed or sped for inspection.
  *
  * A design surface needs to be able to watch a 90ms `hold` happen. Scaling

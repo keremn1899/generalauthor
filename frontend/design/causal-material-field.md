@@ -83,18 +83,25 @@ reversible control:
 Plates and filaments keep their existing selection geometry in this slice.
 Their ants already become the plate border or run along the selected line.
 
-## Arrival and withdrawal — next slice
+## Arrival and withdrawal
 
 Arrival means admission to the observer's working field, not semantic
 creation. A body nucleates at its final authored position, becomes legible,
-then its constraints arrive. Expansion groups propagate in graph-distance
-waves from the requested anchor.
+then its constraints bind no earlier than one shared `hold` after it. Expansion
+groups propagate in graph-distance waves from the requested anchor. The lab's
+speed control stretches the nucleation, binding interval and wave window
+together; it never changes their causal order.
 
 Withdrawal means leaving observation, not destruction of the World entity:
 
 ```text
-selection returns -> constraints release -> body contracts -> remnant leaves
+observer field releases -> constraints release -> body contracts -> remnant leaves
 ```
+
+Constraint release completes before body contraction begins. A new data frame
+may arrive during either phase, but the serialized canvas lane finishes the
+current physical episode and then reconciles to the newest waiting state; it
+never overlaps two global scene mutations.
 
 Folding a binary filament into a plate is neither birth nor death. It should
 eventually conserve one assertion's identity while its projection changes.

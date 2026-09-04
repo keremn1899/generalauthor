@@ -55,6 +55,8 @@ import {
 import {
   DEFAULT_MOTION_PLANS,
   NODE_BIRTH_PLAN,
+  NODE_COLLAPSE_PLAN,
+  scaleMotionPlan,
   type MotionPlan,
   type MotionPlans,
 } from "../styles/motion";
@@ -333,6 +335,21 @@ export function WorldCanvas({
   const graphRef = useRef<Graph | null>(null);
   const motionRef = useRef(motion);
   motionRef.current = motion;
+  const lifecycleMotion = useMemo(
+    () => ({
+      birth: scaleMotionPlan(
+        NODE_BIRTH_PLAN,
+        DEFAULT_MOTION_PLANS.emit.durationMs / motion.emit.durationMs,
+      ),
+      collapse: scaleMotionPlan(
+        NODE_COLLAPSE_PLAN,
+        DEFAULT_MOTION_PLANS.absorb.durationMs / motion.absorb.durationMs,
+      ),
+    }),
+    [motion],
+  );
+  const lifecycleMotionRef = useRef(lifecycleMotion);
+  lifecycleMotionRef.current = lifecycleMotion;
   const materialTuning = useMemo<MaterialTuning>(
     () => ({ ...MATERIAL_DEFAULTS, ...material }),
     [material],
@@ -961,7 +978,13 @@ export function WorldCanvas({
               graph,
               next,
               () => graphRef.current !== graph || graph.destroyed,
-              { stellarNodes: true },
+              {
+                birthPlan: lifecycleMotionRef.current.birth,
+                collapsePlan: lifecycleMotionRef.current.collapse,
+                releasePlan: motionRef.current.absorb,
+                bindingDelayMs: motionRef.current.hold.durationMs,
+                staggerWindowMs: motionRef.current.absorb.durationMs,
+              },
             );
             if (graphRef.current !== graph || graph.destroyed) return;
 
