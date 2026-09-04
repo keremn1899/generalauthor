@@ -159,7 +159,6 @@
 .ctrl-group button {
   background: var(--canvas);
   border: 1px solid var(--rule);
-  border-radius: 2px;
   font-family: var(--font-sans);
   font-size: var(--type-body);
   font-weight: 400;
@@ -189,7 +188,6 @@
 .ctrl-link {
   background: var(--canvas);
   border: 1px solid var(--rule);
-  border-radius: 2px;
   font-family: var(--font-sans);
   font-size: var(--type-body);
   font-weight: 400;
@@ -206,25 +204,138 @@
   gap: 0.75rem;
 }
 
-.ctrl-sliders label {
+/* No rule for a bare label in here. `.ctrl-sliders` is a stack and nothing
+   more; what a control looks like is the control's own business. The rule
+   that used to live here dressed every descendant label as a column, which
+   is why the checkbox row needed `!important` to be a row. */
+
+/* The lab is drawn in the same language as the product it shows, and that
+   language has no soft corner. Seven rules here carried a 2px or 4px radius
+   that no product surface has — the drift the lab exists to end, happening
+   inside the lab. Stated once so there is nowhere for it to come back.
+
+   The exception is a mark that is genuinely round: `.motion-runner-bead` is a
+   body with mass, and it keeps its 50%. */
+.world-lab :where(button, input, a, .specimen-card, .specimen-render,
+  .motion-plan-card, .motion-badge, .motion-runner-track) {
+  border-radius: 0;
+}
+
+/* ── Form controls ── */
+/* See `labControls.tsx` for why these exist and why they stay in the lab.
+   Everything below is one idea drawn twice: a 1px rule for what a value can
+   be, a sharp block of ink for what it is. No radius, no accent colour, no
+   glyph the platform chose. */
+
+/* Stated, not inherited from `.ctrl-sliders`. A control that only looks
+   right inside one container is the drift these replaced. */
+.ctrl-range,
+.ctrl-toggle {
   display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
   font-family: var(--font-sans);
   font-size: var(--type-label);
   font-weight: 400;
   color: var(--ink-muted);
 }
-
-.ctrl-sliders input[type="range"] {
-  width: 100%;
-  accent-color: var(--ink);
+.ctrl-range {
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.ctrl-range input[type="range"],
+.ctrl-toggle input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
-.ctrl-checkbox {
-  flex-direction: row !important;
+/* The track is drawn on the input's own background rather than on
+   `::-webkit-slider-runnable-track`, because Firefox names that shape
+   something else and the two vendor rules cannot be written as one selector —
+   a browser that does not recognise a selector discards the whole rule. A
+   background gradient is understood everywhere. */
+.ctrl-range input[type="range"] {
+  width: 100%;
+  /* The hit area is 14px tall; the line inside it is 1px. Height here is
+     padding around a rule, not the rule itself. */
+  height: 14px;
+  background-image: linear-gradient(
+    to right,
+    var(--ink) 0 var(--ctrl-fill, 0%),
+    var(--rule) var(--ctrl-fill, 0%) 100%
+  );
+  background-size: 100% 1px;
+  background-position: 0 center;
+  background-repeat: no-repeat;
+}
+
+.ctrl-range input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 3px;
+  height: 14px;
+  background: var(--ink);
+  border: none;
+  border-radius: 0;
+  transition: transform var(--motion-hold-duration, 90ms)
+    var(--motion-hold-curve, ease-out);
+}
+
+.ctrl-range input[type="range"]::-moz-range-thumb {
+  width: 3px;
+  height: 14px;
+  background: var(--ink);
+  border: none;
+  border-radius: 0;
+  transition: transform var(--motion-hold-duration, 90ms)
+    var(--motion-hold-curve, ease-out);
+}
+
+/* Firefox paints its own track over the background gradient. Blank it. */
+.ctrl-range input[type="range"]::-moz-range-track {
+  background: none;
+  border: none;
+}
+
+/* The press. A thumb that grew sideways would read as the value widening, so
+   it grows along the axis the value does not live on. */
+.ctrl-range input[type="range"]:active::-webkit-slider-thumb {
+  transform: scaleY(1.4);
+}
+.ctrl-range input[type="range"]:active::-moz-range-thumb {
+  transform: scaleY(1.4);
+}
+
+/* A ring states where the keyboard is, and it is there the instant the key
+   lands — `focusIsWhereYouAre`. Nothing below transitions. */
+.ctrl-range input[type="range"]:focus-visible,
+.ctrl-toggle input[type="checkbox"]:focus-visible {
+  outline: 1px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.ctrl-toggle {
+  flex-direction: row;
   align-items: center;
-  gap: 0.5rem !important;
+  gap: 0.5rem;
+}
+
+/* Outlined and filled, which is the vocabulary the marks already use for a
+   thing that is asserted versus a thing that is not. A tick would be a third
+   alphabet for a fact the shape already carries. */
+.ctrl-toggle input[type="checkbox"] {
+  width: 11px;
+  height: 11px;
+  flex: none;
+  border: 1px solid var(--rule);
+  border-radius: 0;
+}
+
+.ctrl-toggle input[type="checkbox"]:checked {
+  background: var(--ink);
+  border-color: var(--ink);
 }
 
 .ctrl-prose {
@@ -282,7 +393,6 @@
   padding: 1.25rem;
   background: var(--panel);
   border: 1px solid var(--rule);
-  border-radius: 4px;
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
@@ -310,7 +420,6 @@
   padding: 1rem 0;
   min-height: 140px;
   background: var(--canvas);
-  border-radius: 2px;
 }
 
 /* ── Reader specimens ── */
@@ -350,7 +459,6 @@
   padding: 1.25rem;
   background: var(--panel);
   border: 1px solid var(--rule);
-  border-radius: 4px;
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
@@ -378,7 +486,6 @@
   padding: 0.13rem 0.4rem;
   background: var(--canvas);
   border: 1px solid var(--rule);
-  border-radius: 2px;
   color: var(--ink-muted);
 }
 
@@ -405,7 +512,6 @@
   height: 22px;
   background: var(--canvas);
   border: 1px solid var(--rule);
-  border-radius: 2px;
   position: relative;
   display: flex;
   align-items: center;

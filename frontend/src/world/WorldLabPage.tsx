@@ -49,6 +49,7 @@ import { WorldTable } from "./WorldTable";
 import { FrontierTable } from "./FrontierTable";
 import { RelationTable } from "./RelationTable";
 import { DerivationView } from "./DerivationView";
+import { LabRange, LabToggle } from "./labControls";
 import { type TableChrome } from "./tableChrome";
 import {
   Find,
@@ -797,32 +798,22 @@ export function WorldLabPage() {
               ))}
             </div>
             <div className="ctrl-sliders">
-              <label>
-                <span>Falloff — {lightField.falloff.toFixed(1)} hops</span>
-                <input
-                  type="range"
-                  min={0.4}
-                  max={4}
-                  step={0.1}
-                  value={lightField.falloff}
-                  onChange={(e) =>
-                    setLightField((f) => ({ ...f, falloff: Number(e.target.value) }))
-                  }
-                />
-              </label>
-              <label>
-                <span>Lift — {lightField.lift.toFixed(2)}</span>
-                <input
-                  type="range"
-                  min={0}
-                  max={1}
-                  step={0.01}
-                  value={lightField.lift}
-                  onChange={(e) =>
-                    setLightField((f) => ({ ...f, lift: Number(e.target.value) }))
-                  }
-                />
-              </label>
+              <LabRange
+                label={`Falloff — ${lightField.falloff.toFixed(1)} hops`}
+                min={0.4}
+                max={4}
+                step={0.1}
+                value={lightField.falloff}
+                onChange={(falloff) => setLightField((f) => ({ ...f, falloff }))}
+              />
+              <LabRange
+                label={`Lift — ${lightField.lift.toFixed(2)}`}
+                min={0}
+                max={1}
+                step={0.01}
+                value={lightField.lift}
+                onChange={(lift) => setLightField((f) => ({ ...f, lift }))}
+              />
             </div>
           </div>
           {labTab === "sandbox" ? (<>
@@ -869,12 +860,8 @@ export function WorldLabPage() {
                 </button>
               </div>
               <div className="ctrl-sliders">
-                <label><span>Tables width — {tablesWidth}px</span>
-                  <input type="range" min={260} max={520} value={tablesWidth} onChange={(e) => setTablesWidth(Number(e.target.value))} />
-                </label>
-                <label><span>Reader width — {readerWidth}px</span>
-                  <input type="range" min={260} max={520} value={readerWidth} onChange={(e) => setReaderWidth(Number(e.target.value))} />
-                </label>
+                <LabRange label={`Tables width — ${tablesWidth}px`} min={260} max={520} value={tablesWidth} onChange={setTablesWidth} />
+                <LabRange label={`Reader width — ${readerWidth}px`} min={260} max={520} value={readerWidth} onChange={setReaderWidth} />
               </div>
             </div>
 
@@ -895,39 +882,21 @@ export function WorldLabPage() {
               <div className="ctrl-section">
                 <span className="ctrl-label">GEOMETRY</span>
                 <div className="ctrl-sliders">
-                  <label><span>Disc diameter — {markKnobs.discDiameter}px</span>
-                    <input type="range" min={36} max={120} value={markKnobs.discDiameter} onChange={(e) => setMarkKnobs((k) => ({ ...k, discDiameter: Number(e.target.value) }))} />
-                  </label>
-                  <label><span>Chip height — {markKnobs.chipHeight}px</span>
-                    <input type="range" min={12} max={32} value={markKnobs.chipHeight} onChange={(e) => setMarkKnobs((k) => ({ ...k, chipHeight: Number(e.target.value) }))} />
-                  </label>
-                  <label><span>Edge width — {markKnobs.edgeWidth}px</span>
-                    <input type="range" min={1} max={4} step={0.5} value={markKnobs.edgeWidth} onChange={(e) => setMarkKnobs((k) => ({ ...k, edgeWidth: Number(e.target.value) }))} />
-                  </label>
-                  <label className="ctrl-checkbox"><span>Mechanical outline</span>
-                    <input type="checkbox" checked={markKnobs.mechanicalOutline} onChange={(e) => setMarkKnobs((k) => ({ ...k, mechanicalOutline: e.target.checked }))} />
-                  </label>
+                  <LabRange label={`Disc diameter — ${markKnobs.discDiameter}px`} min={36} max={120} value={markKnobs.discDiameter} onChange={(discDiameter) => setMarkKnobs((k) => ({ ...k, discDiameter }))} />
+                  <LabRange label={`Chip height — ${markKnobs.chipHeight}px`} min={12} max={32} value={markKnobs.chipHeight} onChange={(chipHeight) => setMarkKnobs((k) => ({ ...k, chipHeight }))} />
+                  <LabRange label={`Edge width — ${markKnobs.edgeWidth}px`} min={1} max={4} step={0.5} value={markKnobs.edgeWidth} onChange={(edgeWidth) => setMarkKnobs((k) => ({ ...k, edgeWidth }))} />
+                  <LabToggle label="Mechanical outline" checked={markKnobs.mechanicalOutline} onChange={(mechanicalOutline) => setMarkKnobs((k) => ({ ...k, mechanicalOutline }))} />
                 </div>
               </div>
             ) : componentSection === "ants" ? (
               <div className="ctrl-section">
                 <span className="ctrl-label">ANT RING</span>
                 <div className="ctrl-sliders">
-                  <label><span>Clearance — {antClearance}px</span>
-                    <input type="range" min={1} max={20} value={antClearance} onChange={(e) => setAntClearance(Number(e.target.value))} />
-                  </label>
-                  <label><span>Dot gap — {antDotGap}px</span>
-                    <input type="range" min={2} max={10} step={0.5} value={antDotGap} onChange={(e) => setAntDotGap(Number(e.target.value))} />
-                  </label>
-                  <label><span>Stroke width — {antLineWidth}px</span>
-                    <input type="range" min={1} max={3} step={0.5} value={antLineWidth} onChange={(e) => setAntLineWidth(Number(e.target.value))} />
-                  </label>
-                  <label><span>Speed — {antSpeed}px/s</span>
-                    <input type="range" min={0} max={24} value={antSpeed} onChange={(e) => setAntSpeed(Number(e.target.value))} />
-                  </label>
-                  <label className="ctrl-checkbox"><span>Animated</span>
-                    <input type="checkbox" checked={antAnimated} onChange={(e) => setAntAnimated(e.target.checked)} />
-                  </label>
+                  <LabRange label={`Clearance — ${antClearance}px`} min={1} max={20} value={antClearance} onChange={setAntClearance} />
+                  <LabRange label={`Dot gap — ${antDotGap}px`} min={2} max={10} step={0.5} value={antDotGap} onChange={setAntDotGap} />
+                  <LabRange label={`Stroke width — ${antLineWidth}px`} min={1} max={3} step={0.5} value={antLineWidth} onChange={setAntLineWidth} />
+                  <LabRange label={`Speed — ${antSpeed}px/s`} min={0} max={24} value={antSpeed} onChange={setAntSpeed} />
+                  <LabToggle label="Animated" checked={antAnimated} onChange={setAntAnimated} />
                 </div>
               </div>
             ) : componentSection === "tables" ? (
@@ -949,9 +918,7 @@ export function WorldLabPage() {
             <div className="ctrl-section">
               <span className="ctrl-label">SCRUB</span>
               <div className="ctrl-sliders">
-                <label><span>Progress — {Math.round(motionScrub * 100)}%</span>
-                  <input type="range" min={0} max={1} step={0.01} value={motionScrub} onChange={(e) => setMotionScrub(Number(e.target.value))} />
-                </label>
+                <LabRange label={`Progress — ${Math.round(motionScrub * 100)}%`} min={0} max={1} step={0.01} value={motionScrub} onChange={setMotionScrub} />
               </div>
             </div>
 
