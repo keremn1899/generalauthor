@@ -39,7 +39,12 @@ import {
   type WorldTuple,
 } from "../api/world";
 import { type ThemeMode } from "../styles/graphDna";
-import { DEFAULT_MOTION_PLANS, still } from "../styles/motion";
+import {
+  DEFAULT_MOTION_PLANS,
+  still,
+  type MotionPlans,
+} from "../styles/motion";
+import type { LightField } from "../styles/light";
 import { ShowBand } from "./ShowBand";
 import {
   TABLES_HANDLE_RESERVE,
@@ -55,14 +60,20 @@ import {
   type ExpansionRequests,
 } from "./expansionMachine";
 import { FrontierTable, type Obligation } from "./FrontierTable";
-import { MARK_DEFAULTS } from "./marks";
+import { MARK_DEFAULTS, type MarkParams } from "./marks";
 import { RelationTable } from "./RelationTable";
 import { SchemaCanvas } from "./SchemaCanvas";
 import { readField, writeField } from "./fieldMemory";
 import { chipKind } from "./schemaGraph";
 import type { TableChrome } from "./tableChrome";
 import { WorldTable } from "./WorldTable";
-import { WorldCanvas, type CanvasSelection } from "./WorldCanvas";
+import {
+  WorldCanvas,
+  type AntTuning,
+  type CanvasSelection,
+  type MaterialTuning,
+  type SelectionTreatment,
+} from "./WorldCanvas";
 import type { CameraInsets } from "./canvasFocus";
 import {
   collapse,
@@ -105,7 +116,7 @@ import "../product/GraphWorkspace.css";
 import "../product/OverlayPanel.css";
 import "../product/overlayChrome.css";
 
-function storedTheme(): ThemeMode {
+export function readStoredWorldTheme(): ThemeMode {
   try {
     return localStorage.getItem("graphauthor.productTheme") === "dark"
       ? "dark"
@@ -636,8 +647,40 @@ function linkedRelationFromHash(): string | null {
   return new URLSearchParams(query).get("relation");
 }
 
-export function WorldPage() {
-  const [mode, setMode] = useState<ThemeMode>(storedTheme);
+/**
+ * Optional instruments for a full-system lab.
+ *
+ * The page still owns all World data and interaction state. The lab is only
+ * allowed to tune how the real canvas expresses that state, which prevents a
+ * fixture sandbox from becoming a second, less capable World application.
+ */
+export type WorldPageTuning = {
+  params?: MarkParams;
+  ants?: Partial<AntTuning>;
+  motion?: MotionPlans;
+  material?: Partial<MaterialTuning>;
+  selectionTreatment?: SelectionTreatment;
+  light?: Partial<LightField>;
+};
+
+export type WorldPageProps = {
+  tuning?: WorldPageTuning;
+  /** Replaces the recursive LAB link with a way back to the product surface. */
+  lab?: boolean;
+  /** The lab controls appearance outside the page so its instruments agree. */
+  mode?: ThemeMode;
+  onModeChange?: (mode: ThemeMode) => void;
+};
+
+export function WorldPage({
+  tuning,
+  lab = false,
+  mode: controlledMode,
+  onModeChange,
+}: WorldPageProps = {}) {
+  const motion = tuning?.motion ?? DEFAULT_MOTION_PLANS;
+  const [localMode, setLocalMode] = useState<ThemeMode>(readStoredWorldTheme);
+  const mode = controlledMode ?? localMode;
   const [motionReady, setMotionReady] = useState(false);
   const [overview, setOverview] = useState<WorldOverview | null>(null);
   const [relations, setRelations] = useState<WorldRelation[]>([]);
@@ -690,7 +733,7 @@ export function WorldPage() {
    * `vocabularyFocus` stays the thing a person asked for; `focusView.value` is
    * what is on screen, and every visual read below uses it.
    */
-  const focusView = useSequencedSwap(vocabularyFocus);
+  const focusView = useSequencedSwap(vocabularyFocus, motion);
   const focusDrawn = focusView.value;
   /**
    * A mark a table named, distinct from canvas selection.
@@ -1146,7 +1189,7 @@ export function WorldPage() {
         setSelection((current) => (current?.id === mark.id ? null : current));
         const timer = window.setTimeout(
           finish,
-          DEFAULT_MOTION_PLANS.absorb.durationMs,
+          motion.absorb.durationMs,
         );
         pendingRemovals.current.set(mark.id, timer);
       };
@@ -1163,11 +1206,11 @@ export function WorldPage() {
       setSelection(mark);
       const timer = window.setTimeout(
         collapseRing,
-        DEFAULT_MOTION_PLANS.emit.durationMs,
+        motion.emit.durationMs,
       );
       pendingRemovals.current.set(mark.id, timer);
     },
-    [selection],
+    [motion.absorb.durationMs, motion.emit.durationMs, selection],
   );
 
   const onRemove = useCallback(() => {
@@ -1227,7 +1270,7 @@ export function WorldPage() {
    * lab emits exactly the same tokens.
    */
   const style = {
-    ...worldShellStyle(mode, { focus: focusDrawn }),
+    ...worldShellStyle(mode, { focus: focusDrawn, motion }),
     ...worldChromeDockVars({ tablesWidth, readerWidth }),
   };
   const onField = fieldSize(set) > 0;
@@ -1316,18 +1359,20 @@ export function WorldPage() {
           ) : null}
           <div className="product-shell__utils">
             <a
-              href="#/world-lab"
+              href={lab ? "#/world" : "#/world-lab"}
               className="product-shell__lab-link"
-              title="Open World Design & Motion Lab"
+              title={lab ? "Open World" : "Open World Design & Motion Lab"}
             >
-              LAB
+              {lab ? "WORLD" : "LAB"}
             </a>
             <button
               type="button"
               className="product-shell__theme"
-              onClick={() =>
-                setMode((value) => (value === "light" ? "dark" : "light"))
-              }
+              onClick={() => {
+                const next = mode === "light" ? "dark" : "light";
+                if (onModeChange) onModeChange(next);
+                else setLocalMode(next);
+              }}
               aria-label={`Use ${mode === "light" ? "dark" : "light"} appearance`}
             >
               {mode === "light" ? "dark" : "light"}
@@ -1457,7 +1502,7 @@ export function WorldPage() {
                         <WorldCanvas
                           set={set}
                           mode={mode}
-                          params={MARK_DEFAULTS}
+                          params={tuning?.params ?? MARK_DEFAULTS}
                           hovered={hovered}
                           selection={selection}
                           show={show}
@@ -1465,6 +1510,11 @@ export function WorldPage() {
                           focusToken={focus?.token ?? 0}
                           animateInitial={Boolean(selection)}
                           insets={cameraInsets}
+                          ants={tuning?.ants}
+                          motion={motion}
+                          material={tuning?.material}
+                          selectionTreatment={tuning?.selectionTreatment}
+                          light={tuning?.light}
                           onHover={setHovered}
                           onSelect={chooseFieldMark}
                           onPositions={onPositions}

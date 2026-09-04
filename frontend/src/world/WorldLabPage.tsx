@@ -9,7 +9,7 @@
  * 3. Inspect and compare the Motion DNA curves (emit, absorb, settle, flow, hold).
  */
 
-import { useCallback, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { type ThemeMode } from "../styles/graphDna";
 import { scaleMotionPlans, type MotionIntent } from "../styles/motion";
 import {
@@ -18,22 +18,14 @@ import {
   reflected,
   type LightField,
 } from "../styles/light";
-import { Swap } from "../styles/Swap";
-import { useSequencedSwap } from "../styles/useSequencedSwap";
-import { worldCameraInsets, worldChromeDockVars, worldShellStyle } from "./worldChrome";
+import { worldShellStyle } from "./worldChrome";
 import {
   MARK_DEFAULTS,
   type MarkParams,
 } from "./marks";
 import { SHOW_DEFAULT, type ShowState } from "./show";
 import { ShowBand } from "./ShowBand";
-import {
-  emptySet,
-  fieldSize,
-  place,
-  dropMark,
-  type WorkingSet,
-} from "./workingSet";
+import { type WorkingSet } from "./workingSet";
 import {
   ANT_DEFAULTS,
   MATERIAL_DEFAULTS,
@@ -42,7 +34,6 @@ import {
   type MaterialTuning,
   type SelectionTreatment,
 } from "./WorldCanvas";
-import { SchemaCanvas } from "./SchemaCanvas";
 import { Spine } from "../construction/Spine";
 import { Docket } from "../construction/Docket";
 import { LabTransitions } from "./LabTransitions";
@@ -59,6 +50,9 @@ import {
   AssertionPanel,
   DemandPanel,
   ReferentPanel,
+  WorldPage,
+  readStoredWorldTheme,
+  type WorldPageTuning,
 } from "./WorldPage";
 import {
   createMockWorkingSet,
@@ -75,7 +69,6 @@ import {
   MOCK_RELATIONS,
 } from "./mockWorldData";
 import type { CameraInsets } from "./canvasFocus";
-import type { WorldRole, WorldTuple } from "../api/world";
 import "./WorldLabPage.css";
 import "../construction/ConstructionPage.css";
 import "./WorldPage.css";
@@ -124,7 +117,7 @@ export function WorldLabPage() {
   const [labTab, setLabTab] = useState<LabTab>("sandbox");
   const [componentSection, setComponentSection] =
     useState<ComponentSection>("marks");
-  const [mode, setMode] = useState<ThemeMode>("light");
+  const [mode, setMode] = useState<ThemeMode>(readStoredWorldTheme);
   const [speedFactor, setSpeedFactor] = useState<number>(1);
 
   /**
@@ -140,28 +133,11 @@ export function WorldLabPage() {
     [speedFactor],
   );
 
-  // Shared state for the full composite Sandbox
-  const [set, setSet] = useState<WorkingSet>(createMockWorkingSet);
-  const [selection, setSelection] = useState<CanvasSelection>({
-    kind: "assertion",
-    id: "assertion:temp_c300_bom_d",
-  });
-  const [hovered, setHovered] = useState<string | null>(null);
-  const [hoveredRelation, setHoveredRelation] = useState<string | null>(null);
-  const [focusedRelation, setFocusedRelation] = useState<string | null>(null);
-  const [vocabularyFocus, setVocabularyFocus] = useState(false);
-  /** What is drawn, which lags the intent by one absorb. See the World page. */
-  const focusView = useSequencedSwap(vocabularyFocus, motionPlans);
-  const focusDrawn = focusView.value;
-  const [namedAtRest, setNamedAtRest] = useState(false);
+  // Fixtures remain only for isolated component specimens. The sandbox below
+  // is the real WorldPage and owns its own live working set.
+  const [mockSet] = useState<WorkingSet>(createMockWorkingSet);
   const [show, setShow] = useState<ShowState>(SHOW_DEFAULT);
-  const [tablesOpen, setTablesOpen] = useState(true);
-  const [tablesWidth, setTablesWidth] = useState(360);
-  const [readerOpen, setReaderOpen] = useState(true);
-  const [readerWidth, setReaderWidth] = useState(320);
   const [activeTable, setActiveTable] = useState<"world" | "frontier" | "relation">("world");
-  const [tableRelation, setTableRelation] = useState<string>("temperature_compatible");
-  const [focus, setFocus] = useState<{ id: string; token: number } | null>(null);
   const [demoTableKind, setDemoTableKind] = useState<"world" | "frontier" | "relation" | "derivation">("world");
   const [demoPass, setDemoPass] = useState<string | null>(null);
   const [demoObligation, setDemoObligation] = useState<string | null>("ob:supply_c303");
@@ -202,6 +178,24 @@ export function WorldLabPage() {
    * and how much of the world stays readable where it does not.
    */
   const [lightField, setLightField] = useState<LightField>(DEFAULT_LIGHT_FIELD);
+  const worldTuning = useMemo<WorldPageTuning>(
+    () => ({
+      params: markKnobs,
+      ants: antTuning,
+      motion: motionPlans,
+      material: materialTuning,
+      selectionTreatment,
+      light: lightField,
+    }),
+    [
+      antTuning,
+      lightField,
+      markKnobs,
+      materialTuning,
+      motionPlans,
+      selectionTreatment,
+    ],
+  );
 
   /**
    * The specimen field: one mark of every construction origin, plus the three
@@ -226,35 +220,9 @@ export function WorldLabPage() {
    * look the product does not have, which is worse than having no lab.
    */
   const style = useMemo(
-    () => ({
-      ...worldShellStyle(mode, { focus: focusDrawn, motion: motionPlans }),
-      ...worldChromeDockVars({ tablesWidth, readerWidth }),
-    }),
-    [mode, motionPlans, focusDrawn, tablesWidth, readerWidth],
+    () => worldShellStyle(mode, { motion: motionPlans }),
+    [mode, motionPlans],
   );
-
-  const cameraInsets = useMemo<CameraInsets>(
-    () =>
-      worldCameraInsets({
-        focus: focusDrawn,
-        tablesOpen,
-        tablesWidth,
-        readerOpen,
-        readerWidth,
-      }),
-    [readerOpen, readerWidth, tablesOpen, tablesWidth, focusDrawn],
-  );
-
-  /**
-   * What each dock is *about*, which is what decides whether a change is a
-   * replacement or an update. Same keys the product builds, so the lab swaps
-   * on exactly the occasions the product swaps on.
-   */
-  const readerSubject = selection
-    ? `${selection.kind}:${selection.id}`
-    : "reader:empty";
-  const tableSubject =
-    activeTable === "relation" ? `relation:${tableRelation}` : activeTable;
 
   const tableChrome = useMemo<TableChrome>(
     () => ({
@@ -262,107 +230,14 @@ export function WorldLabPage() {
       hasFrontier: true,
       onWorld: () => setActiveTable("world"),
       onFrontier: () => setActiveTable("frontier"),
-      onClose: () => setTablesOpen(false),
+      onClose: () => {},
     }),
     [activeTable],
   );
 
-  const onPositions = useCallback(
-    (positions: Map<string, { x: number; y: number }>) => {
-      setSet((curr) => ({
-        ...curr,
-        positions: new Map([...curr.positions, ...positions]),
-      }));
-    },
-    [],
-  );
-
-  /**
-   * Take one named mark off the field.
-   *
-   * The canvas passes the mark that was right-clicked, which is not
-   * necessarily the selected one — the lab used to ignore the argument and
-   * drop `selection` instead, so right-clicking an unselected mark removed
-   * the wrong thing, and right-clicking with nothing selected did nothing at
-   * all. It read as a missing absorb; it was a missing argument.
-   */
-  const removeMark = useCallback((mark: NonNullable<CanvasSelection>) => {
-    setSet((curr) => dropMark(curr, mark.id));
-    setSelection((curr) => (curr?.id === mark.id ? null : curr));
-  }, []);
-
-  /** The reader's "take off the field", which acts on what is being read. */
-  const onRemove = useCallback(() => {
-    if (!selection) return;
-    removeMark(selection);
-  }, [removeMark, selection]);
-
-  // Actions for the Motion Director
-  const spawnNode = () => {
-    const id = `part:P${Math.floor(Math.random() * 900) + 100}`;
-    const label = `Transceiver ${id.slice(5)}`;
-    const roles: WorldRole[] = [
-      { name: "part", type: "REFERENT", referent: true, kinds: ["part"] },
-      { name: "bom_item", type: "REFERENT", referent: true, kinds: ["bom"] },
-    ];
-    const tuple: WorldTuple = {
-      assertion_id: `assertion:temp_${id}`,
-      origin: "DERIVED",
-      values: { part: id, bom_item: "bom:BOM-D" },
-    };
-    const labels = new Map([
-      [id, label],
-      ["bom:BOM-D", "BOM-D"],
-    ]);
-    setSet((curr) =>
-      place(curr, {
-        relation: "temperature_compatible",
-        mode: "DERIVED",
-        stale: false,
-        completeness: "COMPLETE",
-        roles,
-        tuple,
-        labels,
-      }),
-    );
-    setSelection({ kind: "assertion", id: tuple.assertion_id });
-  };
-
-  const despawnNode = () => {
-    const assertionIds = Array.from(set.assertions.keys());
-    if (assertionIds.length) {
-      const dropId = assertionIds[assertionIds.length - 1];
-      setSet((curr) => dropMark(curr, dropId));
-      if (selection?.id === dropId) setSelection(null);
-      return;
-    }
-    const bond = set.bonds[set.bonds.length - 1];
-    if (bond) {
-      setSet((curr) => dropMark(curr, bond.assertion_id));
-      if (selection?.id === bond.assertion_id) setSelection(null);
-      return;
-    }
-    const referentIds = Array.from(set.referents.keys());
-    if (referentIds.length) {
-      const dropId = referentIds[referentIds.length - 1];
-      setSet((curr) => dropMark(curr, dropId));
-      if (selection?.id === dropId) setSelection(null);
-    }
-  };
-
-  const resetCluster = () => {
-    setSet(createMockWorkingSet());
-    setSelection({ kind: "assertion", id: "assertion:temp_c300_bom_d" });
-  };
-
-  const clearField = () => {
-    setSet(emptySet());
-    setSelection(null);
-  };
-
   return (
     <main
-      className={`product-shell world world-lab${mode === "dark" ? " is-dark" : ""}${focusDrawn ? " is-focus" : ""}`}
+      className={`product-shell world world-lab${mode === "dark" ? " is-dark" : ""}`}
       style={style}
       data-mode={mode}
     >
@@ -371,217 +246,12 @@ export function WorldLabPage() {
         {/* ── LEFT: stage / canvas area ──────────────────────────────────────── */}
         <div className="lab-stage">
           {labTab === "sandbox" ? (
-            <>
-              {/* Live World Shell inside the stage */}
-              <div className="product-shell__body">
-                <div className="product-shell__scenes">
-                  <div className="product-shell__scene is-in">
-                    <div className="gm gm--product">
-                      <div className="gm__main">
-                        <OverlayPanel
-                          id="world-tables"
-                          side="left"
-                          title="Tables"
-                          open={tablesOpen}
-                          onToggle={setTablesOpen}
-                          handleWhen="closed"
-                          width={tablesWidth}
-                          onWidthChange={setTablesWidth}
-                          minWidth={280}
-                          maxWidth={520}
-                          reserve={readerOpen ? readerWidth : 0}
-                          flush
-                        >
-                          <Swap id={tableSubject} className="motion-swap--fill">
-                          {activeTable === "world" ? (
-                            <WorldTable
-                              overview={MOCK_OVERVIEW}
-                              relations={MOCK_RELATIONS}
-                              chrome={tableChrome}
-                              onOpen={(name) => {
-                                setTableRelation(name);
-                                setActiveTable("relation");
-                              }}
-                            />
-                          ) : activeTable === "frontier" ? (
-                            <FrontierTable
-                              demand={MOCK_DEMAND}
-                              relations={MOCK_RELATIONS}
-                              problem={null}
-                              present={new Set(["assertion:temp_c300_bom_d"])}
-                              chrome={tableChrome}
-                              onFocus={(obl) => setSelection({ kind: "demand", id: obl.key })}
-                            />
-                          ) : (
-                            <RelationTable
-                              relation={MOCK_RELATIONS.find((r) => r.name === tableRelation) ?? MOCK_RELATIONS[0]}
-                              present={new Set(["assertion:temp_c300_bom_d"])}
-                              onFocus={() => {}}
-                              onWiden={() => setActiveTable("world")}
-                              onDerivation={() => {}}
-                              chrome={tableChrome}
-                            />
-                          )}
-                          </Swap>
-                        </OverlayPanel>
-
-                        <div
-                          className={`gm__stage world__plane motion-layer motion-layer--fade${
-                            focusView.shown ? " is-in" : ""
-                          }`}
-                        >
-                          {fieldSize(set) > 0 ? (
-                            <div className={`world__layer${focusDrawn ? " is-parked" : ""}`}>
-                              <WorldCanvas
-                                set={set}
-                                mode={mode}
-                                params={markKnobs}
-                                hovered={hovered}
-                                selection={selection}
-                                show={show}
-                                focusId={focus?.id ?? null}
-                                focusToken={focus?.token ?? 0}
-                                insets={cameraInsets}
-                                ants={antTuning}
-                                motion={motionPlans}
-                                material={materialTuning}
-                                selectionTreatment={selectionTreatment}
-                                light={lightField}
-                                onHover={setHovered}
-                                onSelect={setSelection}
-                                onPositions={onPositions}
-                                onRemove={removeMark}
-                              />
-                            </div>
-                          ) : null}
-                          {/* Both canvases stay mounted, and the one that is not in
-                          view is parked rather than unmounted. Unmounting it
-                          destroyed a G6 graph on every focus toggle, which
-                          raced its own in-flight draw ("the graph instance has
-                          been destroyed") and meant the vocabulary had to be
-                          rebuilt before it could be shown — during the gap the
-                          swap leaves for exactly that. A vocabulary is bounded
-                          by the world's relations, not its field, so the
-                          second graph is cheap to simply keep. */}
-                          <div
-                            className={`world__layer${
-                              fieldSize(set) > 0 && !focusDrawn ? " is-parked" : ""
-                            }`}
-                          >
-                              <SchemaCanvas
-                                relations={MOCK_RELATIONS}
-                                mode={mode}
-                                namedAtRest={namedAtRest}
-                                inverted={focusDrawn}
-                                active={hoveredRelation ?? focusedRelation}
-                                selected={focusedRelation}
-                                focusId={focus?.id ?? null}
-                                focusToken={focus?.token ?? 0}
-                                insets={cameraInsets}
-                                onHover={setHoveredRelation}
-                                onSelect={setFocusedRelation}
-                              />
-                          </div>
-                        </div>
-
-                        <OverlayPanel
-                          id="world-reader"
-                          side="right"
-                          title="World reader"
-                          open={readerOpen}
-                          onToggle={setReaderOpen}
-                          handle={false}
-                          width={readerWidth}
-                          onWidthChange={setReaderWidth}
-                          reserve={tablesOpen ? tablesWidth : 34}
-                          flush
-                        >
-                          {/* `node-reader`, not `world-reader`. The reader's
-                              own tokens — `--reader-size`, `--reader-inset`,
-                              `--reader-leading` — are defined on this class,
-                              so the lab's copy left every one of them unset:
-                              the panel's h2 fell back to 16px in a product
-                              whose largest type is 12px, and the insets
-                              collapsed. It is the class the product uses. */}
-                          <div className="node-reader">
-                            <Swap id={readerSubject} className="motion-swap--fill">
-                            {selection?.kind === "assertion" ? (
-                              <AssertionPanel
-                                assertion={MOCK_ASSERTION_DERIVED}
-                                folding="open"
-                                onFold={() => {}}
-                                onTable={(rel) => { setTableRelation(rel); setActiveTable("relation"); setTablesOpen(true); }}
-                                onDerivation={() => {}}
-                                onRemove={onRemove}
-                                onClose={() => setReaderOpen(false)}
-                              />
-                            ) : selection?.kind === "demand" ? (
-                              <DemandPanel
-                                obligation={MOCK_OBLIGATION}
-                                demand={MOCK_DEMAND}
-                                roles={["new_part", "old_part", "context"]}
-                                onTable={(rel) => { setTableRelation(rel); setActiveTable("relation"); setTablesOpen(true); }}
-                                onRemove={onRemove}
-                                onClose={() => setReaderOpen(false)}
-                              />
-                            ) : (
-                              <ReferentPanel
-                                detail={MOCK_REFERENT}
-                                set={set}
-                                requests={new Map()}
-                                onExpand={() => {}}
-                                onRetract={() => {}}
-                                onTable={(rel) => { setTableRelation(rel); setActiveTable("relation"); setTablesOpen(true); }}
-                                onDrop={onRemove}
-                                onClose={() => setReaderOpen(false)}
-                              />
-                            )}
-                            </Swap>
-                          </div>
-                        </OverlayPanel>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {/* Instrument bar inside stage */}
-              <div className="product-shell__instrument" aria-label="Surface controls">
-                <div className={chromeClass("instrument")}>
-                  <div className="gm__choosing">
-                    <div className="instrument__group" role="group" aria-label="find">
-                      <Find
-                        directory={MOCK_DIRECTORY}
-                        onPick={(id, label) => {
-                          setSet((curr) => place(curr, {
-                            relation: "lifecycle", mode: "BASE", stale: false, completeness: null,
-                            roles: [
-                              { name: "part", type: "REFERENT", referent: true, kinds: ["part"] },
-                              { name: "status", type: "TEXT", referent: false },
-                            ],
-                            tuple: { assertion_id: `assertion:life_${id}`, origin: "MECHANICAL", values: { part: id, status: "active" } },
-                            labels: new Map([[id, label]]),
-                          }));
-                          setSelection({ kind: "referent", id });
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <ShowBand
-                    show={show}
-                    onShow={setShow}
-                    names={{
-                      on: namedAtRest,
-                      onToggle: () => setNamedAtRest((on) => !on),
-                    }}
-                  />
-                  <div className="instrument__group" role="group" aria-label="Field">
-                    <button type="button" onClick={() => setVocabularyFocus((f) => !f)}>
-                      {vocabularyFocus ? "field" : "vocabulary"}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </>
+            <WorldPage
+              tuning={worldTuning}
+              lab
+              mode={mode}
+              onModeChange={setMode}
+            />
           ) : labTab === "components" ? (
             /* Component stage: scrollable gallery of specimens */
             <div className="lab-component-stage">
@@ -663,7 +333,7 @@ export function WorldLabPage() {
                   </div>
                   <div className="reader-specimen-card">
                     <h4>Referent</h4>
-                    <ReferentPanel detail={MOCK_REFERENT} set={set} requests={new Map()} onExpand={() => {}} onRetract={() => {}} onTable={() => {}} onDrop={() => {}} onClose={() => {}} />
+                    <ReferentPanel detail={MOCK_REFERENT} set={mockSet} requests={new Map()} onExpand={() => {}} onRetract={() => {}} onTable={() => {}} onDrop={() => {}} onClose={() => {}} />
                   </div>
                   <div className="reader-specimen-card">
                     <h4>Obligation</h4>
@@ -883,50 +553,12 @@ export function WorldLabPage() {
             </div>
 
             <div className="ctrl-section">
-              <span className="ctrl-label">CANVAS</span>
-              <div className="ctrl-group">
-                <button type="button" onClick={spawnNode}>+ Node (Emit)</button>
-                <button type="button" onClick={despawnNode}>− Node (Absorb)</button>
-                <button type="button" onClick={resetCluster}>Reset cluster</button>
-                <button type="button" onClick={clearField}>Clear field</button>
-                <button type="button" data-active={vocabularyFocus} onClick={() => setVocabularyFocus((f) => !f)}>
-                  {vocabularyFocus ? "Field zoom" : "Schema zoom"}
-                </button>
-              </div>
-            </div>
-
-            <div className="ctrl-section">
-              <span className="ctrl-label">CAMERA</span>
-              <div className="ctrl-group">
-                <button type="button" onClick={() => setFocus({ id: "part:C300", token: Date.now() })}>Pan → part:C300</button>
-                <button type="button" onClick={() => setFocus({ id: "bom:BOM-D", token: Date.now() })}>Pan → BOM-D</button>
-              </div>
-            </div>
-
-            <div className="ctrl-section">
-              <span className="ctrl-label">SELECTION</span>
-              <div className="ctrl-group">
-                <button type="button" onClick={() => setSelection({ kind: "referent", id: "part:C300" })}>Disc (part:C300)</button>
-                <button type="button" onClick={() => setSelection({ kind: "assertion", id: "assertion:req_temp_bom_d" })}>Plate (req_temp)</button>
-                <button type="button" onClick={() => setSelection({ kind: "assertion", id: "assertion:temp_c300_bom_d" })}>Edge label</button>
-                <button type="button" onClick={() => setSelection(null)}>Clear selection</button>
-              </div>
-            </div>
-
-            <div className="ctrl-section">
-              <span className="ctrl-label">PANELS</span>
-              <div className="ctrl-group">
-                <button type="button" data-active={tablesOpen} onClick={() => setTablesOpen((o) => !o)}>
-                  {tablesOpen ? "Close Tables" : "Open Tables"}
-                </button>
-                <button type="button" data-active={readerOpen} onClick={() => setReaderOpen((o) => !o)}>
-                  {readerOpen ? "Close Reader" : "Open Reader"}
-                </button>
-              </div>
-              <div className="ctrl-sliders">
-                <LabRange label={`Tables width — ${tablesWidth}px`} min={260} max={520} value={tablesWidth} onChange={setTablesWidth} />
-                <LabRange label={`Reader width — ${readerWidth}px`} min={260} max={520} value={readerWidth} onChange={setReaderWidth} />
-              </div>
+              <span className="ctrl-label">FULL SYSTEM</span>
+              <p className="ctrl-prose">
+                This is the real World surface. Use its finder, tables and
+                reader to seed any referent, grow or retract neighborhoods,
+                fold assertions, inspect derivations and remove matter.
+              </p>
             </div>
 
           </>) : labTab === "components" ? (<>

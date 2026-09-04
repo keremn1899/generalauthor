@@ -3,6 +3,11 @@
 Status: trial. The shipping World canvas remains the control until the lab
 comparisons below are adjudicated.
 
+The trial runs inside the real World surface. The lab may tune canvas
+expression, but `WorldPage` continues to own API data, field memory, tables,
+search, selection, expansion, folding and removal. A reduced fixture sandbox
+is not an acceptable proxy for judging interaction laws.
+
 ## Aim
 
 The canvas should feel like a small coherent world, not like a diagram with
