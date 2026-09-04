@@ -252,7 +252,7 @@ html.is-panel-resizing .ov__resize::after {
 }
 
 .ov--handleless,
-.ov--handle-closed.is-open {
+.ov--handle-closed:not([data-handle-ready]) {
   --ov-handle: 0px;
 }
 
@@ -274,7 +274,7 @@ html.is-panel-resizing .ov__resize::after {
 /* Open, the body *is* the panel. The tab would sit on the map-facing edge
    repeating a close the body already has, so it collapses to nothing until
    the drawer is off-screen again. */
-.ov--handle-closed.is-open > .ov__handle {
+.ov--handle-closed:not([data-handle-ready]) > .ov__handle {
   visibility: hidden;
   width: 0;
   min-width: 0;

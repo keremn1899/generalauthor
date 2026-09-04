@@ -34,6 +34,18 @@
    duplicate two hundred lines down reinstated `background: var(--canvas)`. The
    reasoning lost to a paste. One authoring now (§2.13). */
 
+@property --chrome-inset-left {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+
+@property --chrome-inset-right {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+
 .product-shell.is-motion-ready {
   transition:
     --canvas var(--motion-emit-duration, 280ms)
@@ -47,12 +59,25 @@
     --matter-surface var(--motion-emit-duration, 280ms)
       var(--motion-emit-curve, ease-out),
     --matter-canvas var(--motion-emit-duration, 280ms)
-      var(--motion-emit-curve, ease-out);
+      var(--motion-emit-curve, ease-out),
+    --chrome-inset-left
+      var(--chrome-left-duration, var(--motion-absorb-duration, 240ms))
+      var(--chrome-left-curve, var(--motion-absorb-curve, ease-in)),
+    --chrome-inset-right
+      var(--chrome-right-duration, var(--motion-absorb-duration, 240ms))
+      var(--chrome-right-curve, var(--motion-absorb-curve, ease-in));
 }
 
 .product-shell.is-motion-ready.is-focus {
   transition-duration: var(--motion-absorb-duration, 190ms);
   transition-timing-function: var(--motion-absorb-curve, ease-in);
+}
+
+/* A drag is hold: the bar tracks the separator this frame, it does not ease
+   toward it. OverlayPanel already marks the document for the resize cursor. */
+html.is-panel-resizing .product-shell {
+  --chrome-left-duration: 0s;
+  --chrome-right-duration: 0s;
 }
 
 .product-shell {
@@ -67,11 +92,25 @@
   --shell-band: 60px;
   --instrument-band: 62px;
   /* The left/right gutter the floating rows keep clear of a drawer handle.
-     Both bars are centred, so this only bites on a narrow window — but that is
-     exactly where a centred bar can reach a handle. */
+     Both bars are centred on the *canvas remainder*, so this air sits inside
+     the dock insets rather than being the insets themselves. */
+  --chrome-air: 0.5rem;
   --chrome-gutter: calc(
-    var(--ov-float, 10px) + var(--ov-handle, 34px) + 0.5rem
+    var(--ov-float, 10px) + var(--ov-handle, 34px) + var(--chrome-air)
   );
+  /* Occupied by the left dock at rest: the closed TABLES handle, standing
+     `--ov-float` off the edge. Open width is `--chrome-dock-left`. */
+  --chrome-dock-left-closed: calc(
+    var(--ov-float, 10px) + var(--ov-handle, 34px)
+  );
+  --chrome-dock-left: var(--ov-preferred-width, 320px);
+  --chrome-dock-right: 0px;
+  --chrome-inset-left: var(--chrome-dock-left-closed);
+  --chrome-inset-right: 0px;
+  --chrome-left-duration: var(--motion-absorb-duration);
+  --chrome-left-curve: var(--motion-absorb-curve);
+  --chrome-right-duration: var(--motion-absorb-duration);
+  --chrome-right-curve: var(--motion-absorb-curve);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -87,6 +126,24 @@
    only tells the platform which form controls and scrollbars to draw. */
 .product-shell.is-dark {
   color-scheme: dark;
+}
+
+.product-shell:has(.ov--left.is-open) {
+  --chrome-inset-left: var(--chrome-dock-left);
+  --chrome-left-duration: var(--motion-emit-duration);
+  --chrome-left-curve: var(--motion-emit-curve);
+}
+
+.product-shell:has(.ov--right.is-open) {
+  --chrome-inset-right: var(--chrome-dock-right);
+  --chrome-right-duration: var(--motion-emit-duration);
+  --chrome-right-curve: var(--motion-emit-curve);
+}
+
+/* Vocabulary focus hides the left dock. The right dock is the reader, which
+   may still be absorbing, so it keeps displacing until `.is-open` leaves. */
+.product-shell.is-focus {
+  --chrome-inset-left: 0px;
 }
 
 /* ------------------------------------------------------------------ identity
@@ -107,17 +164,18 @@
   position: absolute;
   z-index: 40;
   top: 0;
-  right: 0;
-  left: 0;
+  right: var(--chrome-inset-right);
+  left: calc(var(--chrome-inset-left) + var(--shell-inset-left, 0px));
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: var(--shell-band);
-  /* Both gutters clear the same thing the surface's own instrument clears.
-     `--shell-inset-left` additionally clears whatever the surface below has
-     docked against that edge — the DNA workbench's parameter rail. */
-  padding: 0 var(--chrome-gutter) 0
-    calc(var(--shell-inset-left, 0px) + var(--chrome-gutter));
+  padding: 0 var(--chrome-air);
+  /* The band is a container so it can shed reporting cells when the docks
+     have left it too little canvas to hold them — not because the *window*
+     is narrow. */
+  container-type: inline-size;
+  container-name: chrome-band;
   /* Only the bar takes the pointer, so the surface can be dragged either side. */
   pointer-events: none;
 }
@@ -371,15 +429,16 @@
   position: absolute;
   /* Above OverlayPanel (30): the reader used to swallow the bar. */
   z-index: 40;
-  right: 0;
+  right: var(--chrome-inset-right);
   bottom: 0;
-  left: 0;
+  left: calc(var(--chrome-inset-left) + var(--shell-inset-left, 0px));
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: var(--instrument-band);
-  padding: 0 var(--chrome-gutter) 0
-    calc(var(--shell-inset-left, 0px) + var(--chrome-gutter));
+  padding: 0 var(--chrome-air);
+  container-type: inline-size;
+  container-name: chrome-band;
   pointer-events: none;
 }
 
@@ -523,16 +582,11 @@
 
 /* ---------------------------------------------------------------- responsive */
 
-@media (max-width: 680px) {
-  .product-shell__top,
-  .product-shell__instrument {
-    padding: 0 0.55rem;
-  }
-
-  /* The bars are centred and cannot spread, so on a narrow window they shed the
-     cells that only report a condition and keep the ones you act with. */
-  .product-shell__local,
-  .product-shell__workspace {
+/* Collapse from the remaining canvas, not the window. Opening a dock can
+   leave a 1440px window with a 600px strip; that strip is what the bars have
+   to fit, and a viewport query cannot see it. */
+@container chrome-band (max-width: 720px) {
+  .product-shell__local {
     display: none;
   }
 
@@ -540,6 +594,12 @@
   .product-shell__nav > a,
   .product-shell__utils > * {
     padding: 0 0.5rem;
+  }
+}
+
+@container chrome-band (max-width: 520px) {
+  .product-shell__workspace {
+    display: none;
   }
 }
 

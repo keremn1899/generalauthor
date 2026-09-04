@@ -340,6 +340,9 @@ export function shelfNode(
       fill: paint.ink,
       lineWidth: 0,
       labelText: "",
+      // Furniture is not a mark. It sits on the chip and would swallow the
+      // drag that belongs to the plate underneath.
+      pointerEvents: "none" as const,
     },
   };
 }
@@ -348,6 +351,8 @@ export type SpokeOptions = {
   role?: string;
   dotted?: boolean;
   showRole: boolean;
+  /** Placement along the spoke, 0 at the referent. */
+  labelPlacement?: number;
 };
 
 /** A referent filling a role in an assertion. */
@@ -384,6 +389,11 @@ export function spokeEdge(
       strokeOpacity: p.roleSpokeOpacity,
       lineCap: "round" as const,
       lineDash: options.dotted ? ([0, p.dottedGap] as [number, number]) : undefined,
+      // G6 draws edges after nodes, so a spoke through a disc sits on top of
+      // it. The stroke must not steal the drag; the role plate still takes
+      // the pointer when it is named.
+      pointerEvents: "none" as const,
+      labelPointerEvents: "auto" as const,
       labelText: options.showRole ? (options.role ?? "") : "",
       labelFontFamily: FONT_SANS_FAMILY,
       labelFontSize: p.roleLabelSize,
@@ -401,26 +411,122 @@ export function spokeEdge(
       labelBackgroundRadius: p.chipRadius,
       labelPadding: [p.chipPaddingY, p.chipPaddingX] as [number, number],
       labelAutoRotate: false,
-      labelPlacement: p.roleLabelAt,
+      // Same as a bond: G6's BaseEdge default is 4px of unstated X, which
+      // shoved every role name off the spoke and made two of them look like
+      // they were fighting the plate rather than sitting on their own lines.
+      labelOffsetX: 0,
+      labelOffsetY: 0,
+      labelPlacement: options.labelPlacement ?? p.roleLabelAt,
     },
   };
 }
 
-/** A plain filament, with or without its name showing. */
 /**
- * How far along a filament a leaning label sits.
+ * How far a bond's plate sits from the rim of the referent that named it.
  *
- * A bond names itself because a person is on one of its two ends, and the
- * label placed dead centre does not say which. Leaning it toward the mark
- * that caused it to speak does, and it separates the labels of two bonds that
- * share an end and would otherwise stack at their midpoints.
- *
- * Gentle on purpose: a disc is 90 across, and a label pulled much further
- * than this along a short filament ends up inside the mark it is leaning
- * toward.
+ * This is the product canvas's old, measured value. It is a distance rather
+ * than a percentage: a named bond must not drift toward the midpoint merely
+ * because somebody dragged its other end farther away. Very short filaments
+ * cap the distance before the midpoint so the plate never crosses sides.
  */
-export const BOND_LABEL_LEAN = 0.4;
+export const BOND_LABEL_ALONG_PX = 44;
 
+/** Air between stacked plates that share a filament, in graph pixels. */
+export const BOND_LABEL_STACK_GAP = 4;
+
+export type BondLabelLayout = {
+  placement: number;
+  offsetX: number;
+  offsetY: number;
+};
+
+/**
+ * Unit perpendicular of a filament, locked so +offset is screen-up.
+ *
+ * Without the lock, reversing source/target flipped the stack and a pair of
+ * plates would swap sides the moment someone hovered the other disc.
+ */
+export function stableFilamentNormal(
+  source: { x: number; y: number },
+  target: { x: number; y: number },
+): { x: number; y: number } {
+  const dx = target.x - source.x;
+  const dy = target.y - source.y;
+  const len = Math.hypot(dx, dy);
+  if (!(len > 1)) return { x: 0, y: -1 };
+  let nx = -dy / len;
+  let ny = dx / len;
+  if (ny > 0 || (ny === 0 && nx < 0)) {
+    nx = -nx;
+    ny = -ny;
+  }
+  return { x: nx, y: ny };
+}
+
+export function bondLabelAlong(
+  source: { x: number; y: number },
+  target: { x: number; y: number },
+  p: MarkParams,
+  fromRadius = p.discDiameter / 2,
+  toRadius = p.discDiameter / 2,
+): number {
+  const centres = Math.hypot(target.x - source.x, target.y - source.y);
+  const filament = Math.max(0, centres - fromRadius - toRadius);
+  return filament > 1 ? Math.min(BOND_LABEL_ALONG_PX, filament * 0.45) : 0;
+}
+
+export function bondLabelPlacement(
+  source: { x: number; y: number },
+  target: { x: number; y: number },
+  near: "source" | "target" | undefined,
+  p: MarkParams,
+  fromRadius = p.discDiameter / 2,
+  toRadius = p.discDiameter / 2,
+): number {
+  if (!near) return 0.5;
+  const centres = Math.hypot(target.x - source.x, target.y - source.y);
+  const filament = Math.max(0, centres - fromRadius - toRadius);
+  if (!(filament > 1)) return 0.5;
+  const along = bondLabelAlong(source, target, p, fromRadius, toRadius);
+  return near === "source" ? along / filament : 1 - along / filament;
+}
+
+/**
+ * Where a bond's plate sits: a fixed distance from the acted-on rim, and a
+ * perpendicular stack when several claims share the same two ends.
+ *
+ * G6's `labelOffsetX/Y` are graph-space, not rotated into the edge, so the
+ * stack has to be the filament's own normal expressed as those two numbers.
+ * Screen-Y was the first attempt and only looked right on a horizontal spoke.
+ */
+export function bondLabelLayout(
+  source: { x: number; y: number },
+  target: { x: number; y: number },
+  near: "source" | "target" | undefined,
+  stack: number,
+  p: MarkParams,
+  fromRadius = p.discDiameter / 2,
+  toRadius = p.discDiameter / 2,
+): BondLabelLayout {
+  const placement = bondLabelPlacement(
+    source,
+    target,
+    near,
+    p,
+    fromRadius,
+    toRadius,
+  );
+  const nudge = p.chipLabelNudge;
+  if (!stack) return { placement, offsetX: 0, offsetY: nudge };
+  const normal = stableFilamentNormal(source, target);
+  return {
+    placement,
+    offsetX: normal.x * stack,
+    offsetY: normal.y * stack + nudge,
+  };
+}
+
+/** A plain filament, with or without its name showing. */
 export function filamentEdge(
   id: string,
   source: string,
@@ -431,8 +537,13 @@ export function filamentEdge(
     label?: string;
     named: boolean;
     kind?: ChipKind;
-    /** Which end is being acted on, if either. */
-    lean?: "source" | "target";
+    /** Placement derived from a fixed physical distance, after clipping. */
+    labelPlacement?: number;
+    /** Graph-space shift of the plate, from `bondLabelLayout`. */
+    labelOffsetX?: number;
+    labelOffsetY?: number;
+    /** Parallel claims share one physical filament instead of darkening it. */
+    carriesFilament?: boolean;
   },
 ) {
   const named = options.named && Boolean(options.label);
@@ -441,42 +552,55 @@ export function filamentEdge(
   // or a crown from, so a derived or adjudicated binary is drawn detached —
   // see `schemaGraph`, which takes exactly that exception.
   const filled = isAuthored(options.kind);
+  const plateWidth = named && options.label ? chipWidth(options.label, p) : 0;
+  const carries = options.carriesFilament !== false;
   return {
     id,
+    type: "line",
     source,
     target,
     style: {
       stroke: paint.ink,
-      lineWidth: p.edgeWidth,
+      lineWidth: carries ? p.edgeWidth : 0,
       // See `spokeEdge` for why these are two channels: presence, then
       // material. A bond is quiet for the same reason a spoke is, and its
       // name is legible for the same reason.
       opacity: 1,
-      strokeOpacity: p.edgeOpacity,
+      strokeOpacity: carries ? p.edgeOpacity : 0,
+      // G6's theme adds 2px of hit padding. A ghost filament that still
+      // catches the pointer steals clicks from the plate sitting beside it.
+      increasedLineWidthForHitTesting: carries ? 2 : 0,
       lineCap: "round" as const,
+      // Same create-order problem as a spoke: the filament is drawn through
+      // the disc, on top of it. The line is not a grab target; the plate is.
+      pointerEvents: "none" as const,
+      labelPointerEvents: "auto" as const,
       labelText: named ? options.label : "",
       labelFontFamily: FONT_SANS_FAMILY,
       labelFontSize: p.chipLabelSize,
       labelFontWeight: p.chipLabelWeight,
       labelFill: filled ? paint.field : paint.ink,
-      // The plate on a filament is the same plate, so it is centred the same
-      // way — which, now that the nudge is gone, means the renderer's own
-      // placement plus the same human residue.
-      labelOffsetY: p.chipLabelNudge,
+      labelOffsetX: options.labelOffsetX ?? 0,
+      labelOffsetY: options.labelOffsetY ?? p.chipLabelNudge,
       labelOpacity: 1,
       labelBackground: named,
       labelBackgroundOpacity: 1,
       labelBackgroundFill: filled ? paint.ink : paint.chip,
       labelBackgroundLineWidth: 0,
       labelBackgroundRadius: p.chipRadius,
+      // Stated as the standing plate's size, not grown from the glyph box.
+      // G6's label background otherwise paints an 8px rule around a 7px
+      // word, and selection tracing a 10px chip around that is the box
+      // that never quite sat on the plate.
+      ...(named
+        ? {
+            labelBackgroundWidth: plateWidth,
+            labelBackgroundHeight: p.chipHeight,
+          }
+        : {}),
       labelPadding: [p.chipPaddingY, p.chipPaddingX] as [number, number],
       labelAutoRotate: false,
-      labelPlacement:
-        options.lean === "source"
-          ? BOND_LABEL_LEAN
-          : options.lean === "target"
-            ? 1 - BOND_LABEL_LEAN
-            : 0.5,
+      labelPlacement: options.labelPlacement ?? 0.5,
     },
   };
 }

@@ -53,8 +53,9 @@ import {
   useCallback,
   useEffect,
   useRef,
+  useState,
 } from "react";
-import { usePresence } from "../styles/usePresence";
+import { presenceLeaveMs, usePresence } from "../styles/usePresence";
 import "./OverlayPanel.css";
 
 export type OverlaySide = "left" | "right";
@@ -146,6 +147,28 @@ export function OverlayPanel({
    * after absorb. Same class toggle either way.
    */
   const { shown } = usePresence(open, { stayMounted: true });
+  /**
+   * A closed-only handle belongs to the settled closed drawer, not to the
+   * click that started closing it. Keep its width at zero through absorption
+   * and reveal it only once the body has reached the edge.
+   */
+  const [closedHandleReady, setClosedHandleReady] = useState(() => !open);
+  useEffect(() => {
+    if (handleWhen !== "closed") return;
+    if (open) {
+      setClosedHandleReady(false);
+      return;
+    }
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setClosedHandleReady(true);
+      return;
+    }
+    const timer = window.setTimeout(
+      () => setClosedHandleReady(true),
+      presenceLeaveMs(),
+    );
+    return () => window.clearTimeout(timer);
+  }, [handleWhen, open]);
 
   useEffect(() => {
     if (!open || !dismissOnOutsideClick) return;
@@ -199,6 +222,16 @@ export function OverlayPanel({
     // Straight to the property the width is derived from. Routing this through
     // React would re-render the canvas on every pointer frame.
     rootRef.current?.style.setProperty("--ov-preferred-width", `${next}px`);
+    // The identity and instrument bars are parked in the canvas remainder.
+    // Write the dock they are inset from on the same frame, or they lag the
+    // drawer by a React commit.
+    const shell = rootRef.current?.closest(".product-shell");
+    if (shell instanceof HTMLElement) {
+      shell.style.setProperty(
+        side === "right" ? "--chrome-dock-right" : "--chrome-dock-left",
+        `${next}px`,
+      );
+    }
   };
 
   const onResizePointerUp = (event: ReactPointerEvent<HTMLDivElement>) => {
@@ -217,6 +250,9 @@ export function OverlayPanel({
       className={`ov ov--${side}${shown ? " is-open" : ""}${
         handle ? "" : " ov--handleless"
       }${handle && handleWhen === "closed" ? " ov--handle-closed" : ""}`}
+      data-handle-ready={
+        handleWhen !== "closed" || (!open && closedHandleReady) ? true : undefined
+      }
       data-overlay={id}
       style={
         {
@@ -234,8 +270,16 @@ export function OverlayPanel({
           className="chrome ov__handle"
           aria-expanded={open}
           aria-controls={id}
-          aria-hidden={handleWhen === "closed" && open ? true : undefined}
-          tabIndex={handleWhen === "closed" && open ? -1 : undefined}
+          aria-hidden={
+            handleWhen === "closed" && (open || !closedHandleReady)
+              ? true
+              : undefined
+          }
+          tabIndex={
+            handleWhen === "closed" && (open || !closedHandleReady)
+              ? -1
+              : undefined
+          }
           onClick={() => onToggle(!open)}
           title={open ? `Hide ${title}` : `Show ${title}`}
         >

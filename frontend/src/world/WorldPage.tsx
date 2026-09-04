@@ -39,12 +39,13 @@ import {
   type WorldTuple,
 } from "../api/world";
 import { type ThemeMode } from "../styles/graphDna";
-import { still } from "../styles/motion";
+import { DEFAULT_MOTION_PLANS, still } from "../styles/motion";
 import { ShowBand } from "./ShowBand";
 import {
   TABLES_HANDLE_RESERVE,
   TABLES_WIDTH_DEFAULT,
   worldCameraInsets,
+  worldChromeDockVars,
   worldShellStyle,
 } from "./worldChrome";
 import { DerivationView } from "./DerivationView";
@@ -65,6 +66,7 @@ import { WorldCanvas, type CanvasSelection } from "./WorldCanvas";
 import type { CameraInsets } from "./canvasFocus";
 import {
   collapse,
+  retractExpansion,
   dropMark,
   emptySet,
   expand,
@@ -190,7 +192,7 @@ export function Find({
           open && matches[active] ? `${listId}-${active}` : undefined
         }
         value={query}
-        placeholder="Find a referent…"
+        placeholder="find..."
         onChange={(event) => {
           setQuery(event.target.value);
           setFocused(true);
@@ -509,6 +511,7 @@ export function ReferentPanel({
   set,
   requests,
   onExpand,
+  onRetract,
   onTable,
   onDrop,
   onClose,
@@ -517,6 +520,7 @@ export function ReferentPanel({
   set: WorkingSet;
   requests: ExpansionRequests;
   onExpand: (relation: string, count: number) => void;
+  onRetract: (relation: string) => void;
   onTable: (relation: string) => void;
   onDrop: () => void;
   onClose: () => void;
@@ -572,11 +576,13 @@ export function ReferentPanel({
                   <button
                     type="button"
                     className={already ? "is-selected" : undefined}
-                    disabled={already || loading}
+                    disabled={loading}
                     aria-busy={loading || undefined}
                     data-table={tooMany ? true : undefined}
                     onClick={() =>
-                      tooMany
+                      already
+                        ? onRetract(relation.name)
+                        : tooMany
                         ? onTable(relation.name)
                         : onExpand(relation.name, relation.count)
                     }
@@ -584,7 +590,7 @@ export function ReferentPanel({
                     <span className="gm__list-name">{relation.name}</span>
                     <span className="gm__list-meta">
                       {already
-                        ? "on field"
+                        ? "take off"
                         : loading
                           ? "loading"
                           : tooMany
@@ -715,6 +721,18 @@ export function WorldPage() {
   const expansionsInFlight = useRef(new Map<string, number>());
   /** Invalidates a response that lands after its field has been cleared. */
   const expansionGeneration = useRef(0);
+  /** A selected mark stays present while its ants collapse into it. */
+  const pendingRemovals = useRef(new Map<string, number>());
+
+  useEffect(
+    () => () => {
+      for (const timer of pendingRemovals.current.values()) {
+        window.clearTimeout(timer);
+      }
+      pendingRemovals.current.clear();
+    },
+    [],
+  );
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => setMotionReady(true));
@@ -920,6 +938,14 @@ export function WorldPage() {
     [relations, selection, set],
   );
 
+  const onRetract = useCallback(
+    (relation: string) => {
+      if (!selection || selection.kind !== "referent") return;
+      setSet((current) => retractExpansion(current, selection.id, relation));
+    },
+    [selection],
+  );
+
   const onPositions = useCallback((positions: Map<string, { x: number; y: number }>) => {
     setSet((current) => ({ ...current, positions: new Map([...current.positions, ...positions]) }));
   }, []);
@@ -1093,14 +1119,53 @@ export function WorldPage() {
 
   const removeMark = useCallback(
     (mark: NonNullable<CanvasSelection>) => {
+      if (pendingRemovals.current.has(mark.id)) return;
       if (mark.kind === "referent") {
         expansionGeneration.current += 1;
         expansionsInFlight.current.clear();
         dispatchExpansion({ type: "reset" });
       }
-      setSet((current) => dropMark(current, mark.id));
-      setSelection((current) => (current?.id === mark.id ? null : current));
-      setReaderOpen((open) => (selection?.id === mark.id ? false : open));
+      const finish = () => {
+        pendingRemovals.current.delete(mark.id);
+        setSet((current) => dropMark(current, mark.id));
+      };
+      const reduced = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      const wasSelected = selection?.id === mark.id;
+      if (reduced) {
+        setSelection((current) => (current?.id === mark.id ? null : current));
+        setReaderOpen((open) => (wasSelected ? false : open));
+        finish();
+        return;
+      }
+
+      const collapseRing = () => {
+        // First the fast ring contracts. Only after it has handed the outline
+        // back does the slower node mass begin its own absorption in G6.
+        setSelection((current) => (current?.id === mark.id ? null : current));
+        const timer = window.setTimeout(
+          finish,
+          DEFAULT_MOTION_PLANS.absorb.durationMs,
+        );
+        pendingRemovals.current.set(mark.id, timer);
+      };
+
+      if (wasSelected) {
+        setReaderOpen(false);
+        collapseRing();
+        return;
+      }
+
+      // A direct right-click may not have selected the node first. Give it a
+      // ring long enough to resolve, then run the same ring → mass sequence;
+      // otherwise only previously selected nodes would get the stated death.
+      setSelection(mark);
+      const timer = window.setTimeout(
+        collapseRing,
+        DEFAULT_MOTION_PLANS.emit.durationMs,
+      );
+      pendingRemovals.current.set(mark.id, timer);
     },
     [selection],
   );
@@ -1109,6 +1174,20 @@ export function WorldPage() {
     if (!selection) return;
     removeMark(selection);
   }, [removeMark, selection]);
+
+  const clearField = useCallback(() => {
+    for (const timer of pendingRemovals.current.values()) {
+      window.clearTimeout(timer);
+    }
+    pendingRemovals.current.clear();
+    expansionGeneration.current += 1;
+    expansionsInFlight.current.clear();
+    dispatchExpansion({ type: "reset" });
+    setSet(emptySet());
+    setSelection(null);
+    setHovered(null);
+    setReaderOpen(false);
+  }, []);
 
   const enterVocabulary = useCallback(() => {
     setVocabularyFocus(true);
@@ -1147,7 +1226,10 @@ export function WorldPage() {
    * below inherits from. `worldChrome.ts` owns the composition so the design
    * lab emits exactly the same tokens.
    */
-  const style = worldShellStyle(mode, { focus: focusDrawn });
+  const style = {
+    ...worldShellStyle(mode, { focus: focusDrawn }),
+    ...worldChromeDockVars({ tablesWidth, readerWidth }),
+  };
   const onField = fieldSize(set) > 0;
   const relation = relations.find((item) => item.name === focusedRelation) ?? null;
   /**
@@ -1217,12 +1299,20 @@ export function WorldPage() {
             {overview ? `rev ${overview.revision}` : ""}
           </span>
           {onField ? (
-            <span
+            <button
+              type="button"
               className="product-shell__local world__occupancy"
-              title="Marks currently on the field"
+              title="Clear the field"
+              aria-label={`Clear field, ${fieldSize(set)} of ${MAX_FIELD_NODES} on field`}
+              onClick={clearField}
             >
-              {fieldSize(set)}/{MAX_FIELD_NODES} on field
-            </span>
+              <span className="world__occupancy-count">
+                {fieldSize(set)}/{MAX_FIELD_NODES} on field
+              </span>
+              <span className="world__occupancy-clear" aria-hidden="true">
+                clear
+              </span>
+            </button>
           ) : null}
           <div className="product-shell__utils">
             <a
@@ -1240,7 +1330,7 @@ export function WorldPage() {
               }
               aria-label={`Use ${mode === "light" ? "dark" : "light"} appearance`}
             >
-              {mode === "light" ? "Dark" : "Light"}
+              {mode === "light" ? "dark" : "light"}
             </button>
           </div>
         </div>
@@ -1371,8 +1461,9 @@ export function WorldPage() {
                           hovered={hovered}
                           selection={selection}
                           show={show}
-                          focusId={focusDrawn ? null : focus?.id ?? null}
+                          focusId={focus?.id ?? null}
                           focusToken={focus?.token ?? 0}
+                          animateInitial={Boolean(selection)}
                           insets={cameraInsets}
                           onHover={setHovered}
                           onSelect={chooseFieldMark}
@@ -1493,6 +1584,7 @@ export function WorldPage() {
                       set={set}
                       requests={expansionRequests}
                       onExpand={onExpand}
+                      onRetract={onRetract}
                       onTable={(name) =>
                         showTable({
                           kind: "relation",
@@ -1608,7 +1700,7 @@ export function WorldPage() {
       <div className="product-shell__instrument" aria-label="Surface controls">
         <div className={chromeClass("instrument")}>
           <div className="gm__choosing">
-            <div className="instrument__group" role="group" aria-label="Find a referent">
+            <div className="instrument__group" role="group" aria-label="find">
               <Find directory={directory} onPick={onSeed} />
             </div>
           </div>
@@ -1624,16 +1716,11 @@ export function WorldPage() {
           {focusDrawn ? (
             <div className="instrument__group" role="group" aria-label="Clear focus">
               <button type="button" onClick={leaveVocabulary}>
-                Clear
+                clear
               </button>
             </div>
           ) : onField ? (
             <div className="instrument__group" role="group" aria-label="Field">
-              {selection ? (
-                <button type="button" onClick={onRemove}>
-                  remove
-                </button>
-              ) : null}
               <button type="button" onClick={enterVocabulary}>
                 vocabulary
               </button>

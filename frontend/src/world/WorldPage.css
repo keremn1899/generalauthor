@@ -8,13 +8,10 @@
   border-radius: 0;
 }
 
-/* Top bar monospace utilities: theme toggle and lab link */
-.world .product-shell__theme,
+/* Top bar monospace: the lab link. Theme is a verb in the bar, so it wears
+   the same face and size as every other cell. */
 .world .product-shell__lab-link {
   font-family: var(--font-mono);
-}
-
-.world .product-shell__lab-link {
   font-size: var(--type-label);
   letter-spacing: 0.05em;
   padding: 0 0.8rem;
@@ -31,11 +28,46 @@
   color: var(--ink);
 }
 
+/* Rest hugs find... the way every other cell hugs its word. Focus still
+   opens to 20ch; the emit lives on .nodefind__input in NodeFinder.css. */
+.world .instrument__group .nodefind__input {
+  width: 7ch;
+  padding: 0;
+}
+
+.world .instrument__group .nodefind__input:focus {
+  width: 20ch;
+  padding: 0 0.65rem;
+}
+
 .world-show__filter {
   --world-show-key-width: 12px;
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
+}
+
+.world-filter {
+  position: relative;
+}
+
+.world-filter__menu {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  z-index: 20;
+  display: none;
+  justify-content: center;
+  /* A pad, not a gap: the pointer has to be able to travel from the cell
+     onto the keys without leaving the hover target. */
+  padding-bottom: 0.4rem;
+  transform: translateX(-50%);
+  pointer-events: auto;
+}
+
+.world-filter.is-open .world-filter__menu {
+  display: flex;
 }
 
 .world-show__key {
@@ -185,8 +217,24 @@
   line-height: 1.35;
 }
 
-.world-reader__header .node-reader__kind {
-  margin-top: 0.05rem;
+.world-reader__header .node-reader__kind,
+.world-reader__header .panel__close {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  box-sizing: border-box;
+  height: calc(1.25 * var(--reader-size));
+  margin: 0;
+  padding: 0 0.34rem;
+  border: 1px solid var(--rule);
+  background: var(--canvas);
+  color: var(--ink-muted);
+  font-family: var(--font-sans);
+  font-size: var(--type-label);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-transform: lowercase;
 }
 
 .world-reader__content {
@@ -396,9 +444,37 @@
 }
 
 .product-shell__local.world__occupancy {
+  position: relative;
   text-transform: none;
   letter-spacing: 0.02em;
   font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.product-shell__local.world__occupancy:hover,
+.product-shell__local.world__occupancy:focus-visible {
+  color: var(--ink);
+}
+
+.world__occupancy-clear {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  text-transform: none;
+  letter-spacing: 0.01em;
+  font-variant-numeric: normal;
+}
+
+.world__occupancy:hover .world__occupancy-count,
+.world__occupancy:focus-visible .world__occupancy-count {
+  opacity: 0;
+}
+
+.world__occupancy:hover .world__occupancy-clear,
+.world__occupancy:focus-visible .world__occupancy-clear {
+  opacity: 1;
 }
 
 /* Tables overlay: same flush OverlayPanel as Graphs, filled by one table. */
@@ -805,13 +881,16 @@
    word: it is the same act on every panel, so it is the same control. */
 .panel__close {
   flex: 0 0 auto;
-  padding: 3px 9px;
+  box-sizing: border-box;
+  height: calc(1.25 * var(--reader-size));
+  padding: 0 0.34rem;
   border: 1px solid var(--rule);
   background: var(--canvas);
   color: var(--ink-muted);
-  font: inherit;
+  font-family: var(--font-sans);
   font-size: var(--type-label);
-  line-height: 1.35;
+  font-weight: 400;
+  line-height: 1;
   cursor: pointer;
   transition:
     color var(--motion-hold-duration, 90ms) linear,

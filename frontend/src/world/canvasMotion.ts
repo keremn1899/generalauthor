@@ -15,6 +15,8 @@
 import type { Graph } from "@antv/g6";
 import {
   DEFAULT_MOTION_PLANS,
+  NODE_BIRTH_PLAN,
+  NODE_COLLAPSE_PLAN,
   staggerWaves,
   type MotionPlan,
 } from "../styles/motion";
@@ -38,7 +40,7 @@ export type CanvasTransition = {
   diedEdgeIds: string[];
 };
 
-const LIFECYCLE_SCALE = 0.86;
+const LIFECYCLE_SCALE = 0.04;
 
 function scaledSize(size: unknown, scale: number): unknown {
   if (typeof size === "number") return size * scale;
@@ -145,6 +147,7 @@ export async function transitionCanvasData(
   graph: Graph,
   next: CanvasData,
   cancelled: () => boolean,
+  options: { stellarNodes?: boolean } = {},
 ): Promise<CanvasTransition> {
   const previousNodes = new Set(
     graph.getNodeData().map((node) => String(node.id)),
@@ -203,7 +206,13 @@ export async function transitionCanvasData(
   if (gone()) return { bornNodes, bornEdges, diedNodeIds, diedEdgeIds };
 
   if (dyingNodes.length || dyingEdges.length) {
-    graph.setOptions({ animation: planOptions(DEFAULT_MOTION_PLANS.absorb) });
+    graph.setOptions({
+      animation: planOptions(
+        options.stellarNodes
+          ? NODE_COLLAPSE_PLAN
+          : DEFAULT_MOTION_PLANS.absorb,
+      ),
+    });
     graph.setData({
       nodes: [...entering.nodes, ...dyingNodes],
       edges: [...entering.edges, ...dyingEdges],
@@ -240,7 +249,11 @@ export async function transitionCanvasData(
   if (gone()) return { bornNodes, bornEdges, diedNodeIds, diedEdgeIds };
 
   if (bornNodes.length || bornEdges.length) {
-    graph.setOptions({ animation: planOptions(DEFAULT_MOTION_PLANS.emit) });
+    graph.setOptions({
+      animation: planOptions(
+        options.stellarNodes ? NODE_BIRTH_PLAN : DEFAULT_MOTION_PLANS.emit,
+      ),
+    });
 
     const standing = new Map(
       next.nodes.filter((node) => previousNodes.has(node.id)).map((node) => [node.id, node]),

@@ -180,15 +180,60 @@ function trace(
       (typeof edge.style?.labelText === "string" ? edge.style.labelText : "") ||
       "";
     if (text) {
-      const midX = (from.x + to.x) / 2;
-      const midY = (from.y + to.y) / 2;
+      /**
+       * Prefer the background the renderer actually painted, in *world*
+       * space. `getRenderBounds` is already camera-projected; converting
+       * that through `getViewportByCanvas` was the box that drifted under
+       * pan and zoom. `getBounds` is the AABB the plate occupies in the
+       * graph, which is the same space node positions live in.
+       */
+      type Box = { min: [number, number]; max: [number, number] };
+      type Shaped = {
+        getShape?: (name: string) => Shaped | undefined;
+        getBounds?: () => Box | undefined;
+      };
+      const label = (
+        graph as unknown as {
+          context?: { element?: { getElement?: (id: string) => Shaped } };
+        }
+      ).context?.element?.getElement?.(target.id)?.getShape?.("label");
+      const painted =
+        label?.getShape?.("background")?.getBounds?.() ?? label?.getBounds?.();
+      const a = painted ? graph.getViewportByCanvas(painted.min) : null;
+      const b = painted ? graph.getViewportByCanvas(painted.max) : null;
+      if (a && b) {
+        const x0 = Math.min(a[0], b[0]);
+        const x1 = Math.max(a[0], b[0]);
+        const y0 = Math.min(a[1], b[1]);
+        const y1 = Math.max(a[1], b[1]);
+        const d = `M ${x0} ${y0} H ${x1} V ${y1} H ${x0} Z`;
+        const screenLength = 2 * (x1 - x0 + (y1 - y0));
+        return { d, screenLength, graphLength: screenLength / zoom };
+      }
+      /**
+       * Fallback: the same numbers the mark was authored from. G6 places
+       * the label along the rim-to-rim path, not centre-to-centre, and
+       * `labelOffsetX/Y` are graph-space.
+       */
+      const placement = Number(edge.style?.labelPlacement);
+      const ratio = Number.isFinite(placement) ? placement : 0.5;
+      const offsetX = Number(edge.style?.labelOffsetX) || 0;
+      const offsetY = Number(edge.style?.labelOffsetY) || 0;
+      const span = Math.hypot(to.x - from.x, to.y - from.y);
+      const trim = (MARK_DEFAULTS.discDiameter / 2) * zoom;
+      const usable = Math.max(1, span - trim * 2);
+      const ux = span > 0 ? (to.x - from.x) / span : 1;
+      const uy = span > 0 ? (to.y - from.y) / span : 0;
+      const rimX = from.x + ux * trim;
+      const rimY = from.y + uy * trim;
+      const centreX = rimX + ux * usable * ratio + offsetX * zoom;
+      const centreY = rimY + uy * usable * ratio + offsetY * zoom;
       const plateWidth = chipWidth(text, MARK_DEFAULTS) * zoom;
       const plateHeight = MARK_DEFAULTS.chipHeight * zoom;
-      // The same plate in its other position, so the same rule: on the edge.
-      const x0 = midX - plateWidth / 2;
-      const x1 = midX + plateWidth / 2;
-      const y0 = midY - plateHeight / 2;
-      const y1 = midY + plateHeight / 2;
+      const x0 = centreX - plateWidth / 2;
+      const x1 = centreX + plateWidth / 2;
+      const y0 = centreY - plateHeight / 2;
+      const y1 = centreY + plateHeight / 2;
       const d = `M ${x0} ${y0} H ${x1} V ${y1} H ${x0} Z`;
       const screenLength = 2 * (x1 - x0 + (y1 - y0));
       return { d, screenLength, graphLength: screenLength / zoom };
@@ -233,6 +278,7 @@ export function SelectionAnts({
   speed,
   color,
   motion,
+  arrivalDelay = 0,
   animated = true,
 }: {
   graph: Graph | null;
@@ -246,6 +292,8 @@ export function SelectionAnts({
   speed: number;
   color: string;
   motion: MotionPlans;
+  /** Hold a new ring until the mass it names has finished arriving. */
+  arrivalDelay?: number;
   animated?: boolean;
 }) {
   const [drawn, setDrawn] = useState<AntTarget | null>(target);
@@ -256,6 +304,7 @@ export function SelectionAnts({
   const dash = useRef(SOLID_DASH);
   /** How long the march holds off, so it starts when the morph has landed. */
   const march = useRef(0);
+  const revealAt = useRef(0);
   /** Armed by an arrival, fired by the first `update` that has a pattern. */
   const morph = useRef(false);
   /** So the tracing effect can reach the spine without depending on it. */
@@ -268,6 +317,7 @@ export function SelectionAnts({
 
   useEffect(() => {
     if (target) {
+      revealAt.current = performance.now() + Math.max(0, arrivalDelay);
       held.current = target;
       setDrawn(target);
       setArrival((run) => run + 1);
@@ -301,7 +351,7 @@ export function SelectionAnts({
     }
     // `key` stands for `target`: the object is rebuilt every render.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [animated, key, lifecycle, motion.absorb]);
+  }, [animated, arrivalDelay, key, lifecycle, motion.absorb]);
 
   useEffect(() => {
     if (!animated || !arrival || !key || !drawn) return;
@@ -309,7 +359,7 @@ export function SelectionAnts({
       lifecycle.play(
         motionPoseKeyframes({ scale: 0.86, opacity: 0 }, { scale: 1, opacity: 1 }),
         motion.emit,
-        { fill: "both" },
+        { fill: "both", delay: arrivalDelay },
       );
       return;
     }
@@ -337,7 +387,7 @@ export function SelectionAnts({
      */
     march.current = motion.emit.durationMs;
     morph.current = true;
-  }, [animated, arrival, drawn, key, lifecycle, motion.emit]);
+  }, [animated, arrival, arrivalDelay, drawn, key, lifecycle, motion.emit]);
 
   useEffect(() => {
     const path = pathRef.current;
@@ -347,6 +397,14 @@ export function SelectionAnts({
     let misses = 0;
     const update = () => {
       if (graph.destroyed) return;
+      if (performance.now() < revealAt.current) {
+        path.style.visibility = "hidden";
+        frame = requestAnimationFrame(() => {
+          frame = 0;
+          update();
+        });
+        return;
+      }
       let traced: Traced | null = null;
       try {
         traced = trace(graph, drawn, clearance);

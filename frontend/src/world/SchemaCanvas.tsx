@@ -172,6 +172,7 @@ export function SchemaCanvas({
       // Selection is the ants, over the canvas — see `WorldCanvas`. No halo
       // under the plate and no thickened filament: one fact, one mark.
       node: { style: { cursor: "grab" } },
+      edge: { style: { cursor: "default" } },
       behaviors: [
         "zoom-canvas",
         {
@@ -228,14 +229,7 @@ export function SchemaCanvas({
       if (draggingRef.current) return;
       onHoverRef.current(relationOf(idOf(event)));
     });
-    graph.on("edge:pointerenter", (event) => {
-      if (draggingRef.current) return;
-      onHoverRef.current(relationOf(idOf(event)));
-    });
     graph.on("node:pointerleave", () => {
-      if (!draggingRef.current) onHoverRef.current(null);
-    });
-    graph.on("edge:pointerleave", () => {
       if (!draggingRef.current) onHoverRef.current(null);
     });
     graph.on("node:click", (event) => {
@@ -329,27 +323,16 @@ export function SchemaCanvas({
     };
   }, [data]);
 
-  // The vocabulary refits when its stage changes size — unlike the field, it
-  // has no arrangement to preserve. Panel drags still only redraw on release:
-  // the fit is the settle, not a live chase of the handle.
+  // A renderer sized once is sized wrong the moment anything else on the page
+  // takes room. The camera is left alone — resizing is not new matter, and
+  // vocabulary then clear must return to the same view, not a fresh fit.
   useEffect(() => {
     const host = hostRef.current;
     if (!host) return;
-    return observeHostSize(host, (width, height, cause) => {
+    return observeHostSize(host, (width, height) => {
       const graph = graphRef.current;
       if (!graph) return;
       graph.resize(width, height);
-      const settle = DEFAULT_MOTION_PLANS.settle;
-      void graph
-        .fitView(
-          undefined,
-          cause === "release"
-            ? { duration: settle.durationMs, easing: settle.easing.g6 }
-            : false,
-        )
-        .catch((problem: unknown) => {
-          if (graphRef.current === graph) console.error(problem);
-        });
     });
   }, []);
 

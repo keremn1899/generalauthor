@@ -317,6 +317,14 @@ export function createMotionPlans(
 export const DEFAULT_MOTION_PLANS = createMotionPlans();
 
 /**
+ * A node is a mass, so its birth and collapse carry more inertia than chrome
+ * or a selection ring. These remain emit/absorb — the same laws and curves —
+ * with a larger canonical travel supplying the slower, stellar scale change.
+ */
+export const NODE_BIRTH_PLAN = createMotionPlan("emit", { travel: 18 });
+export const NODE_COLLAPSE_PLAN = createMotionPlan("absorb", { travel: 28 });
+
+/**
  * The same spine, slowed or sped for inspection.
  *
  * A design surface needs to be able to watch a 90ms `hold` happen. Scaling

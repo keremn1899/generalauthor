@@ -108,3 +108,23 @@ export function worldCameraInsets(dock: {
     bottom: FOCUS_PAD,
   };
 }
+
+/**
+ * CSS variables that park the identity and instrument bars in the canvas
+ * remainder, not the window.
+ *
+ * The bars read `--chrome-inset-*`, which CSS derives from these docks and
+ * from whether a drawer is still `.is-open` (including through absorb). That
+ * is how a closing TABLES panel keeps the bar displaced until the drawer has
+ * actually left, rather than overlapping for the duration of the slide.
+ */
+export function worldChromeDockVars(dock: {
+  tablesWidth: number;
+  readerWidth: number;
+}): CSSProperties {
+  return {
+    "--chrome-dock-left": `${dock.tablesWidth}px`,
+    "--chrome-dock-right": `${dock.readerWidth}px`,
+    "--chrome-dock-left-closed": `${TABLES_HANDLE_RESERVE}px`,
+  } as CSSProperties;
+}

@@ -13,10 +13,10 @@
  * the field never undoes the arrangement.
  *
  * **Naming lights the bond.** At rest the field is discs and filaments and no
- * words but the referents' own; hovering a mark names what it touches. That is
- * the ambient map's rule, and it is what keeps a neighborhood from reading as a
- * diagram — as well as the mechanical reason a chip is legible at all, since a
- * label takes the opacity of the element it belongs to.
+ * words but the referents' own; hovering a disc names what it touches. A
+ * filament is not a hover target — pointing at the line does not name it, does
+ * not light it, and does not change the cursor. Selection still names, because
+ * that is a choice rather than a pass.
  *
  * **Selection is marching ants.** The mark the reader is open on is ringed by
  * travelling beads — the product canvas's selection, brought over whole. It
@@ -33,6 +33,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Graph } from "@antv/g6";
 import {
+  BOND_LABEL_STACK_GAP,
+  bondLabelLayout,
   chipKindOf,
   chipNode,
   discNode,
@@ -50,7 +52,7 @@ import {
   GRAPH_DNA_THEME,
   type ThemeMode,
 } from "../styles/graphDna";
-import { DEFAULT_MOTION_PLANS } from "../styles/motion";
+import { DEFAULT_MOTION_PLANS, NODE_BIRTH_PLAN } from "../styles/motion";
 import {
   DEFAULT_LIGHT_FIELD,
   lift,
@@ -63,6 +65,7 @@ import { SelectionAnts, type AntTarget } from "../styles/SelectionAnts";
 import { observeHostSize } from "./canvasHost";
 import { transitionCanvasData, type CanvasDatum } from "./canvasMotion";
 import {
+  resolveFocusId,
   useFocusPan,
   type CameraInsets,
 } from "./canvasFocus";
@@ -120,55 +123,55 @@ function liveAt(
 }
 
 /**
- * Shift the camera just enough that new matter is on screen.
+ * The live G6 edge, for a drag that must restation a plate without a draw.
  *
- * Existing marks stay where they were put. `fitView` would reframe the whole
- * neighborhood, which is a translation of everything the person already
- * arranged even when their graph coordinates have not moved.
+ * `graph.draw()` would re-apply stored node data and snap the mark back under
+ * the pointer. The edge already re-strokes on each drag frame (`onframe`);
+ * writing the 44px placement onto that same object is what keeps the plate
+ * a fixed distance from the rim as the filament shortens.
  */
-async function panToReveal(
+function liveEdge(
+  graph: Graph,
+  id: string,
+): { parsedAttributes: Record<string, unknown>; onframe: () => void } | null {
+  const context = (
+    graph as unknown as {
+      context?: { element?: { getElement: (id: string) => unknown } };
+    }
+  ).context;
+  const el = context?.element?.getElement(id);
+  if (!el || typeof el !== "object") return null;
+  const edge = el as {
+    parsedAttributes?: Record<string, unknown>;
+    onframe?: () => void;
+  };
+  if (!edge.parsedAttributes || typeof edge.onframe !== "function") return null;
+  return { parsedAttributes: edge.parsedAttributes, onframe: edge.onframe };
+}
+
+/** Centre a restored field once, after the renderer has its real host size. */
+async function centreStandingField(
   graph: Graph,
   ids: string[],
   insets: CameraInsets,
 ) {
-  if (!ids.length) return;
   const [width, height] = graph.getSize();
-  if (!width || !height) return;
-  const padLeft = insets.left;
-  const padRight = insets.right;
-  const padTop = insets.top;
-  const padBottom = insets.bottom;
-  let minX = Infinity;
-  let minY = Infinity;
-  let maxX = -Infinity;
-  let maxY = -Infinity;
-  for (const id of ids) {
-    const position = graph.getElementPosition(id);
-    if (!position) continue;
-    const view = graph.getViewportByCanvas(position);
-    minX = Math.min(minX, view[0]);
-    minY = Math.min(minY, view[1]);
-    maxX = Math.max(maxX, view[0]);
-    maxY = Math.max(maxY, view[1]);
-  }
-  if (!Number.isFinite(minX)) return;
-  let dx = 0;
-  let dy = 0;
-  if (maxX - minX > width - padLeft - padRight) {
-    dx = (padLeft + width - padRight) / 2 - (minX + maxX) / 2;
-  } else if (minX < padLeft) {
-    dx = padLeft - minX;
-  } else if (maxX > width - padRight) {
-    dx = width - padRight - maxX;
-  }
-  if (maxY - minY > height - padTop - padBottom) {
-    dy = (padTop + height - padBottom) / 2 - (minY + maxY) / 2;
-  } else if (minY < padTop) {
-    dy = padTop - minY;
-  } else if (maxY > height - padBottom) {
-    dy = height - padBottom - maxY;
-  }
-  if (dx || dy) await graph.translateBy([dx, dy], false);
+  const points = ids
+    .map((id) => graph.getElementPosition(id))
+    .filter((point): point is [number, number, number] => Boolean(point))
+    .map((point) => graph.getViewportByCanvas(point));
+  if (!width || !height || !points.length) return;
+  const minX = Math.min(...points.map((point) => point[0]));
+  const maxX = Math.max(...points.map((point) => point[0]));
+  const minY = Math.min(...points.map((point) => point[1]));
+  const maxY = Math.max(...points.map((point) => point[1]));
+  await graph.translateBy(
+    [
+      (insets.left + width - insets.right - minX - maxX) / 2,
+      (insets.top + height - insets.bottom - minY - maxY) / 2,
+    ],
+    false,
+  );
 }
 
 /** What a selection ring is drawn with. The DNA is the product's answer. */
@@ -204,6 +207,7 @@ export function WorldCanvas({
   show,
   focusId = null,
   focusToken = 0,
+  animateInitial = false,
   insets,
   ants,
   light,
@@ -221,6 +225,8 @@ export function WorldCanvas({
   /** A table-named mark to fly to. Canvas clicks do not set this. */
   focusId?: string | null;
   focusToken?: number;
+  /** The first mark was just requested, rather than restored from memory. */
+  animateInitial?: boolean;
   insets: CameraInsets;
   /**
    * The selection ring's tuning, for a surface that exists to tune it.
@@ -249,8 +255,6 @@ export function WorldCanvas({
   const graphRef = useRef<Graph | null>(null);
   const insetsRef = useRef(insets);
   insetsRef.current = insets;
-  const focusIdRef = useRef(focusId);
-  focusIdRef.current = focusId;
   const [stageSize, setStageSize] = useState({ width: 0, height: 0 });
   /** Marks on the field last time we drew, so growth can be noticed. */
   const drawnRef = useRef(0);
@@ -267,6 +271,10 @@ export function WorldCanvas({
    */
   const setRef = useRef(set);
   setRef.current = set;
+  const paramsRef = useRef(params);
+  paramsRef.current = params;
+  const bondAnchorRef = useRef<string | null>(null);
+  const spokeSubjectRef = useRef<string | null>(null);
   const onHoverRef = useRef(onHover);
   const onSelectRef = useRef(onSelect);
   const onRemoveRef = useRef(onRemove);
@@ -282,6 +290,41 @@ export function WorldCanvas({
    * the mark under the hand.
    */
   const liveRef = useRef(set.positions);
+  /**
+   * The last referent the pointer actually entered.
+   *
+   * Crossing from a disc onto its bond label changes G6's hover subject to
+   * the assertion. The plate has to keep the disc it was named from, not
+   * whoever happens to be selected elsewhere, and not the midpoint G6 uses
+   * when no endpoint is supplied. Selection only wins at rest.
+   */
+  const labelAnchorRef = useRef<string | null>(null);
+  const latchedSelection = useRef<string | null>(null);
+  if (selection?.kind === "referent" && latchedSelection.current !== selection.id) {
+    latchedSelection.current = selection.id;
+    labelAnchorRef.current = selection.id;
+  }
+  if (hovered && set.referents.has(hovered)) {
+    labelAnchorRef.current = hovered;
+  }
+  const hoverReferent =
+    hovered && set.referents.has(hovered) ? hovered : null;
+  const selectedReferent =
+    selection?.kind === "referent" ? selection.id : null;
+  bondAnchorRef.current =
+    hoverReferent ?? labelAnchorRef.current ?? selectedReferent;
+  spokeSubjectRef.current =
+    hovered &&
+    (set.referents.has(hovered) ||
+      set.assertions.has(hovered) ||
+      set.demands.has(hovered))
+      ? hovered
+      : selection &&
+          (selection.kind === "referent" ||
+            selection.kind === "assertion" ||
+            selection.kind === "demand")
+        ? selection.id
+        : null;
   const draggingRef = useRef(false);
   /** Whether the renderer exists yet, so the ants can be handed a live graph. */
   const [ready, setReady] = useState(false);
@@ -351,8 +394,26 @@ export function WorldCanvas({
     for (const [mark, distance] of hops) {
       if (distance <= NAMING_HOPS) named.add(mark);
     }
+    /**
+     * Parallel claims on one filament name each other. Hovering one plate
+     * used to unname its neighbour (two hops via the disc), which collapsed
+     * the stack and sent the remaining plate onto the line — the jump that
+     * read as "back to centre".
+     */
+    const focus = hovered ?? selection?.id ?? null;
+    const origin = focus
+      ? set.bonds.find((bond) => bond.assertion_id === focus)
+      : undefined;
+    if (origin) {
+      for (const bond of set.bonds) {
+        const same =
+          (bond.source === origin.source && bond.target === origin.target) ||
+          (bond.source === origin.target && bond.target === origin.source);
+        if (same) named.add(bond.assertion_id);
+      }
+    }
     return named;
-  }, [hops]);
+  }, [hops, hovered, selection, set]);
 
   /**
    * What the ants trace: the geometry the selected mark already has.
@@ -389,37 +450,77 @@ export function WorldCanvas({
     return null;
   }, [params.discDiameter, selection, set, show]);
 
+  const selectionArrivalDelay = useMemo(() => {
+    const graph = graphRef.current;
+    if (!ready || !selection || !graph || graph.destroyed) return 0;
+    return resolveFocusId(graph, selection.id) ? 0 : NODE_BIRTH_PLAN.durationMs;
+  }, [ready, selection]);
+
   const data = useMemo(() => {
     const nodes: unknown[] = [];
     const edges: unknown[] = [];
-    const loneSeed =
-      set.referents.size === 1 &&
-      set.assertions.size === 0 &&
-      set.demands.size === 0 &&
-      set.bonds.length === 0;
     const paintFor = (_id: string, overlay = false) =>
       overlay ? provisional : paint;
     const named = (id: string) => Boolean(namedMarks?.has(id));
-    /** The mark a person is on, which is what a bond's label leans toward. */
-    const acted = hovered ?? (selection ? selection.id : null);
+    const hoverReferent =
+      hovered && set.referents.has(hovered) ? hovered : null;
+    const selectedReferent =
+      selection?.kind === "referent" ? selection.id : null;
+    const bondAnchor =
+      hoverReferent ?? labelAnchorRef.current ?? selectedReferent;
+    const spokeSubject =
+      hovered &&
+      (set.referents.has(hovered) ||
+        set.assertions.has(hovered) ||
+        set.demands.has(hovered))
+        ? hovered
+        : selection &&
+            (selection.kind === "referent" ||
+              selection.kind === "assertion" ||
+              selection.kind === "demand")
+          ? selection.id
+          : null;
     const at = (id: string, fallback: { x: number; y: number } = { x: 0, y: 0 }) =>
       liveAt(liveRef.current, set.positions, id, fallback);
+    const visibleBonds = set.bonds.filter(
+      (bond) =>
+        set.referents.has(bond.source) &&
+        set.referents.has(bond.target) &&
+        assertionShown(bond.origin, bond.mode, show),
+    );
+    /**
+     * One stroke per pair of ends. Several claims between the same two
+     * referents are still one filament — two wires would invent a geometry
+     * the tuples do not have. The plates of those claims share the 44px
+     * station and step along the filament's normal so each stays selectable.
+     */
+    const byEndpoints = new Map<string, typeof visibleBonds>();
+    for (const bond of visibleBonds) {
+      const key = [bond.source, bond.target].sort().join("\u0000");
+      const group = byEndpoints.get(key) ?? [];
+      group.push(bond);
+      byEndpoints.set(key, group);
+    }
+    const stackByAssertion = new Map<string, number>();
+    const filamentCarrier = new Set<string>();
+    for (const unsorted of byEndpoints.values()) {
+      const group = [...unsorted].sort((a, b) =>
+        `${a.relation}\u0000${a.assertion_id}`.localeCompare(
+          `${b.relation}\u0000${b.assertion_id}`,
+        ),
+      );
+      if (group[0]) filamentCarrier.add(group[0].assertion_id);
+      const gap = params.chipHeight + BOND_LABEL_STACK_GAP;
+      const middle = (group.length - 1) / 2;
+      group.forEach((bond, index) => {
+        stackByAssertion.set(bond.assertion_id, (index - middle) * gap);
+      });
+    }
 
     for (const referent of set.referents.values()) {
       const stored = at(referent.id);
-      // Give a new seed a real field position instead of distorting the camera
-      // with a single-element fit. Once moved, its stored position wins and
-      // this convenience disappears.
-      const placed =
-        loneSeed &&
-        stored.x === 0 &&
-        stored.y === 0 &&
-        stageSize.width &&
-        stageSize.height
-          ? { x: stageSize.width / 2, y: stageSize.height / 2 }
-          : stored;
       nodes.push(
-        discNode(referent.id, placed.x, placed.y, referent.label, paintFor(referent.id), params),
+        discNode(referent.id, stored.x, stored.y, referent.label, paintFor(referent.id), params),
       );
     }
 
@@ -471,6 +572,12 @@ export function WorldCanvas({
       }
       assertion.spokes.forEach((spoke, index) => {
         if (!set.referents.has(spoke.id)) return;
+        const near =
+          spokeSubject === spoke.id
+            ? "source"
+            : spokeSubject === assertion.assertion_id
+              ? "target"
+              : undefined;
         edges.push(
           spokeEdge(
             `${assertion.assertion_id}:${index}`,
@@ -478,7 +585,19 @@ export function WorldCanvas({
             assertion.assertion_id,
             paintFor(assertion.assertion_id, overlay),
             params,
-            { role: spoke.role, showRole: named(assertion.assertion_id) },
+            {
+              role: spoke.role,
+              showRole: named(assertion.assertion_id),
+              labelPlacement: bondLabelLayout(
+                at(spoke.id),
+                at(assertion.assertion_id),
+                near,
+                0,
+                params,
+                params.discDiameter / 2,
+                params.chipHeight / 2,
+              ).placement,
+            },
           ),
         );
       });
@@ -505,6 +624,12 @@ export function WorldCanvas({
       );
       demand.spokes.forEach((spoke, index) => {
         if (!set.referents.has(spoke.id)) return;
+        const near =
+          spokeSubject === spoke.id
+            ? "source"
+            : spokeSubject === demand.key
+              ? "target"
+              : undefined;
         edges.push(
           spokeEdge(
             `${demand.key}:${index}`,
@@ -512,7 +637,20 @@ export function WorldCanvas({
             demand.key,
             paintFor(demand.key),
             params,
-            { role: spoke.role, showRole: named(demand.key), dotted: true },
+            {
+              role: spoke.role,
+              showRole: named(demand.key),
+              dotted: true,
+              labelPlacement: bondLabelLayout(
+                at(spoke.id),
+                at(demand.key),
+                near,
+                0,
+                params,
+                params.discDiameter / 2,
+                params.chipHeight / 2,
+              ).placement,
+            },
           ),
         );
       });
@@ -522,6 +660,19 @@ export function WorldCanvas({
       if (!set.referents.has(bond.source) || !set.referents.has(bond.target)) continue;
       if (!assertionShown(bond.origin, bond.mode, show)) continue;
       const overlay = unsettled(bond.stale, bond.completeness);
+      const near =
+        bondAnchor === bond.source
+          ? "source"
+          : bondAnchor === bond.target
+            ? "target"
+            : undefined;
+      const layout = bondLabelLayout(
+        at(bond.source),
+        at(bond.target),
+        near,
+        stackByAssertion.get(bond.assertion_id) ?? 0,
+        params,
+      );
       edges.push(
         filamentEdge(
           bondElementId(bond.assertion_id),
@@ -533,12 +684,10 @@ export function WorldCanvas({
             label: bond.relation,
             named: named(bond.assertion_id),
             kind: chipKindOf(bond.origin),
-            lean:
-              acted === bond.source
-                ? "source"
-                : acted === bond.target
-                  ? "target"
-                  : undefined,
+            labelPlacement: layout.placement,
+            labelOffsetX: layout.offsetX,
+            labelOffsetY: layout.offsetY,
+            carriesFilament: filamentCarrier.has(bond.assertion_id),
           },
         ),
       );
@@ -617,7 +766,6 @@ export function WorldCanvas({
     incident,
     namedMarks,
     show,
-    stageSize,
   ]);
 
   /** Dragged positions belong to the person, so they are read back before use. */
@@ -647,7 +795,7 @@ export function WorldCanvas({
     host.addEventListener("contextmenu", blockMenu);
     const graph = new Graph({
       container: host,
-      data: data as never,
+      data: (animateInitial ? { nodes: [], edges: [] } : data) as never,
       animation: false,
       padding: 60,
       // Transparent on purpose. G6's `setOptions({ background })` stores the
@@ -660,6 +808,7 @@ export function WorldCanvas({
       // halo under a disc — two marks for one fact, and the quieter one was
       // the only one anybody read.
       node: { style: { cursor: "grab" } },
+      edge: { style: { cursor: "default" } },
       behaviors: [
         "zoom-canvas",
         {
@@ -720,6 +869,121 @@ export function WorldCanvas({
       if (Object.keys(moved).length) {
         void graph.translateElementTo(moved, false);
       }
+      relayoutIncidentLabels(id);
+    };
+
+    const relayoutIncidentLabels = (nodeId: string) => {
+      const current = setRef.current;
+      const p = paramsRef.current;
+      const at = (id: string) => {
+        const here = graph.getElementPosition(id);
+        return here
+          ? { x: here[0], y: here[1] }
+          : liveAt(liveRef.current, current.positions, id);
+      };
+      const station = (elementId: string, layout: ReturnType<typeof bondLabelLayout>) => {
+        const edge = liveEdge(graph, elementId);
+        if (!edge) return;
+        edge.parsedAttributes.labelPlacement = layout.placement;
+        edge.parsedAttributes.labelOffsetX = layout.offsetX;
+        edge.parsedAttributes.labelOffsetY = layout.offsetY;
+        edge.onframe();
+      };
+      const visibleBonds = current.bonds.filter(
+        (bond) =>
+          current.referents.has(bond.source) &&
+          current.referents.has(bond.target) &&
+          (bond.source === nodeId || bond.target === nodeId),
+      );
+      const byEndpoints = new Map<string, typeof visibleBonds>();
+      for (const bond of visibleBonds) {
+        const key = [bond.source, bond.target].sort().join("\u0000");
+        const group = byEndpoints.get(key) ?? [];
+        group.push(bond);
+        byEndpoints.set(key, group);
+      }
+      const stackByAssertion = new Map<string, number>();
+      for (const unsorted of byEndpoints.values()) {
+        const group = [...unsorted].sort((a, b) =>
+          `${a.relation}\u0000${a.assertion_id}`.localeCompare(
+            `${b.relation}\u0000${b.assertion_id}`,
+          ),
+        );
+        const gap = p.chipHeight + BOND_LABEL_STACK_GAP;
+        const middle = (group.length - 1) / 2;
+        group.forEach((bond, index) => {
+          stackByAssertion.set(bond.assertion_id, (index - middle) * gap);
+        });
+      }
+      const bondAnchor = bondAnchorRef.current;
+      for (const bond of visibleBonds) {
+        const near =
+          bondAnchor === bond.source
+            ? "source"
+            : bondAnchor === bond.target
+              ? "target"
+              : undefined;
+        station(
+          bondElementId(bond.assertion_id),
+          bondLabelLayout(
+            at(bond.source),
+            at(bond.target),
+            near,
+            stackByAssertion.get(bond.assertion_id) ?? 0,
+            p,
+          ),
+        );
+      }
+      const spokeSubject = spokeSubjectRef.current;
+      const stationSpoke = (
+        elementId: string,
+        fromId: string,
+        toId: string,
+        subjectId: string,
+      ) => {
+        const near =
+          spokeSubject === fromId
+            ? "source"
+            : spokeSubject === subjectId
+              ? "target"
+              : undefined;
+        station(
+          elementId,
+          bondLabelLayout(
+            at(fromId),
+            at(toId),
+            near,
+            0,
+            p,
+            p.discDiameter / 2,
+            p.chipHeight / 2,
+          ),
+        );
+      };
+      for (const assertion of current.assertions.values()) {
+        assertion.spokes.forEach((spoke, index) => {
+          if (!current.referents.has(spoke.id)) return;
+          if (spoke.id !== nodeId && assertion.assertion_id !== nodeId) return;
+          stationSpoke(
+            `${assertion.assertion_id}:${index}`,
+            spoke.id,
+            assertion.assertion_id,
+            assertion.assertion_id,
+          );
+        });
+      }
+      for (const demand of current.demands.values()) {
+        demand.spokes.forEach((spoke, index) => {
+          if (!current.referents.has(spoke.id)) return;
+          if (spoke.id !== nodeId && demand.key !== nodeId) return;
+          stationSpoke(
+            `${demand.key}:${index}`,
+            spoke.id,
+            demand.key,
+            demand.key,
+          );
+        });
+      }
     };
 
     let ignoreClickUntil = 0;
@@ -747,9 +1011,7 @@ export function WorldCanvas({
     };
 
     graph.on("node:pointerenter", (event) => hovering(subject(idOf(event))));
-    graph.on("edge:pointerenter", (event) => hovering(markOf(idOf(event))));
     graph.on("node:pointerleave", () => hovering(null));
-    graph.on("edge:pointerleave", () => hovering(null));
     graph.on("node:click", (event) => {
       if (performance.now() < ignoreClickUntil) return;
       const id = subject(idOf(event));
@@ -799,7 +1061,11 @@ export function WorldCanvas({
 
     void graph
       .render()
-      .then(() => {
+      .then(async () => {
+        if (graphRef.current !== graph) return;
+        if (!animateInitial && data.nodes.length) {
+          if (data.nodes.length === 1) await graph.zoomTo(1, { duration: 0 });
+        }
         if (graphRef.current === graph) setReady(true);
       })
       .catch((problem: unknown) => {
@@ -825,7 +1091,13 @@ export function WorldCanvas({
 
   useEffect(() => {
     const graph = graphRef.current;
-    if (!graph || draggingRef.current) return;
+    if (
+      !ready ||
+      !stageSize.width ||
+      !stageSize.height ||
+      !graph ||
+      draggingRef.current
+    ) return;
     let cancelled = false;
     const next = {
       nodes: data.nodes as CanvasDatum[],
@@ -834,22 +1106,40 @@ export function WorldCanvas({
 
     void (async () => {
       try {
-        const transition = await transitionCanvasData(
+        /**
+         * Restored data was already rendered by the constructor. Do not send
+         * it through a no-op animated draw before centring: G6 completes that
+         * camera-affecting frame after the draw promise and used to undo the
+         * vertical half of the centre operation.
+         */
+        if (!animateInitial && drawnRef.current === 0 && next.nodes.length) {
+          drawnRef.current = next.nodes.length;
+          if (next.nodes.length === 1) {
+            await graph.zoomTo(1, { duration: 0 });
+          }
+          await centreStandingField(
+            graph,
+            next.nodes
+              .map((node) => node.id)
+              .filter((id) => !isDecoration(id)),
+            insetsRef.current,
+          );
+          return;
+        }
+        await transitionCanvasData(
           graph,
           next,
           () => cancelled || graphRef.current !== graph,
+          { stellarNodes: true },
         );
         if (cancelled || graphRef.current !== graph) return;
         const count = next.nodes.length;
         const grew = count > drawnRef.current;
         drawnRef.current = count;
+        /* A first seed still needs a unit zoom. Growth from Expand through
+           must not pan: new marks appear where they were placed. */
         if (grew && count === 1) {
           await graph.zoomTo(1, { duration: 0 });
-        } else if (grew && !focusIdRef.current) {
-          const reveal = transition.bornNodes
-            .map((node) => node.id)
-            .filter((id) => !isDecoration(id));
-          await panToReveal(graph, reveal, insetsRef.current);
         }
       } catch (problem: unknown) {
         if (graphRef.current === graph) console.error(problem);
@@ -858,7 +1148,7 @@ export function WorldCanvas({
     return () => {
       cancelled = true;
     };
-  }, [data]);
+  }, [animateInitial, data, ready, stageSize.height, stageSize.width]);
 
   // A renderer sized once is sized wrong the moment anything else on the page
   // takes room. The camera is left alone — resizing is not new matter.
@@ -894,6 +1184,7 @@ export function WorldCanvas({
         speed={tuning.animated ? tuning.speed : 0}
         color={paint.ink}
         motion={DEFAULT_MOTION_PLANS}
+        arrivalDelay={selectionArrivalDelay}
         animated={tuning.animated}
       />
     </div>

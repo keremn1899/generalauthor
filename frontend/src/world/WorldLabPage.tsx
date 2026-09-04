@@ -20,7 +20,7 @@ import {
 } from "../styles/light";
 import { Swap } from "../styles/Swap";
 import { useSequencedSwap } from "../styles/useSequencedSwap";
-import { worldCameraInsets, worldShellStyle } from "./worldChrome";
+import { worldCameraInsets, worldChromeDockVars, worldShellStyle } from "./worldChrome";
 import {
   MARK_DEFAULTS,
   type MarkParams,
@@ -215,8 +215,11 @@ export function WorldLabPage() {
    * look the product does not have, which is worse than having no lab.
    */
   const style = useMemo(
-    () => worldShellStyle(mode, { focus: focusDrawn, motion: motionPlans }),
-    [mode, motionPlans, focusDrawn],
+    () => ({
+      ...worldShellStyle(mode, { focus: focusDrawn, motion: motionPlans }),
+      ...worldChromeDockVars({ tablesWidth, readerWidth }),
+    }),
+    [mode, motionPlans, focusDrawn, tablesWidth, readerWidth],
   );
 
   const cameraInsets = useMemo<CameraInsets>(
@@ -425,7 +428,7 @@ export function WorldLabPage() {
                                 hovered={hovered}
                                 selection={selection}
                                 show={show}
-                                focusId={focusDrawn ? null : focus?.id ?? null}
+                                focusId={focus?.id ?? null}
                                 focusToken={focus?.token ?? 0}
                                 insets={cameraInsets}
                                 light={lightField}
@@ -512,6 +515,7 @@ export function WorldLabPage() {
                                 set={set}
                                 requests={new Map()}
                                 onExpand={() => {}}
+                                onRetract={() => {}}
                                 onTable={(rel) => { setTableRelation(rel); setActiveTable("relation"); setTablesOpen(true); }}
                                 onDrop={onRemove}
                                 onClose={() => setReaderOpen(false)}
@@ -529,7 +533,7 @@ export function WorldLabPage() {
               <div className="product-shell__instrument" aria-label="Surface controls">
                 <div className={chromeClass("instrument")}>
                   <div className="gm__choosing">
-                    <div className="instrument__group" role="group" aria-label="Find a referent">
+                    <div className="instrument__group" role="group" aria-label="find">
                       <Find
                         directory={MOCK_DIRECTORY}
                         onPick={(id, label) => {
@@ -556,7 +560,6 @@ export function WorldLabPage() {
                     }}
                   />
                   <div className="instrument__group" role="group" aria-label="Field">
-                    {selection ? <button type="button" onClick={onRemove}>remove</button> : null}
                     <button type="button" onClick={() => setVocabularyFocus((f) => !f)}>
                       {vocabularyFocus ? "field" : "vocabulary"}
                     </button>
@@ -639,7 +642,7 @@ export function WorldLabPage() {
                   </div>
                   <div className="reader-specimen-card">
                     <h4>Referent</h4>
-                    <ReferentPanel detail={MOCK_REFERENT} set={set} requests={new Map()} onExpand={() => {}} onTable={() => {}} onDrop={() => {}} onClose={() => {}} />
+                    <ReferentPanel detail={MOCK_REFERENT} set={set} requests={new Map()} onExpand={() => {}} onRetract={() => {}} onTable={() => {}} onDrop={() => {}} onClose={() => {}} />
                   </div>
                   <div className="reader-specimen-card">
                     <h4>Obligation</h4>
@@ -657,7 +660,7 @@ export function WorldLabPage() {
                 <div className="lab-instrument-demo">
                   <div className={chromeClass("instrument")}>
                     <div className="gm__choosing">
-                      <div className="instrument__group" role="group" aria-label="Find a referent">
+                      <div className="instrument__group" role="group" aria-label="find">
                         <Find directory={MOCK_DIRECTORY} onPick={() => {}} />
                       </div>
                     </div>

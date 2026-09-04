@@ -201,6 +201,70 @@ export function expansionOnField(
   return expansionTupleCount(set, referentId, relation) >= expectedCount;
 }
 
+/**
+ * Take one completed expansion back off the field.
+ *
+ * The route is identified by the same anchor/relation pair that added it. Its
+ * tuples leave; referents that arrived through that anchor leave only when no
+ * remaining tuple or obligation still uses them. This makes the control a
+ * genuine toggle without deleting shared matter another expansion owns.
+ */
+export function retractExpansion(
+  set: WorkingSet,
+  referentId: string,
+  relation: string,
+): WorkingSet {
+  const assertionIds = new Set<string>();
+  for (const assertion of set.assertions.values()) {
+    if (
+      assertion.relation === relation &&
+      assertion.spokes.some((spoke) => spoke.id === referentId)
+    ) {
+      assertionIds.add(assertion.assertion_id);
+    }
+  }
+  for (const bond of set.bonds) {
+    if (
+      bond.relation === relation &&
+      bond.spokes.some((spoke) => spoke.id === referentId)
+    ) {
+      assertionIds.add(bond.assertion_id);
+    }
+  }
+  const key = expansionKey(referentId, relation);
+  if (!assertionIds.size && !set.expanded.has(key)) return set;
+
+  const next = clone(set);
+  for (const id of assertionIds) {
+    next.assertions.delete(id);
+    next.positions.delete(id);
+  }
+  next.bonds = next.bonds.filter(
+    (bond) => !assertionIds.has(bond.assertion_id),
+  );
+  next.expanded.delete(key);
+
+  const used = new Set<string>();
+  for (const assertion of next.assertions.values()) {
+    assertion.spokes.forEach((spoke) => used.add(spoke.id));
+  }
+  for (const bond of next.bonds) {
+    bond.spokes.forEach((spoke) => used.add(spoke.id));
+  }
+  for (const demand of next.demands.values()) {
+    demand.spokes.forEach((spoke) => used.add(spoke.id));
+  }
+  for (const [id, referent] of next.referents) {
+    if (id === referentId || referent.via !== referentId || used.has(id)) continue;
+    next.referents.delete(id);
+    next.positions.delete(id);
+    for (const expanded of [...next.expanded]) {
+      if (expanded.startsWith(`${id}\u0000`)) next.expanded.delete(expanded);
+    }
+  }
+  return next;
+}
+
 /** Put the first referent on an empty field, at the middle. */
 export function seed(set: WorkingSet, id: string, label: string): WorkingSet {
   const next = clone(set);
