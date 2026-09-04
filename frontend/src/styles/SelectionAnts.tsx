@@ -138,12 +138,27 @@ function trace(
   }
 
   if (target.shape === "rect") {
-    const box = graph.getElementRenderBounds(target.id);
-    if (!box) return null;
-    const a = graph.getViewportByCanvas([box.min[0], box.min[1]]);
-    const b = graph.getViewportByCanvas([box.max[0], box.max[1]]);
+    /**
+     * The plate's own rect, from its position and size.
+     *
+     * Not `getElementRenderBounds`, which is the union of everything the
+     * element draws — and a plate's label ink is *taller than its plate*. A
+     * 71x10 plate reported 71x16 render bounds, so the ring stood 3px proud
+     * top and bottom while matching the width, which is why it read as very
+     * nearly right and still wrong. Position and size are what the plate was
+     * built from, so this cannot disagree with it.
+     */
+    const centre = graph.getElementPosition(target.id);
+    const datum = graph.getNodeData(target.id) as
+      | { style?: { size?: number | [number, number] } }
+      | undefined;
+    const size = datum?.style?.size;
+    if (!centre || size === undefined) return null;
+    const [w, h] = typeof size === "number" ? [size, size] : size;
+    const a = graph.getViewportByCanvas([centre[0] - w / 2, centre[1] - h / 2]);
+    const b = graph.getViewportByCanvas([centre[0] + w / 2, centre[1] + h / 2]);
     // No gap. The caller drops the plate's own stroke while it is the target,
-    // so these bounds are the rect itself and the beads land where the border
+    // so this rect is the one the stroke was on and the beads land where it
     // was standing. Anything added here is the second rectangle again.
     const x0 = Math.min(a[0], b[0]);
     const x1 = Math.max(a[0], b[0]);

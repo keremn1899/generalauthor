@@ -95,24 +95,27 @@ export function textWidth(text: string, size: number, weight: number): number {
   return metricsOf(text, size, weight)?.width ?? text.length * size * 0.6;
 }
 
-/**
- * How far the word's ink sits off the anchor a centred label is drawn on.
+/*
+ * There was an `opticalNudge` here, and it was the miscentring rather than the
+ * cure for it.
  *
- * A label is placed on the font's baseline box, which is not where the word
- * looks like it is: `acceptable_replacement` has an underscore below the
- * baseline, so the box's middle sits above the ink's middle and the name rides
- * high in a 10px plate — most visibly at small sizes, which is the size this
- * chip is. Corrected from the glyphs themselves rather than a hand-tuned
- * constant, so a name with a descender and one without both come out centred.
+ * The theory was that a label is placed on the font's baseline box, whose
+ * middle sits above the ink's middle, so a name with a descender rides high in
+ * a 10px plate and wants pushing down by `(ascent - descent) / 2`. Measured on
+ * four plates at once, the ink's centre came out below the rect's centre by
+ * *exactly* the offset applied — 1.5 for `requires_temperature`, 2.0 for
+ * `candidate_replacement`, `eligible_part` and `viable_replacement`. Residual
+ * equal to the correction means the correction is the whole error: G6 already
+ * centres the label's ink box on the node, and every plate in the product was
+ * being shoved 1.5–2px down a 10px plate, a sixth of its height.
+ *
+ * Distinguishing "centres the ink" from "centres the em box" matters, because
+ * the second would still need a correction: for Jost at 7px the two differ by
+ * 0.5px. A residual of exactly the offset, with no 0.5 left over, says it is
+ * the ink.
+ *
+ * `chipLabelNudge` stays. It is the human residue, and it is 0.
  */
-export function opticalNudge(text: string, size: number, weight: number): number {
-  const m = metricsOf(text, size, weight);
-  if (!m) return 0;
-  const ascent = m.actualBoundingBoxAscent;
-  const descent = m.actualBoundingBoxDescent;
-  if (!Number.isFinite(ascent) || !Number.isFinite(descent)) return 0;
-  return (ascent - descent) / 2;
-}
 
 export function chipWidth(text: string, p: MarkParams): number {
   return Math.round(
@@ -241,8 +244,7 @@ export function chipNode(
       labelFontFamily: FONT_SANS_FAMILY,
       labelFontSize: p.chipLabelSize,
       labelFontWeight: p.chipLabelWeight,
-      labelOffsetY:
-        opticalNudge(text, p.chipLabelSize, p.chipLabelWeight) + p.chipLabelNudge,
+      labelOffsetY: p.chipLabelNudge,
     },
   };
 }
@@ -402,11 +404,9 @@ export function filamentEdge(
       labelFontWeight: p.chipLabelWeight,
       labelFill: filled ? paint.field : paint.ink,
       // The plate on a filament is the same plate, so it is centred the same
-      // way. Letting the edge label fall back to the renderer's own placement
-      // is how the collapsed and detached forms stop being one object.
-      labelOffsetY:
-        opticalNudge(options.label ?? "", p.chipLabelSize, p.chipLabelWeight) +
-        p.chipLabelNudge,
+      // way — which, now that the nudge is gone, means the renderer's own
+      // placement plus the same human residue.
+      labelOffsetY: p.chipLabelNudge,
       labelOpacity: 1,
       labelBackground: named,
       labelBackgroundOpacity: 1,
