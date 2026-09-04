@@ -360,21 +360,13 @@ export function WorldCanvas({
     const assertion = set.assertions.get(id);
     if (assertion) {
       return assertionShown(assertion.origin, assertion.mode, show)
-        ? {
-            shape: "rect",
-            id,
-            clearance: GRAPH_DNA_INTERACTION.selectionPlateClearance,
-          }
+        ? { shape: "rect", id }
         : null;
     }
+    // An obligation's plate is the one that is dotted already, so its ants take
+    // over the pattern rather than morphing into it.
     if (set.demands.has(id)) {
-      return show.unresolved
-        ? {
-            shape: "rect",
-            id,
-            clearance: GRAPH_DNA_INTERACTION.selectionPlateClearance,
-          }
-        : null;
+      return show.unresolved ? { shape: "rect", id, dotted: true } : null;
     }
     const bond = set.bonds.find((edge) => edge.assertion_id === id);
     if (bond && assertionShown(bond.origin, bond.mode, show)) {
@@ -382,7 +374,6 @@ export function WorldCanvas({
         shape: "edge-label",
         id: bondElementId(id),
         text: bond.relation,
-        clearance: GRAPH_DNA_INTERACTION.selectionPlateClearance,
       };
     }
     return null;
@@ -553,12 +544,31 @@ export function WorldCanvas({
         mark.style.opacity = reflected(albedo, incident.at(mark.id));
       }
     }
+    /**
+     * The selected plate hands its border to the ants.
+     *
+     * Two rectangles is what the ants used to draw, and dropping the standoff
+     * alone would only have stacked them: a solid border with beads sitting on
+     * it is still a solid border. So the plate's own stroke goes, the ants
+     * arrive solid in exactly its place, and what a person sees is one border
+     * that becomes dotted. It comes straight back on deselect, and it never
+     * tweens — `meaningIsStructural`; the width is a fact about construction
+     * origin, and a plate caught between outlined and not draws an origin that
+     * does not exist.
+     */
+    if (antTarget && antTarget.shape === "rect") {
+      const plate = (nodes as { id: string; style?: Record<string, unknown> }[]).find(
+        (node) => node.id === antTarget.id,
+      );
+      if (plate?.style) plate.style.lineWidth = 0;
+    }
     return { nodes, edges };
   }, [
     set,
     paint,
     provisional,
     params,
+    antTarget,
     incident,
     namedMarks,
     show,

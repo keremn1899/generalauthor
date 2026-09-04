@@ -116,12 +116,22 @@ export function SchemaCanvas({
         const at = node.id
           ? (liveRef.current.get(node.id) ?? positions.get(node.id))
           : null;
-        return at
-          ? { ...node, style: { ...node.style, x: at.x, y: at.y } }
-          : node;
+        // The selected plate hands its border to the ants, which trace exactly
+        // where the stroke was. Leaving it on would put a solid rectangle
+        // under the dotted one — the pair this change exists to remove.
+        const ringed = node.id === `rel:${selected}`;
+        if (!at && !ringed) return node;
+        return {
+          ...node,
+          style: {
+            ...node.style,
+            ...(at ? { x: at.x, y: at.y } : null),
+            ...(ringed ? { lineWidth: 0 } : null),
+          },
+        };
       }),
     }),
-    [base.data, positions],
+    [base.data, positions, selected],
   );
 
   const relationOf = (id: string | null): string | null => {
@@ -145,17 +155,8 @@ export function SchemaCanvas({
       (node) => node.id === plate,
     );
     return standing
-      ? {
-          shape: "rect",
-          id: plate,
-          clearance: GRAPH_DNA_INTERACTION.selectionPlateClearance,
-        }
-      : {
-          shape: "edge-label",
-          id: selected,
-          text: selected,
-          clearance: GRAPH_DNA_INTERACTION.selectionPlateClearance,
-        };
+      ? { shape: "rect", id: plate }
+      : { shape: "edge-label", id: selected, text: selected };
   }, [base.data.nodes, selected]);
 
   useEffect(() => {

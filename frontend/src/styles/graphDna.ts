@@ -500,16 +500,15 @@ export const GRAPH_DNA_INTERACTION = {
   dragEdgeLoad: 0.3,
   dragEdgePresence: 0.08,
   selectionSpeed: 8,
-  selectionClearance: 11,
   /**
-   * The same air, off a plate instead of a disc.
+   * The air between a disc and the beads that ring it.
    *
-   * Selection stands off the mark it rings, and how far is a question about the
-   * mark's own scale: 11 is a quarter of a disc's radius and more than a plate
-   * is tall. One value each, rather than one value that is wrong for one of
-   * them.
+   * A disc only. There is no plate equivalent, and the absence is the point:
+   * a plate has a border of its own, so its ants take it over rather than
+   * standing off it. Any number here would be a second rectangle around the
+   * first, which is what the pair of them used to look like.
    */
-  selectionPlateClearance: 5,
+  selectionClearance: 11,
   selectionDotGap: 4.5,
   selectionLine: 1.5,
   /**
