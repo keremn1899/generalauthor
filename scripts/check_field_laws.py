@@ -22,9 +22,10 @@ markdown file.
 
 Prints nothing and exits 0 when clean; prints file:line and exits 1 otherwise.
 
-Scope is the live World IR surfaces. `product/` and `explorations/` are the
-frozen lineage and the workbench, which predate the spine and are not being
-brought onto it.
+Scope is the live World IR surfaces, plus the handful of `product/`
+stylesheets those surfaces import — see `SHARED`. The rest of `product/` and
+all of `explorations/` are the frozen lineage and the workbench, which predate
+the spine and are not being brought onto it.
 """
 
 from __future__ import annotations
@@ -38,6 +39,24 @@ SURFACES = [
     REPO / "frontend/src/world",
     REPO / "frontend/src/construction",
     REPO / "frontend/src/styles",
+]
+
+# Four stylesheets that live in the frozen lineage and dress a live surface.
+#
+# `product/` as a whole is out of scope — see the note below — but these four
+# are imported by `WorldPage` and `WorldLabPage`, so the reader's heading, the
+# finder and the whole instrument band are wearing them. A file cannot be
+# half-governed: whatever laws the World surface is held to, the stylesheets it
+# is actually painted with are held to as well. The rest of `product/` keeps
+# its own type, because changing it would be changing the frozen product for
+# no live surface's benefit.
+SHARED = [
+    REPO / "frontend/src/product/ProductShell.css",
+    REPO / "frontend/src/product/NodeFinder.css",
+    REPO / "frontend/src/product/NodeReaderPanel.css",
+    REPO / "frontend/src/product/GraphWorkspace.css",
+    REPO / "frontend/src/product/OverlayPanel.css",
+    REPO / "frontend/src/product/overlayChrome.css",
 ]
 
 # A `transition` / `animation` / `*-duration` / `*-delay` declaration, wherever
@@ -115,10 +134,11 @@ def offences(path: Path) -> list[tuple[int, str]]:
 
 def main() -> int:
     problems: list[str] = []
-    for surface in SURFACES:
-        for path in sorted(surface.rglob("*.css")):
-            for number, detail in offences(path):
-                problems.append(f"{path.relative_to(REPO)}:{number}: {detail}")
+    paths = [path for surface in SURFACES for path in sorted(surface.rglob("*.css"))]
+    paths += [path for path in SHARED if path.exists()]
+    for path in paths:
+        for number, detail in offences(path):
+            problems.append(f"{path.relative_to(REPO)}:{number}: {detail}")
 
     if not problems:
         return 0

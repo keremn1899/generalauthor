@@ -10,6 +10,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { createMotionPlans, motionCssVariables } from "../styles/motion";
+import { typeCssVariables } from "../styles/type";
 import { usePresence } from "../styles/usePresence";
 import "../styles/presence.css";
 import {
@@ -424,6 +425,11 @@ function ProductShellBody({
     const focusVars = focusCssVariables(focusPalette);
     const style: Record<string, string> = {
       ...(motionCssVariables(motion) as Record<string, string>),
+      // The type scale, for the same reason the spine is here: these
+      // stylesheets are shared with the World surfaces, so both roots have to
+      // supply the same tokens or a swept `font-size: var(--type-label)`
+      // becomes invalid on whichever root forgot.
+      ...typeCssVariables(),
       ...chromeCssVariables(chrome),
       // The focus palette reaches the DOM too, so the Ask spotlight fogs the
       // map in the same ink the canvas uses when it enters focus.
