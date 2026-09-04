@@ -18,6 +18,7 @@ import {
   type LightField,
 } from "../styles/light";
 import { Swap } from "../styles/Swap";
+import { useSequencedSwap } from "../styles/useSequencedSwap";
 import { worldCameraInsets, worldShellStyle } from "./worldChrome";
 import {
   MARK_DEFAULTS,
@@ -144,6 +145,9 @@ export function WorldLabPage() {
   const [hoveredRelation, setHoveredRelation] = useState<string | null>(null);
   const [focusedRelation, setFocusedRelation] = useState<string | null>(null);
   const [vocabularyFocus, setVocabularyFocus] = useState(false);
+  /** What is drawn, which lags the intent by one absorb. See the World page. */
+  const focusView = useSequencedSwap(vocabularyFocus, motionPlans);
+  const focusDrawn = focusView.value;
   const [namedAtRest, setNamedAtRest] = useState(false);
   const [show, setShow] = useState<ShowState>(SHOW_DEFAULT);
   const [tablesOpen, setTablesOpen] = useState(true);
@@ -209,20 +213,20 @@ export function WorldLabPage() {
    * look the product does not have, which is worse than having no lab.
    */
   const style = useMemo(
-    () => worldShellStyle(mode, { focus: vocabularyFocus, motion: motionPlans }),
-    [mode, motionPlans, vocabularyFocus],
+    () => worldShellStyle(mode, { focus: focusDrawn, motion: motionPlans }),
+    [mode, motionPlans, focusDrawn],
   );
 
   const cameraInsets = useMemo<CameraInsets>(
     () =>
       worldCameraInsets({
-        focus: vocabularyFocus,
+        focus: focusDrawn,
         tablesOpen,
         tablesWidth,
         readerOpen,
         readerWidth,
       }),
-    [readerOpen, readerWidth, tablesOpen, tablesWidth, vocabularyFocus],
+    [readerOpen, readerWidth, tablesOpen, tablesWidth, focusDrawn],
   );
 
   /**
@@ -342,7 +346,7 @@ export function WorldLabPage() {
 
   return (
     <main
-      className={`product-shell world world-lab${mode === "dark" ? " is-dark" : ""}${vocabularyFocus ? " is-focus" : ""}`}
+      className={`product-shell world world-lab${mode === "dark" ? " is-dark" : ""}${focusDrawn ? " is-focus" : ""}`}
       style={style}
       data-mode={mode}
     >
@@ -405,9 +409,13 @@ export function WorldLabPage() {
                           </Swap>
                         </OverlayPanel>
 
-                        <div className="gm__stage world__plane">
+                        <div
+                          className={`gm__stage world__plane motion-layer motion-layer--fade${
+                            focusView.shown ? " is-in" : ""
+                          }`}
+                        >
                           {fieldSize(set) > 0 ? (
-                            <div className={`world__layer${vocabularyFocus ? " is-parked" : ""}`}>
+                            <div className={`world__layer${focusDrawn ? " is-parked" : ""}`}>
                               <WorldCanvas
                                 set={set}
                                 mode={mode}
@@ -415,7 +423,7 @@ export function WorldLabPage() {
                                 hovered={hovered}
                                 selection={selection}
                                 show={show}
-                                focusId={vocabularyFocus ? null : focus?.id ?? null}
+                                focusId={focusDrawn ? null : focus?.id ?? null}
                                 focusToken={focus?.token ?? 0}
                                 insets={cameraInsets}
                                 light={lightField}
@@ -426,13 +434,25 @@ export function WorldLabPage() {
                               />
                             </div>
                           ) : null}
-                          {fieldSize(set) === 0 || vocabularyFocus ? (
-                            <div className="world__layer">
+                          {/* Both canvases stay mounted, and the one that is not in
+                          view is parked rather than unmounted. Unmounting it
+                          destroyed a G6 graph on every focus toggle, which
+                          raced its own in-flight draw ("the graph instance has
+                          been destroyed") and meant the vocabulary had to be
+                          rebuilt before it could be shown — during the gap the
+                          swap leaves for exactly that. A vocabulary is bounded
+                          by the world's relations, not its field, so the
+                          second graph is cheap to simply keep. */}
+                          <div
+                            className={`world__layer${
+                              fieldSize(set) > 0 && !focusDrawn ? " is-parked" : ""
+                            }`}
+                          >
                               <SchemaCanvas
                                 relations={MOCK_RELATIONS}
                                 mode={mode}
                                 namedAtRest={namedAtRest}
-                                inverted={vocabularyFocus}
+                                inverted={focusDrawn}
                                 active={hoveredRelation ?? focusedRelation}
                                 selected={focusedRelation}
                                 focusId={focus?.id ?? null}
@@ -441,8 +461,7 @@ export function WorldLabPage() {
                                 onHover={setHoveredRelation}
                                 onSelect={setFocusedRelation}
                               />
-                            </div>
-                          ) : null}
+                          </div>
                         </div>
 
                         <OverlayPanel

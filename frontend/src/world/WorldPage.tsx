@@ -82,6 +82,7 @@ import { OverlayPanel } from "../product/OverlayPanel";
 import { chromeClass } from "../product/overlayChrome";
 import { Swap } from "../styles/Swap";
 import { useHeld, usePresence } from "../styles/usePresence";
+import { useSequencedSwap } from "../styles/useSequencedSwap";
 import {
   readStoredPanelSize,
   storePanelSize,
@@ -683,6 +684,16 @@ export function WorldPage() {
    */
   const [vocabularyFocus, setVocabularyFocus] = useState(false);
   /**
+   * What is *drawn*, which lags the intent by one absorb.
+   *
+   * Vocabulary focus inverts the whole surface, so the field and the
+   * vocabulary have no shared ground to cross over — see `useSequencedSwap`.
+   * `vocabularyFocus` stays the thing a person asked for; `focusView.value` is
+   * what is on screen, and every visual read below uses it.
+   */
+  const focusView = useSequencedSwap(vocabularyFocus);
+  const focusDrawn = focusView.value;
+  /**
    * A mark a table named, distinct from canvas selection.
    *
    * Clicking the field already has the mark under the pointer. A row does not,
@@ -1143,7 +1154,7 @@ export function WorldPage() {
    * below inherits from. `worldChrome.ts` owns the composition so the design
    * lab emits exactly the same tokens.
    */
-  const style = worldShellStyle(mode, { focus: vocabularyFocus });
+  const style = worldShellStyle(mode, { focus: focusDrawn });
   const onField = fieldSize(set) > 0;
   const relation = relations.find((item) => item.name === focusedRelation) ?? null;
   /**
@@ -1183,7 +1194,7 @@ export function WorldPage() {
   const cameraInsets = useMemo<CameraInsets>(
     () =>
       worldCameraInsets({
-        focus: vocabularyFocus,
+        focus: focusDrawn,
         tablesOpen,
         tablesWidth,
         readerOpen,
@@ -1194,13 +1205,13 @@ export function WorldPage() {
       readerWidth,
       tablesOpen,
       tablesWidth,
-      vocabularyFocus,
+      focusDrawn,
     ],
   );
 
   return (
     <main
-      className={`product-shell world${mode === "dark" ? " is-dark" : ""}${vocabularyFocus ? " is-focus" : ""}${motionReady ? " is-motion-ready" : ""}`}
+      className={`product-shell world${mode === "dark" ? " is-dark" : ""}${focusDrawn ? " is-focus" : ""}${motionReady ? " is-motion-ready" : ""}`}
       style={style}
       data-mode={mode}
     >
@@ -1258,7 +1269,7 @@ export function WorldPage() {
                 onWidthChange={onTablesWidth}
                 minWidth={280}
                 maxWidth={640}
-                reserve={vocabularyFocus ? 0 : readerOpen ? readerWidth : 0}
+                reserve={focusDrawn ? 0 : readerOpen ? readerWidth : 0}
                 flush
               >
                 <Swap id={tableSubject} className="motion-swap--fill">
@@ -1339,7 +1350,14 @@ export function WorldPage() {
                   ) : null}
                 </Swap>
               </OverlayPanel>
-              <div className="gm__stage world__plane">
+              {/* The plane is the slot the two views share. It absorbs the
+                  one that is leaving, the palette flips while it is dark, and
+                  it emits the one that arrives — `useSequencedSwap`. */}
+              <div
+                className={`gm__stage world__plane motion-layer motion-layer--fade${
+                  focusView.shown ? " is-in" : ""
+                }`}
+              >
                 {error ? (
                   <p className="world__error">
                     {error} — is the read plane running?{" "}
@@ -1351,7 +1369,7 @@ export function WorldPage() {
                   <>
                     {onField ? (
                       <div
-                        className={`world__layer${vocabularyFocus ? " is-parked" : ""}`}
+                        className={`world__layer${focusDrawn ? " is-parked" : ""}`}
                       >
                         <WorldCanvas
                           set={set}
@@ -1360,7 +1378,7 @@ export function WorldPage() {
                           hovered={hovered}
                           selection={selection}
                           show={show}
-                          focusId={vocabularyFocus ? null : focus?.id ?? null}
+                          focusId={focusDrawn ? null : focus?.id ?? null}
                           focusToken={focus?.token ?? 0}
                           insets={cameraInsets}
                           onHover={setHovered}
@@ -1370,13 +1388,25 @@ export function WorldPage() {
                         />
                       </div>
                     ) : null}
-                    {!onField || vocabularyFocus ? (
-                      <div className="world__layer">
+                    {/* Both canvases stay mounted, and the one that is not in
+                        view is parked rather than unmounted. Unmounting it
+                        destroyed a G6 graph on every focus toggle, which
+                        raced its own in-flight draw ("the graph instance has
+                        been destroyed") and meant the vocabulary had to be
+                        rebuilt before it could be shown — during the gap the
+                        swap leaves for exactly that. A vocabulary is bounded
+                        by the world's relations, not its field, so the
+                        second graph is cheap to simply keep. */}
+                    <div
+                      className={`world__layer${
+                        onField && !focusDrawn ? " is-parked" : ""
+                      }`}
+                    >
                         <SchemaCanvas
                           relations={visibleRelations}
                           mode={mode}
                           namedAtRest={namedAtRest}
-                          inverted={vocabularyFocus}
+                          inverted={focusDrawn}
                           active={activeRelation}
                           selected={focusedRelation}
                           focusId={focus?.id ?? null}
@@ -1385,8 +1415,7 @@ export function WorldPage() {
                           onHover={setHoveredRelation}
                           onSelect={chooseSchemaRelation}
                         />
-                      </div>
-                    ) : null}
+                    </div>
                   </>
                 )}
               </div>
@@ -1401,7 +1430,7 @@ export function WorldPage() {
               width={readerWidth}
               onWidthChange={onReaderWidth}
               reserve={
-                vocabularyFocus
+                focusDrawn
                   ? 0
                   : tablesOpen
                     ? tablesWidth
@@ -1594,12 +1623,12 @@ export function WorldPage() {
             show={show}
             onShow={setShow}
             names={
-              !onField || vocabularyFocus
+              !onField || focusDrawn
                 ? { on: namedAtRest, onToggle: () => setNamedAtRest((on) => !on) }
                 : undefined
             }
           />
-          {vocabularyFocus ? (
+          {focusDrawn ? (
             <div className="instrument__group" role="group" aria-label="Clear focus">
               <button type="button" onClick={leaveVocabulary}>
                 Clear

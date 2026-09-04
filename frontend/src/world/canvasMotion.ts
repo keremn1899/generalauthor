@@ -160,6 +160,9 @@ export async function transitionCanvasData(
   const diedEdgeIds = [...previousEdges].filter((id) => !nextEdgeIds.has(id));
 
   if (reducedMotion()) {
+    if (cancelled() || graph.destroyed) {
+      return { bornNodes, bornEdges, diedNodeIds, diedEdgeIds };
+    }
     graph.setOptions({ animation: false });
     graph.setData(next as never);
     await graph.draw();
@@ -187,6 +190,18 @@ export async function transitionCanvasData(
     ),
   };
 
+  /**
+   * Every `await` here is a place the canvas can be unmounted under us.
+   *
+   * `graph.draw()` resolves a frame or more later, and by then the vocabulary
+   * toggle may have destroyed the schema canvas — G6 logs "the graph instance
+   * has been destroyed" for each call that lands afterwards. The checks after
+   * each await were there; the ones *before* the next call were not, so a
+   * destroy that happened during an await was caught one statement too late.
+   */
+  const gone = () => cancelled() || graph.destroyed;
+  if (gone()) return { bornNodes, bornEdges, diedNodeIds, diedEdgeIds };
+
   if (dyingNodes.length || dyingEdges.length) {
     graph.setOptions({ animation: planOptions(DEFAULT_MOTION_PLANS.absorb) });
     graph.setData({
@@ -194,17 +209,14 @@ export async function transitionCanvasData(
       edges: [...entering.edges, ...dyingEdges],
     } as never);
     await graph.draw();
+    if (gone()) return { bornNodes, bornEdges, diedNodeIds, diedEdgeIds };
     graph.setOptions({ animation: false });
-    if (cancelled() || graph.destroyed) {
-      return { bornNodes, bornEdges, diedNodeIds, diedEdgeIds };
-    }
   }
 
+  if (gone()) return { bornNodes, bornEdges, diedNodeIds, diedEdgeIds };
   graph.setData(entering as never);
   await graph.draw();
-  if (cancelled() || graph.destroyed) {
-    return { bornNodes, bornEdges, diedNodeIds, diedEdgeIds };
-  }
+  if (gone()) return { bornNodes, bornEdges, diedNodeIds, diedEdgeIds };
 
   if (bornNodes.length || bornEdges.length) {
     graph.setOptions({ animation: planOptions(DEFAULT_MOTION_PLANS.emit) });
@@ -256,7 +268,7 @@ export async function transitionCanvasData(
     const drawn: Promise<unknown>[] = [];
     for (let index = 0; index < edgeWaves.length; index += 1) {
       if (index > 0 && stepMs > 0) await sleep(stepMs);
-      if (cancelled() || graph.destroyed) break;
+      if (gone()) break;
       const nodeWave = waves[index] ?? [];
       if (nodeWave.length) {
         graph.updateNodeData(nodeWave.map(shown) as never);
