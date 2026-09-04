@@ -53,8 +53,8 @@ import {
 import { DEFAULT_MOTION_PLANS } from "../styles/motion";
 import {
   DEFAULT_LIGHT_FIELD,
-  luminance,
-  namingCut,
+  lift,
+  NAMING_HOPS,
   reflected,
   type LightField,
 } from "../styles/light";
@@ -310,39 +310,49 @@ export function WorldCanvas({
     () => ({ ...DEFAULT_LIGHT_FIELD, ...light }),
     [light],
   );
-  const incident = useMemo(() => {
-    const source = hovered ?? (selection ? selection.id : null);
-    if (!source) return null;
-    const hops = hopsFrom(set, source);
-    const cut = namingCut(lightField);
-    // Furniture takes the light of the chip it hangs off, and a spoke the
-    // light of the plate it belongs to — otherwise the rule under a derived
-    // plate fades out of step with the plate it is part of.
-    const at = (elementId: string) => {
-      const mark = markOfElement(elementId);
-      return luminance(hops.has(mark) ? (hops.get(mark) as number) : null, lightField);
-    };
-    return { at, named: (id: string) => at(id) >= cut };
-  }, [hovered, lightField, selection, set]);
 
   /**
-   * Which marks name themselves.
+   * Graph distance from whatever a person is acting on.
    *
-   * Not a second rule — the same light, read at a threshold. `namingCut` is
-   * defined as the light on a neighbour, so this stays *the mark you touched
-   * and what it is joined to* however the field is tuned.
+   * Hover outranks selection because the pointer is the more recent act. With
+   * nothing acted on there is no source and the two things below — naming and
+   * light — both stand down, which is the resting state of the field.
+   */
+  const hops = useMemo(() => {
+    const source = hovered ?? (selection ? selection.id : null);
+    return source ? hopsFrom(set, source) : null;
+  }, [hovered, selection, set]);
+
+  /**
+   * How much light reaches an element.
+   *
+   * Furniture takes the light of the chip it hangs off, and a spoke the light
+   * of the plate it belongs to — otherwise the rule under a derived plate
+   * lifts out of step with the plate it is part of.
+   */
+  const incident = useMemo(() => {
+    if (!hops) return null;
+    return (elementId: string) => {
+      const mark = markOfElement(elementId);
+      return lift(hops.has(mark) ? (hops.get(mark) as number) : null, lightField);
+    };
+  }, [hops, lightField]);
+
+  /**
+   * Which marks name themselves: the one you touched, and what it is joined to.
+   *
+   * A plain hop count, not a light threshold. Reading naming off the light
+   * made retuning the falloff silently change which labels appear, and they
+   * are different questions — see `NAMING_HOPS`.
    */
   const namedMarks = useMemo(() => {
-    if (!incident) return null;
+    if (!hops) return null;
     const named = new Set<string>();
-    for (const id of set.referents.keys()) if (incident.named(id)) named.add(id);
-    for (const id of set.assertions.keys()) if (incident.named(id)) named.add(id);
-    for (const id of set.demands.keys()) if (incident.named(id)) named.add(id);
-    for (const bond of set.bonds) {
-      if (incident.named(bond.assertion_id)) named.add(bond.assertion_id);
+    for (const [mark, distance] of hops) {
+      if (distance <= NAMING_HOPS) named.add(mark);
     }
     return named;
-  }, [incident, set]);
+  }, [hops]);
 
   /**
    * What the ants trace: the geometry the selected mark already has.
@@ -390,6 +400,8 @@ export function WorldCanvas({
     const paintFor = (_id: string, overlay = false) =>
       overlay ? provisional : paint;
     const named = (id: string) => Boolean(namedMarks?.has(id));
+    /** The mark a person is on, which is what a bond's label leans toward. */
+    const acted = hovered ?? (selection ? selection.id : null);
     const at = (id: string, fallback: { x: number; y: number } = { x: 0, y: 0 }) =>
       liveAt(liveRef.current, set.positions, id, fallback);
 
@@ -521,6 +533,12 @@ export function WorldCanvas({
             label: bond.relation,
             named: named(bond.assertion_id),
             kind: chipKindOf(bond.origin),
+            lean:
+              acted === bond.source
+                ? "source"
+                : acted === bond.target
+                  ? "target"
+                  : undefined,
           },
         ),
       );
@@ -535,13 +553,27 @@ export function WorldCanvas({
      * there was a law.
      */
     if (incident) {
-      for (const mark of [...nodes, ...edges] as {
-        id: string;
-        style?: Record<string, unknown>;
-      }[]) {
-        if (!mark.style) continue;
-        const albedo = (mark.style.opacity as number | undefined) ?? 1;
-        mark.style.opacity = reflected(albedo, incident.at(mark.id));
+      /**
+       * Each mark reflects on the channel it is made of.
+       *
+       * A node's material is its `opacity`; an edge's is `strokeOpacity`,
+       * because an edge's `opacity` is its presence — the channel birth and
+       * absorption own — and lighting a name is not the same act as lighting
+       * the line beneath it. See `spokeEdge`.
+       */
+      const reflect = (
+        mark: { id: string; style?: Record<string, unknown> },
+        channel: "opacity" | "strokeOpacity",
+      ) => {
+        if (!mark.style) return;
+        const albedo = (mark.style[channel] as number | undefined) ?? 1;
+        mark.style[channel] = reflected(albedo, incident(mark.id));
+      };
+      for (const node of nodes as { id: string; style?: Record<string, unknown> }[]) {
+        reflect(node, "opacity");
+      }
+      for (const edge of edges as { id: string; style?: Record<string, unknown> }[]) {
+        reflect(edge, "strokeOpacity");
       }
     }
     /**
@@ -569,6 +601,8 @@ export function WorldCanvas({
     provisional,
     params,
     antTarget,
+    hovered,
+    selection,
     incident,
     namedMarks,
     show,

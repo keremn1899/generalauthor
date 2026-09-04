@@ -189,26 +189,6 @@
   margin-top: 0.05rem;
 }
 
-.world-reader__close {
-  flex: 0 0 auto;
-  margin: 0;
-  padding: 0.15rem 0;
-  border: 0;
-  border-bottom: 1px solid transparent;
-  background: none;
-  color: var(--ink-muted);
-  font: inherit;
-  font-size: var(--type-label);
-  cursor: pointer;
-}
-
-.world-reader__close:hover,
-.world-reader__close:focus-visible {
-  border-bottom-color: currentColor;
-  color: var(--ink);
-  outline: none;
-}
-
 .world-reader__content {
   flex: 1 1 auto;
   min-width: 0;
@@ -819,4 +799,27 @@
 
 .deriv__tuple--head:hover {
   background: none;
+}
+
+/* The one close. See `world/panelChrome.tsx` for why it is a chip and not a
+   word: it is the same act on every panel, so it is the same control. */
+.panel__close {
+  flex: 0 0 auto;
+  padding: 3px 9px;
+  border: 1px solid var(--rule);
+  background: var(--canvas);
+  color: var(--ink-muted);
+  font: inherit;
+  font-size: var(--type-label);
+  line-height: 1.35;
+  cursor: pointer;
+  transition:
+    color var(--motion-hold-duration, 90ms) linear,
+    border-color var(--motion-hold-duration, 90ms) linear;
+}
+
+.panel__close:hover,
+.panel__close:focus-visible {
+  color: var(--ink);
+  border-color: var(--ink);
 }

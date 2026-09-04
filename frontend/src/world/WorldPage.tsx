@@ -83,6 +83,7 @@ import { chromeClass } from "../product/overlayChrome";
 import { Swap } from "../styles/Swap";
 import { useHeld, usePresence } from "../styles/usePresence";
 import { useSequencedSwap } from "../styles/useSequencedSwap";
+import { PanelClose } from "./panelChrome";
 import {
   readStoredPanelSize,
   storePanelSize,
@@ -282,15 +283,7 @@ export function ReaderHeader({
         {meta ? <p>{meta}</p> : null}
       </div>
       {kind ? <span className="node-reader__kind">{kind}</span> : null}
-      {onClose ? (
-        <button
-          type="button"
-          className="world-reader__close"
-          onClick={onClose}
-        >
-          Close
-        </button>
-      ) : null}
+      {onClose ? <PanelClose onClose={onClose} /> : null}
     </header>
   );
 }

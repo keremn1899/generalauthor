@@ -1,102 +1,90 @@
 /**
- * Light — the second law of the field.
+ * Light — the second law, and the one that had to be rewritten.
  *
- * `motion.ts` is gravity: `emit` is a body given exactly the escape impulse
- * gravity spends at its home, `absorb` is constant acceleration from rest,
- * `settle` is an analytic damped spring. Those are not metaphors, and this is
- * meant to be read beside them.
+ * The first version was a spotlight. A source lit what a person had acted on,
+ * fell off inverse-square through the graph, and everything beyond reach sat
+ * at an ambient floor of 0.34. It was coherent and it was wrong, for a reason
+ * worth keeping written down: **a vignette makes a claim about the marks
+ * outside it.** Dropping seven of eight disconnected seeds to a third of their
+ * opacity because the pointer is on the eighth says those seven are less
+ * present, and they are not — nothing about them changed. The person looked
+ * somewhere. The world did not move.
  *
- * A world is dark until someone looks at it. Pointing at a mark makes that
- * mark a source; light falls off from it through the field, and what is far
- * from what you are doing falls to ambient. So illumination is not decoration
- * layered on top of an interaction — **it is the interaction, drawn.** Nothing
- * is lit that a person did not light.
+ * There was a second, quieter fault. `opacity` on a shape composites its fill
+ * and its stroke separately, so a disc whose stroke is its fill colour grows a
+ * visible darker rim the moment it is drawn below 1 — the dimming invented an
+ * outline on a mark that is supposed to read as a mass.
  *
- * Three commitments make it honest:
+ * So light lifts and never dims:
  *
- * **Distance is measured in the field, not on the screen.** Two marks a
- * thousand pixels apart but joined by one relation are neighbours; two marks
- * touching on screen and joined by nothing are not. The field is a graph, so
- * hops are what "near" means here. Zooming does not change what is lit.
+ * ```text
+ * lit    = albedo + (1 - albedo) * lift(hops)
+ * lift   = LIFT / (1 + hops / falloff)^2
+ * ```
  *
- * **Light is opacity, never colour.** Colour is for status only, and geometry
- * carries construction origin — a mark that changed hue under illumination
- * would be saying something about itself that is not true. Opacity is also
- * the physically correct variable: illumination falls off, matter does not
- * change what it is made of.
+ * A mark already at 1 is untouched, which is most of them. What moves is what
+ * rests below 1 — an unnamed filament, a quiet spoke — and near the acted-on
+ * mark those come *up*. The result is the neighbourhood becoming more present
+ * rather than the rest becoming less, and at rest, with nothing acted on, the
+ * law changes nothing at all.
  *
- * **Nothing acted on means nothing dimmed.** With no source the field is
- * evenly lit and every mark is at 1, so the law changes nothing at rest. That
- * is the difference between a lamp and a vignette.
+ * `LIFT` is deliberately small. This is meant to be noticed only if you look
+ * for it; anything strong enough to read as a highlight is doing the ants' job
+ * with the wrong instrument.
  */
 
 export type LightField = {
-  /**
-   * The floor. Unlit matter is still there — a world does not stop existing
-   * because you are looking elsewhere — so this is how much of it you can
-   * still read, not zero.
-   */
-  ambient: number;
-  /**
-   * Falloff distance, in hops. Inverse square about a source one of these
-   * away; larger reaches further.
-   */
+  /** Lift at the source itself, 0..1. 0 switches the law off entirely. */
+  lift: number;
+  /** Hops at which the lift has fallen to a quarter. */
   falloff: number;
 };
 
-export const DEFAULT_LIGHT_FIELD: LightField = {
-  ambient: 0.34,
-  falloff: 1.6,
-};
+export const DEFAULT_LIGHT_FIELD: LightField = { lift: 0.3, falloff: 1.6 };
 
 /**
- * Inverse square from a point source, over graph distance.
+ * How much of the way to full a mark at `hops` is carried.
  *
- * `incident = 1 / (1 + d/k)²`, then lifted onto the ambient floor. The `1 +`
- * is what keeps a source finite at its own position rather than infinite:
- * a mark is one falloff-unit from its own surface, which is the usual cheap
- * approximation and is the whole of the physics here.
- *
- * `null` distance is a mark the source cannot reach at all — a separate
- * component of the field. It sits at ambient, which is correct: nothing that
- * happened over there reaches it.
+ * `null` — not reachable from the source, or nothing acted on — is 0, not a
+ * floor. That is the whole difference from the spotlight.
  */
-export function luminance(
+export function lift(
   hops: number | null,
   field: LightField = DEFAULT_LIGHT_FIELD,
 ): number {
-  if (hops === null) return field.ambient;
+  if (hops === null) return 0;
   const distance = Math.max(0, hops) / Math.max(0.01, field.falloff);
-  const incident = 1 / (1 + distance) ** 2;
-  return field.ambient + (1 - field.ambient) * incident;
+  return field.lift / (1 + distance) ** 2;
 }
 
 /**
- * The brightness at which a mark says its own name.
+ * The mark's own opacity, carried toward 1 by whatever light reaches it.
  *
- * Defined as the light on a neighbour, not as a number: naming has always
- * meant *the mark you touched and the ones it is joined to*, and deriving the
- * cut from the law keeps that true when the law is retuned. Retune `falloff`
- * and the named set does not silently grow.
+ * Reflected rather than replaced, and one-sided: `albedo` is a floor the light
+ * can only raise. A filament authored quiet stays quieter than the disc beside
+ * it, and a mark at 1 cannot be made brighter than it already is — which is
+ * why nothing has to be dimmed to make room.
  */
-export function namingCut(field: LightField = DEFAULT_LIGHT_FIELD): number {
-  return luminance(1, field) - 1e-9;
+export function reflected(albedo: number, incidentLift: number): number {
+  return albedo + (1 - albedo) * Math.max(0, Math.min(1, incidentLift));
 }
 
 /**
- * What a mark actually draws at: its own material, under this much light.
+ * How far a mark can be from the source and still name itself.
  *
- * Reflected, not replaced. A quiet filament authored at 0.4 stays quieter
- * than the disc beside it — illumination scales what a thing already is
- * rather than overwriting it.
+ * One hop. Naming used to be read off the light at a threshold, which was neat
+ * and made the two inseparable: retuning the falloff silently changed which
+ * marks showed their labels. They are different questions. *What is lit* is a
+ * matter of degree; *what says its name* is a matter of whether it is joined
+ * to the thing you touched.
  */
-export function reflected(albedo: number, incident: number): number {
-  return albedo * incident;
-}
+export const NAMING_HOPS = 1;
 
-export function lightCssVariables(field: LightField = DEFAULT_LIGHT_FIELD) {
+export function lightCssVariables(
+  field: LightField = DEFAULT_LIGHT_FIELD,
+): Record<string, string> {
   return {
-    "--light-ambient": String(field.ambient),
+    "--light-lift": String(field.lift),
     "--light-falloff": String(field.falloff),
-  } as const;
+  };
 }

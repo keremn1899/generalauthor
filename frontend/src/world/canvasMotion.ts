@@ -214,8 +214,29 @@ export async function transitionCanvasData(
   }
 
   if (gone()) return { bornNodes, bornEdges, diedNodeIds, diedEdgeIds };
+  /**
+   * Nothing is arriving or leaving, so this pass is only what the marks
+   * *look* like — light lifting, a label appearing on a bond a person has
+   * reached. Those ease.
+   *
+   * `marksNeverMove` is not in tension with it: this animates appearance, not
+   * position, and a re-layout still cannot happen because none is being
+   * asked for. Births and deaths keep their own plans below; only the
+   * standing-still case gets `hold`, which is the shortest thing the spine
+   * has and the one intended for a change that tracks a person rather than
+   * announcing itself.
+   */
+  const settling =
+    !bornNodes.length &&
+    !bornEdges.length &&
+    !dyingNodes.length &&
+    !dyingEdges.length;
+  if (settling) {
+    graph.setOptions({ animation: planOptions(DEFAULT_MOTION_PLANS.hold) });
+  }
   graph.setData(entering as never);
   await graph.draw();
+  if (settling && !graph.destroyed) graph.setOptions({ animation: false });
   if (gone()) return { bornNodes, bornEdges, diedNodeIds, diedEdgeIds };
 
   if (bornNodes.length || bornEdges.length) {

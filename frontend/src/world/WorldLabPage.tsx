@@ -14,7 +14,8 @@ import { type ThemeMode } from "../styles/graphDna";
 import { scaleMotionPlans, type MotionIntent } from "../styles/motion";
 import {
   DEFAULT_LIGHT_FIELD,
-  luminance,
+  lift,
+  reflected,
   type LightField,
 } from "../styles/light";
 import { Swap } from "../styles/Swap";
@@ -780,16 +781,18 @@ export function WorldLabPage() {
 
           <div className="ctrl-section">
             <span className="ctrl-label">LIGHT</span>
-            {/* The law, plotted. A number for `falloff` means nothing on its
-                own; the fifth bar going dark is the thing you are choosing. */}
+            {/* The law, plotted on a quiet mark — one that rests at 0.45,
+                because a mark already at 1 is exactly what this law leaves
+                alone and would plot as a flat row of identical bars. The
+                right-hand bar is the unlit rest, which nothing dims below. */}
             <div className="light-ladder" aria-hidden>
-              {[0, 1, 2, 3, 4, 5].map((hops) => (
-                <div key={hops} className="light-ladder__step">
+              {[0, 1, 2, 3, 4, 5, null].map((hops) => (
+                <div key={hops ?? "rest"} className="light-ladder__step">
                   <span
                     className="light-ladder__mark"
-                    style={{ opacity: luminance(hops, lightField) }}
+                    style={{ opacity: reflected(0.45, lift(hops, lightField)) }}
                   />
-                  <b>{hops}</b>
+                  <b>{hops ?? "\u221e"}</b>
                 </div>
               ))}
             </div>
@@ -808,15 +811,15 @@ export function WorldLabPage() {
                 />
               </label>
               <label>
-                <span>Ambient — {lightField.ambient.toFixed(2)}</span>
+                <span>Lift — {lightField.lift.toFixed(2)}</span>
                 <input
                   type="range"
                   min={0}
-                  max={0.9}
+                  max={1}
                   step={0.01}
-                  value={lightField.ambient}
+                  value={lightField.lift}
                   onChange={(e) =>
-                    setLightField((f) => ({ ...f, ambient: Number(e.target.value) }))
+                    setLightField((f) => ({ ...f, lift: Number(e.target.value) }))
                   }
                 />
               </label>

@@ -162,8 +162,17 @@ export function discNode(
       size: p.discDiameter,
       opacity: 1,
       fill: paint.ink,
-      stroke: paint.ink,
-      lineWidth: GRAPH_DNA_GEOMETRY.nodeLine,
+      /**
+       * No stroke. A referent is a mass, not an outline.
+       *
+       * It used to carry `stroke: paint.ink` at `nodeLine` — the same colour
+       * as the fill, so at rest it was invisible and cost nothing. Below full
+       * opacity it stopped being invisible: a canvas paints fill and stroke as
+       * two operations, and a stroke straddling the fill's edge composites
+       * twice over its inner half, so any dimming grew a darker rim on every
+       * disc. A border that can only ever be the fill colour is not a border.
+       */
+      lineWidth: 0,
       labelText: label,
       labelPlacement: "center" as const,
       labelFill: paint.field,
@@ -344,12 +353,22 @@ export function spokeEdge(
     style: {
       stroke: paint.ink,
       lineWidth: p.roleSpokeWidth,
-      // A named bond is a lit bond. G6 applies the element's opacity to the
-      // label group as well, so a chip on a 0.5 filament comes out grey on
-      // grey — and the fix is not to fight the inheritance but to accept what
-      // it is telling us: you are looking at this spoke, so it should be at
-      // full strength while you are.
-      opacity: options.showRole ? 1 : p.roleSpokeOpacity,
+      // Two channels, and the split is the point.
+      //
+      // `opacity` is presence: 0 while the spoke is being born or absorbed,
+      // 1 once it is here, and nothing else touches it. `strokeOpacity` is
+      // what the line is made of — quiet, because a role spoke is scaffolding
+      // — and it is the channel light reflects off.
+      //
+      // They were one channel until the light law had something to say. G6
+      // composites element opacity into the label group, so a spoke drawn at
+      // 0.5 drew its name at 0.5 too: grey on grey. The old fix was to send
+      // the whole spoke to full strength the moment it was named, which read
+      // well and cost the law its subject — the falloff had nothing left to
+      // act on, and a spoke you pointed at doubled instead of brightening.
+      // Dimming the stroke alone leaves the name at the strength stated below.
+      opacity: 1,
+      strokeOpacity: p.roleSpokeOpacity,
       lineCap: "round" as const,
       lineDash: options.dotted ? ([0, p.dottedGap] as [number, number]) : undefined,
       labelText: options.showRole ? (options.role ?? "") : "",
@@ -357,9 +376,10 @@ export function spokeEdge(
       labelFontSize: p.roleLabelSize,
       labelFontWeight: p.roleLabelWeight,
       labelFill: paint.ink,
-      // Stated, not inherited. A label left to take the edge's opacity is a
-      // name drawn at the strength of the line under it, which is backwards:
-      // the filament is quiet so the name can be read over it.
+      // Stated, not inherited — and now actually so. A label left to take the
+      // edge's opacity is a name drawn at the strength of the line under it,
+      // which is backwards: the filament is quiet so the name can be read
+      // over it.
       labelOpacity: 1,
       labelBackground: true,
       labelBackgroundOpacity: 1,
@@ -374,13 +394,33 @@ export function spokeEdge(
 }
 
 /** A plain filament, with or without its name showing. */
+/**
+ * How far along a filament a leaning label sits.
+ *
+ * A bond names itself because a person is on one of its two ends, and the
+ * label placed dead centre does not say which. Leaning it toward the mark
+ * that caused it to speak does, and it separates the labels of two bonds that
+ * share an end and would otherwise stack at their midpoints.
+ *
+ * Gentle on purpose: a disc is 90 across, and a label pulled much further
+ * than this along a short filament ends up inside the mark it is leaning
+ * toward.
+ */
+export const BOND_LABEL_LEAN = 0.4;
+
 export function filamentEdge(
   id: string,
   source: string,
   target: string,
   paint: Paint,
   p: MarkParams,
-  options: { label?: string; named: boolean; kind?: ChipKind },
+  options: {
+    label?: string;
+    named: boolean;
+    kind?: ChipKind;
+    /** Which end is being acted on, if either. */
+    lean?: "source" | "target";
+  },
 ) {
   const named = options.named && Boolean(options.label);
   // A bond's plate is the same plate, so it fills on the same rule. What it
@@ -395,8 +435,11 @@ export function filamentEdge(
     style: {
       stroke: paint.ink,
       lineWidth: p.edgeWidth,
-      // See `spokeEdge`: naming a bond lights it.
-      opacity: named ? 1 : p.edgeOpacity,
+      // See `spokeEdge` for why these are two channels: presence, then
+      // material. A bond is quiet for the same reason a spoke is, and its
+      // name is legible for the same reason.
+      opacity: 1,
+      strokeOpacity: p.edgeOpacity,
       lineCap: "round" as const,
       labelText: named ? options.label : "",
       labelFontFamily: FONT_SANS_FAMILY,
@@ -415,7 +458,12 @@ export function filamentEdge(
       labelBackgroundRadius: p.chipRadius,
       labelPadding: [p.chipPaddingY, p.chipPaddingX] as [number, number],
       labelAutoRotate: false,
-      labelPlacement: 0.5,
+      labelPlacement:
+        options.lean === "source"
+          ? BOND_LABEL_LEAN
+          : options.lean === "target"
+            ? 1 - BOND_LABEL_LEAN
+            : 0.5,
     },
   };
 }

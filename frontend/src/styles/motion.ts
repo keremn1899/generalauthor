@@ -414,6 +414,8 @@ export const STILL_RULES = {
     "Retrieval and traversal do not call a model, so nothing on the read plane is indeterminate and flow is never correct there.",
   themeSnaps:
     "The theme is not a transition. It changes every colour on every surface at once; tweening it makes the whole product briefly untrue.",
+  focusIsWhereYouAre:
+    "A focus ring states where the keyboard is, and it is there the instant the key lands. A ring still arriving is a ring you cannot yet trust — and it is the affordance someone navigating without a pointer is steering by.",
 } as const;
 
 export type StillRule = keyof typeof STILL_RULES;

@@ -3,12 +3,16 @@
    The dock owns the edge, the width and the rule. Neighbours first, then
    the name and the body. `--canvas`, not `--panel`.
 
-   Type is Ask's claim, not GitHub's article scale. `.ask__text` is 0.88rem /
-   1.62 — the same job (prose you read against the map). The node's name is
-   that size at 600. Markdown headings do not outrank it: weight only. */
+   Type comes from `styles/type.ts` — see `--reader-size` below. The node's
+   name is that size at 600, and markdown headings do not outrank it: weight
+   only. */
 
 .node-reader {
-  --reader-size: 0.88rem;
+  /* On the scale. The argument that used to sit above this — that the reader
+     runs its own register, "Ask's claim, not GitHub's article scale" — was
+     written before there was a scale to be off. `subject` is what this is:
+     what the panel is about, and the prose that answers it. */
+  --reader-size: var(--type-subject);
   --reader-leading: 1.62;
   /* One inset, one block. Numerals live in that column — they do not
      hang left of Origin, the title, or the body. */

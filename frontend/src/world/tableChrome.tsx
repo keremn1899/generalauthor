@@ -8,6 +8,7 @@
  */
 
 import type { ReactNode } from "react";
+import { PanelClose } from "./panelChrome";
 
 export type TableSubject = "world" | "frontier" | "other";
 
@@ -54,9 +55,7 @@ export function TableBar({
       {meta ? <span className="table__meta">{meta}</span> : null}
       <div className="table__actions">
         {children}
-        <button type="button" onClick={chrome.onClose}>
-          close
-        </button>
+        <PanelClose onClose={chrome.onClose} />
       </div>
     </header>
   );
