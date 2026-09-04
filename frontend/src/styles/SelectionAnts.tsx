@@ -280,6 +280,7 @@ export function SelectionAnts({
   motion,
   arrivalDelay = 0,
   animated = true,
+  held: contactHeld = false,
 }: {
   graph: Graph | null;
   target: AntTarget | null;
@@ -295,6 +296,8 @@ export function SelectionAnts({
   /** Hold a new ring until the mass it names has finished arriving. */
   arrivalDelay?: number;
   animated?: boolean;
+  /** Pointer contact pauses a selected field before drag threshold is crossed. */
+  held?: boolean;
 }) {
   const [drawn, setDrawn] = useState<AntTarget | null>(target);
   const [arrival, setArrival] = useState(0);
@@ -526,7 +529,9 @@ export function SelectionAnts({
           pathRef.current = element;
           lifecycle.ref.current = element;
         }}
-        className={speed <= 0 ? "ants__mark is-still" : "ants__mark"}
+        className={`ants__mark${speed <= 0 ? " is-still" : ""}${
+          contactHeld ? " is-held" : ""
+        }`}
         d=""
         pathLength={100}
         fill="none"

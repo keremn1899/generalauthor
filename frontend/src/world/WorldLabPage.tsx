@@ -36,8 +36,11 @@ import {
 } from "./workingSet";
 import {
   ANT_DEFAULTS,
+  MATERIAL_DEFAULTS,
   WorldCanvas,
   type CanvasSelection,
+  type MaterialTuning,
+  type SelectionTreatment,
 } from "./WorldCanvas";
 import { SchemaCanvas } from "./SchemaCanvas";
 import { Spine } from "../construction/Spine";
@@ -175,6 +178,10 @@ export function WorldLabPage() {
   const [antLineWidth, setAntLineWidth] = useState(ANT_DEFAULTS.lineWidth);
   const [antSpeed, setAntSpeed] = useState(ANT_DEFAULTS.speed);
   const [antAnimated, setAntAnimated] = useState(ANT_DEFAULTS.animated);
+  const [selectionTreatment, setSelectionTreatment] =
+    useState<SelectionTreatment>("outer-field");
+  const [contactEnabled, setContactEnabled] = useState(true);
+  const [pressScale, setPressScale] = useState(MATERIAL_DEFAULTS.pressScale);
   const antTuning = useMemo(
     () => ({
       clearance: antClearance,
@@ -184,6 +191,10 @@ export function WorldLabPage() {
       animated: antAnimated,
     }),
     [antAnimated, antClearance, antDotGap, antLineWidth, antSpeed],
+  );
+  const materialTuning = useMemo<MaterialTuning>(
+    () => ({ contact: contactEnabled, pressScale }),
+    [contactEnabled, pressScale],
   );
 
   /**
@@ -431,6 +442,10 @@ export function WorldLabPage() {
                                 focusId={focus?.id ?? null}
                                 focusToken={focus?.token ?? 0}
                                 insets={cameraInsets}
+                                ants={antTuning}
+                                motion={motionPlans}
+                                material={materialTuning}
+                                selectionTreatment={selectionTreatment}
                                 light={lightField}
                                 onHover={setHovered}
                                 onSelect={setSelection}
@@ -586,6 +601,9 @@ export function WorldLabPage() {
                     show={SPECIMEN_SHOW}
                     insets={SPECIMEN_INSETS}
                     ants={antTuning}
+                    motion={motionPlans}
+                    material={materialTuning}
+                    selectionTreatment={selectionTreatment}
                     light={lightField}
                     onHover={() => {}}
                     onSelect={setSpecimenSelection}
@@ -611,6 +629,9 @@ export function WorldLabPage() {
                     show={SPECIMEN_SHOW}
                     insets={SPECIMEN_INSETS}
                     ants={antTuning}
+                    motion={motionPlans}
+                    material={materialTuning}
+                    selectionTreatment={selectionTreatment}
                     light={lightField}
                     onHover={() => {}}
                     onSelect={setSpecimenSelection}
@@ -820,6 +841,46 @@ export function WorldLabPage() {
             </div>
           </div>
           {labTab === "sandbox" ? (<>
+
+            <div className="ctrl-section">
+              <span className="ctrl-label">CAUSAL MATERIAL</span>
+              <p className="ctrl-prose">
+                Press applies load. Release settles the body; selection binds
+                only after the click is committed.
+              </p>
+              <div className="ctrl-group ctrl-group--stack">
+                {(
+                  [
+                    ["outer-field", "Outer field · control"],
+                    ["excited-boundary", "Excited boundary"],
+                    ["hollow", "Hollow · contrast"],
+                  ] as const
+                ).map(([treatment, label]) => (
+                  <button
+                    key={treatment}
+                    type="button"
+                    data-active={selectionTreatment === treatment}
+                    onClick={() => setSelectionTreatment(treatment)}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+              <div className="ctrl-sliders">
+                <LabToggle
+                  label="Contact response"
+                  checked={contactEnabled}
+                  onChange={setContactEnabled}
+                />
+                <LabRange
+                  label={`Held size — ${Math.round(pressScale * 100)}%`}
+                  min={90}
+                  max={100}
+                  value={Math.round(pressScale * 100)}
+                  onChange={(value) => setPressScale(value / 100)}
+                />
+              </div>
+            </div>
 
             <div className="ctrl-section">
               <span className="ctrl-label">CANVAS</span>

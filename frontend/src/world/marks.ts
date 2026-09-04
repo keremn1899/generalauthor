@@ -183,6 +183,11 @@ export function discNode(
       lineWidth: 0,
       labelText: label,
       labelPlacement: "center" as const,
+      // Contact scales the already-laid-out name with its body. Keeping a
+      // canonical identity transform prevents G6 from inventing a transform
+      // origin on the first pressed frame and changing line breaks mid-load.
+      labelTransform: [["scale", 1, 1]] as [["scale", number, number]],
+      labelTransformOrigin: "0px 0px",
       labelFill: paint.field,
       labelFontFamily: FONT_SANS_FAMILY,
       labelFontSize: GRAPH_DNA_GEOMETRY.labelSize,
@@ -262,6 +267,8 @@ export function chipNode(
       lineCap: "round" as const,
       labelText: text,
       labelPlacement: "center" as const,
+      labelTransform: [["scale", 1, 1]] as [["scale", number, number]],
+      labelTransformOrigin: "0px 0px",
       labelFill: filled ? paint.field : paint.ink,
       labelFontFamily: FONT_SANS_FAMILY,
       labelFontSize: p.chipLabelSize,

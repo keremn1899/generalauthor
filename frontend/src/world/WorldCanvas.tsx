@@ -31,7 +31,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Graph } from "@antv/g6";
+import { Graph, type NodeData } from "@antv/g6";
 import {
   BOND_LABEL_STACK_GAP,
   bondLabelLayout,
@@ -52,7 +52,13 @@ import {
   GRAPH_DNA_THEME,
   type ThemeMode,
 } from "../styles/graphDna";
-import { DEFAULT_MOTION_PLANS, NODE_BIRTH_PLAN } from "../styles/motion";
+import {
+  DEFAULT_MOTION_PLANS,
+  NODE_BIRTH_PLAN,
+  type MotionPlan,
+  type MotionPlans,
+} from "../styles/motion";
+import { g6StateMotion } from "../styles/motionG6";
 import {
   DEFAULT_LIGHT_FIELD,
   lift,
@@ -75,6 +81,13 @@ import {
   unsettled,
   type ShowState,
 } from "./show";
+import {
+  IDLE_CONTACT,
+  contactId,
+  transitionContact,
+  type ContactEvent,
+  type ContactState,
+} from "./canvasInteraction";
 
 /**
  * The element id a bond's filament is drawn under.
@@ -191,6 +204,69 @@ export const ANT_DEFAULTS: AntTuning = {
   animated: GRAPH_DNA_INTERACTION.selectionMotion,
 };
 
+/** Competing observer-field treatments kept together for the trial. */
+export type SelectionTreatment =
+  | "outer-field"
+  | "excited-boundary"
+  | "hollow";
+
+export type MaterialTuning = {
+  /** Off on the shipping surface until the lab trial is adjudicated. */
+  contact: boolean;
+  /** Resting diameter retained while pointer load is applied. */
+  pressScale: number;
+};
+
+export const MATERIAL_DEFAULTS: MaterialTuning = {
+  contact: false,
+  pressScale: 0.96,
+};
+
+const CONTACT_STATE = "contact-load";
+
+type ContactSize = number | [number, number] | [number, number, number];
+
+function scaledContactSize(size: unknown, scale: number): ContactSize | undefined {
+  if (typeof size === "number") return size * scale;
+  if (
+    Array.isArray(size) &&
+    (size.length === 2 || size.length === 3) &&
+    size.every((part) => typeof part === "number")
+  ) {
+    return size.map((part) => part * scale) as ContactSize;
+  }
+  return undefined;
+}
+
+function reducedMotion(): boolean {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+/**
+ * A step load engages directly; removing it releases through the field spring.
+ * G6 owns interpolation, while the state machine below owns the causal order.
+ */
+function contactNodeOptions(plan: MotionPlan, pressScale: number) {
+  return {
+    style: { cursor: "grab" as const },
+    state: {
+      [CONTACT_STATE]: {
+        size: (datum: NodeData) =>
+          scaledContactSize(datum.style?.size, pressScale),
+        labelTransform: [
+          ["scale", pressScale, pressScale],
+        ] as [["scale", number, number]],
+      },
+    },
+    animation: {
+      state: [
+        g6StateMotion(plan, { fields: ["size"] }),
+        g6StateMotion(plan, { shape: "label", fields: ["transform"] }),
+      ],
+    },
+  };
+}
+
 export type CanvasSelection =
   | { kind: "referent"; id: string }
   | { kind: "assertion"; id: string }
@@ -210,6 +286,9 @@ export function WorldCanvas({
   animateInitial = false,
   insets,
   ants,
+  motion = DEFAULT_MOTION_PLANS,
+  material,
+  selectionTreatment = "outer-field",
   light,
   onHover,
   onSelect,
@@ -238,6 +317,12 @@ export function WorldCanvas({
    * like.
    */
   ants?: Partial<AntTuning>;
+  /** Shared plans; the lab may slow the same laws for inspection. */
+  motion?: MotionPlans;
+  /** Trial-only contact mechanics. The product default remains inert. */
+  material?: Partial<MaterialTuning>;
+  /** How a selected referent binds to the observer field. */
+  selectionTreatment?: SelectionTreatment;
   /**
    * The light field's tuning, for a surface that exists to tune it.
    *
@@ -253,6 +338,16 @@ export function WorldCanvas({
 }) {
   const hostRef = useRef<HTMLDivElement>(null);
   const graphRef = useRef<Graph | null>(null);
+  const motionRef = useRef(motion);
+  motionRef.current = motion;
+  const materialTuning = useMemo<MaterialTuning>(
+    () => ({ ...MATERIAL_DEFAULTS, ...material }),
+    [material],
+  );
+  const materialRef = useRef(materialTuning);
+  materialRef.current = materialTuning;
+  const contactRef = useRef<ContactState>(IDLE_CONTACT);
+  const [contact, setContact] = useState<ContactState>(IDLE_CONTACT);
   const insetsRef = useRef(insets);
   insetsRef.current = insets;
   const [stageSize, setStageSize] = useState({ width: 0, height: 0 });
@@ -426,7 +521,12 @@ export function WorldCanvas({
     if (!selection) return null;
     const id = selection.id;
     if (set.referents.has(id)) {
-      return { shape: "circle", id, diameter: params.discDiameter };
+      return {
+        shape: "circle",
+        id,
+        diameter: params.discDiameter,
+        ...(selectionTreatment === "outer-field" ? {} : { clearance: 0 }),
+      };
     }
     const assertion = set.assertions.get(id);
     if (assertion) {
@@ -448,7 +548,7 @@ export function WorldCanvas({
       };
     }
     return null;
-  }, [params.discDiameter, selection, set, show]);
+  }, [params.discDiameter, selection, selectionTreatment, set, show]);
 
   const selectionArrivalDelay = useMemo(() => {
     const graph = graphRef.current;
@@ -519,9 +619,29 @@ export function WorldCanvas({
 
     for (const referent of set.referents.values()) {
       const stored = at(referent.id);
-      nodes.push(
-        discNode(referent.id, stored.x, stored.y, referent.label, paintFor(referent.id), params),
+      const node = discNode(
+        referent.id,
+        stored.x,
+        stored.y,
+        referent.label,
+        paintFor(referent.id),
+        params,
       );
+      /**
+       * Contrast specimen only. It intentionally removes the referent's fill
+       * so the trial can test whether that reads as selection or absence.
+       * Outer-field and excited-boundary never mutate semantic matter.
+       */
+      if (
+        selectionTreatment === "hollow" &&
+        selection?.kind === "referent" &&
+        selection.id === referent.id
+      ) {
+        node.style.fill = paint.canvas;
+        node.style.fillOpacity = 1;
+        node.style.labelFill = paint.ink;
+      }
+      nodes.push(node);
     }
 
     for (const assertion of set.assertions.values()) {
@@ -763,6 +883,7 @@ export function WorldCanvas({
     antTarget,
     hovered,
     selection,
+    selectionTreatment,
     incident,
     namedMarks,
     show,
@@ -807,7 +928,10 @@ export function WorldCanvas({
       // ants, so the renderer is not also asked to thicken a line or lay a
       // halo under a disc — two marks for one fact, and the quieter one was
       // the only one anybody read.
-      node: { style: { cursor: "grab" } },
+      node: contactNodeOptions(
+        motion.hold,
+        materialTuning.pressScale,
+      ),
       edge: { style: { cursor: "default" } },
       behaviors: [
         "zoom-canvas",
@@ -987,6 +1111,52 @@ export function WorldCanvas({
     };
 
     let ignoreClickUntil = 0;
+    const publishContact = (event: ContactEvent) => {
+      const next = transitionContact(contactRef.current, event);
+      if (next === contactRef.current) return next;
+      contactRef.current = next;
+      setContact(next);
+      return next;
+    };
+    const elementStatesWithoutContact = (id: string) =>
+      graph.getElementState(id).filter((state) => state !== CONTACT_STATE);
+    const engageContact = (id: string) => {
+      if (!materialRef.current.contact || isDecoration(id)) return;
+      const next = publishContact({ type: "press", id });
+      if (next.phase !== "pressed" || next.id !== id) return;
+      graph.setNode(
+        contactNodeOptions(
+          motionRef.current.hold,
+          materialRef.current.pressScale,
+        ),
+      );
+      const states = elementStatesWithoutContact(id);
+      void graph
+        .setElementState(
+          { [id]: [...states, CONTACT_STATE] },
+          !reducedMotion(),
+        )
+        .catch(() => undefined);
+      return next;
+    };
+    const releaseContact = () => {
+      const next = publishContact({ type: "release" });
+      if (next.phase !== "releasing") return;
+      const { id } = next;
+      graph.setNode(
+        contactNodeOptions(
+          motionRef.current.settle,
+          materialRef.current.pressScale,
+        ),
+      );
+      void graph
+        .setElementState(
+          { [id]: elementStatesWithoutContact(id) },
+          !reducedMotion(),
+        )
+        .catch(() => undefined)
+        .finally(() => publishContact({ type: "settled", id }));
+    };
     const hovering = (id: string | null) => {
       if (draggingRef.current) return;
       onHoverRef.current(id);
@@ -1012,6 +1182,10 @@ export function WorldCanvas({
 
     graph.on("node:pointerenter", (event) => hovering(subject(idOf(event))));
     graph.on("node:pointerleave", () => hovering(null));
+    graph.on("node:pointerdown", (event) => {
+      const id = subject(idOf(event));
+      if (id) engageContact(id);
+    });
     graph.on("node:click", (event) => {
       if (performance.now() < ignoreClickUntil) return;
       const id = subject(idOf(event));
@@ -1041,7 +1215,10 @@ export function WorldCanvas({
     graph.on("node:dragstart", (event) => {
       draggingRef.current = true;
       const id = subject(idOf(event));
-      if (id) followFurniture(id);
+      if (id) {
+        publishContact({ type: "drag", id });
+        followFurniture(id);
+      }
     });
     graph.on("node:drag", (event) => {
       const id = subject(idOf(event));
@@ -1057,7 +1234,13 @@ export function WorldCanvas({
       draggingRef.current = false;
       ignoreClickUntil = performance.now() + 240;
       harvest();
+      releaseContact();
     });
+
+    // G6 owns picking, but release belongs to the pointer even when it leaves
+    // the canvas. A lost release would leave matter compressed indefinitely.
+    window.addEventListener("pointerup", releaseContact);
+    window.addEventListener("pointercancel", releaseContact);
 
     void graph
       .render()
@@ -1071,17 +1254,25 @@ export function WorldCanvas({
       .catch((problem: unknown) => {
         if (graphRef.current === graph) console.error(problem);
       });
-    // A canvas has no DOM to address, so in development the graph is reachable
-    // for driving from the console or a browser-automated check. Synthetic
-    // pointer events do not reach the renderer's own picking, which makes this
-    // the only way to exercise selection without a human hand on the mouse.
+    // A canvas has no DOM to address, so in development the field graph is
+    // reachable for a browser-automated material check. This has its own name:
+    // SchemaCanvas also exposes a graph, and a lab may mount both at once.
     if (import.meta.env.DEV) {
-      (window as unknown as { __worldGraph?: Graph }).__worldGraph = graph;
+      (window as unknown as { __worldFieldGraph?: Graph }).__worldFieldGraph = graph;
     }
     return () => {
       host.removeEventListener("contextmenu", blockMenu);
+      window.removeEventListener("pointerup", releaseContact);
+      window.removeEventListener("pointercancel", releaseContact);
       graphRef.current = null;
       setReady(false);
+      if (
+        (window as unknown as { __worldFieldGraph?: Graph }).__worldFieldGraph ===
+        graph
+      ) {
+        delete (window as unknown as { __worldFieldGraph?: Graph })
+          .__worldFieldGraph;
+      }
       graph.destroy();
     };
     // The graph is created once. Data changes go through the effect below, so
@@ -1173,7 +1364,11 @@ export function WorldCanvas({
   useFocusPan(graphRef, ready, focusId, focusToken, insetsRef);
 
   return (
-    <div className="world__stage">
+    <div
+      className="world__stage"
+      data-contact-phase={contact.phase}
+      data-selection-treatment={selectionTreatment}
+    >
       <div className="world__surface" ref={hostRef} />
       <SelectionAnts
         graph={ready ? graphRef.current : null}
@@ -1182,10 +1377,16 @@ export function WorldCanvas({
         dotGap={tuning.dotGap}
         lineWidth={tuning.lineWidth}
         speed={tuning.animated ? tuning.speed : 0}
-        color={paint.ink}
-        motion={DEFAULT_MOTION_PLANS}
+        color={
+          antTarget?.shape === "circle" &&
+          selectionTreatment === "excited-boundary"
+            ? paint.canvas
+            : paint.ink
+        }
+        motion={motion}
         arrivalDelay={selectionArrivalDelay}
         animated={tuning.animated}
+        held={contactId(contact) === selection?.id}
       />
     </div>
   );
