@@ -155,7 +155,7 @@ export function WorldLabPage() {
   const [antSpeed, setAntSpeed] = useState(ANT_DEFAULTS.speed);
   const [antAnimated, setAntAnimated] = useState(ANT_DEFAULTS.animated);
   const [selectionTreatment, setSelectionTreatment] =
-    useState<SelectionTreatment>("outer-field");
+    useState<SelectionTreatment>("hollow");
   const [contactEnabled, setContactEnabled] = useState(true);
   const [pressScale, setPressScale] = useState(MATERIAL_DEFAULTS.pressScale);
   const antTuning = useMemo(
@@ -521,9 +521,9 @@ export function WorldLabPage() {
               <div className="ctrl-group ctrl-group--stack">
                 {(
                   [
+                    ["hollow", "Hollow aperture · trial"],
                     ["outer-field", "Outer field · control"],
                     ["excited-boundary", "Excited boundary"],
-                    ["hollow", "Hollow · contrast"],
                   ] as const
                 ).map(([treatment, label]) => (
                   <button

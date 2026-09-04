@@ -31,7 +31,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Graph, type NodeData } from "@antv/g6";
+import { Graph } from "@antv/g6";
 import {
   BOND_LABEL_STACK_GAP,
   bondLabelLayout,
@@ -58,7 +58,7 @@ import {
   type MotionPlan,
   type MotionPlans,
 } from "../styles/motion";
-import { g6StateMotion } from "../styles/motionG6";
+import { g6KeyframeMotion } from "../styles/motionG6";
 import {
   DEFAULT_LIGHT_FIELD,
   lift,
@@ -159,7 +159,14 @@ function liveEdge(
     onframe?: () => void;
   };
   if (!edge.parsedAttributes || typeof edge.onframe !== "function") return null;
-  return { parsedAttributes: edge.parsedAttributes, onframe: edge.onframe };
+  // `onframe` calls other G6 edge methods through `this`. Returning the bare
+  // method detaches it from the element, so dragging any connected node throws
+  // while an isolated node appears to work — the inconsistency is topology,
+  // not load. Preserve the receiver at this one renderer boundary.
+  return {
+    parsedAttributes: edge.parsedAttributes,
+    onframe: edge.onframe.bind(el),
+  };
 }
 
 /** Centre a restored field once, after the renderer has its real host size. */
@@ -222,50 +229,36 @@ export const MATERIAL_DEFAULTS: MaterialTuning = {
   pressScale: 0.96,
 };
 
-const CONTACT_STATE = "contact-load";
-
-type ContactSize = number | [number, number] | [number, number, number];
-
-function scaledContactSize(size: unknown, scale: number): ContactSize | undefined {
-  if (typeof size === "number") return size * scale;
-  if (
-    Array.isArray(size) &&
-    (size.length === 2 || size.length === 3) &&
-    size.every((part) => typeof part === "number")
-  ) {
-    return size.map((part) => part * scale) as ContactSize;
-  }
-  return undefined;
-}
-
 function reducedMotion(): boolean {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
-/**
- * A step load engages directly; removing it releases through the field spring.
- * G6 owns interpolation, while the state machine below owns the causal order.
- */
-function contactNodeOptions(plan: MotionPlan, pressScale: number) {
-  return {
-    style: { cursor: "grab" as const },
-    state: {
-      [CONTACT_STATE]: {
-        size: (datum: NodeData) =>
-          scaledContactSize(datum.style?.size, pressScale),
-        labelTransform: [
-          ["scale", pressScale, pressScale],
-        ] as [["scale", number, number]],
-      },
-    },
-    animation: {
-      state: [
-        g6StateMotion(plan, { fields: ["size"] }),
-        g6StateMotion(plan, { shape: "label", fields: ["transform"] }),
-      ],
-    },
+type MaterialAnimation = {
+  currentTime: number | null;
+  finished: Promise<unknown>;
+  cancel: () => void;
+};
+
+type MaterialShape = {
+  attr: {
+    (name: string): unknown;
+    (attributes: Record<string, unknown>): void;
   };
-}
+  animate: (
+    keyframes: Record<string, unknown>[],
+    options: KeyframeAnimationOptions,
+  ) => MaterialAnimation | null;
+};
+
+type MaterialElement = {
+  getShape: (name: string) => MaterialShape | undefined;
+};
+
+type CanvasFrame = {
+  nodes: CanvasDatum[];
+  edges: CanvasDatum[];
+  animateInitial: boolean;
+};
 
 export type CanvasSelection =
   | { kind: "referent"; id: string }
@@ -353,6 +346,17 @@ export function WorldCanvas({
   const [stageSize, setStageSize] = useState({ width: 0, height: 0 });
   /** Marks on the field last time we drew, so growth can be noticed. */
   const drawnRef = useRef(0);
+  /**
+   * G6 has one mutable scene, so it also gets one reconciliation lane.
+   *
+   * Selection, naming and expansion can all change React data while an
+   * animated draw is in flight. Keeping only the newest waiting frame avoids
+   * drawing stale intermediate states, while the promise lane prevents two
+   * calls from mutating the same scene concurrently. A frame received during
+   * a drag waits here instead of being discarded.
+   */
+  const pendingFrameRef = useRef<CanvasFrame | null>(null);
+  const drawLaneRef = useRef<Promise<void>>(Promise.resolve());
   /**
    * The current working set, for handlers registered once at mount.
    *
@@ -628,9 +632,9 @@ export function WorldCanvas({
         params,
       );
       /**
-       * Contrast specimen only. It intentionally removes the referent's fill
-       * so the trial can test whether that reads as selection or absence.
-       * Outer-field and excited-boundary never mutate semantic matter.
+       * Observer aperture. Selection withdraws the disc's optical fill into
+       * its marching boundary without changing identity, geometry or incident
+       * constraints. Returning to rest condenses the authored fill again.
        */
       if (
         selectionTreatment === "hollow" &&
@@ -905,6 +909,75 @@ export function WorldCanvas({
     onPositions(out);
   }, [onPositions]);
 
+  const queueCanvasDraw = useCallback(() => {
+    const scheduledGraph = graphRef.current;
+    if (
+      !scheduledGraph ||
+      draggingRef.current ||
+      contactRef.current.phase !== "idle"
+    ) return;
+
+    drawLaneRef.current = drawLaneRef.current
+      .catch(() => undefined)
+      .then(async () => {
+        const graph = graphRef.current;
+        if (!graph || graph !== scheduledGraph || graph.destroyed) return;
+
+        while (
+          pendingFrameRef.current &&
+          !draggingRef.current &&
+          contactRef.current.phase === "idle"
+        ) {
+          const next = pendingFrameRef.current;
+          pendingFrameRef.current = null;
+
+          try {
+            /**
+             * Restored data was already rendered by the constructor. Do not
+             * send it through a no-op animated draw before centring: G6
+             * completes that camera-affecting frame after the draw promise and
+             * used to undo the vertical half of the centre operation.
+             */
+            if (
+              !next.animateInitial &&
+              drawnRef.current === 0 &&
+              next.nodes.length
+            ) {
+              drawnRef.current = next.nodes.length;
+              if (next.nodes.length === 1) {
+                await graph.zoomTo(1, { duration: 0 });
+              }
+              await centreStandingField(
+                graph,
+                next.nodes
+                  .map((node) => node.id)
+                  .filter((id) => !isDecoration(id)),
+                insetsRef.current,
+              );
+              continue;
+            }
+
+            await transitionCanvasData(
+              graph,
+              next,
+              () => graphRef.current !== graph || graph.destroyed,
+              { stellarNodes: true },
+            );
+            if (graphRef.current !== graph || graph.destroyed) return;
+
+            const count = next.nodes.length;
+            const grew = count > drawnRef.current;
+            drawnRef.current = count;
+            if (grew && count === 1) {
+              await graph.zoomTo(1, { duration: 0 });
+            }
+          } catch (problem: unknown) {
+            if (graphRef.current === graph) console.error(problem);
+          }
+        }
+      });
+  }, []);
+
   useEffect(() => {
     if (!draggingRef.current) liveRef.current = set.positions;
   }, [set.positions]);
@@ -928,10 +1001,7 @@ export function WorldCanvas({
       // ants, so the renderer is not also asked to thicken a line or lay a
       // halo under a disc — two marks for one fact, and the quieter one was
       // the only one anybody read.
-      node: contactNodeOptions(
-        motion.hold,
-        materialTuning.pressScale,
-      ),
+      node: { style: { cursor: "grab" } },
       edge: { style: { cursor: "default" } },
       behaviors: [
         "zoom-canvas",
@@ -999,8 +1069,15 @@ export function WorldCanvas({
     const relayoutIncidentLabels = (nodeId: string) => {
       const current = setRef.current;
       const p = paramsRef.current;
+      const present = new Set(
+        graph.getNodeData().map((node) => String(node.id)),
+      );
       const at = (id: string) => {
-        const here = graph.getElementPosition(id);
+        // React may already hold an expansion frame that the draw lane is
+        // intentionally postponing until this drag ends. Asking G6 for that
+        // future element throws; its authored position is enough until its
+        // edge actually exists, at which point the queued draw lays it out.
+        const here = present.has(id) ? graph.getElementPosition(id) : null;
         return here
           ? { x: here[0], y: here[1] }
           : liveAt(liveRef.current, current.positions, id);
@@ -1110,7 +1187,16 @@ export function WorldCanvas({
       }
     };
 
-    let ignoreClickUntil = 0;
+    let suppressReleaseClick = false;
+    let releaseClickTimer: number | undefined;
+    type RunningContact = {
+      from: number;
+      to: number;
+      plan: MotionPlan;
+      key: MaterialAnimation | null;
+      label: MaterialAnimation | null;
+    };
+    const runningContact = new Map<string, RunningContact>();
     const publishContact = (event: ContactEvent) => {
       const next = transitionContact(contactRef.current, event);
       if (next === contactRef.current) return next;
@@ -1118,44 +1204,139 @@ export function WorldCanvas({
       setContact(next);
       return next;
     };
-    const elementStatesWithoutContact = (id: string) =>
-      graph.getElementState(id).filter((state) => state !== CONTACT_STATE);
+    const elementOf = (id: string): MaterialElement | undefined =>
+      (
+        graph as unknown as {
+          context?: {
+            element?: { getElement: (elementId: string) => MaterialElement };
+          };
+        }
+      ).context?.element?.getElement(id);
+    const scaleTransform = (scale: number) => [
+      ["scale", scale, scale],
+    ];
+    /**
+     * Contact acts on the two local shapes of one body. It never changes the
+     * graph's global node mapper and therefore never asks unrelated matter to
+     * refresh. The tracked trajectory also lets a quick release begin at the
+     * compression actually reached, rather than jumping to the full load.
+     */
+    const animateContact = (
+      id: string,
+      target: number,
+      plan: MotionPlan,
+    ): Promise<void> => {
+      const element = elementOf(id);
+      const key = element?.getShape("key");
+      const label = element?.getShape("label");
+      if (!key) return Promise.resolve();
+
+      const previous = runningContact.get(id);
+      const elapsed = Math.max(
+        0,
+        Math.min(
+          previous?.plan.durationMs ?? 0,
+          Number(previous?.key?.currentTime ?? previous?.plan.durationMs ?? 0),
+        ),
+      );
+      const progress = previous
+        ? previous.plan.sample(elapsed) /
+          Math.max(previous.plan.sample(previous.plan.durationMs), 1e-6)
+        : 1;
+      const from = previous
+        ? previous.from + (previous.to - previous.from) * progress
+        : target === 1
+          ? materialRef.current.pressScale
+          : 1;
+
+      previous?.key?.cancel();
+      previous?.label?.cancel();
+      runningContact.delete(id);
+
+      const start = scaleTransform(from);
+      const end = scaleTransform(target);
+      key.attr({ transform: start });
+      label?.attr({ transform: start });
+
+      if (reducedMotion()) {
+        key.attr({ transform: end });
+        label?.attr({ transform: end });
+        return Promise.resolve();
+      }
+
+      const options = g6KeyframeMotion(plan);
+      const keyAnimation = key.animate(
+        [{ transform: start }, { transform: end }],
+        options,
+      );
+      const labelAnimation = label?.animate(
+        [{ transform: start }, { transform: end }],
+        options,
+      ) ?? null;
+      const running = {
+        from,
+        to: target,
+        plan,
+        key: keyAnimation,
+        label: labelAnimation,
+      };
+      runningContact.set(id, running);
+
+      const finished = [keyAnimation, labelAnimation]
+        .filter((animation): animation is MaterialAnimation =>
+          Boolean(animation),
+        )
+        .map((animation) => animation.finished.catch(() => undefined));
+      // G's animation timeline can be replaced by a graph draw. The draw lane
+      // is held while contact is live, but this deadline is the final safety
+      // law: renderer interruption may shorten a release, never strand it.
+      const deadline = new Promise<void>((resolve) => {
+        window.setTimeout(resolve, plan.durationMs + 64);
+      });
+      return Promise.race([
+        Promise.all(finished).then(() => undefined),
+        deadline,
+      ]).then(() => {
+        if (runningContact.get(id) !== running) return;
+        keyAnimation?.cancel();
+        labelAnimation?.cancel();
+        key.attr({ transform: end });
+        label?.attr({ transform: end });
+        runningContact.delete(id);
+      });
+    };
     const engageContact = (id: string) => {
       if (!materialRef.current.contact || isDecoration(id)) return;
       const next = publishContact({ type: "press", id });
       if (next.phase !== "pressed" || next.id !== id) return;
-      graph.setNode(
-        contactNodeOptions(
-          motionRef.current.hold,
-          materialRef.current.pressScale,
-        ),
+      void animateContact(
+        id,
+        materialRef.current.pressScale,
+        motionRef.current.hold,
       );
-      const states = elementStatesWithoutContact(id);
-      void graph
-        .setElementState(
-          { [id]: [...states, CONTACT_STATE] },
-          !reducedMotion(),
-        )
-        .catch(() => undefined);
       return next;
     };
     const releaseContact = () => {
       const next = publishContact({ type: "release" });
       if (next.phase !== "releasing") return;
       const { id } = next;
-      graph.setNode(
-        contactNodeOptions(
-          motionRef.current.settle,
-          materialRef.current.pressScale,
-        ),
-      );
-      void graph
-        .setElementState(
-          { [id]: elementStatesWithoutContact(id) },
-          !reducedMotion(),
-        )
-        .catch(() => undefined)
-        .finally(() => publishContact({ type: "settled", id }));
+      void animateContact(id, 1, motionRef.current.settle).finally(() => {
+        publishContact({ type: "settled", id });
+        queueCanvasDraw();
+      });
+    };
+    const markReleaseClick = () => {
+      suppressReleaseClick = true;
+      window.clearTimeout(releaseClickTimer);
+      releaseClickTimer = window.setTimeout(() => {
+        suppressReleaseClick = false;
+      }, 0);
+    };
+    const swallowReleaseClick = () => {
+      if (!suppressReleaseClick) return false;
+      suppressReleaseClick = false;
+      window.clearTimeout(releaseClickTimer);
+      return true;
     };
     const hovering = (id: string | null) => {
       if (draggingRef.current) return;
@@ -1187,19 +1368,19 @@ export function WorldCanvas({
       if (id) engageContact(id);
     });
     graph.on("node:click", (event) => {
-      if (performance.now() < ignoreClickUntil) return;
+      if (swallowReleaseClick()) return;
       const id = subject(idOf(event));
       if (!id) return;
       onSelectRef.current(pickNode(id));
     });
     graph.on("edge:click", (event) => {
-      if (performance.now() < ignoreClickUntil) return;
+      if (swallowReleaseClick()) return;
       const id = markOf(idOf(event));
       if (!id) return;
       onSelectRef.current(pickEdge(id));
     });
     graph.on("canvas:click", () => {
-      if (performance.now() < ignoreClickUntil) return;
+      if (swallowReleaseClick()) return;
       onSelectRef.current(null);
     });
     graph.on("node:contextmenu", (event) => {
@@ -1232,15 +1413,24 @@ export function WorldCanvas({
       const id = subject(idOf(event));
       if (id) followFurniture(id);
       draggingRef.current = false;
-      ignoreClickUntil = performance.now() + 240;
+      markReleaseClick();
       harvest();
       releaseContact();
+      queueCanvasDraw();
     });
 
     // G6 owns picking, but release belongs to the pointer even when it leaves
     // the canvas. A lost release would leave matter compressed indefinitely.
+    const cancelPointer = () => {
+      const wasDragging = draggingRef.current;
+      draggingRef.current = false;
+      if (wasDragging) harvest();
+      releaseContact();
+      queueCanvasDraw();
+    };
     window.addEventListener("pointerup", releaseContact);
-    window.addEventListener("pointercancel", releaseContact);
+    window.addEventListener("pointercancel", cancelPointer);
+    window.addEventListener("blur", cancelPointer);
 
     void graph
       .render()
@@ -1263,7 +1453,15 @@ export function WorldCanvas({
     return () => {
       host.removeEventListener("contextmenu", blockMenu);
       window.removeEventListener("pointerup", releaseContact);
-      window.removeEventListener("pointercancel", releaseContact);
+      window.removeEventListener("pointercancel", cancelPointer);
+      window.removeEventListener("blur", cancelPointer);
+      window.clearTimeout(releaseClickTimer);
+      for (const running of runningContact.values()) {
+        running.key?.cancel();
+        running.label?.cancel();
+      }
+      runningContact.clear();
+      pendingFrameRef.current = null;
       graphRef.current = null;
       setReady(false);
       if (
@@ -1281,65 +1479,26 @@ export function WorldCanvas({
   }, []);
 
   useEffect(() => {
-    const graph = graphRef.current;
     if (
       !ready ||
       !stageSize.width ||
       !stageSize.height ||
-      !graph ||
-      draggingRef.current
+      !graphRef.current
     ) return;
-    let cancelled = false;
-    const next = {
+    pendingFrameRef.current = {
       nodes: data.nodes as CanvasDatum[],
       edges: data.edges as CanvasDatum[],
+      animateInitial,
     };
-
-    void (async () => {
-      try {
-        /**
-         * Restored data was already rendered by the constructor. Do not send
-         * it through a no-op animated draw before centring: G6 completes that
-         * camera-affecting frame after the draw promise and used to undo the
-         * vertical half of the centre operation.
-         */
-        if (!animateInitial && drawnRef.current === 0 && next.nodes.length) {
-          drawnRef.current = next.nodes.length;
-          if (next.nodes.length === 1) {
-            await graph.zoomTo(1, { duration: 0 });
-          }
-          await centreStandingField(
-            graph,
-            next.nodes
-              .map((node) => node.id)
-              .filter((id) => !isDecoration(id)),
-            insetsRef.current,
-          );
-          return;
-        }
-        await transitionCanvasData(
-          graph,
-          next,
-          () => cancelled || graphRef.current !== graph,
-          { stellarNodes: true },
-        );
-        if (cancelled || graphRef.current !== graph) return;
-        const count = next.nodes.length;
-        const grew = count > drawnRef.current;
-        drawnRef.current = count;
-        /* A first seed still needs a unit zoom. Growth from Expand through
-           must not pan: new marks appear where they were placed. */
-        if (grew && count === 1) {
-          await graph.zoomTo(1, { duration: 0 });
-        }
-      } catch (problem: unknown) {
-        if (graphRef.current === graph) console.error(problem);
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [animateInitial, data, ready, stageSize.height, stageSize.width]);
+    queueCanvasDraw();
+  }, [
+    animateInitial,
+    data,
+    queueCanvasDraw,
+    ready,
+    stageSize.height,
+    stageSize.width,
+  ]);
 
   // A renderer sized once is sized wrong the moment anything else on the page
   // takes room. The camera is left alone — resizing is not new matter.

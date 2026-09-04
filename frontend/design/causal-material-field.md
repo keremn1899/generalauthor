@@ -27,7 +27,8 @@ space skin, idle wandering, stars, nebulae or ornamental orbit.
   never an unsupported relation strength or direction.
 - **The field** carries light, collision and bounded propagation.
 - **The observer** is the pointer, selection and camera. Selection belongs to
-  the observer and must not overwrite semantic geometry.
+  the observer. It may temporarily change a body's optical presentation, but
+  must not overwrite its semantic geometry or construction origin.
 - Rest is the default. Nothing moves without a visible cause.
 - A mark may respond to a local cause, but its authored rest position is
   conserved. A directly manipulated mark may acquire a new authored rest.
@@ -64,14 +65,20 @@ idle -> pressed -> releasing -> idle
 
 ## Selection comparison
 
-The lab retains all three treatments against the same shipping component:
+The lab retains all three treatments against the same shipping component.
+Hollow is now the leading trial, while the shipped outer ring remains the
+reversible control:
 
-1. **Outer field (control).** The existing ants stand off a filled disc.
-2. **Excited boundary (challenger).** The disc remains filled and the ants run
-   on its material boundary. This is the preferred hypothesis.
-3. **Hollow transformation (contrast).** The fill withdraws and ants become
-   the boundary. This deliberately tests the feared reading of subtraction or
-   absence; it is not a proposed semantic default.
+1. **Hollow aperture (leading trial).** On committed selection, the disc's
+   material evacuates optically into its boundary and the ants occupy that
+   boundary. The body has not been removed: its stable geometry, name and
+   incident constraints remain. Deselection condenses the fill back. This is
+   an observer aperture into matter, not a deletion or a semantic hollow.
+2. **Outer field (control).** The existing ants stand off a filled disc. It is
+   retained unchanged until the aperture reading survives use in the full
+   surface.
+3. **Excited boundary (alternate).** The disc remains filled and the ants run
+   on its material boundary.
 
 Plates and filaments keep their existing selection geometry in this slice.
 Their ants already become the plate border or run along the selected line.
@@ -112,5 +119,7 @@ only for the causal episode and stops at rest.
 - Any neighbour displacement is capped and reversible.
 - Interrupted or reversed animations leave no stuck compression or orphaned
   selection field.
+- Interaction-driven canvas updates are serialized; a frame received during
+  drag is applied after release rather than discarded.
 - Touch, keyboard and reduced-motion paths retain the same state distinctions.
 - The 150-mark field limit remains responsive.
