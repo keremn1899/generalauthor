@@ -37,9 +37,12 @@ changes nothing; that is the difference between a lamp and a vignette.
 
 Two consequences worth stating, because they are otherwise argued about twice:
 
-- **While held, physics is suspended.** A drag is `hold` — 90ms, linear, no
-  easing — because the mark is not moving, you are moving it. On release,
-  **still**: a settle would take the mark off the spot the person chose.
+- **While held, autonomous physics is suspended.** A drag is `hold` — 90ms,
+  linear, no easing — because the mark is not moving, you are moving it. A
+  gated one-hop trial may let connected neighbours yield quasi-statically to
+  that visible load, but no solver or inertia acts on the held mark. On
+  release, the held mark is **still**: a settle would take it off the spot the
+  person chose.
 - **The camera is not matter.** Nothing about pan or zoom obeys either law.
   That disposes of panning, scrolling and zoom together, and explains why
   fit-to-view is the one exception — it moves matter into view because it was
@@ -160,9 +163,11 @@ Each is a quotation from something already decided, not a new position.
 | every mark already placed | REMAINS | **still** — rule 1, the load-bearing one |
 | edge for a new expansion | ARRIVES | `emit`, drawn along its path, after its node lands |
 | `drop(id)` | DEPARTS | `absorb` |
+| open a binary filament into a plate | CONTINUES through a different projection | paired hand-off: release filament, `emit` plate, then bind spokes — not death + birth |
+| collapse a binary plate into a filament | CONTINUES through a different projection | paired hand-off: release spokes, `absorb` plate, then extend filament — not death + birth |
 | drag a mark | TRACKS | `hold` |
 | drag release | REMAINS | **still** — no settle; a settle would take the mark off the spot the person chose |
-| unpinned neighbours during a local relax | MOVES | `settle` (see the layout note) |
+| one-hop neighbours under a held mark, gated trial only | TRACKS then MOVES | direct capped axial yield, then `settle` exactly home; control remains fixed |
 | hover | TRACKS | `hold` |
 | selection ring | ARRIVES on the mark | `emit` on the ring; the mark itself **still** |
 | construction-origin geometry | — | **still** — rule 2, always |
