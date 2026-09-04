@@ -1,0 +1,4335 @@
+[
+  {
+    "trial": "T1",
+    "loc": {
+      "physical_loc": 695,
+      "nonblank_loc": 657,
+      "by_category": {
+        "SOURCE_IO": 3,
+        "SOURCE_PROFILING_OR_EXPLORATION": 0,
+        "PHYSICAL_NORMALIZATION": 106,
+        "GENERAL_HELPER_OR_CONTROL_FLOW": 11,
+        "REFERENT_DECLARATION": 20,
+        "RELATION_DECLARATION": 173,
+        "GROUNDING_OR_MAPPING": 7,
+        "MECHANICAL_DERIVATION": 25,
+        "PURPOSE_REQUIREMENT_SCHEMA": 133,
+        "PURPOSE_REQUIREMENT_INSTANTIATION": 5,
+        "UNRESOLVED_OR_HOLE_EMISSION": 34,
+        "REPORTING_DEBUGGING_OR_SERIALIZATION": 0,
+        "OTHER": 140
+      },
+      "semantic_loc": 392,
+      "mechanical_runtime_support_loc": 120,
+      "requirement_loc": 138,
+      "hole_instance_loc": 34
+    },
+    "calls": {
+      "call_counts": {
+        "replace": 1,
+        "rows": 2,
+        "document_inventory": 1,
+        "relation": 13,
+        "map": 7,
+        "derive": 6,
+        "require_materializable": 5,
+        "require_unique": 2,
+        "require_numeric": 2,
+        "require_interpreted": 10,
+        "Source": 1,
+        "World": 1,
+        "Purpose": 1,
+        "construct": 1,
+        "main": 1,
+        "float": 1,
+        "str": 2,
+        "_text": 100,
+        "referent": 4,
+        "append": 14,
+        "parse_date": 8,
+        "interval_contains": 2,
+        "get": 115,
+        "strip": 1,
+        "_looks_numeric": 6,
+        "unresolved": 3,
+        "setdefault": 1,
+        "upper": 2
+      },
+      "n_requirement_call_sites": 22,
+      "n_unique_requirement_names": 22
+    },
+    "referents": [
+      {
+        "original": "document",
+        "normalized": "Document"
+      },
+      {
+        "original": "limit_value",
+        "normalized": "LimitValue"
+      },
+      {
+        "original": "measurement",
+        "normalized": "Measurement"
+      },
+      {
+        "original": "monitoring_requirement",
+        "normalized": "MonitoringRequirement"
+      }
+    ],
+    "relations": [
+      {
+        "original": "measurement_context",
+        "normalized": "MeasurementBase",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 824,
+        "roles": [
+          "measurement",
+          "permit",
+          "discharge_point",
+          "parameter_code",
+          "monitoring_period_end",
+          "monitoring_location",
+          "dmr_event_id",
+          "limit_id",
+          "limit_value_id",
+          "limit_set_id",
+          "limit_set_schedule_id",
+          "limit_set_designator",
+          "nmbr_of_submission",
+          "nmbr_of_report"
+        ]
+      },
+      {
+        "original": "measurement_result",
+        "normalized": "MeasurementBase",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 824,
+        "roles": [
+          "measurement",
+          "dmr_value_nmbr",
+          "dmr_value_qualifier",
+          "dmr_value_standard_units",
+          "dmr_unit_code",
+          "nodi_code",
+          "value_type_code"
+        ]
+      },
+      {
+        "original": "measurement_limit_snapshot",
+        "normalized": "CandidateCorrespondence",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 824,
+        "roles": [
+          "measurement",
+          "limit_value_type_code",
+          "limit_value_nmbr",
+          "limit_value_qualifier",
+          "limit_unit_code",
+          "limit_value_standard_units",
+          "statistical_base_code",
+          "statistical_base_type_code",
+          "limit_type_code",
+          "optional_monitoring_flag",
+          "limit_begin_date",
+          "limit_end_date"
+        ]
+      },
+      {
+        "original": "monitoring_requirement_spec",
+        "normalized": "MonitoringObligation",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 105,
+        "roles": [
+          "requirement",
+          "limit_value",
+          "permit",
+          "discharge_point",
+          "parameter_code",
+          "limit_id",
+          "limit_value_id",
+          "limit_set_schedule_id",
+          "limit_set_designator",
+          "limit_set_name",
+          "limit_set_status_flag",
+          "limit_begin_date",
+          "limit_end_date",
+          "nmbr_of_submission",
+          "nmbr_of_report",
+          "limit_value_type_code",
+          "limit_value_nmbr",
+          "limit_value_qualifier",
+          "limit_unit_code",
+          "statistical_base_code",
+          "statistical_base_type_code",
+          "limit_type_code",
+          "optional_monitoring_flag",
+          "limit_sample_type_code",
+          "limit_freq_of_analysis_code",
+          "all_months_limit",
+          "limit_season_id",
+          "dmr_comment_text"
+        ]
+      },
+      {
+        "original": "requirement_season_month",
+        "normalized": "SeasonalMonth",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 1260,
+        "roles": [
+          "requirement",
+          "month",
+          "active_flag"
+        ]
+      },
+      {
+        "original": "document_catalog",
+        "normalized": "DocumentInventory",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 12,
+        "roles": [
+          "document",
+          "permit",
+          "document_kind",
+          "path",
+          "filename",
+          "bytes"
+        ]
+      },
+      {
+        "original": "limit_catalog_variant",
+        "normalized": "LimitBase",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 105,
+        "roles": [
+          "limit_value",
+          "requirement",
+          "limit_set_schedule_id",
+          "nmbr_of_submission",
+          "nmbr_of_report"
+        ]
+      },
+      {
+        "original": "measurement_in_fy2025",
+        "normalized": "Fy2025Scope",
+        "derived": true,
+        "mode": "WORLD",
+        "n_rows": 824,
+        "roles": [
+          "measurement"
+        ]
+      },
+      {
+        "original": "limit_active_on_measurement_date",
+        "normalized": "CandidateCorrespondence",
+        "derived": true,
+        "mode": "WORLD",
+        "n_rows": 824,
+        "roles": [
+          "measurement"
+        ]
+      },
+      {
+        "original": "measurement_schedule_match",
+        "normalized": "CandidateCorrespondence",
+        "derived": true,
+        "mode": "WORLD",
+        "n_rows": 824,
+        "roles": [
+          "measurement",
+          "requirement",
+          "limit_value"
+        ]
+      },
+      {
+        "original": "numeric_comparison_candidate",
+        "normalized": "NumericComparison",
+        "derived": true,
+        "mode": "PURPOSE",
+        "n_rows": 342,
+        "roles": [
+          "measurement",
+          "limit_value_nmbr",
+          "limit_value_qualifier",
+          "dmr_value_nmbr",
+          "dmr_value_qualifier",
+          "limit_value_standard_units",
+          "dmr_value_standard_units"
+        ]
+      },
+      {
+        "original": "measurement_no_result",
+        "normalized": "MissingEvidence",
+        "derived": true,
+        "mode": "PURPOSE",
+        "n_rows": 186,
+        "roles": [
+          "measurement",
+          "nodi_code",
+          "dmr_value_nmbr",
+          "optional_monitoring_flag",
+          "limit_value_nmbr"
+        ]
+      },
+      {
+        "original": "non_numeric_limit_candidate",
+        "normalized": "NumericComparison",
+        "derived": true,
+        "mode": "PURPOSE",
+        "n_rows": 380,
+        "roles": [
+          "measurement",
+          "limit_value_nmbr",
+          "limit_value_qualifier",
+          "limit_type_code",
+          "optional_monitoring_flag"
+        ]
+      }
+    ],
+    "requirement_schemas": [
+      {
+        "original": "fy2025_measurements_materializable",
+        "normalized": "materializable_fy2025_measurements",
+        "kind": "require_materializable",
+        "field": null
+      },
+      {
+        "original": "monitoring_requirements_materializable",
+        "normalized": "materializable_monitoring",
+        "kind": "require_materializable",
+        "field": null
+      },
+      {
+        "original": "no_result_cases_materializable",
+        "normalized": "materializable_no_result",
+        "kind": "require_materializable",
+        "field": null
+      },
+      {
+        "original": "comparison_candidates_materializable",
+        "normalized": "materializable_candidates",
+        "kind": "require_materializable",
+        "field": null
+      },
+      {
+        "original": "non_numeric_limit_candidates_materializable",
+        "normalized": "materializable_candidates",
+        "kind": "require_materializable",
+        "field": null
+      },
+      {
+        "original": "unique_schedule_match_per_measurement",
+        "normalized": "unique_applicable_limit",
+        "kind": "require_unique",
+        "field": null
+      },
+      {
+        "original": "unique_catalog_variant_per_limit_value",
+        "normalized": "unique_applicable_limit",
+        "kind": "require_unique",
+        "field": null
+      },
+      {
+        "original": "comparison_limit_value_numeric",
+        "normalized": "numeric_limit",
+        "kind": "require_numeric",
+        "field": "limit_value_nmbr"
+      },
+      {
+        "original": "comparison_reported_value_numeric",
+        "normalized": "numeric_measurement",
+        "kind": "require_numeric",
+        "field": "dmr_value_nmbr"
+      },
+      {
+        "original": "comparison_limit_qualifier",
+        "normalized": "interpret_qualifier",
+        "kind": "require_interpreted",
+        "field": "limit_value_qualifier"
+      },
+      {
+        "original": "comparison_reported_qualifier",
+        "normalized": "interpret_qualifier",
+        "kind": "require_interpreted",
+        "field": "dmr_value_qualifier"
+      },
+      {
+        "original": "non_numeric_limit_classification",
+        "normalized": "numeric_limit",
+        "kind": "require_interpreted",
+        "field": "limit_type_code"
+      },
+      {
+        "original": "non_numeric_limit_optional_flag",
+        "normalized": "interpret_optional_monitoring",
+        "kind": "require_interpreted",
+        "field": "optional_monitoring_flag"
+      },
+      {
+        "original": "requirement_comment_semantics",
+        "normalized": "interpret_comment",
+        "kind": "require_interpreted",
+        "field": "dmr_comment_text"
+      },
+      {
+        "original": "optional_monitoring_flag_semantics",
+        "normalized": "interpret_optional_monitoring",
+        "kind": "require_interpreted",
+        "field": "optional_monitoring_flag"
+      },
+      {
+        "original": "limit_freq_semantics",
+        "normalized": "interpret_frequency",
+        "kind": "require_interpreted",
+        "field": "limit_freq_of_analysis_code"
+      },
+      {
+        "original": "season_month_flag_semantics",
+        "normalized": "interpret_seasonal_month",
+        "kind": "require_interpreted",
+        "field": "active_flag"
+      },
+      {
+        "original": "nodi_code_semantics",
+        "normalized": "interpret_nodi",
+        "kind": "require_interpreted",
+        "field": "nodi_code"
+      },
+      {
+        "original": "no_result_optional_monitoring_flag",
+        "normalized": "interpret_optional_monitoring",
+        "kind": "require_interpreted",
+        "field": "optional_monitoring_flag"
+      },
+      {
+        "original": "discharge_condition_not_in_structured_evidence",
+        "normalized": "interpret_comment",
+        "kind": "unresolved",
+        "field": null
+      },
+      {
+        "original": "permit_year_condition_requires_document_text",
+        "normalized": "document_text_unavailable",
+        "kind": "unresolved",
+        "field": null
+      },
+      {
+        "original": "numeric_limit_without_reported_value_or_nodi",
+        "normalized": "interpret_nodi",
+        "kind": "unresolved",
+        "field": null
+      }
+    ],
+    "n_spine_requirement_rows": 48,
+    "n_relations": 13,
+    "n_referent_kinds": 4,
+    "n_requirement_schemas": 22,
+    "grain": {
+      "requirement_schemas": 22,
+      "schema_names": [
+        "comparison_candidates_materializable",
+        "comparison_limit_qualifier",
+        "comparison_limit_value_numeric",
+        "comparison_reported_qualifier",
+        "comparison_reported_value_numeric",
+        "discharge_condition_not_in_structured_evidence",
+        "fy2025_measurements_materializable",
+        "limit_freq_semantics",
+        "monitoring_requirements_materializable",
+        "no_result_cases_materializable",
+        "no_result_optional_monitoring_flag",
+        "nodi_code_semantics",
+        "non_numeric_limit_candidates_materializable",
+        "non_numeric_limit_classification",
+        "non_numeric_limit_optional_flag",
+        "numeric_limit_without_reported_value_or_nodi",
+        "optional_monitoring_flag_semantics",
+        "permit_year_condition_requires_document_text",
+        "requirement_comment_semantics",
+        "season_month_flag_semantics",
+        "unique_catalog_variant_per_limit_value",
+        "unique_schedule_match_per_measurement"
+      ],
+      "candidate_semantic_obligations": 30,
+      "hole_occurrences": 3414,
+      "obligation_sample": [
+        [
+          "cardinality",
+          "unique_catalog_variant_per_limit_value",
+          "MULTIPLE_CANDIDATES"
+        ],
+        [
+          "cardinality",
+          "unique_catalog_variant_per_limit_value",
+          "CARDINALITY_OVERSATISFIED"
+        ],
+        [
+          "interpret",
+          "comparison_limit_qualifier",
+          ">="
+        ],
+        [
+          "interpret",
+          "comparison_limit_qualifier",
+          "<="
+        ],
+        [
+          "interpret",
+          "comparison_reported_qualifier",
+          "="
+        ],
+        [
+          "interpret",
+          "comparison_reported_qualifier",
+          "<"
+        ],
+        [
+          "interpret",
+          "comparison_reported_qualifier",
+          ">"
+        ],
+        [
+          "interpret",
+          "limit_freq_semantics",
+          "99/99"
+        ],
+        [
+          "interpret",
+          "limit_freq_semantics",
+          "01/07"
+        ],
+        [
+          "interpret",
+          "limit_freq_semantics",
+          "05/WK"
+        ],
+        [
+          "interpret",
+          "limit_freq_semantics",
+          "09/99"
+        ],
+        [
+          "interpret",
+          "limit_freq_semantics",
+          "01/01"
+        ],
+        [
+          "interpret",
+          "limit_freq_semantics",
+          "02/30"
+        ],
+        [
+          "interpret",
+          "limit_freq_semantics",
+          "02/07"
+        ],
+        [
+          "interpret",
+          "limit_freq_semantics",
+          "01/90"
+        ],
+        [
+          "interpret",
+          "no_result_optional_monitoring_flag",
+          "Y"
+        ],
+        [
+          "interpret",
+          "no_result_optional_monitoring_flag",
+          "N"
+        ],
+        [
+          "interpret",
+          "nodi_code_semantics",
+          "9"
+        ],
+        [
+          "interpret",
+          "nodi_code_semantics",
+          "C"
+        ],
+        [
+          "interpret",
+          "non_numeric_limit_classification",
+          "ENF"
+        ],
+        [
+          "interpret",
+          "non_numeric_limit_optional_flag",
+          "N"
+        ],
+        [
+          "interpret",
+          "non_numeric_limit_optional_flag",
+          "Y"
+        ],
+        [
+          "interpret",
+          "optional_monitoring_flag_semantics",
+          "N"
+        ],
+        [
+          "interpret",
+          "optional_monitoring_flag_semantics",
+          "Y"
+        ],
+        [
+          "interpret",
+          "requirement_comment_semantics",
+          "(PASS = 0  FAIL = 1) REPORT PASS AS '0' OR REPORT FAIL AS '1' IN CONCENTRATION MAX. ABOVE.  IF ALL TESTS PASS FOR THE FIRST YEAR OF THE PERMIT, THE FREQUENCY WILL BE REDUCED FOR YEARS 2-5 TO:  1/6 MONTHS FOR DAPHNIA PULEX & 1/YR FOR PIMEPHALES PROMELAS (SEE FOOTNOTE 9, PAGE 3 OF PART I OF PERMIT)."
+        ],
+        [
+          "interpret",
+          "requirement_comment_semantics",
+          "WHEN DISCHARGING."
+        ],
+        [
+          "interpret",
+          "requirement_comment_semantics",
+          "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES."
+        ],
+        [
+          "interpret",
+          "season_month_flag_semantics",
+          "Y"
+        ],
+        [
+          "unresolved",
+          "discharge_condition_not_in_structured_evidence",
+          "Permit limit comment references discharge occurrence; structured sources lack di"
+        ],
+        [
+          "unresolved",
+          "permit_year_condition_requires_document_text",
+          "Monitoring frequency depends on permit-year outcome described in comment; only d"
+        ]
+      ]
+    },
+    "duplication": {
+      "counts_by_category": {
+        "A_PURE_CODE_DUPLICATION": 0,
+        "B_INSTANCE_EXPANSION": 11,
+        "C_MISSING_PARAMETERIZATION": 29,
+        "D_FALSE_DUPLICATION": 0,
+        "E_UNCERTAIN": 0
+      },
+      "per_name": [
+        {
+          "name": "unique_catalog_variant_per_limit_value",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 30,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "comparison_limit_qualifier",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 342,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "comparison_reported_qualifier",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 342,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "non_numeric_limit_classification",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 380,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "non_numeric_limit_optional_flag",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 380,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "requirement_comment_semantics",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 69,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "optional_monitoring_flag_semantics",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 105,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "limit_freq_semantics",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 105,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "season_month_flag_semantics",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 1260,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "nodi_code_semantics",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 186,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "no_result_optional_monitoring_flag",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 186,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "discharge_condition_not_in_structured_evidence",
+          "sites": 1,
+          "emitted": 17,
+          "holes": 17,
+          "category": "C_MISSING_PARAMETERIZATION"
+        },
+        {
+          "name": "permit_year_condition_requires_document_text",
+          "sites": 1,
+          "emitted": 12,
+          "holes": 12,
+          "category": "C_MISSING_PARAMETERIZATION"
+        }
+      ]
+    },
+    "n_hole_groups": 14,
+    "n_hole_instances": 3414,
+    "relation_row_counts": {
+      "measurement_context": 824,
+      "measurement_result": 824,
+      "measurement_limit_snapshot": 824,
+      "monitoring_requirement_spec": 105,
+      "requirement_season_month": 1260,
+      "document_catalog": 12,
+      "limit_catalog_variant": 105,
+      "measurement_in_fy2025": 824,
+      "limit_active_on_measurement_date": 824,
+      "measurement_schedule_match": 824,
+      "numeric_comparison_candidate": 342,
+      "measurement_no_result": 186,
+      "non_numeric_limit_candidate": 380
+    },
+    "referent_kinds_runtime": {
+      "measurement": 824,
+      "limit_value": 90,
+      "monitoring_requirement": 105,
+      "document": 12
+    },
+    "factorized": {
+      "requirement_schemas": [
+        "document_text_unavailable",
+        "interpret_comment",
+        "interpret_frequency",
+        "interpret_nodi",
+        "interpret_optional_monitoring",
+        "interpret_qualifier",
+        "interpret_seasonal_month",
+        "materializable_candidates",
+        "materializable_fy2025_measurements",
+        "materializable_monitoring",
+        "materializable_no_result",
+        "numeric_limit",
+        "numeric_measurement",
+        "unique_applicable_limit"
+      ],
+      "relation_schemas": [
+        "CandidateCorrespondence",
+        "DocumentInventory",
+        "Fy2025Scope",
+        "LimitBase",
+        "MeasurementBase",
+        "MissingEvidence",
+        "MonitoringObligation",
+        "NumericComparison",
+        "SeasonalMonth"
+      ],
+      "referent_schemas": [
+        "Document",
+        "LimitValue",
+        "Measurement",
+        "MonitoringRequirement"
+      ],
+      "n_requirement_schemas": 14,
+      "n_relation_schemas": 9,
+      "n_referent_schemas": 4,
+      "grounded_requirement_instances": 48,
+      "grounded_hole_occurrences": 3414
+    }
+  },
+  {
+    "trial": "T2",
+    "loc": {
+      "physical_loc": 1015,
+      "nonblank_loc": 957,
+      "by_category": {
+        "SOURCE_IO": 3,
+        "SOURCE_PROFILING_OR_EXPLORATION": 0,
+        "PHYSICAL_NORMALIZATION": 128,
+        "GENERAL_HELPER_OR_CONTROL_FLOW": 9,
+        "REFERENT_DECLARATION": 17,
+        "RELATION_DECLARATION": 196,
+        "GROUNDING_OR_MAPPING": 21,
+        "MECHANICAL_DERIVATION": 44,
+        "PURPOSE_REQUIREMENT_SCHEMA": 139,
+        "PURPOSE_REQUIREMENT_INSTANTIATION": 22,
+        "UNRESOLVED_OR_HOLE_EMISSION": 65,
+        "REPORTING_DEBUGGING_OR_SERIALIZATION": 0,
+        "OTHER": 313
+      },
+      "semantic_loc": 482,
+      "mechanical_runtime_support_loc": 140,
+      "requirement_loc": 161,
+      "hole_instance_loc": 65
+    },
+    "calls": {
+      "call_counts": {
+        "interval_contains": 2,
+        "rows": 2,
+        "document_inventory": 1,
+        "set": 12,
+        "relation": 21,
+        "map": 21,
+        "derive": 4,
+        "sorted": 12,
+        "require_materializable": 6,
+        "require_unique": 1,
+        "require_interpreted": 11,
+        "require_numeric": 2,
+        "items": 1,
+        "Source": 1,
+        "World": 1,
+        "purpose": 1,
+        "construct": 1,
+        "main": 1,
+        "strip": 1,
+        "get": 129,
+        "_text": 126,
+        "referent": 11,
+        "add": 12,
+        "append": 13,
+        "_once": 13,
+        "setdefault": 1,
+        "next": 3,
+        "_in_fy2025": 1,
+        "unresolved": 8,
+        "len": 2,
+        "str": 1,
+        "parse_date": 6,
+        "_limit_active_for_period": 1
+      },
+      "n_requirement_call_sites": 28,
+      "n_unique_requirement_names": 28
+    },
+    "referents": [
+      {
+        "original": "discharge_point",
+        "normalized": "Outfall"
+      },
+      {
+        "original": "dmr_report",
+        "normalized": "Measurement"
+      },
+      {
+        "original": "document",
+        "normalized": "Document"
+      },
+      {
+        "original": "facility",
+        "normalized": "Facility"
+      },
+      {
+        "original": "limit",
+        "normalized": "Limit"
+      },
+      {
+        "original": "limit_set_schedule",
+        "normalized": "LimitSchedule"
+      },
+      {
+        "original": "limit_value",
+        "normalized": "LimitValue"
+      },
+      {
+        "original": "monitoring_event",
+        "normalized": "MonitoringEvent"
+      },
+      {
+        "original": "monitoring_requirement",
+        "normalized": "MonitoringRequirement"
+      },
+      {
+        "original": "parameter",
+        "normalized": "Parameter"
+      },
+      {
+        "original": "permit",
+        "normalized": "Permit"
+      }
+    ],
+    "relations": [
+      {
+        "original": "facility_permit",
+        "normalized": "OtherRelation",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 3,
+        "roles": [
+          "facility",
+          "permit",
+          "activity_id",
+          "permit_number"
+        ]
+      },
+      {
+        "original": "discharge_point_identity",
+        "normalized": "OtherRelation",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 4,
+        "roles": [
+          "discharge_point",
+          "permit",
+          "feature_number",
+          "feature_type_code"
+        ]
+      },
+      {
+        "original": "parameter_identity",
+        "normalized": "OtherRelation",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 33,
+        "roles": [
+          "parameter",
+          "parameter_code",
+          "parameter_desc"
+        ]
+      },
+      {
+        "original": "limit_identity",
+        "normalized": "LimitBase",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 44,
+        "roles": [
+          "limit",
+          "permit",
+          "discharge_point",
+          "parameter",
+          "limit_set_id",
+          "limit_set_designator"
+        ]
+      },
+      {
+        "original": "limit_value_identity",
+        "normalized": "LimitBase",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 90,
+        "roles": [
+          "limit_value",
+          "limit",
+          "limit_value_type_code",
+          "statistical_base_code",
+          "statistical_base_type_code"
+        ]
+      },
+      {
+        "original": "limit_effective_interval",
+        "normalized": "EffectiveInterval",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 44,
+        "roles": [
+          "limit",
+          "limit_begin_date",
+          "limit_end_date"
+        ]
+      },
+      {
+        "original": "limit_value_magnitude",
+        "normalized": "LimitBase",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 90,
+        "roles": [
+          "limit_value",
+          "limit_value_nmbr",
+          "limit_value_standard_units",
+          "limit_unit_code",
+          "limit_unit_desc"
+        ]
+      },
+      {
+        "original": "limit_value_qualifier_code",
+        "normalized": "LimitBase",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 90,
+        "roles": [
+          "limit_value",
+          "qualifier_code"
+        ]
+      },
+      {
+        "original": "limit_type_code",
+        "normalized": "LimitBase",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 44,
+        "roles": [
+          "limit",
+          "limit_type_code"
+        ]
+      },
+      {
+        "original": "optional_monitoring_flag",
+        "normalized": "CodePayload",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 44,
+        "roles": [
+          "limit",
+          "optional_monitoring_flag"
+        ]
+      },
+      {
+        "original": "monitoring_schedule",
+        "normalized": "OtherRelation",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 51,
+        "roles": [
+          "limit_set_schedule",
+          "limit",
+          "limit_freq_of_analysis_code",
+          "limit_sample_type_code",
+          "nmbr_of_submission",
+          "nmbr_of_report",
+          "all_months_limit"
+        ]
+      },
+      {
+        "original": "seasonal_month_flag",
+        "normalized": "SeasonalMonth",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 84,
+        "roles": [
+          "limit_set_schedule",
+          "month",
+          "active_flag"
+        ]
+      },
+      {
+        "original": "permit_limit_comment",
+        "normalized": "LimitBase",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 4,
+        "roles": [
+          "limit_set_schedule",
+          "dmr_comment_text"
+        ]
+      },
+      {
+        "original": "dmr_measurement",
+        "normalized": "MeasurementBase",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 824,
+        "roles": [
+          "dmr_report",
+          "monitoring_event",
+          "limit",
+          "limit_value",
+          "limit_set_schedule",
+          "permit",
+          "discharge_point",
+          "parameter",
+          "monitoring_period_end_date",
+          "value_received_date",
+          "limit_set_designator"
+        ]
+      },
+      {
+        "original": "measurement_value",
+        "normalized": "MeasurementBase",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 824,
+        "roles": [
+          "dmr_report",
+          "dmr_value_nmbr",
+          "dmr_value_standard_units",
+          "dmr_unit_code",
+          "value_type_code"
+        ]
+      },
+      {
+        "original": "measurement_qualifier_code",
+        "normalized": "MeasurementBase",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 824,
+        "roles": [
+          "dmr_report",
+          "dmr_value_qualifier_code"
+        ]
+      },
+      {
+        "original": "measurement_nodi_code",
+        "normalized": "MeasurementBase",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 824,
+        "roles": [
+          "dmr_report",
+          "nodi_code"
+        ]
+      },
+      {
+        "original": "document_inventory",
+        "normalized": "DocumentInventory",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 12,
+        "roles": [
+          "document",
+          "permit",
+          "document_kind",
+          "filename",
+          "bytes",
+          "origin"
+        ]
+      },
+      {
+        "original": "fy2025_dmr_measurement",
+        "normalized": "Fy2025Scope",
+        "derived": true,
+        "mode": "WORLD",
+        "n_rows": 824,
+        "roles": [
+          "dmr_report",
+          "monitoring_period_end_date"
+        ]
+      },
+      {
+        "original": "dmr_permit_link",
+        "normalized": "CandidateCorrespondence",
+        "derived": true,
+        "mode": "WORLD",
+        "n_rows": 824,
+        "roles": [
+          "dmr_report",
+          "limit",
+          "limit_value",
+          "limit_set_schedule",
+          "permit_row_found",
+          "limit_active_for_period"
+        ]
+      },
+      {
+        "original": "permit_monitoring_requirement",
+        "normalized": "MonitoringObligation",
+        "derived": true,
+        "mode": "WORLD",
+        "n_rows": 51,
+        "roles": [
+          "monitoring_requirement",
+          "limit",
+          "limit_set_schedule",
+          "permit",
+          "discharge_point",
+          "parameter",
+          "limit_freq_of_analysis_code",
+          "has_dmr_comment"
+        ]
+      },
+      {
+        "original": "requirement_fy2025_dmr_evidence",
+        "normalized": "Fy2025Scope",
+        "derived": true,
+        "mode": "WORLD",
+        "n_rows": 51,
+        "roles": [
+          "monitoring_requirement",
+          "fy2025_dmr_present"
+        ]
+      },
+      {
+        "original": "numeric_comparison_pair",
+        "normalized": "NumericComparison",
+        "derived": false,
+        "mode": "PURPOSE",
+        "n_rows": 342,
+        "roles": [
+          "dmr_report",
+          "limit_value",
+          "dmr_value_nmbr",
+          "limit_value_nmbr",
+          "limit_value_qualifier_code",
+          "dmr_value_qualifier_code",
+          "limit_set_designator",
+          "optional_monitoring_flag",
+          "nodi_code"
+        ]
+      },
+      {
+        "original": "no_numeric_result_case",
+        "normalized": "MissingEvidence",
+        "derived": false,
+        "mode": "PURPOSE",
+        "n_rows": 186,
+        "roles": [
+          "dmr_report",
+          "limit",
+          "parameter",
+          "monitoring_period_end_date",
+          "dmr_value_nmbr",
+          "limit_value_nmbr",
+          "nodi_code",
+          "optional_monitoring_flag",
+          "limit_set_designator"
+        ]
+      },
+      {
+        "original": "monitoring_obligation_subject",
+        "normalized": "MonitoringObligation",
+        "derived": false,
+        "mode": "PURPOSE",
+        "n_rows": 51,
+        "roles": [
+          "monitoring_requirement",
+          "limit",
+          "limit_set_schedule",
+          "parameter",
+          "fy2025_dmr_present",
+          "has_dmr_comment"
+        ]
+      }
+    ],
+    "requirement_schemas": [
+      {
+        "original": "fy2025_reported_measurements",
+        "normalized": "other_requirement",
+        "kind": "require_materializable",
+        "field": null
+      },
+      {
+        "original": "dmr_permit_links",
+        "normalized": "other_requirement",
+        "kind": "require_materializable",
+        "field": null
+      },
+      {
+        "original": "numeric_comparison_pairs",
+        "normalized": "other_requirement",
+        "kind": "require_materializable",
+        "field": null
+      },
+      {
+        "original": "unique_limit_value_per_numeric_measurement",
+        "normalized": "unique_applicable_limit",
+        "kind": "require_unique",
+        "field": null
+      },
+      {
+        "original": "interpret_limit_type_code",
+        "normalized": "interpret_limit_type",
+        "kind": "require_interpreted",
+        "field": "limit_type_code"
+      },
+      {
+        "original": "interpret_limit_value_qualifier",
+        "normalized": "interpret_qualifier",
+        "kind": "require_interpreted",
+        "field": "qualifier_code"
+      },
+      {
+        "original": "interpret_optional_monitoring_for_limits",
+        "normalized": "interpret_optional_monitoring",
+        "kind": "require_interpreted",
+        "field": "optional_monitoring_flag"
+      },
+      {
+        "original": "interpret_measurement_qualifier",
+        "normalized": "interpret_qualifier",
+        "kind": "require_interpreted",
+        "field": "dmr_value_qualifier_code"
+      },
+      {
+        "original": "interpret_nodi_for_limit_applicability",
+        "normalized": "interpret_nodi",
+        "kind": "require_interpreted",
+        "field": "nodi_code"
+      },
+      {
+        "original": "numeric_limit_for_comparison",
+        "normalized": "numeric_limit",
+        "kind": "require_numeric",
+        "field": "limit_value_nmbr"
+      },
+      {
+        "original": "numeric_measurement_for_comparison",
+        "normalized": "numeric_measurement",
+        "kind": "require_numeric",
+        "field": "dmr_value_nmbr"
+      },
+      {
+        "original": "permit_monitoring_requirements",
+        "normalized": "other_requirement",
+        "kind": "require_materializable",
+        "field": null
+      },
+      {
+        "original": "monitoring_obligation_subjects",
+        "normalized": "other_requirement",
+        "kind": "require_materializable",
+        "field": null
+      },
+      {
+        "original": "interpret_monitoring_frequency_code",
+        "normalized": "interpret_frequency",
+        "kind": "require_interpreted",
+        "field": "limit_freq_of_analysis_code"
+      },
+      {
+        "original": "interpret_seasonal_month_flag",
+        "normalized": "interpret_seasonal_month",
+        "kind": "require_interpreted",
+        "field": "active_flag"
+      },
+      {
+        "original": "interpret_permit_dmr_comment",
+        "normalized": "interpret_comment",
+        "kind": "require_interpreted",
+        "field": "dmr_comment_text"
+      },
+      {
+        "original": "interpret_optional_monitoring_for_obligations",
+        "normalized": "interpret_optional_monitoring",
+        "kind": "require_interpreted",
+        "field": "optional_monitoring_flag"
+      },
+      {
+        "original": "no_numeric_result_cases",
+        "normalized": "other_requirement",
+        "kind": "require_materializable",
+        "field": null
+      },
+      {
+        "original": "interpret_nodi_semantics",
+        "normalized": "interpret_nodi",
+        "kind": "require_interpreted",
+        "field": "nodi_code"
+      },
+      {
+        "original": "interpret_optional_monitoring_for_no_result",
+        "normalized": "interpret_optional_monitoring",
+        "kind": "require_interpreted",
+        "field": "optional_monitoring_flag"
+      },
+      {
+        "original": "reported_value_without_numeric_limit",
+        "normalized": "numeric_limit",
+        "kind": "unresolved",
+        "field": null
+      },
+      {
+        "original": "numeric_limit_without_reported_value_or_nodi",
+        "normalized": "interpret_nodi",
+        "kind": "unresolved",
+        "field": null
+      },
+      {
+        "original": "numeric_limit_without_qualifier",
+        "normalized": "interpret_qualifier",
+        "kind": "unresolved",
+        "field": null
+      },
+      {
+        "original": "conditional_permit_comment_present",
+        "normalized": "interpret_comment",
+        "kind": "unresolved",
+        "field": null
+      },
+      {
+        "original": "nodi_without_interpretation",
+        "normalized": "interpret_nodi",
+        "kind": "unresolved",
+        "field": null
+      },
+      {
+        "original": "permit_requirement_without_fy2025_dmr",
+        "normalized": "other_requirement",
+        "kind": "unresolved",
+        "field": null
+      },
+      {
+        "original": "multiple_permit_schedules_for_limit",
+        "normalized": "other_requirement",
+        "kind": "unresolved",
+        "field": null
+      },
+      {
+        "original": "missing_measurement_for_numeric_limit",
+        "normalized": "numeric_limit",
+        "kind": "unresolved",
+        "field": null
+      }
+    ],
+    "n_spine_requirement_rows": 547,
+    "n_relations": 25,
+    "n_referent_kinds": 11,
+    "n_requirement_schemas": 28,
+    "grain": {
+      "requirement_schemas": 28,
+      "schema_names": [
+        "conditional_permit_comment_present",
+        "dmr_permit_links",
+        "fy2025_reported_measurements",
+        "interpret_limit_type_code",
+        "interpret_limit_value_qualifier",
+        "interpret_measurement_qualifier",
+        "interpret_monitoring_frequency_code",
+        "interpret_nodi_for_limit_applicability",
+        "interpret_nodi_semantics",
+        "interpret_optional_monitoring_for_limits",
+        "interpret_optional_monitoring_for_no_result",
+        "interpret_optional_monitoring_for_obligations",
+        "interpret_permit_dmr_comment",
+        "interpret_seasonal_month_flag",
+        "missing_measurement_for_numeric_limit",
+        "monitoring_obligation_subjects",
+        "multiple_permit_schedules_for_limit",
+        "no_numeric_result_cases",
+        "nodi_without_interpretation",
+        "numeric_comparison_pairs",
+        "numeric_limit_for_comparison",
+        "numeric_limit_without_qualifier",
+        "numeric_limit_without_reported_value_or_nodi",
+        "numeric_measurement_for_comparison",
+        "permit_monitoring_requirements",
+        "permit_requirement_without_fy2025_dmr",
+        "reported_value_without_numeric_limit",
+        "unique_limit_value_per_numeric_measurement"
+      ],
+      "candidate_semantic_obligations": 33,
+      "hole_occurrences": 1891,
+      "obligation_sample": [
+        [
+          "interpret",
+          "interpret_limit_type_code",
+          "ENF"
+        ],
+        [
+          "interpret",
+          "interpret_limit_value_qualifier",
+          "<="
+        ],
+        [
+          "interpret",
+          "interpret_limit_value_qualifier",
+          ">="
+        ],
+        [
+          "interpret",
+          "interpret_measurement_qualifier",
+          "<"
+        ],
+        [
+          "interpret",
+          "interpret_measurement_qualifier",
+          ">"
+        ],
+        [
+          "interpret",
+          "interpret_measurement_qualifier",
+          "="
+        ],
+        [
+          "interpret",
+          "interpret_monitoring_frequency_code",
+          "01/90"
+        ],
+        [
+          "interpret",
+          "interpret_monitoring_frequency_code",
+          "99/99"
+        ],
+        [
+          "interpret",
+          "interpret_monitoring_frequency_code",
+          "01/07"
+        ],
+        [
+          "interpret",
+          "interpret_monitoring_frequency_code",
+          "09/99"
+        ],
+        [
+          "interpret",
+          "interpret_monitoring_frequency_code",
+          "05/WK"
+        ],
+        [
+          "interpret",
+          "interpret_monitoring_frequency_code",
+          "01/01"
+        ],
+        [
+          "interpret",
+          "interpret_monitoring_frequency_code",
+          "02/30"
+        ],
+        [
+          "interpret",
+          "interpret_monitoring_frequency_code",
+          "02/07"
+        ],
+        [
+          "interpret",
+          "interpret_nodi_for_limit_applicability",
+          "9"
+        ],
+        [
+          "interpret",
+          "interpret_nodi_for_limit_applicability",
+          "C"
+        ],
+        [
+          "interpret",
+          "interpret_nodi_semantics",
+          "C"
+        ],
+        [
+          "interpret",
+          "interpret_nodi_semantics",
+          "9"
+        ],
+        [
+          "interpret",
+          "interpret_optional_monitoring_for_limits",
+          "N"
+        ],
+        [
+          "interpret",
+          "interpret_optional_monitoring_for_limits",
+          "Y"
+        ],
+        [
+          "interpret",
+          "interpret_optional_monitoring_for_no_result",
+          "N"
+        ],
+        [
+          "interpret",
+          "interpret_optional_monitoring_for_no_result",
+          "Y"
+        ],
+        [
+          "interpret",
+          "interpret_optional_monitoring_for_obligations",
+          "N"
+        ],
+        [
+          "interpret",
+          "interpret_optional_monitoring_for_obligations",
+          "Y"
+        ],
+        [
+          "interpret",
+          "interpret_permit_dmr_comment",
+          "(PASS = 0  FAIL = 1) REPORT PASS AS '0' OR REPORT FAIL AS '1' IN CONCENTRATION MAX. ABOVE.  IF ALL TESTS PASS FOR THE FIRST YEAR OF THE PERMIT, THE FREQUENCY WILL BE REDUCED FOR YEARS 2-5 TO:  1/6 MONTHS FOR DAPHNIA PULEX & 1/YR FOR PIMEPHALES PROMELAS (SEE FOOTNOTE 9, PAGE 3 OF PART I OF PERMIT)."
+        ],
+        [
+          "interpret",
+          "interpret_permit_dmr_comment",
+          "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES."
+        ],
+        [
+          "interpret",
+          "interpret_permit_dmr_comment",
+          "WHEN DISCHARGING."
+        ],
+        [
+          "interpret",
+          "interpret_seasonal_month_flag",
+          "Y"
+        ],
+        [
+          "unresolved",
+          "conditional_permit_comment_present",
+          "Permit schedule carries DMR comment text that may condition monitoring applicabi"
+        ],
+        [
+          "unresolved",
+          "multiple_permit_schedules_for_limit",
+          "Permit exposes multiple schedule ids for the same limit; FY2025 DMR does not dis"
+        ],
+        [
+          "unresolved",
+          "nodi_without_interpretation",
+          "No numeric result accompanied by NODI code pending semantic interpretation."
+        ],
+        [
+          "unresolved",
+          "permit_requirement_without_fy2025_dmr",
+          "Permit monitoring requirement has no FY2025 DMR evidence row."
+        ],
+        [
+          "unresolved",
+          "reported_value_without_numeric_limit",
+          "Reported measurement has numeric value but paired limit value number is absent."
+        ]
+      ]
+    },
+    "duplication": {
+      "counts_by_category": {
+        "A_PURE_CODE_DUPLICATION": 0,
+        "B_INSTANCE_EXPANSION": 25,
+        "C_MISSING_PARAMETERIZATION": 513,
+        "D_FALSE_DUPLICATION": 0,
+        "E_UNCERTAIN": 0
+      },
+      "per_name": [
+        {
+          "name": "interpret_limit_type_code",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 44,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "interpret_limit_value_qualifier",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 39,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "interpret_optional_monitoring_for_limits",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 44,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "interpret_measurement_qualifier",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 638,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "interpret_nodi_for_limit_applicability",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 186,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "reported_value_without_numeric_limit",
+          "sites": 1,
+          "emitted": 296,
+          "holes": 296,
+          "category": "C_MISSING_PARAMETERIZATION"
+        },
+        {
+          "name": "interpret_monitoring_frequency_code",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 51,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "interpret_seasonal_month_flag",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 84,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "interpret_permit_dmr_comment",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 4,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "interpret_optional_monitoring_for_obligations",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 44,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "multiple_permit_schedules_for_limit",
+          "sites": 1,
+          "emitted": 7,
+          "holes": 7,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "conditional_permit_comment_present",
+          "sites": 1,
+          "emitted": 31,
+          "holes": 31,
+          "category": "C_MISSING_PARAMETERIZATION"
+        },
+        {
+          "name": "interpret_nodi_semantics",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 186,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "interpret_optional_monitoring_for_no_result",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 44,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "nodi_without_interpretation",
+          "sites": 1,
+          "emitted": 186,
+          "holes": 186,
+          "category": "C_MISSING_PARAMETERIZATION"
+        },
+        {
+          "name": "permit_requirement_without_fy2025_dmr",
+          "sites": 1,
+          "emitted": 7,
+          "holes": 7,
+          "category": "B_INSTANCE_EXPANSION"
+        }
+      ]
+    },
+    "n_hole_groups": 16,
+    "n_hole_instances": 1891,
+    "relation_row_counts": {
+      "facility_permit": 3,
+      "discharge_point_identity": 4,
+      "parameter_identity": 33,
+      "limit_identity": 44,
+      "limit_value_identity": 90,
+      "limit_effective_interval": 44,
+      "limit_value_magnitude": 90,
+      "limit_value_qualifier_code": 90,
+      "limit_type_code": 44,
+      "optional_monitoring_flag": 44,
+      "monitoring_schedule": 51,
+      "seasonal_month_flag": 84,
+      "permit_limit_comment": 4,
+      "dmr_measurement": 824,
+      "measurement_value": 824,
+      "measurement_qualifier_code": 824,
+      "measurement_nodi_code": 824,
+      "document_inventory": 12,
+      "fy2025_dmr_measurement": 824,
+      "dmr_permit_link": 824,
+      "permit_monitoring_requirement": 51,
+      "requirement_fy2025_dmr_evidence": 51,
+      "numeric_comparison_pair": 342,
+      "no_numeric_result_case": 186,
+      "monitoring_obligation_subject": 51
+    },
+    "referent_kinds_runtime": {
+      "facility": 3,
+      "permit": 3,
+      "discharge_point": 4,
+      "parameter": 33,
+      "limit": 44,
+      "limit_value": 90,
+      "limit_set_schedule": 7,
+      "dmr_report": 824,
+      "monitoring_event": 48,
+      "document": 12,
+      "monitoring_requirement": 51
+    },
+    "factorized": {
+      "requirement_schemas": [
+        "interpret_comment",
+        "interpret_frequency",
+        "interpret_limit_type",
+        "interpret_nodi",
+        "interpret_optional_monitoring",
+        "interpret_qualifier",
+        "interpret_seasonal_month",
+        "numeric_limit",
+        "numeric_measurement",
+        "other_requirement",
+        "unique_applicable_limit"
+      ],
+      "relation_schemas": [
+        "CandidateCorrespondence",
+        "CodePayload",
+        "DocumentInventory",
+        "EffectiveInterval",
+        "Fy2025Scope",
+        "LimitBase",
+        "MeasurementBase",
+        "MissingEvidence",
+        "MonitoringObligation",
+        "NumericComparison",
+        "OtherRelation",
+        "SeasonalMonth"
+      ],
+      "referent_schemas": [
+        "Document",
+        "Facility",
+        "Limit",
+        "LimitSchedule",
+        "LimitValue",
+        "Measurement",
+        "MonitoringEvent",
+        "MonitoringRequirement",
+        "Outfall",
+        "Parameter",
+        "Permit"
+      ],
+      "n_requirement_schemas": 11,
+      "n_relation_schemas": 12,
+      "n_referent_schemas": 11,
+      "grounded_requirement_instances": 547,
+      "grounded_hole_occurrences": 1891
+    }
+  },
+  {
+    "trial": "T3",
+    "loc": {
+      "physical_loc": 804,
+      "nonblank_loc": 762,
+      "by_category": {
+        "SOURCE_IO": 3,
+        "SOURCE_PROFILING_OR_EXPLORATION": 0,
+        "PHYSICAL_NORMALIZATION": 116,
+        "GENERAL_HELPER_OR_CONTROL_FLOW": 3,
+        "REFERENT_DECLARATION": 65,
+        "RELATION_DECLARATION": 181,
+        "GROUNDING_OR_MAPPING": 6,
+        "MECHANICAL_DERIVATION": 16,
+        "PURPOSE_REQUIREMENT_SCHEMA": 157,
+        "PURPOSE_REQUIREMENT_INSTANTIATION": 11,
+        "UNRESOLVED_OR_HOLE_EMISSION": 67,
+        "REPORTING_DEBUGGING_OR_SERIALIZATION": 0,
+        "OTHER": 137
+      },
+      "semantic_loc": 492,
+      "mechanical_runtime_support_loc": 122,
+      "requirement_loc": 168,
+      "hole_instance_loc": 67
+    },
+    "calls": {
+      "call_counts": {
+        "interval_contains": 3,
+        "rows": 2,
+        "document_inventory": 1,
+        "relation": 9,
+        "map": 6,
+        "derive": 3,
+        "require_materializable": 5,
+        "require_unique": 2,
+        "require_interpreted": 13,
+        "require_numeric": 2,
+        "unresolved": 8,
+        "reset": 1,
+        "World": 1,
+        "construct": 1,
+        "str": 1,
+        "referent": 39,
+        "append": 8,
+        "_in_fy2025": 2,
+        "get": 117,
+        "bool": 2,
+        "strip": 7,
+        "Source": 1,
+        "Purpose": 1,
+        "_text": 104,
+        "parse_date": 6,
+        "zip": 1
+      },
+      "n_requirement_call_sites": 30,
+      "n_unique_requirement_names": 30
+    },
+    "referents": [
+      {
+        "original": "discharge_point",
+        "normalized": "Outfall"
+      },
+      {
+        "original": "limit",
+        "normalized": "Limit"
+      },
+      {
+        "original": "limit_schedule",
+        "normalized": "LimitSchedule"
+      },
+      {
+        "original": "limit_set",
+        "normalized": "LimitSet"
+      },
+      {
+        "original": "limit_value",
+        "normalized": "LimitValue"
+      },
+      {
+        "original": "measurement",
+        "normalized": "Measurement"
+      },
+      {
+        "original": "monitoring_event",
+        "normalized": "MonitoringEvent"
+      },
+      {
+        "original": "monitoring_period",
+        "normalized": "MonitoringPeriod"
+      },
+      {
+        "original": "parameter",
+        "normalized": "Parameter"
+      },
+      {
+        "original": "permit",
+        "normalized": "Permit"
+      },
+      {
+        "original": "permit_limit_row",
+        "normalized": "LimitRow"
+      },
+      {
+        "original": "source_document",
+        "normalized": "Document"
+      }
+    ],
+    "relations": [
+      {
+        "original": "document_catalog",
+        "normalized": "DocumentInventory",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 12,
+        "roles": [
+          "document",
+          "permit",
+          "document_kind",
+          "filename",
+          "origin"
+        ]
+      },
+      {
+        "original": "measurement_record",
+        "normalized": "MeasurementBase",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 824,
+        "roles": [
+          "measurement",
+          "permit",
+          "discharge_point",
+          "parameter",
+          "monitoring_period",
+          "monitoring_event",
+          "limit",
+          "limit_value",
+          "limit_set",
+          "limit_schedule",
+          "period_end_date",
+          "limit_begin_date",
+          "limit_end_date",
+          "value_type_code",
+          "limit_value_type_code",
+          "limit_value_nmbr",
+          "limit_value_qualifier_code",
+          "limit_unit_code",
+          "limit_type_code",
+          "statistical_base_code",
+          "optional_monitoring_flag",
+          "limit_sample_type_code",
+          "limit_freq_of_analysis_code",
+          "dmr_value_nmbr",
+          "dmr_value_qualifier_code",
+          "dmr_unit_code",
+          "dmr_sample_type_code",
+          "nodi_code",
+          "nmbr_of_submission",
+          "nmbr_of_report"
+        ]
+      },
+      {
+        "original": "permit_limit_record",
+        "normalized": "LimitBase",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 105,
+        "roles": [
+          "permit_limit_row",
+          "permit",
+          "discharge_point",
+          "parameter",
+          "limit",
+          "limit_value",
+          "limit_set",
+          "limit_schedule",
+          "limit_begin_date",
+          "limit_end_date",
+          "limit_value_nmbr",
+          "limit_value_qualifier_code",
+          "limit_unit_code",
+          "limit_type_code",
+          "statistical_base_code",
+          "optional_monitoring_flag",
+          "limit_sample_type_code",
+          "limit_freq_of_analysis_code",
+          "dmr_comment_text",
+          "limit_set_status_flag",
+          "nmbr_of_submission",
+          "nmbr_of_report",
+          "jan",
+          "feb",
+          "mar",
+          "apr",
+          "may",
+          "jun",
+          "jul",
+          "aug",
+          "sep",
+          "oct",
+          "nov",
+          "dec"
+        ]
+      },
+      {
+        "original": "fy2025_measurement",
+        "normalized": "Fy2025Scope",
+        "derived": true,
+        "mode": "WORLD",
+        "n_rows": 824,
+        "roles": [
+          "measurement"
+        ]
+      },
+      {
+        "original": "measurement_permit_link",
+        "normalized": "CandidateCorrespondence",
+        "derived": true,
+        "mode": "WORLD",
+        "n_rows": 824,
+        "roles": [
+          "measurement",
+          "permit_limit_row",
+          "limit_value"
+        ]
+      },
+      {
+        "original": "fy25_limit_evaluation",
+        "normalized": "Fy2025Scope",
+        "derived": false,
+        "mode": "PURPOSE",
+        "n_rows": 824,
+        "roles": [
+          "measurement",
+          "limit_value",
+          "permit_limit_row",
+          "has_limit_value_number",
+          "has_dmr_value_number",
+          "limit_value_qualifier_code",
+          "dmr_value_qualifier_code",
+          "limit_unit_code",
+          "value_type_code",
+          "optional_monitoring_flag",
+          "nodi_code",
+          "dmr_comment_text"
+        ]
+      },
+      {
+        "original": "fy25_monitoring_obligation",
+        "normalized": "Fy2025Scope",
+        "derived": false,
+        "mode": "PURPOSE",
+        "n_rows": 105,
+        "roles": [
+          "permit_limit_row",
+          "permit",
+          "parameter",
+          "discharge_point",
+          "optional_monitoring_flag",
+          "limit_freq_of_analysis_code",
+          "dmr_comment_text",
+          "limit_sample_type_code",
+          "jan",
+          "feb",
+          "mar",
+          "apr",
+          "may",
+          "jun",
+          "jul",
+          "aug",
+          "sep",
+          "oct",
+          "nov",
+          "dec"
+        ]
+      },
+      {
+        "original": "fy25_no_result_case",
+        "normalized": "Fy2025Scope",
+        "derived": false,
+        "mode": "PURPOSE",
+        "n_rows": 186,
+        "roles": [
+          "measurement",
+          "permit",
+          "parameter",
+          "monitoring_period",
+          "nodi_code",
+          "has_dmr_value_number",
+          "has_limit_value_number",
+          "optional_monitoring_flag",
+          "dmr_comment_text"
+        ]
+      },
+      {
+        "original": "numeric_comparison_candidate",
+        "normalized": "NumericComparison",
+        "derived": true,
+        "mode": "PURPOSE",
+        "n_rows": 342,
+        "roles": [
+          "measurement",
+          "limit_value",
+          "limit_value_nmbr",
+          "dmr_value_nmbr",
+          "limit_value_qualifier_code",
+          "dmr_value_qualifier_code",
+          "limit_unit_code",
+          "value_type_code"
+        ]
+      }
+    ],
+    "requirement_schemas": [
+      {
+        "original": "fy25_measurements_materializable",
+        "normalized": "materializable_fy2025_measurements",
+        "kind": "require_materializable",
+        "field": null
+      },
+      {
+        "original": "fy25_limit_evaluations_materializable",
+        "normalized": "materializable_fy2025_measurements",
+        "kind": "require_materializable",
+        "field": null
+      },
+      {
+        "original": "unique_permit_limit_per_measurement",
+        "normalized": "unique_applicable_limit",
+        "kind": "require_unique",
+        "field": null
+      },
+      {
+        "original": "unique_source_limit_value_per_measurement",
+        "normalized": "unique_applicable_limit",
+        "kind": "require_unique",
+        "field": null
+      },
+      {
+        "original": "limit_qualifier_for_comparison",
+        "normalized": "interpret_qualifier",
+        "kind": "require_interpreted",
+        "field": "limit_value_qualifier_code"
+      },
+      {
+        "original": "dmr_qualifier_for_comparison",
+        "normalized": "interpret_qualifier",
+        "kind": "require_interpreted",
+        "field": "dmr_value_qualifier_code"
+      },
+      {
+        "original": "limit_unit_for_comparison",
+        "normalized": "interpret_unit",
+        "kind": "require_interpreted",
+        "field": "limit_unit_code"
+      },
+      {
+        "original": "value_type_for_limit_selection",
+        "normalized": "interpret_value_type",
+        "kind": "require_interpreted",
+        "field": "value_type_code"
+      },
+      {
+        "original": "optional_flag_for_limit_applicability",
+        "normalized": "interpret_optional_monitoring",
+        "kind": "require_interpreted",
+        "field": "optional_monitoring_flag"
+      },
+      {
+        "original": "nodi_affects_limit_applicability",
+        "normalized": "interpret_nodi",
+        "kind": "require_interpreted",
+        "field": "nodi_code"
+      },
+      {
+        "original": "limit_value_numeric_for_comparison",
+        "normalized": "numeric_limit",
+        "kind": "require_numeric",
+        "field": "limit_value_nmbr"
+      },
+      {
+        "original": "dmr_value_numeric_for_comparison",
+        "normalized": "numeric_measurement",
+        "kind": "require_numeric",
+        "field": "dmr_value_nmbr"
+      },
+      {
+        "original": "document_catalog_materializable",
+        "normalized": "materializable_documents",
+        "kind": "require_materializable",
+        "field": null
+      },
+      {
+        "original": "permit_document_text_not_materialized",
+        "normalized": "document_text_unavailable",
+        "kind": "unresolved",
+        "field": null
+      },
+      {
+        "original": "fy25_monitoring_obligations_materializable",
+        "normalized": "materializable_fy2025_measurements",
+        "kind": "require_materializable",
+        "field": null
+      },
+      {
+        "original": "permit_comment_for_monitoring_applicability",
+        "normalized": "interpret_comment",
+        "kind": "require_interpreted",
+        "field": "dmr_comment_text"
+      },
+      {
+        "original": "optional_flag_for_monitoring_applicability",
+        "normalized": "interpret_optional_monitoring",
+        "kind": "require_interpreted",
+        "field": "optional_monitoring_flag"
+      },
+      {
+        "original": "frequency_code_for_monitoring_applicability",
+        "normalized": "interpret_frequency",
+        "kind": "require_interpreted",
+        "field": "limit_freq_of_analysis_code"
+      },
+      {
+        "original": "sample_type_for_monitoring_applicability",
+        "normalized": "interpret_sample_type",
+        "kind": "require_interpreted",
+        "field": "limit_sample_type_code"
+      },
+      {
+        "original": "fy25_no_result_cases_materializable",
+        "normalized": "materializable_fy2025_measurements",
+        "kind": "require_materializable",
+        "field": null
+      },
+      {
+        "original": "nodi_code_semantics",
+        "normalized": "interpret_nodi",
+        "kind": "require_interpreted",
+        "field": "nodi_code"
+      },
+      {
+        "original": "optional_flag_for_no_result_semantics",
+        "normalized": "interpret_optional_monitoring",
+        "kind": "require_interpreted",
+        "field": "optional_monitoring_flag"
+      },
+      {
+        "original": "seasonal_{month}_for_monitoring_applicability",
+        "normalized": "interpret_seasonal_month",
+        "kind": "require_interpreted",
+        "field": null
+      },
+      {
+        "original": "permit_comment_affects_limit_applicability",
+        "normalized": "interpret_comment",
+        "kind": "unresolved",
+        "field": null
+      },
+      {
+        "original": "report_only_limit_with_numeric_measurement",
+        "normalized": "numeric_limit",
+        "kind": "unresolved",
+        "field": null
+      },
+      {
+        "original": "pass_fail_limit_comparison_semantics",
+        "normalized": "pass_fail_semantics",
+        "kind": "unresolved",
+        "field": null
+      },
+      {
+        "original": "conditional_monitoring_requirement",
+        "normalized": "interpret_comment",
+        "kind": "unresolved",
+        "field": null
+      },
+      {
+        "original": "nodi_establishes_no_result_state",
+        "normalized": "interpret_nodi",
+        "kind": "unresolved",
+        "field": null
+      },
+      {
+        "original": "permit_comment_affects_no_result_semantics",
+        "normalized": "interpret_comment",
+        "kind": "unresolved",
+        "field": null
+      },
+      {
+        "original": "missing_result_with_numeric_limit",
+        "normalized": "numeric_limit",
+        "kind": "unresolved",
+        "field": null
+      }
+    ],
+    "n_spine_requirement_rows": 1273,
+    "n_relations": 9,
+    "n_referent_kinds": 12,
+    "n_requirement_schemas": 30,
+    "grain": {
+      "requirement_schemas": 30,
+      "schema_names": [
+        "conditional_monitoring_requirement",
+        "dmr_qualifier_for_comparison",
+        "dmr_value_numeric_for_comparison",
+        "document_catalog_materializable",
+        "frequency_code_for_monitoring_applicability",
+        "fy25_limit_evaluations_materializable",
+        "fy25_measurements_materializable",
+        "fy25_monitoring_obligations_materializable",
+        "fy25_no_result_cases_materializable",
+        "limit_qualifier_for_comparison",
+        "limit_unit_for_comparison",
+        "limit_value_numeric_for_comparison",
+        "missing_result_with_numeric_limit",
+        "nodi_affects_limit_applicability",
+        "nodi_code_semantics",
+        "nodi_establishes_no_result_state",
+        "optional_flag_for_limit_applicability",
+        "optional_flag_for_monitoring_applicability",
+        "optional_flag_for_no_result_semantics",
+        "pass_fail_limit_comparison_semantics",
+        "permit_comment_affects_limit_applicability",
+        "permit_comment_affects_no_result_semantics",
+        "permit_comment_for_monitoring_applicability",
+        "permit_document_text_not_materialized",
+        "report_only_limit_with_numeric_measurement",
+        "sample_type_for_monitoring_applicability",
+        "seasonal_{month}_for_monitoring_applicability",
+        "unique_permit_limit_per_measurement",
+        "unique_source_limit_value_per_measurement",
+        "value_type_for_limit_selection"
+      ],
+      "candidate_semantic_obligations": 63,
+      "hole_occurrences": 6116,
+      "obligation_sample": [
+        [
+          "interpret",
+          "dmr_qualifier_for_comparison",
+          ">"
+        ],
+        [
+          "interpret",
+          "dmr_qualifier_for_comparison",
+          "="
+        ],
+        [
+          "interpret",
+          "dmr_qualifier_for_comparison",
+          "<"
+        ],
+        [
+          "interpret",
+          "frequency_code_for_monitoring_applicability",
+          "99/99"
+        ],
+        [
+          "interpret",
+          "frequency_code_for_monitoring_applicability",
+          "01/07"
+        ],
+        [
+          "interpret",
+          "frequency_code_for_monitoring_applicability",
+          "09/99"
+        ],
+        [
+          "interpret",
+          "frequency_code_for_monitoring_applicability",
+          "05/WK"
+        ],
+        [
+          "interpret",
+          "frequency_code_for_monitoring_applicability",
+          "01/01"
+        ],
+        [
+          "interpret",
+          "frequency_code_for_monitoring_applicability",
+          "02/30"
+        ],
+        [
+          "interpret",
+          "frequency_code_for_monitoring_applicability",
+          "02/07"
+        ],
+        [
+          "interpret",
+          "frequency_code_for_monitoring_applicability",
+          "01/90"
+        ],
+        [
+          "interpret",
+          "limit_qualifier_for_comparison",
+          "<="
+        ],
+        [
+          "interpret",
+          "limit_qualifier_for_comparison",
+          ">="
+        ],
+        [
+          "interpret",
+          "limit_unit_for_comparison",
+          "19"
+        ],
+        [
+          "interpret",
+          "limit_unit_for_comparison",
+          "12"
+        ],
+        [
+          "interpret",
+          "limit_unit_for_comparison",
+          "3Z"
+        ],
+        [
+          "interpret",
+          "limit_unit_for_comparison",
+          "23"
+        ],
+        [
+          "interpret",
+          "limit_unit_for_comparison",
+          "26"
+        ],
+        [
+          "interpret",
+          "limit_unit_for_comparison",
+          "9Z"
+        ],
+        [
+          "interpret",
+          "limit_unit_for_comparison",
+          "28"
+        ],
+        [
+          "interpret",
+          "nodi_affects_limit_applicability",
+          "C"
+        ],
+        [
+          "interpret",
+          "nodi_affects_limit_applicability",
+          "9"
+        ],
+        [
+          "interpret",
+          "nodi_code_semantics",
+          "9"
+        ],
+        [
+          "interpret",
+          "nodi_code_semantics",
+          "C"
+        ],
+        [
+          "interpret",
+          "optional_flag_for_limit_applicability",
+          "Y"
+        ],
+        [
+          "interpret",
+          "optional_flag_for_limit_applicability",
+          "N"
+        ],
+        [
+          "interpret",
+          "optional_flag_for_monitoring_applicability",
+          "Y"
+        ],
+        [
+          "interpret",
+          "optional_flag_for_monitoring_applicability",
+          "N"
+        ],
+        [
+          "interpret",
+          "optional_flag_for_no_result_semantics",
+          "Y"
+        ],
+        [
+          "interpret",
+          "optional_flag_for_no_result_semantics",
+          "N"
+        ],
+        [
+          "interpret",
+          "permit_comment_for_monitoring_applicability",
+          "(PASS = 0  FAIL = 1) REPORT PASS AS '0' OR REPORT FAIL AS '1' IN CONCENTRATION MAX. ABOVE.  IF ALL TESTS PASS FOR THE FIRST YEAR OF THE PERMIT, THE FREQUENCY WILL BE REDUCED FOR YEARS 2-5 TO:  1/6 MONTHS FOR DAPHNIA PULEX & 1/YR FOR PIMEPHALES PROMELAS (SEE FOOTNOTE 9, PAGE 3 OF PART I OF PERMIT)."
+        ],
+        [
+          "interpret",
+          "permit_comment_for_monitoring_applicability",
+          "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES."
+        ],
+        [
+          "interpret",
+          "permit_comment_for_monitoring_applicability",
+          "WHEN DISCHARGING."
+        ],
+        [
+          "interpret",
+          "sample_type_for_monitoring_applicability",
+          "ES"
+        ],
+        [
+          "interpret",
+          "sample_type_for_monitoring_applicability",
+          "12"
+        ],
+        [
+          "interpret",
+          "sample_type_for_monitoring_applicability",
+          "CA"
+        ],
+        [
+          "interpret",
+          "sample_type_for_monitoring_applicability",
+          "GR"
+        ],
+        [
+          "interpret",
+          "sample_type_for_monitoring_applicability",
+          "24"
+        ],
+        [
+          "interpret",
+          "sample_type_for_monitoring_applicability",
+          "TM"
+        ],
+        [
+          "interpret",
+          "seasonal_apr_for_monitoring_applicability",
+          "Y"
+        ]
+      ]
+    },
+    "duplication": {
+      "counts_by_category": {
+        "A_PURE_CODE_DUPLICATION": 0,
+        "B_INSTANCE_EXPANSION": 12,
+        "C_MISSING_PARAMETERIZATION": 1239,
+        "D_FALSE_DUPLICATION": 0,
+        "E_UNCERTAIN": 12
+      },
+      "per_name": [
+        {
+          "name": "limit_qualifier_for_comparison",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 342,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "dmr_qualifier_for_comparison",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 342,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "limit_unit_for_comparison",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 342,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "value_type_for_limit_selection",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 824,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "optional_flag_for_limit_applicability",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 824,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "nodi_affects_limit_applicability",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 186,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "permit_comment_affects_limit_applicability",
+          "sites": 1,
+          "emitted": 620,
+          "holes": 620,
+          "category": "C_MISSING_PARAMETERIZATION"
+        },
+        {
+          "name": "pass_fail_limit_comparison_semantics",
+          "sites": 1,
+          "emitted": 32,
+          "holes": 32,
+          "category": "C_MISSING_PARAMETERIZATION"
+        },
+        {
+          "name": "report_only_limit_with_numeric_measurement",
+          "sites": 1,
+          "emitted": 296,
+          "holes": 296,
+          "category": "C_MISSING_PARAMETERIZATION"
+        },
+        {
+          "name": "permit_comment_for_monitoring_applicability",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 69,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "optional_flag_for_monitoring_applicability",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 105,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "frequency_code_for_monitoring_applicability",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 105,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "sample_type_for_monitoring_applicability",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 105,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "seasonal_jan_for_monitoring_applicability",
+          "sites": 0,
+          "emitted": 1,
+          "holes": 105,
+          "category": "E_UNCERTAIN"
+        },
+        {
+          "name": "seasonal_feb_for_monitoring_applicability",
+          "sites": 0,
+          "emitted": 1,
+          "holes": 105,
+          "category": "E_UNCERTAIN"
+        },
+        {
+          "name": "seasonal_mar_for_monitoring_applicability",
+          "sites": 0,
+          "emitted": 1,
+          "holes": 105,
+          "category": "E_UNCERTAIN"
+        },
+        {
+          "name": "seasonal_apr_for_monitoring_applicability",
+          "sites": 0,
+          "emitted": 1,
+          "holes": 105,
+          "category": "E_UNCERTAIN"
+        },
+        {
+          "name": "seasonal_may_for_monitoring_applicability",
+          "sites": 0,
+          "emitted": 1,
+          "holes": 105,
+          "category": "E_UNCERTAIN"
+        },
+        {
+          "name": "seasonal_jun_for_monitoring_applicability",
+          "sites": 0,
+          "emitted": 1,
+          "holes": 105,
+          "category": "E_UNCERTAIN"
+        },
+        {
+          "name": "seasonal_jul_for_monitoring_applicability",
+          "sites": 0,
+          "emitted": 1,
+          "holes": 105,
+          "category": "E_UNCERTAIN"
+        },
+        {
+          "name": "seasonal_aug_for_monitoring_applicability",
+          "sites": 0,
+          "emitted": 1,
+          "holes": 105,
+          "category": "E_UNCERTAIN"
+        },
+        {
+          "name": "seasonal_sep_for_monitoring_applicability",
+          "sites": 0,
+          "emitted": 1,
+          "holes": 105,
+          "category": "E_UNCERTAIN"
+        },
+        {
+          "name": "seasonal_oct_for_monitoring_applicability",
+          "sites": 0,
+          "emitted": 1,
+          "holes": 105,
+          "category": "E_UNCERTAIN"
+        },
+        {
+          "name": "seasonal_nov_for_monitoring_applicability",
+          "sites": 0,
+          "emitted": 1,
+          "holes": 105,
+          "category": "E_UNCERTAIN"
+        },
+        {
+          "name": "seasonal_dec_for_monitoring_applicability",
+          "sites": 0,
+          "emitted": 1,
+          "holes": 105,
+          "category": "E_UNCERTAIN"
+        },
+        {
+          "name": "conditional_monitoring_requirement",
+          "sites": 1,
+          "emitted": 69,
+          "holes": 69,
+          "category": "C_MISSING_PARAMETERIZATION"
+        },
+        {
+          "name": "nodi_code_semantics",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 186,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "optional_flag_for_no_result_semantics",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 186,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "nodi_establishes_no_result_state",
+          "sites": 1,
+          "emitted": 186,
+          "holes": 186,
+          "category": "C_MISSING_PARAMETERIZATION"
+        },
+        {
+          "name": "permit_comment_affects_no_result_semantics",
+          "sites": 1,
+          "emitted": 36,
+          "holes": 36,
+          "category": "C_MISSING_PARAMETERIZATION"
+        }
+      ]
+    },
+    "n_hole_groups": 31,
+    "n_hole_instances": 6116,
+    "relation_row_counts": {
+      "document_catalog": 12,
+      "measurement_record": 824,
+      "permit_limit_record": 105,
+      "fy2025_measurement": 824,
+      "measurement_permit_link": 824,
+      "fy25_limit_evaluation": 824,
+      "fy25_monitoring_obligation": 105,
+      "fy25_no_result_case": 186,
+      "numeric_comparison_candidate": 342
+    },
+    "referent_kinds_runtime": {
+      "measurement": 824,
+      "limit": 44,
+      "limit_value": 90,
+      "permit": 3,
+      "discharge_point": 4,
+      "parameter": 33,
+      "monitoring_period": 12,
+      "monitoring_event": 48,
+      "limit_set": 6,
+      "limit_schedule": 7,
+      "source_document": 12,
+      "permit_limit_row": 105
+    },
+    "factorized": {
+      "requirement_schemas": [
+        "document_text_unavailable",
+        "interpret_comment",
+        "interpret_frequency",
+        "interpret_nodi",
+        "interpret_optional_monitoring",
+        "interpret_qualifier",
+        "interpret_sample_type",
+        "interpret_seasonal_month",
+        "interpret_unit",
+        "interpret_value_type",
+        "materializable_documents",
+        "materializable_fy2025_measurements",
+        "numeric_limit",
+        "numeric_measurement",
+        "pass_fail_semantics",
+        "unique_applicable_limit"
+      ],
+      "relation_schemas": [
+        "CandidateCorrespondence",
+        "DocumentInventory",
+        "Fy2025Scope",
+        "LimitBase",
+        "MeasurementBase",
+        "NumericComparison"
+      ],
+      "referent_schemas": [
+        "Document",
+        "Limit",
+        "LimitRow",
+        "LimitSchedule",
+        "LimitSet",
+        "LimitValue",
+        "Measurement",
+        "MonitoringEvent",
+        "MonitoringPeriod",
+        "Outfall",
+        "Parameter",
+        "Permit"
+      ],
+      "n_requirement_schemas": 16,
+      "n_relation_schemas": 6,
+      "n_referent_schemas": 12,
+      "grounded_requirement_instances": 1273,
+      "grounded_hole_occurrences": 6116
+    }
+  },
+  {
+    "trial": "T4",
+    "loc": {
+      "physical_loc": 660,
+      "nonblank_loc": 619,
+      "by_category": {
+        "SOURCE_IO": 3,
+        "SOURCE_PROFILING_OR_EXPLORATION": 0,
+        "PHYSICAL_NORMALIZATION": 67,
+        "GENERAL_HELPER_OR_CONTROL_FLOW": 7,
+        "REFERENT_DECLARATION": 14,
+        "RELATION_DECLARATION": 166,
+        "GROUNDING_OR_MAPPING": 9,
+        "MECHANICAL_DERIVATION": 10,
+        "PURPOSE_REQUIREMENT_SCHEMA": 99,
+        "PURPOSE_REQUIREMENT_INSTANTIATION": 7,
+        "UNRESOLVED_OR_HOLE_EMISSION": 41,
+        "REPORTING_DEBUGGING_OR_SERIALIZATION": 2,
+        "OTHER": 194
+      },
+      "semantic_loc": 339,
+      "mechanical_runtime_support_loc": 77,
+      "requirement_loc": 106,
+      "hole_instance_loc": 41
+    },
+    "calls": {
+      "call_counts": {
+        "rows": 2,
+        "document_inventory": 1,
+        "relation": 11,
+        "set": 3,
+        "map": 9,
+        "derive": 2,
+        "defaultdict": 1,
+        "require_unique": 1,
+        "require_materializable": 3,
+        "require_interpreted": 8,
+        "require_numeric": 2,
+        "sorted": 1,
+        "Source": 1,
+        "World": 1,
+        "Purpose": 1,
+        "construct": 1,
+        "snapshot": 1,
+        "print": 1,
+        "strip": 1,
+        "_text": 67,
+        "add": 3,
+        "append": 8,
+        "items": 2,
+        "get": 61,
+        "unresolved": 5,
+        "bool": 2,
+        "referent": 8,
+        "parse_date": 4,
+        "all": 2,
+        "interval_contains": 1,
+        "dict": 1,
+        "str": 1,
+        "_period_key_from_referent": 1,
+        "keys": 1,
+        "any": 1,
+        "len": 1
+      },
+      "n_requirement_call_sites": 19,
+      "n_unique_requirement_names": 19
+    },
+    "referents": [
+      {
+        "original": "discharge_point",
+        "normalized": "Outfall"
+      },
+      {
+        "original": "dmr_measurement",
+        "normalized": "Measurement"
+      },
+      {
+        "original": "document",
+        "normalized": "Document"
+      },
+      {
+        "original": "limit",
+        "normalized": "Limit"
+      },
+      {
+        "original": "limit_value",
+        "normalized": "LimitValue"
+      },
+      {
+        "original": "monitoring_period",
+        "normalized": "MonitoringPeriod"
+      },
+      {
+        "original": "parameter",
+        "normalized": "Parameter"
+      },
+      {
+        "original": "permit",
+        "normalized": "Permit"
+      }
+    ],
+    "relations": [
+      {
+        "original": "permit_feature",
+        "normalized": "OtherRelation",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 4,
+        "roles": [
+          "permit",
+          "discharge_point",
+          "feature_number"
+        ]
+      },
+      {
+        "original": "limit_value_specification",
+        "normalized": "LimitBase",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 105,
+        "roles": [
+          "limit_value",
+          "limit",
+          "parameter",
+          "discharge_point",
+          "limit_value_type_code",
+          "limit_value_nmbr",
+          "limit_value_qualifier_code",
+          "limit_unit_code",
+          "statistical_base_code",
+          "statistical_base_type_code",
+          "optional_monitoring_flag",
+          "limit_type_code",
+          "limit_freq_of_analysis_code",
+          "limit_sample_type_code",
+          "dmr_comment_text",
+          "limit_set_designator",
+          "limit_set_schedule_id",
+          "nmbr_of_submission"
+        ]
+      },
+      {
+        "original": "limit_effective_interval",
+        "normalized": "EffectiveInterval",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 44,
+        "roles": [
+          "limit",
+          "begin_date",
+          "end_date"
+        ]
+      },
+      {
+        "original": "measurement_reported",
+        "normalized": "MeasurementBase",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 824,
+        "roles": [
+          "measurement",
+          "permit",
+          "discharge_point",
+          "parameter",
+          "limit",
+          "limit_value",
+          "monitoring_period",
+          "monitoring_location_code",
+          "value_type_code",
+          "dmr_value_nmbr",
+          "dmr_value_qualifier_code",
+          "dmr_unit_code",
+          "nodi_code",
+          "nmbr_of_submission",
+          "optional_monitoring_flag",
+          "limit_value_nmbr",
+          "limit_value_qualifier_code",
+          "limit_type_code"
+        ]
+      },
+      {
+        "original": "document_inventory_entry",
+        "normalized": "DocumentInventory",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 12,
+        "roles": [
+          "document",
+          "permit",
+          "document_kind",
+          "filename"
+        ]
+      },
+      {
+        "original": "fy2025_measurement",
+        "normalized": "Fy2025Scope",
+        "derived": true,
+        "mode": "WORLD",
+        "n_rows": 824,
+        "roles": [
+          "measurement",
+          "permit",
+          "discharge_point",
+          "parameter",
+          "limit",
+          "limit_value",
+          "monitoring_period",
+          "monitoring_location_code",
+          "value_type_code",
+          "dmr_value_nmbr",
+          "dmr_value_qualifier_code",
+          "dmr_unit_code",
+          "nodi_code",
+          "nmbr_of_submission",
+          "optional_monitoring_flag",
+          "limit_value_nmbr",
+          "limit_value_qualifier_code",
+          "limit_type_code"
+        ]
+      },
+      {
+        "original": "measurement_permit_match",
+        "normalized": "CandidateCorrespondence",
+        "derived": true,
+        "mode": "WORLD",
+        "n_rows": 824,
+        "roles": [
+          "measurement",
+          "permit",
+          "discharge_point",
+          "parameter",
+          "limit",
+          "limit_value",
+          "monitoring_period",
+          "monitoring_location_code",
+          "value_type_code",
+          "dmr_value_nmbr",
+          "dmr_value_qualifier_code",
+          "dmr_unit_code",
+          "nodi_code",
+          "nmbr_of_submission",
+          "optional_monitoring_flag",
+          "limit_value_nmbr",
+          "limit_value_qualifier_code",
+          "limit_type_code",
+          "permit_limit_schedule_id",
+          "permit_dmr_comment_text",
+          "permit_optional_monitoring_flag",
+          "permit_limit_freq_code"
+        ]
+      },
+      {
+        "original": "applicable_limit_candidate",
+        "normalized": "CandidateCorrespondence",
+        "derived": false,
+        "mode": "PURPOSE",
+        "n_rows": 824,
+        "roles": [
+          "measurement",
+          "limit_value",
+          "monitoring_period",
+          "limit_value_nmbr",
+          "limit_value_qualifier_code",
+          "dmr_value_nmbr",
+          "dmr_value_qualifier_code",
+          "limit_type_code",
+          "optional_monitoring_flag"
+        ]
+      },
+      {
+        "original": "numeric_limit_comparison_candidate",
+        "normalized": "NumericComparison",
+        "derived": false,
+        "mode": "PURPOSE",
+        "n_rows": 342,
+        "roles": [
+          "measurement",
+          "limit_value",
+          "limit_value_nmbr",
+          "limit_value_qualifier_code",
+          "dmr_value_nmbr",
+          "dmr_value_qualifier_code"
+        ]
+      },
+      {
+        "original": "monitoring_obligation_candidate",
+        "normalized": "CandidateCorrespondence",
+        "derived": false,
+        "mode": "PURPOSE",
+        "n_rows": 105,
+        "roles": [
+          "limit_value",
+          "limit",
+          "parameter",
+          "discharge_point",
+          "permit",
+          "optional_monitoring_flag",
+          "dmr_comment_text",
+          "limit_freq_of_analysis_code",
+          "limit_set_designator",
+          "limit_set_schedule_id",
+          "nmbr_of_submission"
+        ]
+      },
+      {
+        "original": "missing_result_case",
+        "normalized": "MissingEvidence",
+        "derived": false,
+        "mode": "PURPOSE",
+        "n_rows": 186,
+        "roles": [
+          "measurement",
+          "monitoring_period",
+          "parameter",
+          "nodi_code",
+          "dmr_value_nmbr",
+          "limit_value_nmbr",
+          "optional_monitoring_flag"
+        ]
+      }
+    ],
+    "requirement_schemas": [
+      {
+        "original": "unique_applicable_limit_per_measurement",
+        "normalized": "unique_applicable_limit",
+        "kind": "require_unique",
+        "field": null
+      },
+      {
+        "original": "applicable_limit_candidates_materializable",
+        "normalized": "materializable_candidates",
+        "kind": "require_materializable",
+        "field": null
+      },
+      {
+        "original": "limit_value_qualifier_for_comparison",
+        "normalized": "interpret_qualifier",
+        "kind": "require_interpreted",
+        "field": "limit_value_qualifier_code"
+      },
+      {
+        "original": "dmr_value_qualifier_for_comparison",
+        "normalized": "interpret_qualifier",
+        "kind": "require_interpreted",
+        "field": "dmr_value_qualifier_code"
+      },
+      {
+        "original": "limit_value_numeric_for_comparison",
+        "normalized": "numeric_limit",
+        "kind": "require_numeric",
+        "field": "limit_value_nmbr"
+      },
+      {
+        "original": "dmr_value_numeric_for_comparison",
+        "normalized": "numeric_measurement",
+        "kind": "require_numeric",
+        "field": "dmr_value_nmbr"
+      },
+      {
+        "original": "limit_value_nmbr_comparability",
+        "normalized": "report_only_gap",
+        "kind": "require_interpreted",
+        "field": "limit_value_nmbr"
+      },
+      {
+        "original": "limit_type_code_comparability",
+        "normalized": "interpret_limit_type",
+        "kind": "require_interpreted",
+        "field": "limit_type_code"
+      },
+      {
+        "original": "monitoring_obligation_candidates_materializable",
+        "normalized": "materializable_candidates",
+        "kind": "require_materializable",
+        "field": null
+      },
+      {
+        "original": "optional_monitoring_flag_obligation",
+        "normalized": "interpret_optional_monitoring",
+        "kind": "require_interpreted",
+        "field": "optional_monitoring_flag"
+      },
+      {
+        "original": "dmr_comment_obligation",
+        "normalized": "interpret_comment",
+        "kind": "require_interpreted",
+        "field": "dmr_comment_text"
+      },
+      {
+        "original": "limit_freq_obligation",
+        "normalized": "interpret_frequency",
+        "kind": "require_interpreted",
+        "field": "limit_freq_of_analysis_code"
+      },
+      {
+        "original": "missing_result_cases_materializable",
+        "normalized": "materializable_no_result",
+        "kind": "require_materializable",
+        "field": null
+      },
+      {
+        "original": "nodi_code_semantics",
+        "normalized": "interpret_nodi",
+        "kind": "require_interpreted",
+        "field": "nodi_code"
+      },
+      {
+        "original": "measurement_permit_spec_unmatched",
+        "normalized": "other_requirement",
+        "kind": "unresolved",
+        "field": null
+      },
+      {
+        "original": "limit_applicability_without_numeric_limit",
+        "normalized": "numeric_limit",
+        "kind": "unresolved",
+        "field": null
+      },
+      {
+        "original": "conditional_monitoring_applicability",
+        "normalized": "interpret_comment",
+        "kind": "unresolved",
+        "field": null
+      },
+      {
+        "original": "missing_result_without_nodi",
+        "normalized": "interpret_nodi",
+        "kind": "unresolved",
+        "field": null
+      },
+      {
+        "original": "nodi_with_limit_but_no_measurement",
+        "normalized": "interpret_nodi",
+        "kind": "unresolved",
+        "field": null
+      }
+    ],
+    "n_spine_requirement_rows": 565,
+    "n_relations": 11,
+    "n_referent_kinds": 8,
+    "n_requirement_schemas": 19,
+    "grain": {
+      "requirement_schemas": 19,
+      "schema_names": [
+        "applicable_limit_candidates_materializable",
+        "conditional_monitoring_applicability",
+        "dmr_comment_obligation",
+        "dmr_value_numeric_for_comparison",
+        "dmr_value_qualifier_for_comparison",
+        "limit_applicability_without_numeric_limit",
+        "limit_freq_obligation",
+        "limit_type_code_comparability",
+        "limit_value_nmbr_comparability",
+        "limit_value_numeric_for_comparison",
+        "limit_value_qualifier_for_comparison",
+        "measurement_permit_spec_unmatched",
+        "missing_result_cases_materializable",
+        "missing_result_without_nodi",
+        "monitoring_obligation_candidates_materializable",
+        "nodi_code_semantics",
+        "nodi_with_limit_but_no_measurement",
+        "optional_monitoring_flag_obligation",
+        "unique_applicable_limit_per_measurement"
+      ],
+      "candidate_semantic_obligations": 25,
+      "hole_occurrences": 2904,
+      "obligation_sample": [
+        [
+          "interpret",
+          "dmr_comment_obligation",
+          "(PASS = 0  FAIL = 1) REPORT PASS AS '0' OR REPORT FAIL AS '1' IN CONCENTRATION MAX. ABOVE.  IF ALL TESTS PASS FOR THE FIRST YEAR OF THE PERMIT, THE FREQUENCY WILL BE REDUCED FOR YEARS 2-5 TO:  1/6 MONTHS FOR DAPHNIA PULEX & 1/YR FOR PIMEPHALES PROMELAS (SEE FOOTNOTE 9, PAGE 3 OF PART I OF PERMIT)."
+        ],
+        [
+          "interpret",
+          "dmr_comment_obligation",
+          "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES."
+        ],
+        [
+          "interpret",
+          "dmr_comment_obligation",
+          "WHEN DISCHARGING."
+        ],
+        [
+          "interpret",
+          "dmr_value_qualifier_for_comparison",
+          "="
+        ],
+        [
+          "interpret",
+          "dmr_value_qualifier_for_comparison",
+          "<"
+        ],
+        [
+          "interpret",
+          "dmr_value_qualifier_for_comparison",
+          ">"
+        ],
+        [
+          "interpret",
+          "limit_freq_obligation",
+          "02/30"
+        ],
+        [
+          "interpret",
+          "limit_freq_obligation",
+          "02/07"
+        ],
+        [
+          "interpret",
+          "limit_freq_obligation",
+          "01/90"
+        ],
+        [
+          "interpret",
+          "limit_freq_obligation",
+          "99/99"
+        ],
+        [
+          "interpret",
+          "limit_freq_obligation",
+          "01/07"
+        ],
+        [
+          "interpret",
+          "limit_freq_obligation",
+          "05/WK"
+        ],
+        [
+          "interpret",
+          "limit_freq_obligation",
+          "09/99"
+        ],
+        [
+          "interpret",
+          "limit_freq_obligation",
+          "01/01"
+        ],
+        [
+          "interpret",
+          "limit_type_code_comparability",
+          "ENF"
+        ],
+        [
+          "interpret",
+          "limit_value_nmbr_comparability",
+          "limit_value_nmbr"
+        ],
+        [
+          "interpret",
+          "limit_value_qualifier_for_comparison",
+          ">="
+        ],
+        [
+          "interpret",
+          "limit_value_qualifier_for_comparison",
+          "<="
+        ],
+        [
+          "interpret",
+          "nodi_code_semantics",
+          "9"
+        ],
+        [
+          "interpret",
+          "nodi_code_semantics",
+          "C"
+        ],
+        [
+          "interpret",
+          "optional_monitoring_flag_obligation",
+          "Y"
+        ],
+        [
+          "interpret",
+          "optional_monitoring_flag_obligation",
+          "N"
+        ],
+        [
+          "unresolved",
+          "conditional_monitoring_applicability",
+          "permit comment text present; conditional/event/seasonal applicability not establ"
+        ],
+        [
+          "unresolved",
+          "limit_applicability_without_numeric_limit",
+          "no numeric limit value in source; enforceable vs report-only applicability not e"
+        ],
+        [
+          "unresolved",
+          "nodi_with_limit_but_no_measurement",
+          "NODI present with limit value but no measurement value; no-data semantics not fu"
+        ]
+      ]
+    },
+    "duplication": {
+      "counts_by_category": {
+        "A_PURE_CODE_DUPLICATION": 0,
+        "B_INSTANCE_EXPANSION": 8,
+        "C_MISSING_PARAMETERIZATION": 551,
+        "D_FALSE_DUPLICATION": 0,
+        "E_UNCERTAIN": 0
+      },
+      "per_name": [
+        {
+          "name": "limit_value_qualifier_for_comparison",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 342,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "dmr_value_qualifier_for_comparison",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 342,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "limit_value_nmbr_comparability",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 380,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "limit_type_code_comparability",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 824,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "limit_applicability_without_numeric_limit",
+          "sites": 1,
+          "emitted": 380,
+          "holes": 380,
+          "category": "C_MISSING_PARAMETERIZATION"
+        },
+        {
+          "name": "optional_monitoring_flag_obligation",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 105,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "dmr_comment_obligation",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 69,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "limit_freq_obligation",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 105,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "conditional_monitoring_applicability",
+          "sites": 1,
+          "emitted": 69,
+          "holes": 69,
+          "category": "C_MISSING_PARAMETERIZATION"
+        },
+        {
+          "name": "nodi_code_semantics",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 186,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "nodi_with_limit_but_no_measurement",
+          "sites": 1,
+          "emitted": 102,
+          "holes": 102,
+          "category": "C_MISSING_PARAMETERIZATION"
+        }
+      ]
+    },
+    "n_hole_groups": 11,
+    "n_hole_instances": 2904,
+    "relation_row_counts": {
+      "permit_feature": 4,
+      "limit_value_specification": 105,
+      "limit_effective_interval": 44,
+      "measurement_reported": 824,
+      "document_inventory_entry": 12,
+      "fy2025_measurement": 824,
+      "measurement_permit_match": 824,
+      "applicable_limit_candidate": 824,
+      "numeric_limit_comparison_candidate": 342,
+      "monitoring_obligation_candidate": 105,
+      "missing_result_case": 186
+    },
+    "referent_kinds_runtime": {
+      "permit": 3,
+      "discharge_point": 4,
+      "parameter": 33,
+      "limit": 44,
+      "limit_value": 90,
+      "dmr_measurement": 824,
+      "monitoring_period": 12,
+      "document": 12
+    },
+    "factorized": {
+      "requirement_schemas": [
+        "interpret_comment",
+        "interpret_frequency",
+        "interpret_limit_type",
+        "interpret_nodi",
+        "interpret_optional_monitoring",
+        "interpret_qualifier",
+        "materializable_candidates",
+        "materializable_no_result",
+        "numeric_limit",
+        "numeric_measurement",
+        "other_requirement",
+        "report_only_gap",
+        "unique_applicable_limit"
+      ],
+      "relation_schemas": [
+        "CandidateCorrespondence",
+        "DocumentInventory",
+        "EffectiveInterval",
+        "Fy2025Scope",
+        "LimitBase",
+        "MeasurementBase",
+        "MissingEvidence",
+        "NumericComparison",
+        "OtherRelation"
+      ],
+      "referent_schemas": [
+        "Document",
+        "Limit",
+        "LimitValue",
+        "Measurement",
+        "MonitoringPeriod",
+        "Outfall",
+        "Parameter",
+        "Permit"
+      ],
+      "n_requirement_schemas": 13,
+      "n_relation_schemas": 9,
+      "n_referent_schemas": 8,
+      "grounded_requirement_instances": 565,
+      "grounded_hole_occurrences": 2904
+    }
+  },
+  {
+    "trial": "T5",
+    "loc": {
+      "physical_loc": 652,
+      "nonblank_loc": 609,
+      "by_category": {
+        "SOURCE_IO": 3,
+        "SOURCE_PROFILING_OR_EXPLORATION": 0,
+        "PHYSICAL_NORMALIZATION": 67,
+        "GENERAL_HELPER_OR_CONTROL_FLOW": 8,
+        "REFERENT_DECLARATION": 17,
+        "RELATION_DECLARATION": 79,
+        "GROUNDING_OR_MAPPING": 3,
+        "MECHANICAL_DERIVATION": 93,
+        "PURPOSE_REQUIREMENT_SCHEMA": 135,
+        "PURPOSE_REQUIREMENT_INSTANTIATION": 6,
+        "UNRESOLVED_OR_HOLE_EMISSION": 32,
+        "REPORTING_DEBUGGING_OR_SERIALIZATION": 0,
+        "OTHER": 166
+      },
+      "semantic_loc": 359,
+      "mechanical_runtime_support_loc": 78,
+      "requirement_loc": 141,
+      "hole_instance_loc": 32
+    },
+    "calls": {
+      "call_counts": {
+        "bool": 1,
+        "rows": 2,
+        "document_inventory": 1,
+        "relation": 3,
+        "map": 3,
+        "derive": 5,
+        "_declare_purpose_requirements": 1,
+        "require_materializable": 5,
+        "require_unique": 1,
+        "require_numeric": 2,
+        "require_interpreted": 12,
+        "unresolved": 4,
+        "Source": 1,
+        "World": 1,
+        "purpose": 1,
+        "construct": 1,
+        "main": 1,
+        "strip": 1,
+        "_text": 54,
+        "append": 4,
+        "get": 2,
+        "referent": 10,
+        "parse_date": 9,
+        "interval_contains": 6,
+        "upper": 4,
+        "str": 1,
+        "measurement_ref": 1,
+        "permit_ref": 3,
+        "feature_ref": 2,
+        "parameter_ref": 2,
+        "limit_ref": 2,
+        "limit_value_ref": 2,
+        "limit_set_ref": 2,
+        "schedule_ref": 2,
+        "_has_text": 3,
+        "permit_limit_ref": 2,
+        "document_ref": 1,
+        "int": 1,
+        "len": 1
+      },
+      "n_requirement_call_sites": 24,
+      "n_unique_requirement_names": 24
+    },
+    "referents": [
+      {
+        "original": "document",
+        "normalized": "Document"
+      },
+      {
+        "original": "feature",
+        "normalized": "Outfall"
+      },
+      {
+        "original": "limit",
+        "normalized": "Limit"
+      },
+      {
+        "original": "limit_set",
+        "normalized": "LimitSet"
+      },
+      {
+        "original": "limit_set_schedule",
+        "normalized": "LimitSchedule"
+      },
+      {
+        "original": "limit_value",
+        "normalized": "LimitValue"
+      },
+      {
+        "original": "measurement",
+        "normalized": "Measurement"
+      },
+      {
+        "original": "parameter",
+        "normalized": "Parameter"
+      },
+      {
+        "original": "permit",
+        "normalized": "Permit"
+      },
+      {
+        "original": "permit_limit_row",
+        "normalized": "LimitRow"
+      }
+    ],
+    "relations": [
+      {
+        "original": "dmr_measurement",
+        "normalized": "MeasurementBase",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 824,
+        "roles": [
+          "measurement",
+          "permit",
+          "feature",
+          "parameter",
+          "limit",
+          "limit_value",
+          "limit_set",
+          "limit_set_schedule",
+          "monitoring_period_end",
+          "limit_begin_date",
+          "limit_end_date",
+          "dmr_value_nmbr",
+          "dmr_value_standard_units",
+          "dmr_value_qualifier_code",
+          "limit_value_nmbr",
+          "limit_value_standard_units",
+          "limit_value_qualifier_code",
+          "limit_type_code",
+          "optional_monitoring_flag",
+          "nodi_code",
+          "limit_set_designator",
+          "limit_value_type_code",
+          "value_type_code",
+          "statistical_base_type_code",
+          "dmr_sample_type_code",
+          "dmr_freq_of_analysis_code",
+          "limit_freq_of_analysis_code",
+          "limit_sample_type_code",
+          "monitoring_location_code",
+          "has_reported_value",
+          "has_limit_value_nmbr",
+          "period_in_limit_interval"
+        ]
+      },
+      {
+        "original": "permit_limit",
+        "normalized": "LimitBase",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 105,
+        "roles": [
+          "permit_limit_row",
+          "permit",
+          "feature",
+          "parameter",
+          "limit",
+          "limit_value",
+          "limit_set",
+          "limit_set_schedule",
+          "limit_begin_date",
+          "limit_end_date",
+          "limit_value_nmbr",
+          "limit_value_standard_units",
+          "limit_value_qualifier_code",
+          "limit_type_code",
+          "optional_monitoring_flag",
+          "limit_set_designator",
+          "limit_set_name",
+          "limit_freq_of_analysis_code",
+          "limit_sample_type_code",
+          "statistical_base_type_code",
+          "dmr_comment_text",
+          "monitoring_location_code",
+          "has_limit_value_nmbr",
+          "limit_overlaps_fy2025"
+        ]
+      },
+      {
+        "original": "permit_document",
+        "normalized": "DocumentInventory",
+        "derived": false,
+        "mode": "WORLD",
+        "n_rows": 12,
+        "roles": [
+          "permit",
+          "document",
+          "document_kind",
+          "filename",
+          "bytes"
+        ]
+      },
+      {
+        "original": "fy2025_measurement",
+        "normalized": "Fy2025Scope",
+        "derived": true,
+        "mode": "PURPOSE",
+        "n_rows": 824,
+        "roles": [
+          "measurement",
+          "monitoring_period_end"
+        ]
+      },
+      {
+        "original": "measurement_limit_pair",
+        "normalized": "CandidateCorrespondence",
+        "derived": true,
+        "mode": "PURPOSE",
+        "n_rows": 824,
+        "roles": [
+          "measurement",
+          "permit_limit_row",
+          "permit",
+          "feature",
+          "parameter",
+          "limit",
+          "limit_value",
+          "monitoring_period_end",
+          "dmr_value_standard_units",
+          "limit_value_standard_units",
+          "limit_value_qualifier_code",
+          "dmr_value_qualifier_code",
+          "optional_monitoring_flag",
+          "limit_type_code",
+          "has_reported_value",
+          "has_limit_value_nmbr",
+          "nodi_code",
+          "dmr_comment_text",
+          "limit_freq_of_analysis_code",
+          "statistical_base_type_code"
+        ]
+      },
+      {
+        "original": "numeric_comparison_candidate",
+        "normalized": "NumericComparison",
+        "derived": true,
+        "mode": "PURPOSE",
+        "n_rows": 342,
+        "roles": [
+          "measurement",
+          "permit_limit_row",
+          "dmr_value_standard_units",
+          "limit_value_standard_units",
+          "limit_value_qualifier_code",
+          "dmr_value_qualifier_code",
+          "statistical_base_type_code"
+        ]
+      },
+      {
+        "original": "no_numeric_result_case",
+        "normalized": "MissingEvidence",
+        "derived": true,
+        "mode": "PURPOSE",
+        "n_rows": 186,
+        "roles": [
+          "measurement",
+          "permit",
+          "feature",
+          "parameter",
+          "limit",
+          "limit_value",
+          "monitoring_period_end",
+          "nodi_code",
+          "optional_monitoring_flag",
+          "limit_freq_of_analysis_code",
+          "dmr_freq_of_analysis_code",
+          "has_limit_value_nmbr"
+        ]
+      },
+      {
+        "original": "monitoring_requirement_fy2025",
+        "normalized": "Fy2025Scope",
+        "derived": true,
+        "mode": "PURPOSE",
+        "n_rows": 105,
+        "roles": [
+          "permit_limit_row",
+          "permit",
+          "feature",
+          "parameter",
+          "limit",
+          "limit_value",
+          "optional_monitoring_flag",
+          "limit_freq_of_analysis_code",
+          "limit_sample_type_code",
+          "dmr_comment_text",
+          "has_limit_value_nmbr",
+          "limit_set_designator"
+        ]
+      }
+    ],
+    "requirement_schemas": [
+      {
+        "original": "fy2025_measurements_materializable",
+        "normalized": "materializable_fy2025_measurements",
+        "kind": "require_materializable",
+        "field": null
+      },
+      {
+        "original": "measurement_limit_pairs_materializable",
+        "normalized": "materializable_fy2025_measurements",
+        "kind": "require_materializable",
+        "field": null
+      },
+      {
+        "original": "unique_applicable_limit_per_measurement",
+        "normalized": "unique_applicable_limit",
+        "kind": "require_unique",
+        "field": null
+      },
+      {
+        "original": "numeric_comparison_candidates_materializable",
+        "normalized": "materializable_candidates",
+        "kind": "require_materializable",
+        "field": null
+      },
+      {
+        "original": "limit_value_for_comparison",
+        "normalized": "other_requirement",
+        "kind": "require_numeric",
+        "field": "limit_value_standard_units"
+      },
+      {
+        "original": "reported_value_for_comparison",
+        "normalized": "other_requirement",
+        "kind": "require_numeric",
+        "field": "dmr_value_standard_units"
+      },
+      {
+        "original": "limit_comparison_operator",
+        "normalized": "other_requirement",
+        "kind": "require_interpreted",
+        "field": "limit_value_qualifier_code"
+      },
+      {
+        "original": "reported_value_qualifier",
+        "normalized": "interpret_qualifier",
+        "kind": "require_interpreted",
+        "field": "dmr_value_qualifier_code"
+      },
+      {
+        "original": "optional_monitoring_flag_for_limit_applicability",
+        "normalized": "interpret_optional_monitoring",
+        "kind": "require_interpreted",
+        "field": "optional_monitoring_flag"
+      },
+      {
+        "original": "limit_type_code_for_enforceability",
+        "normalized": "interpret_limit_type",
+        "kind": "require_interpreted",
+        "field": "limit_type_code"
+      },
+      {
+        "original": "statistical_base_for_limit_comparison",
+        "normalized": "interpret_statistical_base",
+        "kind": "require_interpreted",
+        "field": "statistical_base_type_code"
+      },
+      {
+        "original": "monitoring_requirements_materializable",
+        "normalized": "materializable_monitoring",
+        "kind": "require_materializable",
+        "field": null
+      },
+      {
+        "original": "monitoring_frequency_code",
+        "normalized": "interpret_frequency",
+        "kind": "require_interpreted",
+        "field": "limit_freq_of_analysis_code"
+      },
+      {
+        "original": "limit_sample_type_code",
+        "normalized": "interpret_limit_type",
+        "kind": "require_interpreted",
+        "field": "limit_sample_type_code"
+      },
+      {
+        "original": "optional_monitoring_flag_for_obligation",
+        "normalized": "interpret_optional_monitoring",
+        "kind": "require_interpreted",
+        "field": "optional_monitoring_flag"
+      },
+      {
+        "original": "permit_limit_comment_text",
+        "normalized": "interpret_comment",
+        "kind": "require_interpreted",
+        "field": "dmr_comment_text"
+      },
+      {
+        "original": "limit_set_designator_for_schedule",
+        "normalized": "other_requirement",
+        "kind": "require_interpreted",
+        "field": "limit_set_designator"
+      },
+      {
+        "original": "no_numeric_result_cases_materializable",
+        "normalized": "materializable_no_result",
+        "kind": "require_materializable",
+        "field": null
+      },
+      {
+        "original": "nodi_code_semantics",
+        "normalized": "interpret_nodi",
+        "kind": "require_interpreted",
+        "field": "nodi_code"
+      },
+      {
+        "original": "optional_monitoring_flag_for_missing_evidence",
+        "normalized": "interpret_optional_monitoring",
+        "kind": "require_interpreted",
+        "field": "optional_monitoring_flag"
+      },
+      {
+        "original": "permit_document_text_not_available",
+        "normalized": "document_text_unavailable",
+        "kind": "unresolved",
+        "field": null
+      },
+      {
+        "original": "conditional_discharge_dependent_monitoring",
+        "normalized": "interpret_comment",
+        "kind": "unresolved",
+        "field": null
+      },
+      {
+        "original": "pass_fail_reporting_semantics",
+        "normalized": "pass_fail_semantics",
+        "kind": "unresolved",
+        "field": null
+      },
+      {
+        "original": "aggregated_reporting_requirement",
+        "normalized": "aggregated_reporting",
+        "kind": "unresolved",
+        "field": null
+      }
+    ],
+    "n_spine_requirement_rows": 90,
+    "n_relations": 8,
+    "n_referent_kinds": 10,
+    "n_requirement_schemas": 24,
+    "grain": {
+      "requirement_schemas": 24,
+      "schema_names": [
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "fy2025_measurements_materializable",
+        "limit_comparison_operator",
+        "limit_sample_type_code",
+        "limit_set_designator_for_schedule",
+        "limit_type_code_for_enforceability",
+        "limit_value_for_comparison",
+        "measurement_limit_pairs_materializable",
+        "monitoring_frequency_code",
+        "monitoring_requirements_materializable",
+        "no_numeric_result_cases_materializable",
+        "nodi_code_semantics",
+        "numeric_comparison_candidates_materializable",
+        "optional_monitoring_flag_for_limit_applicability",
+        "optional_monitoring_flag_for_missing_evidence",
+        "optional_monitoring_flag_for_obligation",
+        "pass_fail_reporting_semantics",
+        "permit_document_text_not_available",
+        "permit_limit_comment_text",
+        "reported_value_for_comparison",
+        "reported_value_qualifier",
+        "statistical_base_for_limit_comparison",
+        "unique_applicable_limit_per_measurement"
+      ],
+      "candidate_semantic_obligations": 23,
+      "hole_occurrences": 535,
+      "obligation_sample": [
+        [
+          "interpret",
+          "limit_sample_type_code",
+          "24"
+        ],
+        [
+          "interpret",
+          "limit_sample_type_code",
+          "TM"
+        ],
+        [
+          "interpret",
+          "limit_sample_type_code",
+          "ES"
+        ],
+        [
+          "interpret",
+          "limit_sample_type_code",
+          "12"
+        ],
+        [
+          "interpret",
+          "limit_sample_type_code",
+          "CA"
+        ],
+        [
+          "interpret",
+          "limit_sample_type_code",
+          "GR"
+        ],
+        [
+          "interpret",
+          "monitoring_frequency_code",
+          "05/WK"
+        ],
+        [
+          "interpret",
+          "monitoring_frequency_code",
+          "09/99"
+        ],
+        [
+          "interpret",
+          "monitoring_frequency_code",
+          "01/01"
+        ],
+        [
+          "interpret",
+          "monitoring_frequency_code",
+          "02/30"
+        ],
+        [
+          "interpret",
+          "monitoring_frequency_code",
+          "02/07"
+        ],
+        [
+          "interpret",
+          "monitoring_frequency_code",
+          "01/90"
+        ],
+        [
+          "interpret",
+          "monitoring_frequency_code",
+          "99/99"
+        ],
+        [
+          "interpret",
+          "monitoring_frequency_code",
+          "01/07"
+        ],
+        [
+          "interpret",
+          "nodi_code_semantics",
+          "9"
+        ],
+        [
+          "interpret",
+          "nodi_code_semantics",
+          "C"
+        ],
+        [
+          "interpret",
+          "permit_limit_comment_text",
+          "(PASS = 0  FAIL = 1) REPORT PASS AS '0' OR REPORT FAIL AS '1' IN CONCENTRATION MAX. ABOVE.  IF ALL TESTS PASS FOR THE FIRST YEAR OF THE PERMIT, THE FREQUENCY WILL BE REDUCED FOR YEARS 2-5 TO:  1/6 MONTHS FOR DAPHNIA PULEX & 1/YR FOR PIMEPHALES PROMELAS (SEE FOOTNOTE 9, PAGE 3 OF PART I OF PERMIT)."
+        ],
+        [
+          "interpret",
+          "permit_limit_comment_text",
+          "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES."
+        ],
+        [
+          "interpret",
+          "permit_limit_comment_text",
+          "WHEN DISCHARGING."
+        ],
+        [
+          "unresolved",
+          "aggregated_reporting_requirement",
+          "Permit limit comment describes aggregated reporting (geometric mean) whose appli"
+        ],
+        [
+          "unresolved",
+          "conditional_discharge_dependent_monitoring",
+          "Permit limit comment references discharge occurrence; structured sources do not "
+        ],
+        [
+          "unresolved",
+          "pass_fail_reporting_semantics",
+          "Permit limit uses pass/fail reporting semantics that require interpretation beyo"
+        ],
+        [
+          "unresolved",
+          "permit_document_text_not_available",
+          "Permit package documents are inventoried by filename and hash only; narrative pe"
+        ]
+      ]
+    },
+    "duplication": {
+      "counts_by_category": {
+        "A_PURE_CODE_DUPLICATION": 0,
+        "B_INSTANCE_EXPANSION": 4,
+        "C_MISSING_PARAMETERIZATION": 69,
+        "D_FALSE_DUPLICATION": 0,
+        "E_UNCERTAIN": 0
+      },
+      "per_name": [
+        {
+          "name": "monitoring_frequency_code",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 105,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "limit_sample_type_code",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 105,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "permit_limit_comment_text",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 69,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "nodi_code_semantics",
+          "sites": 1,
+          "emitted": 1,
+          "holes": 186,
+          "category": "B_INSTANCE_EXPANSION"
+        },
+        {
+          "name": "aggregated_reporting_requirement",
+          "sites": 1,
+          "emitted": 40,
+          "holes": 40,
+          "category": "C_MISSING_PARAMETERIZATION"
+        },
+        {
+          "name": "conditional_discharge_dependent_monitoring",
+          "sites": 1,
+          "emitted": 17,
+          "holes": 17,
+          "category": "C_MISSING_PARAMETERIZATION"
+        },
+        {
+          "name": "pass_fail_reporting_semantics",
+          "sites": 1,
+          "emitted": 12,
+          "holes": 12,
+          "category": "C_MISSING_PARAMETERIZATION"
+        }
+      ]
+    },
+    "n_hole_groups": 8,
+    "n_hole_instances": 535,
+    "relation_row_counts": {
+      "dmr_measurement": 824,
+      "permit_limit": 105,
+      "permit_document": 12,
+      "fy2025_measurement": 824,
+      "measurement_limit_pair": 824,
+      "numeric_comparison_candidate": 342,
+      "no_numeric_result_case": 186,
+      "monitoring_requirement_fy2025": 105
+    },
+    "referent_kinds_runtime": {
+      "measurement": 824,
+      "permit": 3,
+      "feature": 4,
+      "parameter": 33,
+      "limit": 44,
+      "limit_value": 90,
+      "limit_set": 6,
+      "limit_set_schedule": 7,
+      "permit_limit_row": 105,
+      "document": 12
+    },
+    "factorized": {
+      "requirement_schemas": [
+        "aggregated_reporting",
+        "document_text_unavailable",
+        "interpret_comment",
+        "interpret_frequency",
+        "interpret_limit_type",
+        "interpret_nodi",
+        "interpret_optional_monitoring",
+        "interpret_qualifier",
+        "interpret_statistical_base",
+        "materializable_candidates",
+        "materializable_fy2025_measurements",
+        "materializable_monitoring",
+        "materializable_no_result",
+        "other_requirement",
+        "pass_fail_semantics",
+        "unique_applicable_limit"
+      ],
+      "relation_schemas": [
+        "CandidateCorrespondence",
+        "DocumentInventory",
+        "Fy2025Scope",
+        "LimitBase",
+        "MeasurementBase",
+        "MissingEvidence",
+        "NumericComparison"
+      ],
+      "referent_schemas": [
+        "Document",
+        "Limit",
+        "LimitRow",
+        "LimitSchedule",
+        "LimitSet",
+        "LimitValue",
+        "Measurement",
+        "Outfall",
+        "Parameter",
+        "Permit"
+      ],
+      "n_requirement_schemas": 16,
+      "n_relation_schemas": 7,
+      "n_referent_schemas": 10,
+      "grounded_requirement_instances": 90,
+      "grounded_hole_occurrences": 535
+    }
+  }
+]
