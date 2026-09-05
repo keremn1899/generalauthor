@@ -57,6 +57,30 @@ PASS_ARTIFACTS: dict[str, str] = {
 
 PASSES: list[str] = list(PASS_ARTIFACTS)
 
+#: Checks a pass runs on its own work, beside the artifact it is answerable for.
+#:
+#: These are not a tenth pass. Constructor v3 kept the nine — normalization is a
+#: deterministic stage inside projection, not a stage a human reviews — and what
+#: it added instead is machine verdicts *within* passes: P1 asks whether the
+#: purpose's required consumer fields can be declared at all, P6 asks whether
+#: every durable assertion is grounded, P8 asks whether those fields actually
+#: materialize before it projects. A run can therefore write its artifact,
+#: exit clean, and still have told you it is not sound.
+#:
+#: The whole contract is a top-level ``ok`` boolean. The read plane does not
+#: model ABI completeness or grounding kinds and must not start to: those live
+#: in `research/`, they are the user's, and a reader that reimplemented them
+#: would be a second opinion drifting from the first. It reports the check's
+#: own verdict and the check's own words for it.
+#:
+#: Absence is silence, never failure. Runs frozen before these existed are read
+#: unchanged, which is the point of a read plane over frozen runs.
+PASS_ATTESTATIONS: dict[str, tuple[str, ...]] = {
+    "p1": ("01_abi_completeness.json",),
+    "p6": ("06_provenance.json",),
+    "p8": ("08_abi_completeness.json",),
+}
+
 #: §2's third column: the question a human opens each pass to answer. Carried
 #: here rather than in the front end because it is part of what the pass *is* —
 #: a spine that showed nine status ticks and no questions would be a progress
@@ -111,6 +135,43 @@ def _load(path: Path) -> Any:
         raise ArtifactError(f"{path.name} is not readable JSON: {error}") from error
 
 
+#: What a check names when it is unhappy: a list of subjects, a count, or a
+#: sentence. Nothing here interprets a value — a name is quoted, a count is
+#: counted, a reason is passed on — so a check that grows a new complaint is one
+#: row, and one that changes what `UNSATISFIED` means needs no change at all.
+_ATTESTATION_KEYS: tuple[str, ...] = (
+    "unsatisfied",
+    "ambiguous",
+    "ungrounded",
+    "reason",
+)
+
+
+def _attestation_says(document: dict[str, Any]) -> list[str]:
+    """The check's own account of what is wrong, capped.
+
+    Capped because this rides on the spine, and a run with four hundred
+    ungrounded assertions has already made its point by the third. The count
+    stays exact; it is the enumeration that stops.
+    """
+    says: list[str] = []
+    for key in _ATTESTATION_KEYS:
+        value = document.get(key)
+        if isinstance(value, str):
+            if value.strip():
+                says.append(f"{key}: {value.strip()}")
+        elif isinstance(value, list) and value:
+            names = [
+                item if isinstance(item, str) else str(item.get("assertion_id", "—"))
+                if isinstance(item, dict)
+                else str(item)
+                for item in value[:3]
+            ]
+            more = f" (+{len(value) - 3} more)" if len(value) > 3 else ""
+            says.append(f"{key}: {', '.join(names)}{more}")
+    return says
+
+
 class ConstructionReader:
     """One constructor run: a directory holding `passes/p0` … `passes/p8`."""
 
@@ -140,6 +201,38 @@ class ConstructionReader:
 
     def _artifact_path(self, pass_id: str) -> Path:
         return self._snapshot(pass_id) / PASS_ARTIFACTS[pass_id]
+
+    def _attestations(self, pass_id: str) -> list[dict[str, Any]]:
+        """What a pass's own checks said, in their words.
+
+        Unreadable is reported as `ok: None` with the reason rather than as
+        `False`. A check that could not be read did not say no; conflating the
+        two would put a pass in the same state whether its grounding failed or
+        its file was half-written, and those need different work from a person.
+        """
+        found: list[dict[str, Any]] = []
+        snapshot = self._snapshot(pass_id)
+        for name in PASS_ATTESTATIONS.get(pass_id, ()):
+            path = snapshot / name
+            if not path.exists():
+                continue
+            try:
+                document = _load(path)
+            except ArtifactError as error:
+                found.append({"artifact": name, "ok": None, "says": [str(error)]})
+                continue
+            if not isinstance(document, dict):
+                found.append({"artifact": name, "ok": None, "says": ["not a verdict"]})
+                continue
+            ok = document.get("ok")
+            found.append(
+                {
+                    "artifact": name,
+                    "ok": ok if isinstance(ok, bool) else None,
+                    "says": _attestation_says(document),
+                }
+            )
+        return found
 
     def _agent(self, pass_id: str) -> dict[str, Any] | None:
         record = self.path / "passes" / pass_id / "agent.json"
@@ -424,6 +517,7 @@ class ConstructionReader:
         agent: dict[str, Any] | None,
         intervened: set[str],
         scored: bool | None,
+        attestations: list[dict[str, Any]] | None = None,
     ) -> tuple[str | None, list[str]]:
         """§5's state for one pass, and why.
 
@@ -435,6 +529,16 @@ class ConstructionReader:
 
         CERTIFIED is only ever returned on a scorer's word. Everything else
         clean returns `None`, which the spine reads as unscored.
+
+        A failed attestation is read *after* the structural states and *before*
+        the scorers, and it withholds certification. It is not FAILED — §5's
+        FAILED is about the artifact, and the artifact is there and readable —
+        and it does not come first, because a pass already going to re-run has
+        nothing to answer for yet. But it does outrank a score. A scorer
+        signing a pass whose own grounding check said no is a contradiction,
+        and the resolution that keeps the read plane honest is to report both
+        and confer nothing: §5 lets this module withhold certification, never
+        confer it, so the safe direction is the one it is allowed to take.
         """
         if not ran:
             return None, []
@@ -448,6 +552,13 @@ class ConstructionReader:
         moved = self._moved_inputs(pass_id)
         if moved:
             return PROVISIONAL, [f"input has moved since it ran: {', '.join(moved)}"]
+        refused = [check for check in (attestations or []) if check["ok"] is False]
+        if refused:
+            because = []
+            for check in refused:
+                said = "; ".join(check["says"]) or "no detail"
+                because.append(f"its own check {check['artifact']} says no — {said}")
+            return None, because
         if scored is True:
             return CERTIFIED, []
         if scored is False:
@@ -532,6 +643,7 @@ class ConstructionReader:
                     valid = False
             grade = graded.get(pass_id)
             scored = grade.get("pass") if isinstance(grade, dict) else grade
+            attestations = self._attestations(pass_id)
             state, because = self._pass_state(
                 pass_id,
                 ran=(self.path / "passes" / pass_id).is_dir(),
@@ -539,6 +651,7 @@ class ConstructionReader:
                 agent=agent,
                 intervened=intervened,
                 scored=scored if isinstance(scored, bool) else None,
+                attestations=attestations,
             )
             entry: dict[str, Any] = {
                 "pass": pass_id,
@@ -551,6 +664,11 @@ class ConstructionReader:
                 "scored": scored if isinstance(scored, bool) else None,
                 "seconds": elapsed.get(pass_id),
                 "question": PASS_QUESTIONS[pass_id],
+                # Always present, empty for a pass that runs no check and for
+                # a run frozen before the checks existed. A front end that had
+                # to distinguish "no checks" from "field absent" would be
+                # distinguishing two ways of saying nothing.
+                "attestations": attestations,
             }
             if artifact.is_dir():
                 entry["items"] = len(sorted(artifact.glob("*.json")))
@@ -607,16 +725,25 @@ class ConstructionReader:
         path = self._artifact_path(pass_id)
         if not path.exists():
             raise KeyError(f"pass {pass_id} has written no {PASS_ARTIFACTS[pass_id]}")
+        # The spine carries the verdict; this is where a person comes to see
+        # what it was reached from, so the check documents come back whole.
+        checks = {
+            name: _load(self._snapshot(pass_id) / name)
+            for name in PASS_ATTESTATIONS.get(pass_id, ())
+            if (self._snapshot(pass_id) / name).is_file()
+        }
         if path.is_dir():
             return {
                 "pass": pass_id,
                 "artifact": PASS_ARTIFACTS[pass_id],
                 "items": {item.stem: _load(item) for item in sorted(path.glob("*.json"))},
+                "checks": checks,
             }
         answer = {
             "pass": pass_id,
             "artifact": PASS_ARTIFACTS[pass_id],
             "document": _load(path),
+            "checks": checks,
         }
         if pass_id == "p2":
             answer["intake"] = self._intake_account()

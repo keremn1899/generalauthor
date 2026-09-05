@@ -566,25 +566,28 @@ export function createSpecimenSet(): WorkingSet {
 }
 
 /**
- * The constructor's nine passes, in the five states the spine can draw.
+ * The constructor's nine passes, in every state the spine can draw.
  *
- * The spine encodes state as *geometry* — filled, half, dashed, struck,
- * dotted — so a gallery that showed only the happy run would be showing one
- * fifth of the vocabulary. `null` is the fifth and the important one: it means
- * no scorer has spoken, and the surface reports that rather than filling in
- * the blank, because a front end that inferred certification would be
- * certifying passes.
+ * The spine encodes state as *geometry* — filled, half, dashed, struck across,
+ * struck down, dotted, bare — so a gallery that showed only the happy run
+ * would be showing a seventh of the vocabulary. Two of the seven are the
+ * important ones. `null` with no check is "no scorer has spoken", which the
+ * surface reports rather than filling in, because a front end that inferred
+ * certification would be certifying passes. `null` with a refused check is P1
+ * saying the purpose's required consumer fields are not declarable — the pass
+ * wrote its artifact and objected to it in the same breath, and a rail that
+ * drew that as unscored would be hiding the objection behind an absence.
  */
 export const MOCK_PASSES: PassEntry[] = [
-  { pass: "p0", artifact: "00_intention_contract.json", present: true, ran: true, scored: null, seconds: null, question: "", agent: null, state: "CERTIFIED", because: [] },
-  { pass: "p1", artifact: "01_vocabulary.json", present: true, ran: true, scored: null, seconds: null, question: "", agent: null, state: "CERTIFIED", because: [] },
-  { pass: "p2", artifact: "02_mechanical_world/", present: true, ran: true, scored: null, seconds: null, question: "", agent: null, state: "PROVISIONAL", because: ["an input moved under it"] },
-  { pass: "p3", artifact: "03_obligations.json", present: true, ran: true, scored: null, seconds: null, question: "", agent: null, state: "CERTIFIED", because: [] },
-  { pass: "p4", artifact: "04_packets/", present: true, ran: true, scored: null, seconds: null, question: "", agent: null, state: "STALE", because: ["an intervention stands upstream"] },
-  { pass: "p5", artifact: "05_dispositions.json", present: true, ran: true, scored: null, seconds: null, question: "", agent: null, state: null, because: ["no scorer has spoken"] },
-  { pass: "p6", artifact: "06_admission.json", present: true, ran: true, scored: null, seconds: null, question: "", agent: null, state: "FAILED", because: ["the artifact is absent"] },
-  { pass: "p7", artifact: "07_derivations.json", present: false, ran: false, scored: null, seconds: null, question: "", agent: null, state: null, because: [] },
-  { pass: "p8", artifact: "08_outputs/", present: false, ran: false, scored: null, seconds: null, question: "", agent: null, state: null, because: [] },
+  { pass: "p0", artifact: "00_intention_contract.json", present: true, ran: true, scored: null, seconds: null, question: "", agent: null, state: "CERTIFIED", because: [], attestations: [] },
+  { pass: "p1", artifact: "01_vocabulary.json", present: true, ran: true, scored: null, seconds: null, question: "", agent: null, state: null, because: ["its own check 01_abi_completeness.json says no — unsatisfied: contract_id"], attestations: [{ artifact: "01_abi_completeness.json", ok: false, says: ["unsatisfied: contract_id"] }] },
+  { pass: "p2", artifact: "02_mechanical_world/", present: true, ran: true, scored: null, seconds: null, question: "", agent: null, state: "PROVISIONAL", because: ["an input moved under it"], attestations: [] },
+  { pass: "p3", artifact: "03_obligations.json", present: true, ran: true, scored: null, seconds: null, question: "", agent: null, state: "CERTIFIED", because: [], attestations: [] },
+  { pass: "p4", artifact: "04_packets/", present: true, ran: true, scored: null, seconds: null, question: "", agent: null, state: "STALE", because: ["an intervention stands upstream"], attestations: [] },
+  { pass: "p5", artifact: "05_dispositions.json", present: true, ran: true, scored: null, seconds: null, question: "", agent: null, state: null, because: ["no scorer has spoken"], attestations: [] },
+  { pass: "p6", artifact: "06_admission.json", present: true, ran: true, scored: null, seconds: null, question: "", agent: null, state: "FAILED", because: ["the artifact is absent"], attestations: [{ artifact: "06_provenance.json", ok: true, says: [] }] },
+  { pass: "p7", artifact: "07_derivations.json", present: false, ran: false, scored: null, seconds: null, question: "", agent: null, state: null, because: [], attestations: [] },
+  { pass: "p8", artifact: "08_outputs/", present: false, ran: false, scored: null, seconds: null, question: "", agent: null, state: null, because: [], attestations: [] },
 ];
 
 /**

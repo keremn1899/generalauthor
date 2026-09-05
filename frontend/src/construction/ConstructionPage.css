@@ -1160,6 +1160,20 @@
   );
 }
 
+/* Ran, wrote its artifact, and its own check said no. Struck like FAILED
+   because it is a pass disowning its work — and struck on the *other* axis,
+   because what failed is not the artifact. The two must not be one mark. */
+.spine__pass[data-state="refused"] .spine__bar {
+  border-color: var(--ink);
+  background: linear-gradient(
+    to right,
+    transparent calc(50% - 0.5px),
+    var(--ink) calc(50% - 0.5px),
+    var(--ink) calc(50% + 0.5px),
+    transparent calc(50% + 0.5px)
+  );
+}
+
 .spine__pass[data-state="absent"] .spine__bar {
   border-style: dotted;
 }
@@ -1181,6 +1195,17 @@
 .spine__because,
 .spine__artifact {
   font-style: italic;
+}
+
+/* A check that said no is set in the body ink rather than the muted one. That
+   is weight, not colour: the same ink the question is set in, which is how
+   everything else on this rail says "read me first". */
+.spine__check {
+  font-variant-numeric: tabular-nums;
+}
+
+.spine__check[data-ok="false"] {
+  color: var(--ink);
 }
 
 .spine__intervention {

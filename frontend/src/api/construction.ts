@@ -151,6 +151,21 @@ export type PassEntry = {
   /** Observed wall clock for this pass, from the run itself. */
   seconds: number | null;
   question: string;
+  /**
+   * What the pass's own checks said about its work.
+   *
+   * Constructor v3 kept nine passes and put machine verdicts inside them — P1
+   * asks whether the purpose's required consumer fields are declarable, P6
+   * whether every durable assertion is grounded, P8 whether those fields
+   * materialize before it projects. A pass can write its artifact, exit
+   * cleanly, and say no in the same breath, so a rail that showed only
+   * `present` would show a tick over a run that had already objected.
+   *
+   * Empty for a pass that runs no check and for a run frozen before the checks
+   * existed. `ok: null` is a check that could not be read — which is not a
+   * check that said no.
+   */
+  attestations: { artifact: string; ok: boolean | null; says: string[] }[];
 };
 
 /** §5 — what an intervention at one pass invalidates, stated before the act. */

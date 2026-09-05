@@ -587,3 +587,122 @@ def test_one_upheld_verdict_does_not_hide_another_that_moved(reader):
         "p7",
         "p8",
     ]
+
+
+# -- a pass's own checks ----------------------------------------------------
+#
+# Constructor v3 kept the nine passes and added machine verdicts inside them:
+# P1's ABI declarability, P6's grounding validation, P8's materialization check
+# before it projects. A pass can write its artifact, exit 0, and have told you
+# in the same breath that it is not sound. These are about the read plane
+# carrying that instead of reporting a clean tick.
+
+
+def _attest(reader, pass_id: str, name: str, document) -> None:
+    _write(reader.path / "passes" / pass_id / "workspace_snapshot" / name, document)
+
+
+def test_a_run_frozen_before_the_checks_existed_reads_unchanged(reader):
+    """Absence is silence. Every v2 run in this repository is this case, and a
+    reader that treated a missing check as a failed one would condemn all of
+    them."""
+    for entry in reader.overview()["passes"]:
+        assert entry["attestations"] == []
+        assert entry["state"] is None
+
+
+def test_a_pass_reports_its_own_check_passing(reader):
+    _attest(reader, "p6", "06_provenance.json", {"ok": True, "ungrounded": []})
+    p6 = next(e for e in reader.overview()["passes"] if e["pass"] == "p6")
+    assert p6["attestations"] == [
+        {"artifact": "06_provenance.json", "ok": True, "says": []}
+    ]
+    assert p6["because"] == ["no scorer has spoken"]
+
+
+def test_ungrounded_assertions_are_named_on_the_spine(reader):
+    """P6's question is whether every durable assertion is grounded. When it is
+    not, the spine says which — the assertion ids are the work."""
+    _attest(
+        reader,
+        "p6",
+        "06_provenance.json",
+        {
+            "ok": False,
+            "ungrounded": [
+                {"assertion_id": "a1", "relation": "invoice", "origin": "ASSERTED"},
+                {"assertion_id": "a2", "relation": "invoice", "origin": "ASSERTED"},
+            ],
+            "ungrounded_count": 2,
+        },
+    )
+    p6 = next(e for e in reader.overview()["passes"] if e["pass"] == "p6")
+    assert p6["attestations"][0]["ok"] is False
+    assert p6["because"] == [
+        "its own check 06_provenance.json says no — ungrounded: a1, a2"
+    ]
+
+
+def test_a_refused_check_outranks_a_scorer(reader):
+    """The contradiction that has to be visible: a scorer signed P8, and P8's
+    own materialization check says a required consumer field is not there. The
+    read plane withholds certification — §5 lets it withhold and never confer,
+    so that is the direction it is allowed to resolve in."""
+    _attest(
+        reader,
+        "p8",
+        "08_abi_completeness.json",
+        {"ok": False, "unsatisfied": ["contract_id"], "ambiguous": []},
+    )
+    p8 = next(
+        e for e in reader.overview(scores={"p8": True})["passes"] if e["pass"] == "p8"
+    )
+    assert p8["state"] is None
+    assert p8["scored"] is True
+    assert p8["because"] == [
+        "its own check 08_abi_completeness.json says no — unsatisfied: contract_id"
+    ]
+
+
+def test_a_pass_going_to_re_run_is_stale_before_it_is_answerable(reader):
+    """Order. An intervention upstream means P8 re-runs whatever its check
+    found, so STALE is the state a person can act on and the check is moot."""
+    _attest(reader, "p8", "08_abi_completeness.json", {"ok": False, "unsatisfied": ["x"]})
+    overview = reader.overview({"alpha": {"disposition": "DISTINCT", "supersedes": "UNRESOLVED"}})
+    p8 = next(e for e in overview["passes"] if e["pass"] == "p8")
+    assert p8["state"] == "STALE"
+    assert p8["attestations"][0]["ok"] is False
+
+
+def test_an_unreadable_check_did_not_say_no(reader):
+    """A half-written check is `None`, not `False`. They need different work
+    from a person and must not collapse into one state."""
+    path = reader.path / "passes" / "p1" / "workspace_snapshot" / "01_abi_completeness.json"
+    path.write_text("{\"ok\": fal", encoding="utf-8")
+    p1 = next(e for e in reader.overview()["passes"] if e["pass"] == "p1")
+    assert p1["attestations"][0]["ok"] is None
+    assert p1["state"] is None
+    assert p1["because"] == ["no scorer has spoken"]
+
+
+def test_a_long_complaint_is_capped_but_its_count_is_not(reader):
+    _attest(
+        reader,
+        "p1",
+        "01_abi_completeness.json",
+        {"ok": False, "unsatisfied": [f"field_{n}" for n in range(9)]},
+    )
+    p1 = next(e for e in reader.overview()["passes"] if e["pass"] == "p1")
+    assert p1["attestations"][0]["says"] == [
+        "unsatisfied: field_0, field_1, field_2 (+6 more)"
+    ]
+
+
+def test_the_check_document_comes_back_whole_on_the_drill_in(reader):
+    document = {"ok": False, "unsatisfied": ["contract_id"], "fields": {"contract_id": {}}}
+    _attest(reader, "p8", "08_abi_completeness.json", document)
+    assert reader.pass_artifact("p8")["checks"] == {"08_abi_completeness.json": document}
+
+
+def test_a_pass_with_no_checks_still_answers_the_question(reader):
+    assert reader.pass_artifact("p3")["checks"] == {}

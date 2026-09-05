@@ -89,9 +89,27 @@ P7  07_derivations.json            derived relations, blocking premises
 P8  08_outputs/{a,b,c}.json        purpose answers
 ```
 
-Lives in `research/semantic_integration/`. The kernel is
-`core/kernel.py` (wraps `taskview.TaskView`, never forks it); the current
-campaign is `domains/diligence/constructor_v2/`.
+Still nine. v3 added no pass — normalization is a deterministic stage inside
+projection, not one a human reviews — and put machine checks *inside* passes
+instead. Each writes a document whose whole contract is a top-level `ok`:
+
+```text
+P1  01_abi_completeness.json       are the required consumer fields declarable
+P6  06_provenance.json             is every durable assertion grounded
+P8  08_abi_completeness.json       do those fields materialize before projection
+```
+
+A pass can write its artifact, exit 0, and say no in the same breath. The read
+plane carries that (`PASS_ATTESTATIONS` in `world_explorer/construction.py`)
+and a refused check withholds CERTIFIED — §5 lets the reader withhold
+certification and never confer it, so that is the direction it resolves in.
+Absence is silence: runs frozen before the checks existed read unchanged.
+
+Lives in `research/semantic_integration/`; `ARCHITECTURE.md` there is the
+current account of the pipeline. The kernel is `core/kernel.py` (wraps
+`taskview.TaskView`, never forks it); the constructor line is v3, most recently
+`domains/diligence/constructor_v3_1_1/`, with `constructor_v2/` frozen beside
+it. Both are readable by the same read plane, which is the point.
 
 **`research/` is user-owned.** Do not modify it, and never overwrite sealed
 results, unless the task is explicitly that work.

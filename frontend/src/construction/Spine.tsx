@@ -26,10 +26,24 @@ import { useEffect, useState } from "react";
 import { still } from "../styles/motion";
 import { constructionApi, type Cost, type PassEntry } from "../api/construction";
 
+/**
+ * A pass that objected to its own work.
+ *
+ * Not one of §5's four states, and not promoted into one: the artifact is
+ * there and readable, so it is not FAILED, and nothing has moved under it. It
+ * is the pass saying no about itself, which the rail has to show or the tick
+ * over it is a lie. Read only where §5 has nothing to say — a STALE pass is
+ * going to re-run and its check is moot, which is the server's order too.
+ */
+function refused(entry: PassEntry): boolean {
+  return !entry.state && entry.attestations.some((check) => check.ok === false);
+}
+
 /** The word for a state, including the one that is an absence. */
 function stateWord(entry: PassEntry): string {
   if (!entry.ran) return "not run";
   if (entry.state) return entry.state.toLowerCase();
+  if (refused(entry)) return "check says no";
   return entry.scored === false ? "not passed" : "unscored";
 }
 
@@ -118,7 +132,10 @@ export function Spine({
               <button
                 type="button"
                 className="spine__pass"
-                data-state={entry.state ?? (entry.ran ? "unscored" : "absent")}
+                data-state={
+                  entry.state ??
+                  (refused(entry) ? "refused" : entry.ran ? "unscored" : "absent")
+                }
                 data-selected={chosen || undefined}
                 aria-expanded={chosen}
                 onClick={() => onSelect(chosen ? null : entry.pass)}
@@ -153,6 +170,27 @@ export function Spine({
                     {entry.items !== undefined ? ` · ${entry.items} items` : ""}
                     {entry.seconds !== null ? ` · took ${duration(entry.seconds)}` : ""}
                   </p>
+                  {/* Which checks the pass ran, and their verdict — a roster,
+                      not an account. `because` above carries what a refusal
+                      *said*, so repeating it here would be one fact set twice
+                      and neither line owning it. What this owns is the fact
+                      `because` cannot state: that a check ran at all. A pass
+                      that ran one and passed it is a different thing from a
+                      pass that ran none, and both are silent up there. */}
+                  {entry.attestations.map((check) => (
+                    <p
+                      key={check.artifact}
+                      className="spine__check"
+                      data-ok={check.ok === null ? "unread" : String(check.ok)}
+                    >
+                      {check.artifact} ·{" "}
+                      {check.ok === null
+                        ? "unreadable"
+                        : check.ok
+                          ? "passed"
+                          : "did not pass"}
+                    </p>
+                  ))}
                   {cost && cost.at === entry.pass ? (
                     <>
                       <p className="spine__intervention">
