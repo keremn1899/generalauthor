@@ -34,9 +34,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Graph } from "@antv/g6";
 import {
   BOND_LABEL_STACK_GAP,
+  BOND_LABEL_STACK_MAX,
   bondLabelLayout,
   chipKindOf,
   chipNode,
+  chipWidth,
   discNode,
   filamentEdge,
   furnitureOf,
@@ -44,6 +46,8 @@ import {
   paintOf,
   shelfNode,
   spokeEdge,
+  stableFilamentNormal,
+  summaryEdge,
   type MarkParams,
 } from "./marks";
 import {
@@ -105,6 +109,15 @@ import {
  */
 function bondElementId(assertionId: string): string {
   return `bond:${assertionId}`;
+}
+
+/** One observer label for several assertions sharing the same filament. */
+function bundleElementId(assertionId: string): string {
+  return `bundle:${assertionId}`;
+}
+
+function subjectOfBundle(elementId: string): string | null {
+  return elementId.startsWith("bundle:") ? elementId.slice(7) : null;
 }
 
 /**
@@ -261,6 +274,13 @@ type CanvasFrame = {
   edges: CanvasDatum[];
   animateInitial: boolean;
   fieldIds: Set<string>;
+  /**
+   * This frame re-places matter that was already standing, because a person
+   * asked it to. The one case where `marksNeverMove` is suspended, so it is
+   * carried on the frame rather than inferred: a mark that moves for any other
+   * reason is a bug, and a canvas that guessed could not tell them apart.
+   */
+  arranged: boolean;
 };
 
 export type CanvasSelection =
@@ -279,6 +299,7 @@ export function WorldCanvas({
   show,
   focusId = null,
   focusToken = 0,
+  arrangeToken = 0,
   animateInitial = false,
   insets,
   ants,
@@ -300,6 +321,14 @@ export function WorldCanvas({
   /** A table-named mark to fly to. Canvas clicks do not set this. */
   focusId?: string | null;
   focusToken?: number;
+  /**
+   * Bumped when a person arranged the field.
+   *
+   * A token rather than a flag because the canvas has to distinguish *this*
+   * arrangement from the next redraw of the same positions, and a flag would
+   * have to be unset by whoever set it.
+   */
+  arrangeToken?: number;
   /** The first mark was just requested, rather than restored from memory. */
   animateInitial?: boolean;
   insets: CameraInsets;
@@ -359,6 +388,17 @@ export function WorldCanvas({
   materialRef.current = materialTuning;
   const contactRef = useRef<ContactState>(IDLE_CONTACT);
   const [contact, setContact] = useState<ContactState>(IDLE_CONTACT);
+  /**
+   * The one group the person has opened, if any.
+   *
+   * Held rather than derived because it is a thing someone did, not a thing the
+   * pointer is currently doing: it survives the pointer moving off the count
+   * and onto the claims the count just revealed. It ends when the group stops
+   * being looked at at all, which is the only exit a person would predict.
+   */
+  const [openedBundle, setOpenedBundle] = useState<string | null>(null);
+  const openedBundleRef = useRef<string | null>(null);
+  openedBundleRef.current = openedBundle;
   const insetsRef = useRef(insets);
   insetsRef.current = insets;
   const [stageSize, setStageSize] = useState({ width: 0, height: 0 });
@@ -377,6 +417,8 @@ export function WorldCanvas({
    * a drag waits here instead of being discarded.
    */
   const pendingFrameRef = useRef<CanvasFrame | null>(null);
+  /** The arrangement this canvas has already drawn. */
+  const drawnArrangeToken = useRef(0);
   const drawLaneRef = useRef<Promise<void>>(Promise.resolve());
   /**
    * The current working set, for handlers registered once at mount.
@@ -409,7 +451,19 @@ export function WorldCanvas({
    * back. This map is written on every drag tick so a redraw mid-gesture keeps
    * the mark under the hand.
    */
-  const liveRef = useRef(set.positions);
+  const liveRef = useRef(new Map(set.positions));
+  /**
+   * Which stored map the live cache was last taken from.
+   *
+   * The cache is a *copy*, and this is what says when to take a new one. It
+   * used to be the stored map itself, aliased — and `followFurniture`, which
+   * writes the pointer's position on every drag tick, therefore wrote drag
+   * positions straight into the working set. That is the renderer editing the
+   * model behind the store's back: no `onPositions`, no new map, so nothing
+   * downstream could see it had happened, and any code that compared the set
+   * against its own previous positions was comparing a map with itself.
+   */
+  const liveSourceRef = useRef(set.positions);
   /**
    * The last referent the pointer actually entered.
    *
@@ -581,6 +635,31 @@ export function WorldCanvas({
     return resolveFocusId(graph, selection.id) ? 0 : NODE_BIRTH_PLAN.durationMs;
   }, [ready, selection]);
 
+  /**
+   * The live cache adopts stored positions the moment they change.
+   *
+   * During render, not in an effect, because `data` is built through `liveAt`
+   * in this same render: an effect would leave one frame drawn from the
+   * positions before the change. That never showed while placement only ever
+   * *added* marks — a mark that has just arrived is not in the cache, so the
+   * cache had nothing stale to say about it — but an arrangement moves marks
+   * that are in it, and a cache of where the renderer last put something
+   * cannot be allowed to outrank a person saying where it now goes.
+   *
+   * A drag is the exception it has always been: the cache is then ahead of the
+   * store rather than behind it, and holds the only copy of where the pointer
+   * has taken the mark.
+   *
+   * Adopting means copying, and only when the store hands over a map it has
+   * not handed over before. Copying is what keeps drag ticks out of the model;
+   * the identity guard is what keeps the frames between release and the
+   * store's acknowledgement from throwing away what `harvest` just read back.
+   */
+  if (!draggingRef.current && liveSourceRef.current !== set.positions) {
+    liveSourceRef.current = set.positions;
+    liveRef.current = new Map(set.positions);
+  }
+
   const data = useMemo(() => {
     const nodes: unknown[] = [];
     const edges: unknown[] = [];
@@ -628,6 +707,17 @@ export function WorldCanvas({
     }
     const stackByAssertion = new Map<string, number>();
     const filamentCarrier = new Set<string>();
+    /** Grouped claims are named by their group, not one at a time. */
+    const namedBond = new Map<string, boolean>();
+    const bundles: {
+      id: string;
+      source: string;
+      target: string;
+      label: string;
+      shown: boolean;
+      interactive: boolean;
+      stack: number;
+    }[] = [];
     for (const unsorted of byEndpoints.values()) {
       const group = [...unsorted].sort((a, b) =>
         `${a.relation}\u0000${a.assertion_id}`.localeCompare(
@@ -635,11 +725,92 @@ export function WorldCanvas({
         ),
       );
       if (group[0]) filamentCarrier.add(group[0].assertion_id);
-      const gap = params.chipHeight + BOND_LABEL_STACK_GAP;
-      const middle = (group.length - 1) / 2;
-      group.forEach((bond, index) => {
+      /**
+       * Three states, not two, and the middle one is the point.
+       *
+       * At rest a filament says nothing. Looked at — an endpoint hovered or
+       * selected — a group says how many claims it carries, because a single
+       * line standing for three of them is a lie by omission. Opened, it says
+       * what they are.
+       *
+       * The step from the second state to the third is the count itself, and it
+       * needs the endpoint *selected* rather than merely hovered: reaching for
+       * the count means leaving the disc, and under hover alone the thing you
+       * were reaching for is gone before you arrive. Once open it stays open
+       * while the group is still being looked at, so the pointer does not have
+       * to keep holding a label it has moved past.
+       */
+      const first = group[0];
+      const grouped = group.length > 1 && Boolean(first);
+      const groupNamed = group.some((bond) => named(bond.assertion_id));
+      const focus = hovered ?? selection?.id ?? null;
+      const opened =
+        !grouped ||
+        (first !== undefined && openedBundle === bundleElementId(first.assertion_id)) ||
+        group.some((bond) => bond.assertion_id === focus);
+      const shown = grouped && opened
+        ? group.slice(0, BOND_LABEL_STACK_MAX)
+        : group;
+      for (const bond of group) {
+        namedBond.set(
+          bond.assertion_id,
+          grouped
+            ? groupNamed && opened && shown.includes(bond)
+            : named(bond.assertion_id),
+        );
+      }
+      /**
+       * How far apart two plates on one filament have to stand.
+       *
+       * The stack runs along the filament's normal, so the step is not a fixed
+       * height: a plate is thin the way it is tall and wide the way it is long,
+       * and on a vertical filament the normal is horizontal, where a step of one
+       * plate height puts two relation names straight through each other.
+       *
+       * Boxes that never rotate need only one axis to clear, so the smallest
+       * honest step is whichever of the two demands less — and on a horizontal
+       * filament that is the plate height it always was.
+       */
+      const normal = first
+        ? stableFilamentNormal(at(first.source), at(first.target))
+        : { x: 0, y: -1 };
+      const widest = Math.max(
+        ...group.map((bond) => chipWidth(bond.relation, params)),
+      );
+      const clear = (extent: number, axis: number) =>
+        Math.abs(axis) > 1e-6
+          ? (extent + BOND_LABEL_STACK_GAP) / Math.abs(axis)
+          : Number.POSITIVE_INFINITY;
+      const gap = Math.min(
+        clear(widest, normal.x),
+        clear(params.chipHeight, normal.y),
+      );
+      // The stack centres on what is actually drawn, so a capped group is not
+      // pushed off its own filament by the plates it is not showing.
+      const middle = (shown.length - 1) / 2;
+      group.forEach((bond) => stackByAssertion.set(bond.assertion_id, 0));
+      shown.forEach((bond, index) => {
         stackByAssertion.set(bond.assertion_id, (index - middle) * gap);
       });
+      if (grouped && first) {
+        const remainder = group.length - shown.length;
+        const endpointSelected =
+          selection?.kind === "referent" &&
+          (selection.id === first.source || selection.id === first.target);
+        bundles.push({
+          id: bundleElementId(first.assertion_id),
+          source: first.source,
+          target: first.target,
+          // Opened, the count stops being a stand-in and becomes the one thing
+          // the stack cannot say for itself: that it is not all of them.
+          label: opened
+            ? `+${remainder} more`
+            : `${group.length} assertions`,
+          shown: groupNamed && (!opened || remainder > 0),
+          interactive: !opened && endpointSelected,
+          stack: opened ? (shown.length - middle) * gap : 0,
+        });
+      }
     }
 
     for (const referent of set.referents.values()) {
@@ -835,7 +1006,7 @@ export function WorldCanvas({
           params,
           {
             label: bond.relation,
-            named: named(bond.assertion_id),
+            named: namedBond.get(bond.assertion_id) ?? named(bond.assertion_id),
             kind: chipKindOf(bond.origin),
             labelPlacement: layout.placement,
             labelOffsetX: layout.offsetX,
@@ -843,6 +1014,45 @@ export function WorldCanvas({
             carriesFilament: filamentCarrier.has(bond.assertion_id),
           },
         ),
+      );
+    }
+    /**
+     * The observer's count, pushed after the claims so it draws over the
+     * filament it is counting rather than under it.
+     *
+     * It is shown exactly when the individual names are not, which is what
+     * makes the pair a cross-fade rather than two independent fades: one
+     * `emit` takes the count out as the same `emit` brings the claims in, and
+     * at no frame is the filament either unnamed or named twice over.
+     */
+    for (const bundle of bundles) {
+      /**
+       * The count stands exactly where the claims will. Pinned to the
+       * filament's geometric midpoint it was a different station from the
+       * 44px one the plates use, so the two halves of the fade happened in
+       * two places and read as one thing dying while others were born
+       * elsewhere — on a long filament, a long way elsewhere.
+       */
+      const station = bondLabelLayout(
+        at(bundle.source),
+        at(bundle.target),
+        bondAnchor === bundle.source
+          ? "source"
+          : bondAnchor === bundle.target
+            ? "target"
+            : undefined,
+        bundle.stack,
+        params,
+      );
+      edges.push(
+        summaryEdge(bundle.id, bundle.source, bundle.target, paint, params, {
+          label: bundle.label,
+          shown: bundle.shown,
+          interactive: bundle.interactive,
+          placement: station.placement,
+          offsetX: station.offsetX,
+          offsetY: station.offsetY,
+        }),
       );
     }
     /**
@@ -919,8 +1129,23 @@ export function WorldCanvas({
     selectionTreatment,
     incident,
     namedMarks,
+    openedBundle,
     show,
   ]);
+
+  /**
+   * An opened group closes when it stops being looked at.
+   *
+   * Not on the count's own `pointerleave`: the first thing the pointer does
+   * after opening a group is move onto the claims it revealed, and a group that
+   * shut on that would be a door that only stays open while you hold it.
+   */
+  useEffect(() => {
+    if (!openedBundle) return;
+    const subject = subjectOfBundle(openedBundle);
+    if (subject && namedMarks?.has(subject)) return;
+    setOpenedBundle(null);
+  }, [openedBundle, namedMarks]);
 
   /** Dragged positions belong to the person, so they are read back before use. */
   const harvest = useCallback(() => {
@@ -931,19 +1156,86 @@ export function WorldCanvas({
       const id = String(node.id);
       if (isDecoration(id)) continue;
       const position = graph.getElementPosition(id);
-      if (position) out.set(id, { x: Math.round(position[0]), y: Math.round(position[1]) });
+      /**
+       * `getElementPosition` answers `[null, null, 0]` for an element whose
+       * transform it cannot resolve, and the array itself is always truthy.
+       * Rounding that gives `NaN`, and `NaN` is what then goes to the store as
+       * where the person put the mark — a place nothing can draw, hit-test or
+       * lay out from, kept across reloads. A position that cannot be read is
+       * not a position; the stored one stands.
+       */
+      if (!position || !Number.isFinite(position[0]) || !Number.isFinite(position[1])) {
+        continue;
+      }
+      out.set(id, { x: Math.round(position[0]), y: Math.round(position[1]) });
     }
     if (!out.size) return;
     liveRef.current = new Map([...liveRef.current, ...out]);
     onPositions(out);
   }, [onPositions]);
 
+  /**
+   * Bring a frame that waited out a drag up to where the drag actually ended.
+   *
+   * A frame built mid-gesture — a filter toggled with the other hand, a hover
+   * that changed what is lit — is held because a redraw under a pointer that
+   * is down would fight the person for the mark. It carries the position the
+   * mark had at the moment it was built, and the mark has moved since. Flushed
+   * as-is on release it puts the mark back there, and the frame that follows
+   * from `onPositions` puts it right again: a yank and a return, for a change
+   * that had nothing to do with where anything is.
+   *
+   * Only the dragged mark and its furniture can be stale — nothing else moved
+   * — so only those are restated, from the cache `harvest` has just made
+   * authoritative. The frame is rebuilt rather than written through: its data
+   * belongs to a memo, and a memo whose contents are edited from an event
+   * handler is a memo that no longer says what it computed.
+   */
+  const restatePendingDrag = useCallback(
+    (id: string) => {
+      const frame = pendingFrameRef.current;
+      const at = liveRef.current.get(id);
+      if (!frame || !at) return;
+      const offset = params.chipHeight / 2 + params.shelfGap;
+      const furniture = new Set(furnitureOf(id));
+      let restated = false;
+      const nodes = frame.nodes.map((node) => {
+        const crown = node.id.startsWith("crown:");
+        if (node.id !== id && !furniture.has(node.id)) return node;
+        const y = node.id === id ? at.y : crown ? at.y - offset : at.y + offset;
+        if (node.style?.x === at.x && node.style?.y === y) return node;
+        restated = true;
+        return { ...node, style: { ...node.style, x: at.x, y } };
+      });
+      if (restated) pendingFrameRef.current = { ...frame, nodes };
+    },
+    [params.chipHeight, params.shelfGap],
+  );
+
+  /**
+   * Which contact phases hold the lane, and why `releasing` is not one of them.
+   *
+   * A pointer that is down owns the field: `pressed` and `dragging` are both
+   * cases where the person is still authoring, and a global redraw underneath
+   * them would answer a question they have not finished asking.
+   *
+   * `releasing` is the opposite. The pointer is already up, the click has
+   * already committed, and what is still running is one body relaxing a load
+   * on its own two shapes — a transform G6 leaves alone across `setData`, so
+   * nothing about a redraw disturbs it. Holding the lane through it made the
+   * observer's aperture wait out the body's viscoelastic return, which are two
+   * different causes with no reason to be serialized: the person acted once
+   * and should see one answer, not the slower of two.
+   */
+  const contactHoldsLane = (phase: ContactState["phase"]) =>
+    phase === "pressed" || phase === "dragging";
+
   const queueCanvasDraw = useCallback(() => {
     const scheduledGraph = graphRef.current;
     if (
       !scheduledGraph ||
       draggingRef.current ||
-      contactRef.current.phase !== "idle"
+      contactHoldsLane(contactRef.current.phase)
     ) return;
 
     drawLaneRef.current = drawLaneRef.current
@@ -955,7 +1247,7 @@ export function WorldCanvas({
         while (
           pendingFrameRef.current &&
           !draggingRef.current &&
-          contactRef.current.phase === "idle"
+          !contactHoldsLane(contactRef.current.phase)
         ) {
           const next = pendingFrameRef.current;
           pendingFrameRef.current = null;
@@ -994,11 +1286,27 @@ export function WorldCanvas({
                 birthPlan: lifecycleMotionRef.current.birth,
                 collapsePlan: lifecycleMotionRef.current.collapse,
                 releasePlan: motionRef.current.absorb,
-                appearancePlan: motionRef.current.hold,
+                /**
+                 * Standing marks are `still` — rule 1 — so `hold` is all the
+                 * appearance plan usually has to carry: a colour, a light, a
+                 * name. An arrangement is the one frame where matter that was
+                 * already placed goes somewhere else, and a body moving to a
+                 * new rest is `settle`. It is not `hold`, because `hold` means
+                 * *you are moving it*, and nobody's pointer is on these.
+                 */
+                appearancePlan: next.arranged
+                  ? motionRef.current.settle
+                  : motionRef.current.hold,
+                labelPlan: motionRef.current.emit,
                 bindingDelayMs: motionRef.current.hold.durationMs,
                 staggerWindowMs: motionRef.current.absorb.durationMs,
                 retainedNode: (id) => next.fieldIds.has(markOfElement(id)),
                 returningNode: (id) => drawnFieldIds.current.has(markOfElement(id)),
+                returningEdge: (id) => {
+                  const bundle = subjectOfBundle(id);
+                  return drawnFieldIds.current.has(bundle ?? markOfElement(id));
+                },
+                revealPlan: motionRef.current.emit,
               },
             );
             drawnFieldIds.current = next.fieldIds;
@@ -1016,10 +1324,6 @@ export function WorldCanvas({
         }
       });
   }, []);
-
-  useEffect(() => {
-    if (!draggingRef.current) liveRef.current = set.positions;
-  }, [set.positions]);
 
   useEffect(() => {
     const host = hostRef.current;
@@ -1081,7 +1385,11 @@ export function WorldCanvas({
      * the trailing index is a suffix this surface added, so only that is taken
      * off.
      */
-    const markOf = (id: string | null) => (id ? markOfElement(id) : null);
+    // A bundle is furniture with an edge's id. Nothing that turns an element
+    // into a mark may accept one, or the reader opens on an assertion whose id
+    // is a label's.
+    const markOf = (id: string | null) =>
+      id && !subjectOfBundle(id) ? markOfElement(id) : null;
 
     const followFurniture = (id: string) => {
       const position = graph.getElementPosition(id);
@@ -1360,8 +1668,9 @@ export function WorldCanvas({
       if (next.phase !== "releasing") return;
       const { id } = next;
       // A small contact deformation should clear within the pointer-response
-      // window. Preserve the spring curve, but do not gate selection on a
-      // full positional settle.
+      // window: the spring curve, run at `hold`. It is compressed because the
+      // load was small, not to get out of the observer's way — nothing waits
+      // on it now that `releasing` no longer holds the draw lane.
       const release = scaleMotionPlan(
         motionRef.current.settle,
         motionRef.current.settle.durationMs / motionRef.current.hold.durationMs,
@@ -1409,6 +1718,17 @@ export function WorldCanvas({
 
     graph.on("node:pointerenter", (event) => hovering(subject(idOf(event))));
     graph.on("node:pointerleave", () => hovering(null));
+    /**
+     * The count is the only edge that answers the pointer, and only to open.
+     *
+     * It never becomes `hovered`: hover is a light source, and furniture does
+     * not light the field. All it does is record that this group was opened.
+     */
+    graph.on("edge:pointerenter", (event) => {
+      const id = idOf(event);
+      if (!id || !subjectOfBundle(id) || draggingRef.current) return;
+      setOpenedBundle(id);
+    });
     graph.on("node:pointerdown", (event) => {
       const id = subject(idOf(event));
       if (id) engageContact(id);
@@ -1439,9 +1759,12 @@ export function WorldCanvas({
       const id = markOf(idOf(event));
       if (id) onRemoveRef.current(pickEdge(id));
     });
+    /** The mark under the pointer, kept because a lost release has no event. */
+    let dragged: string | null = null;
     graph.on("node:dragstart", (event) => {
       draggingRef.current = true;
       const id = subject(idOf(event));
+      dragged = id;
       if (id) {
         publishContact({ type: "drag", id });
         followFurniture(id);
@@ -1456,11 +1779,13 @@ export function WorldCanvas({
     // expansion. The product canvas also swallows the click that fires after
     // a real drag, or the reader opens on a mark you were only moving.
     graph.on("node:dragend", (event) => {
-      const id = subject(idOf(event));
+      const id = subject(idOf(event)) ?? dragged;
       if (id) followFurniture(id);
       draggingRef.current = false;
+      dragged = null;
       markReleaseClick();
       harvest();
+      if (id) restatePendingDrag(id);
       releaseContact();
       queueCanvasDraw();
     });
@@ -1469,8 +1794,13 @@ export function WorldCanvas({
     // the canvas. A lost release would leave matter compressed indefinitely.
     const cancelPointer = () => {
       const wasDragging = draggingRef.current;
+      const id = dragged;
       draggingRef.current = false;
-      if (wasDragging) harvest();
+      dragged = null;
+      if (wasDragging) {
+        harvest();
+        if (id) restatePendingDrag(id);
+      }
       releaseContact();
       queueCanvasDraw();
     };
@@ -1531,6 +1861,8 @@ export function WorldCanvas({
       !stageSize.height ||
       !graphRef.current
     ) return;
+    const arranged = arrangeToken !== drawnArrangeToken.current;
+    drawnArrangeToken.current = arrangeToken;
     pendingFrameRef.current = {
       nodes: data.nodes as CanvasDatum[],
       edges: data.edges as CanvasDatum[],
@@ -1538,13 +1870,16 @@ export function WorldCanvas({
       fieldIds: new Set([
         ...set.referents.keys(), ...set.assertions.keys(), ...set.demands.keys(),
       ]),
+      arranged,
     };
     queueCanvasDraw();
   }, [
     animateInitial,
+    arrangeToken,
     data,
     queueCanvasDraw,
     ready,
+    set,
     stageSize.height,
     stageSize.width,
   ]);

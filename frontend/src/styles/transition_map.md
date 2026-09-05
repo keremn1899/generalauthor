@@ -37,7 +37,7 @@ changes nothing; that is the difference between a lamp and a vignette.
 
 Two consequences worth stating, because they are otherwise argued about twice:
 
-- **While held, autonomous physics is suspended.** A drag is `hold` — 90ms,
+- **While held, autonomous physics is suspended.** A drag is `hold` — 68ms,
   linear, no easing — because the mark is not moving, you are moving it. A
   gated one-hop trial may let connected neighbours yield quasi-statically to
   that visible load, but no solver or inertia acts on the held mark. On
@@ -55,6 +55,14 @@ a place rather than a screensaver:
 
 One exception, `flow`, which is the machine making you wait. An animation with
 no originating act is a bug, not a flourish.
+
+One renderer fact the canvas cannot infer, stated here because it is where both
+laws land: G6 animates position and colour on update and nothing else. Every
+channel meaning is written into here is opacity — occlusion is `opacity`, a name
+arriving is `labelOpacity`, light is `fillOpacity` and `strokeOpacity` — so a
+transition stage that does not name them applies them on the next frame. Light
+that snaps is not light, and a shutter that cuts is not a shutter. See
+`canvasMotion.ts`.
 
 `scripts/check_field_laws.py` is the half of this that has teeth: no stylesheet
 on a live surface may write a duration of its own, so the spine is the only
@@ -149,7 +157,7 @@ Each is a quotation from something already decided, not a new position.
 | `demandProblem` set | ARRIVES | `emit` |
 | `hovered`, `hoveredRelation` | TRACKS | `hold` |
 | `namedAtRest` toggle | labels in / out | `emit` / `absorb`, at `hold` length |
-| `show` filter change | marks join / leave the field | `emit` / `absorb` per mark |
+| `show` filter change | REMAINS, observer occludes / reveals | `absorb` / `emit` opacity at full size, all affected matter together |
 | `focusedRelation` | dims the rest | `hold` cross-fade |
 | `overview`, `relations`, `directory`, `demand` first load | ARRIVES | `emit`, once, as one body |
 | `query` → `matches` | REPLACED | **still** — rule 5 |
@@ -163,12 +171,17 @@ Each is a quotation from something already decided, not a new position.
 | every mark already placed | REMAINS | **still** — rule 1, the load-bearing one |
 | edge for a new expansion | ARRIVES | `emit`, drawn along its path, after its node lands |
 | `drop(id)` | DEPARTS | `absorb` |
+| filter hides / reveals marks | REMAINS behind observer | `absorb` / `emit` opacity at authored size and position; constraints and bodies together |
 | open a binary filament into a plate | CONTINUES through a different projection | paired hand-off: release filament, `emit` plate, then bind spokes — not death + birth |
 | collapse a binary plate into a filament | CONTINUES through a different projection | paired hand-off: release spokes, `absorb` plate, then extend filament — not death + birth |
 | drag a mark | TRACKS | `hold` |
 | drag release | REMAINS | **still** — no settle; a settle would take the mark off the spot the person chose |
 | one-hop neighbours under a held mark, gated trial only | TRACKS then MOVES | direct capped axial yield, then `settle` exactly home; control remains fixed |
-| hover | TRACKS | `hold` |
+| hover light | TRACKS | `hold` |
+| edge labels on hover / focus | ARRIVES / DEPARTS | `emit` opacity; grouped assertions cross-fade with their neutral count |
+| the count on a shared filament | ARRIVES / DEPARTS | `emit` opacity, inverse to the names it stands in for — furniture, so never lit |
+| **arrange** — gather, separate | MOVES | `settle`; the one suspension of rule 1, and only on a named action that records what it displaced |
+| contact release | REMAINS | `settle` at `hold` length, on the body's own shapes; holds nothing else back |
 | selection ring | ARRIVES on the mark | `emit` on the ring; the mark itself **still** |
 | construction-origin geometry | — | **still** — rule 2, always |
 | status colour on rebuild | REPLACED | `hold` cross-fade — rule 3 |

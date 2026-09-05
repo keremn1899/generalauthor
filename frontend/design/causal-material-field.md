@@ -54,16 +54,52 @@ idle -> pressed -> releasing -> idle
 - Pointer-down compresses a body. The initial trial uses 96% of its resting
   size and the shared `hold` plan.
 - Pointer-up removes the load with the `settle` curve compressed to the shared
-  `hold` duration. The small contact deformation must not delay selection by
-  a full positional spring.
+  `hold` duration. It is compressed because the load was small, not to get out
+  of anything's way.
 - A click commits selection only after release. Selection must never appear on
   pointer-down.
+- Release is not a phase anything else waits on. A pointer that is down owns
+  the field, so `pressed` and `dragging` hold the canvas draw lane; `releasing`
+  does not. The pointer is already up by then and what is still running is one
+  body relaxing a load on its own two shapes — a transform the renderer leaves
+  alone across a redraw. Serializing the observer's aperture behind the body's
+  viscoelastic return made one act answer at the speed of the slower of two
+  unrelated causes.
 - Crossing the drag threshold changes contact into manipulation. Drag release
   does not manufacture selection.
 - Pointer cancellation releases the load without selection.
 - An existing selection pauses its circulation while its matter is held.
 - Keyboard or table selection has no invented contact phase; its observer
   field binds directly.
+
+### The observer's cache is a copy, and never writes back
+
+Where a mark *is* has two accounts during a gesture, and they disagree by
+design. The store holds where the person last put it; the renderer's live cache
+holds where the pointer has it now. The cache is ahead of the store for the
+length of the drag and behind it at every other moment, and one rule keeps that
+from becoming corruption:
+
+- **The cache is a copy, never the store's own map.** Aliasing them makes every
+  drag tick an unannounced write into `WorkingSet.positions` — no `onPositions`,
+  no new map, so nothing downstream can see it happened, and any comparison of
+  the set against its own previous positions is a map compared with itself. The
+  same law the unbuilt physics gate below states as *a transient neighbour pose
+  never becomes a `WorkingSet.positions` value* applies first to the drag that
+  already exists.
+- **A place that cannot be read is not a place.** A renderer answering
+  `[null, null]` for an element whose transform will not resolve is saying it
+  does not know, and rounding that produces `NaN` — a position nothing can draw,
+  hit-test or lay out from, written over the good copy and kept across reloads.
+  It is refused at the harvest and again at the read, so a store that already
+  holds one heals instead of staying broken.
+- **A frame held out for a gesture is restated before it is drawn.** A frame
+  built mid-drag — a filter toggled with the other hand — carries the position
+  the mark had when it was built. Flushed as-is on release it puts the mark
+  back there and the next frame corrects it: a yank and a return, for a change
+  that was never about position. Only the dragged mark and its furniture can be
+  stale, so only those are restated, from the cache the harvest has just made
+  authoritative.
 
 ## Selection comparison
 
@@ -85,9 +121,15 @@ reversible control:
 Filled assertion plates also use the aperture, preserving their label, shelf
 and crown. Their ants remain the plate border; filaments keep line selection.
 
-Hover lifts resting material toward full opacity with the shared light law.
-Labels retain their text while opacity transitions over `hold`; invisible
-labels do not intercept pointer input.
+Hover lifts resting material toward full opacity with the shared light law,
+over `hold`. Labels retain their text while opacity transitions over `emit`;
+invisible labels do not intercept pointer input.
+
+Both of those are opacity, and so is occlusion, which is why every transition
+stage has to name the opacity channels explicitly. The renderer's own defaults
+animate position and colour and nothing else, so a stage that leaves them
+unstated applies them on the next frame: light snaps instead of falling off,
+and the observer's shutter cuts instead of closing.
 
 Canvas find searches visible referents, assertions and demands in the working
 field. An empty field uses the directory to choose its first seed. A populated
@@ -120,25 +162,107 @@ never overlaps two global scene mutations.
 Folding a binary filament into a plate is neither birth nor death. It should
 eventually conserve one assertion's identity while its projection changes.
 
-## Open comparison — grouped labels and explicit arrangement
+## Grouped labels and the open arrangement comparison
 
-For multiple assertions sharing a filament, trial one compact assertion count
-at rest, expanding the individual labels on hover or focus. The count must not
-masquerade as one representative assertion, and touch needs a persistent
-expand action. Keep every assertion independently selectable. This comparison
-is pending; current individual labels now fade without replacing their text.
+A filament that carries several assertions has three states, not two:
+
+```text
+at rest              nothing
+looked at            "3 assertions"
+opened               the claims themselves
+```
+
+At rest a filament says nothing, as every filament does. Looked at — an
+endpoint hovered or selected — a group says how many claims it carries, because
+one line standing for three of them is a lie by omission. Opened, it says what
+they are.
+
+The step into the third state is the count itself, and it requires the endpoint
+**selected** rather than merely hovered: reaching for the count means leaving
+the disc, and under hover alone the thing being reached for is gone before the
+pointer arrives. So the count is a hit target only while an endpoint is
+selected, and never while it is invisible. Once opened the group stays opened
+while it is still being looked at — closing on the count's own `pointerleave`
+would be a door that only stays open while you hold it, and the first thing the
+pointer does after opening is move onto the claims it revealed.
+
+The count is shown exactly when the names are not, so the two move as one
+`emit` and the filament is never unnamed or named twice. It also stands exactly
+where they will: the count takes the same 44px station off the acted-on rim
+that the plates use, and tracks the same anchor. Pinned to the geometric
+midpoint instead, the two halves of the fade happened in two places, which
+reads as one thing dying while others are born elsewhere.
+
+The opened stack is capped. Opening an unbounded stack does not make it
+readable, it only defers the same problem to the pointer, so past
+`BOND_LABEL_STACK_MAX` the filament shows what it can and the count stops being
+a stand-in: it becomes `+N more`, standing at the end of the stack, saying the
+one thing the plates cannot say for themselves — that they are not all of them.
+The rest are in the reader, which is already open, because opening the group
+required selecting an endpoint.
+
+The count takes no plate. A plate is where construction origin lives, and a
+summary spanning several origins that wore any one of them would assert a
+further thing nothing constructed — so it is the knockout alone, square, in
+the muted ink the lens labels use. It is furniture, not matter: it is not lit,
+it is not a hit target, and the assertions underneath stay the only things a
+person can take hold of. Touch expands the group by selecting an endpoint;
+every revealed assertion remains independently selectable.
+
+Selectable requires readable, and the stack that reveals them runs along the
+filament's normal. A plate is thin the way it is tall and wide the way it is
+long, so the step between two of them is a property of that direction, not a
+fixed height: on a vertical filament — where the normal is horizontal — a step
+of one plate height drew three relation names through each other.
 
 Expansion continues to place new matter in free slots around its requested
 subject and pin existing matter during the one-shot relaxation. Its geometry
 communicates proximity to the request, not semantic cause or hierarchy.
 
-The next layout comparison should be an explicit **arrange around selection**
-action: one-hop referents around the chosen subject, assertion plates between
-their participants, and unrelated components kept separate. A second useful
-action is **separate overlaps**, conserving positions as far as possible. Both
-need a preview/undo story before implementation because arrangement is authored
-work. Directed layouts belong specifically to a derivation view, where causal
-direction is actually known. These proposals do not enable automatic relayout.
+## Arrangement — two named actions, no automatic relayout
+
+A field's shape is a history of clicks. Expansion authored every position on a
+person's behalf and nothing ever tidies, so twenty minutes of exploring leaves
+a picture of the order things were asked for rather than of the question being
+asked. Dragging one mark at a time is the only recourse the surface offered.
+
+Two actions answer that, and neither is a layout engine:
+
+**Gather** takes the marks joined to the selected subject and puts them around
+it. It is not a second placement model — it is *arrival, run again*: the same
+bodies, the same links, the same one-shot solver, with the pins moved so that
+one subject's neighbours are free instead of the marks that just arrived. A
+field arranged this way settles exactly as it would have if those neighbours
+had been expanded from the subject in the first place, which is what keeps
+there from being two answers to where a mark belongs. The subject is pinned —
+the arrangement is *around* it — and matter not joined to it does not move at
+all. That containment is the whole safety argument: the blast radius is the
+thing the person named.
+
+**Separate** is the same solver with the links taken away. Collision alone,
+from where everything already is: a body overlapping nothing feels nothing and
+does not move, so total displacement is bounded by the depth of the overlaps
+and nothing is rearranged that was not already sitting on something. Keeping
+the links would have made it a relayout of the whole field, which is a
+different and far larger thing to ask for.
+
+Both suspend `existing marks never move`, which is why both are things a person
+clicks and neither ever happens on its own. Each records what it displaced and
+offers to put it back, for exactly as long as the field it belongs to lasts:
+once matter has arrived or left, those positions are no longer a state the
+field was ever in, and offering to restore them would be offering a lie. The
+moved marks travel with `settle` — a body finding a new rest — not the
+pointer-direct `hold` every other standing update uses, and the canvas is told
+which frame is the exception rather than inferring it, because a mark that
+moves for any other reason is a bug and a canvas that guessed could not tell
+the two apart.
+
+They do not compose into a third thing. Gather can leave an overlap it was not
+asked about; separate can leave a neighbour across the field. Two jobs, two
+predictable blast radii — a single action that did both would have neither.
+
+Directed layouts belong specifically to a derivation view, where causal
+direction is actually known. Nothing here enables automatic relayout.
 
 ## Physics decision — a local elastic episode, not a live layout
 

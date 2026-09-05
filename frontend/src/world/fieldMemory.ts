@@ -119,7 +119,18 @@ export function readField(world: string, revision: number): WorkingSet | null {
     for (const [id, assertion] of stored.assertions) set.assertions.set(id, assertion);
     for (const [key, demand] of stored.demands) set.demands.set(key, demand);
     set.bonds = stored.bonds;
-    for (const [id, at] of stored.positions) set.positions.set(id, at);
+    /**
+     * A place has to be a pair of numbers.
+     *
+     * Anything else is dropped rather than restored, and the mark is placed by
+     * arrival like one that was never put anywhere — which is the recoverable
+     * outcome. Restoring it hands the renderer a position it cannot resolve,
+     * and a mark whose transform will not resolve is invisible, unhittable,
+     * and gets written back over the good copy on the next harvest.
+     */
+    for (const [id, at] of stored.positions) {
+      if (Number.isFinite(at?.x) && Number.isFinite(at?.y)) set.positions.set(id, at);
+    }
     for (const key of stored.expanded) set.expanded.add(key);
     return set.referents.size ? set : null;
   } catch {

@@ -31,6 +31,7 @@
 
 import type { WorldRole, WorldTuple } from "../api/world";
 import { projectionOf } from "./marks";
+import { fieldGraph } from "./hops";
 import { relax, type RelaxBody, type RelaxLink } from "./relax";
 
 /**
@@ -492,14 +493,48 @@ export function placeDemand(set: WorkingSet, input: DemandPlacement): WorkingSet
  * person dragged, which by the next expansion is simply something already on
  * the field.
  *
- * Plates are not bodies. A plate sits between the marks it joins, so it is
- * recomputed from its spokes afterwards, and only where a spoke actually
- * moved: a plate whose referents all stayed put is a mark already on the field
- * like any other.
+ * A plate is a body like any other, tied to each mark it gathers by a short
+ * link. That is how it comes to sit between them and how the same collision
+ * that separates two discs clears a plate off one, rather than a rule applied
+ * to plates afterwards. See `relax`.
  */
+function fieldBodies(set: WorkingSet, free: (id: string) => boolean): RelaxBody[] {
+  const bodies: RelaxBody[] = [];
+  const body = (id: string, radius: number) => {
+    const at = set.positions.get(id);
+    if (at) bodies.push({ id, x: at.x, y: at.y, pinned: !free(id), radius });
+  };
+  for (const id of set.referents.keys()) body(id, DISC_BODY);
+  for (const id of set.assertions.keys()) body(id, PLATE_BODY);
+  for (const id of set.demands.keys()) body(id, PLATE_BODY);
+  return bodies;
+}
+
+/**
+ * What the field says is joined.
+ *
+ * A bond is already a line between two referents. A plate is joined to each
+ * mark it gathers, which is both what holds it between them and what carries
+ * its referents toward each other — so there is no separate pull between
+ * co-participants to add.
+ */
+function fieldLinks(set: WorkingSet): RelaxLink[] {
+  const links: RelaxLink[] = [];
+  for (const bond of set.bonds) {
+    links.push({ source: bond.source, target: bond.target, distance: RING_RADIUS });
+  }
+  const spokesOf = (id: string, spokes: { id: string }[]) => {
+    for (const spoke of spokes) {
+      links.push({ source: id, target: spoke.id, distance: SPOKE_LENGTH });
+    }
+  };
+  for (const [id, assertion] of set.assertions) spokesOf(id, assertion.spokes);
+  for (const [id, demand] of set.demands) spokesOf(id, demand.spokes);
+  return links;
+}
+
 function settle(before: WorkingSet, next: WorkingSet): void {
   const arrived = new Set<string>();
-  const held = (id: string) => !arrived.has(id);
   for (const id of next.referents.keys()) {
     if (!before.referents.has(id)) arrived.add(id);
   }
@@ -511,32 +546,69 @@ function settle(before: WorkingSet, next: WorkingSet): void {
   }
   if (!arrived.size) return;
 
-  const bodies: RelaxBody[] = [];
-  const body = (id: string, radius: number) => {
-    const at = next.positions.get(id);
-    if (at) bodies.push({ id, x: at.x, y: at.y, pinned: held(id), radius });
-  };
-  for (const id of next.referents.keys()) body(id, DISC_BODY);
-  for (const id of next.assertions.keys()) body(id, PLATE_BODY);
-  for (const id of next.demands.keys()) body(id, PLATE_BODY);
+  const moved = relax(
+    fieldBodies(next, (id) => arrived.has(id)),
+    fieldLinks(next),
+  );
+  for (const [id, at] of moved) next.positions.set(id, at);
+}
 
-  // What the field says is joined. A bond is already a line between two
-  // referents. A plate is joined to each mark it gathers, which is both what
-  // holds it between them and what carries its referents toward each other —
-  // so there is no separate pull between co-participants to add.
-  const links: RelaxLink[] = [];
-  for (const bond of next.bonds) {
-    links.push({ source: bond.source, target: bond.target, distance: RING_RADIUS });
+/**
+ * Two ways a person may ask the field to re-place matter it already holds.
+ *
+ * Both break the rule the canvas is otherwise built on — `existing marks never
+ * move` — which is exactly why neither may happen on its own. They are actions
+ * with names, taken deliberately, and the caller keeps what they displaced so
+ * it can be put back.
+ */
+export type Arrangement =
+  | { kind: "separate" }
+  | { kind: "gather"; subject: string };
+
+/**
+ * Re-place matter already on the field, because someone asked.
+ *
+ * Neither of these is a second layout model. `gather` is arrival, run again:
+ * the same bodies, the same links, the same solver, with the pins moved so that
+ * one subject's neighbours are free instead of the marks that just arrived. A
+ * field arranged this way settles exactly as it would have if those neighbours
+ * had been expanded from the subject in the first place, which is the property
+ * that keeps there from being two answers to where a mark belongs.
+ *
+ * `separate` is the same solver with the links taken away. Collision alone,
+ * from where everything already is: a body that overlaps nothing feels nothing
+ * and does not move, so the total displacement is bounded by the depth of the
+ * overlaps and nothing is rearranged that was not already on top of something.
+ * Keeping the links would have made it a relayout of the whole field, which is
+ * a different and much larger thing to ask for.
+ *
+ * The subject of a gather is pinned. It is the mark the person named, and the
+ * arrangement is *around* it; moving it would answer a question nobody asked.
+ */
+export function arrange(set: WorkingSet, request: Arrangement): WorkingSet {
+  if (request.kind === "gather") {
+    const near = fieldGraph(set).get(request.subject);
+    if (!near?.size) return set;
+    const moved = relax(
+      fieldBodies(set, (id) => id !== request.subject && near.has(id)),
+      fieldLinks(set),
+    );
+    if (!moved.size) return set;
+    const next = clone(set);
+    for (const [id, at] of moved) next.positions.set(id, at);
+    return next;
   }
-  const spokesOf = (id: string, spokes: { id: string }[]) => {
-    for (const spoke of spokes) {
-      links.push({ source: id, target: spoke.id, distance: SPOKE_LENGTH });
-    }
-  };
-  for (const [id, assertion] of next.assertions) spokesOf(id, assertion.spokes);
-  for (const [id, demand] of next.demands) spokesOf(id, demand.spokes);
 
-  for (const [id, at] of relax(bodies, links)) next.positions.set(id, at);
+  const moved = relax(fieldBodies(set, () => true), []);
+  let disturbed = false;
+  for (const [id, at] of moved) {
+    const was = set.positions.get(id);
+    if (was && (was.x !== at.x || was.y !== at.y)) disturbed = true;
+  }
+  if (!disturbed) return set;
+  const next = clone(set);
+  for (const [id, at] of moved) next.positions.set(id, at);
+  return next;
 }
 
 /**

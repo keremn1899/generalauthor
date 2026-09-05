@@ -45,7 +45,13 @@ export type CanvasMotionOptions = {
   retainedNode?: (id: string) => boolean;
   /** Already belonged to the working field before becoming visible again. */
   returningNode?: (id: string) => boolean;
+  /** A constraint hidden and restored by the observer rather than admitted. */
+  returningEdge?: (id: string) => boolean;
+  /** Observer reveal, distinct from massive-node nucleation. */
+  revealPlan?: MotionPlan;
   appearancePlan?: MotionPlan;
+  /** The small assertion plates carried as edge labels. */
+  labelPlan?: MotionPlan;
   /** Retained for callers that want the canonical massive-node plans. */
   stellarNodes?: boolean;
   /** Lab-scaled forms of the same laws, when supplied. */
@@ -96,6 +102,73 @@ function planOptions(plan: MotionPlan) {
   return {
     duration: plan.durationMs,
     easing: plan.easing.g6,
+  };
+}
+
+/**
+ * The channels a stage is allowed to move, restated because G6 will not.
+ *
+ * The base theme animates position and colour on update and nothing else —
+ * `[{ fields: ['x','y','fill','stroke'] }]` for a node, `sourceNode`,
+ * `targetNode` and `stroke` for an edge. Every channel this surface actually
+ * writes meaning into is opacity: occlusion is `opacity`, a name arriving is
+ * `labelOpacity`, and light is `fillOpacity` and `strokeOpacity`. A stage that
+ * does not name them applies them on the next frame instead — the observer's
+ * shutter snaps shut rather than closing, and a mark two hops from the pointer
+ * flashes rather than lifts.
+ *
+ * `size` is the other one, and it is mass rather than light: a body absorbed
+ * into its 4% nucleation pin has to be seen contracting into it, or the pin is
+ * just a smaller body that appeared where the old one was. Unstated, arrival
+ * and withdrawal both read as a cut.
+ *
+ * `setOptions` replaces this block rather than merging into it, so the theme's
+ * own fields are restated alongside. Dropping `x`/`y` or `sourceNode`/
+ * `targetNode` would let a filament leave the body it is bound to mid-stage,
+ * and dropping `stroke` would take the status cross-fade with it.
+ */
+function nodeUpdateAnimation(plan: MotionPlan) {
+  return {
+    animation: {
+      update: [
+        {
+          fields: [
+            "x",
+            "y",
+            "size",
+            "fill",
+            "stroke",
+            "opacity",
+            "fillOpacity",
+            "strokeOpacity",
+          ],
+          ...planOptions(plan),
+        },
+      ],
+    },
+  };
+}
+
+function edgeUpdateAnimation(keyPlan: MotionPlan, labelPlan = keyPlan) {
+  return {
+    animation: {
+      update: [
+        { fields: ["sourceNode", "targetNode"], ...planOptions(keyPlan) },
+        {
+          fields: ["opacity", "stroke", "strokeOpacity"],
+          shape: "key",
+          ...planOptions(keyPlan),
+        },
+        // A name leaves with the constraint that carried it, on its own plan:
+        // a label is read rather than lit, so it states its arrival at `emit`
+        // while the filament under it releases at whatever the stage is.
+        {
+          fields: ["opacity"],
+          shape: "label",
+          ...planOptions(labelPlan),
+        },
+      ],
+    },
   };
 }
 
@@ -194,8 +267,15 @@ export async function transitionCanvasData(
     .map((id) => graph.getNodeData(id))
     .filter(Boolean)
     .map((node) => node as CanvasDatum);
-  const collapsedNodes = departingNodes.map((node) =>
-    nodePose(node, 0, options.retainedNode?.(node.id) ? 1 : LIFECYCLE_SCALE),
+  const occludedNodes = departingNodes.filter((node) =>
+    options.retainedNode?.(node.id),
+  );
+  const removedNodes = departingNodes.filter((node) =>
+    !options.retainedNode?.(node.id),
+  );
+  const hiddenNodes = occludedNodes.map((node) => nodePose(node, 0, 1));
+  const collapsedNodes = removedNodes.map((node) =>
+    nodePose(node, 0, LIFECYCLE_SCALE),
   );
   const dyingEdges = diedEdgeIds
     .map((id) => graph.getEdgeData(id))
@@ -211,6 +291,18 @@ export async function transitionCanvasData(
       previousEdges.has(edge.id) ? edge : edgeOpacity(edge, 0),
     ),
   };
+  const returningNodes = bornNodes.filter((node) =>
+    options.returningNode?.(node.id),
+  );
+  const arrivingNodes = bornNodes.filter((node) =>
+    !options.returningNode?.(node.id),
+  );
+  const returningEdges = bornEdges.filter((edge) =>
+    options.returningEdge?.(edge.id),
+  );
+  const arrivingEdges = bornEdges.filter((edge) =>
+    !options.returningEdge?.(edge.id),
+  );
 
   /**
    * Every `await` here is a place the canvas can be unmounted under us.
@@ -229,12 +321,18 @@ export async function transitionCanvasData(
    * to matter that has already ceased to occupy the field. Release the
    * departing constraints first while their endpoints still stand.
    */
-  if (dyingEdges.length) {
+  if (dyingEdges.length || hiddenNodes.length) {
+    const releasePlan = options.releasePlan ?? DEFAULT_MOTION_PLANS.absorb;
     graph.setOptions({
-      animation: planOptions(options.releasePlan ?? DEFAULT_MOTION_PLANS.absorb),
+      animation: planOptions(releasePlan),
+      node: nodeUpdateAnimation(releasePlan),
+      edge: edgeUpdateAnimation(releasePlan),
     });
     graph.setData({
-      nodes: [...entering.nodes, ...departingNodes],
+      // A filter is one observer shutter: retained matter and its light fade
+      // together at full size. Explicitly removed mass stays standing until
+      // its constraints have released in this same stage.
+      nodes: [...entering.nodes, ...removedNodes, ...hiddenNodes],
       edges: [...entering.edges, ...dyingEdges],
     } as never);
     await graph.draw();
@@ -244,13 +342,16 @@ export async function transitionCanvasData(
 
   /** Only after its constraints have released may a departing mass collapse. */
   if (collapsedNodes.length) {
+    const collapsePlan =
+      options.collapsePlan ??
+      (options.stellarNodes ? NODE_COLLAPSE_PLAN : DEFAULT_MOTION_PLANS.absorb);
+    // Its own channels, not the release stage's. `setOptions` leaves the
+    // previous `node` block standing, so a collapse that did not state one
+    // contracted at whatever plan released the constraints a moment earlier —
+    // the mass reading its own withdrawal at the speed of a filament's.
     graph.setOptions({
-      animation: planOptions(
-        options.collapsePlan ??
-          (options.stellarNodes
-            ? NODE_COLLAPSE_PLAN
-            : DEFAULT_MOTION_PLANS.absorb),
-      ),
+      animation: planOptions(collapsePlan),
+      node: nodeUpdateAnimation(collapsePlan),
     });
     graph.setData({
       nodes: [...entering.nodes, ...collapsedNodes],
@@ -280,8 +381,12 @@ export async function transitionCanvasData(
     !collapsedNodes.length &&
     !dyingEdges.length;
   if (settling) {
+    const appearancePlan = options.appearancePlan ?? DEFAULT_MOTION_PLANS.hold;
+    const labelPlan = options.labelPlan ?? DEFAULT_MOTION_PLANS.emit;
     graph.setOptions({
-      animation: planOptions(options.appearancePlan ?? DEFAULT_MOTION_PLANS.hold),
+      animation: planOptions(appearancePlan),
+      node: nodeUpdateAnimation(appearancePlan),
+      edge: edgeUpdateAnimation(appearancePlan, labelPlan),
     });
   }
   graph.setData(entering as never);
@@ -289,31 +394,50 @@ export async function transitionCanvasData(
   if (settling && !graph.destroyed) graph.setOptions({ animation: false });
   if (gone()) return { bornNodes, bornEdges, diedNodeIds, diedEdgeIds };
 
-  if (bornNodes.length || bornEdges.length) {
+  /** Occluded matter returns as one field, without replaying nucleation. */
+  if (returningNodes.length || returningEdges.length) {
+    const returnPlan = options.revealPlan ?? DEFAULT_MOTION_PLANS.emit;
     graph.setOptions({
-      animation: planOptions(
-        options.birthPlan ??
-          (options.stellarNodes
-            ? NODE_BIRTH_PLAN
-            : DEFAULT_MOTION_PLANS.emit),
-      ),
+      animation: planOptions(returnPlan),
+      node: nodeUpdateAnimation(returnPlan),
+      edge: edgeUpdateAnimation(returnPlan),
+    });
+    if (returningNodes.length) {
+      graph.updateNodeData(returningNodes.map(shown) as never);
+    }
+    if (returningEdges.length) {
+      graph.updateEdgeData(returningEdges.map(shown) as never);
+    }
+    await graph.draw();
+    if (!graph.destroyed) graph.setOptions({ animation: false });
+    if (gone()) return { bornNodes, bornEdges, diedNodeIds, diedEdgeIds };
+  }
+
+  if (arrivingNodes.length || arrivingEdges.length) {
+    const arrivalPlan =
+      options.birthPlan ??
+      (options.stellarNodes ? NODE_BIRTH_PLAN : DEFAULT_MOTION_PLANS.emit);
+    graph.setOptions({
+      animation: planOptions(arrivalPlan),
+      node: nodeUpdateAnimation(arrivalPlan),
+      edge: edgeUpdateAnimation(arrivalPlan),
     });
 
     const standing = new Map(
       next.nodes.filter((node) => previousNodes.has(node.id)).map((node) => [node.id, node]),
     );
-    const anchor = anchorOf(bornNodes, bornEdges, standing);
+    const anchor = anchorOf(arrivingNodes, arrivingEdges, standing);
     const distance = (node: CanvasDatum) => {
       const point = pointOf(node);
       if (!point || !anchor) return 0;
       return Math.hypot(point.x - anchor.x, point.y - anchor.y);
     };
-    const { waves, stepMs } = staggerWaves(bornNodes, distance, {
+    const { waves, stepMs } = staggerWaves(arrivingNodes, distance, {
       windowMs: options.staggerWindowMs,
     });
     const waveStepMs = Math.max(
       stepMs,
-      bornNodes.length
+      arrivingNodes.length
         ? options.bindingDelayMs ?? DEFAULT_MOTION_PLANS.hold.durationMs
         : 0,
     );
@@ -341,7 +465,7 @@ export async function transitionCanvasData(
       { length: waves.length ? waves.length + 1 : 1 },
       () => [],
     );
-    for (const edge of bornEdges) {
+    for (const edge of arrivingEdges) {
       edgeWaves[Math.min(waveOfEdge(edge), edgeWaves.length - 1)].push(edge);
     }
 

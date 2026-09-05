@@ -441,6 +441,17 @@ export const BOND_LABEL_ALONG_PX = 44;
 /** Air between stacked plates that share a filament, in graph pixels. */
 export const BOND_LABEL_STACK_GAP = 4;
 
+/**
+ * How many of a group's plates the filament will carry.
+ *
+ * The count exists because a stack of names is not readable at rest; opening it
+ * does not make an unbounded stack readable either, it only defers the same
+ * problem to the pointer. Past this many, the filament says how many it is not
+ * showing and the reader carries the rest — the reader is already open, because
+ * opening the group requires having selected an endpoint.
+ */
+export const BOND_LABEL_STACK_MAX = 4;
+
 export type BondLabelLayout = {
   placement: number;
   offsetX: number;
@@ -604,6 +615,88 @@ export function filamentEdge(
       labelPadding: [p.chipPaddingY, p.chipPaddingX] as [number, number],
       labelAutoRotate: false,
       labelPlacement: options.labelPlacement ?? 0.5,
+    },
+  };
+}
+
+/**
+ * How many claims a filament carries — said by the observer, not by the world.
+ *
+ * Parallel assertions share one physical filament, so at rest their plates are
+ * a stack of names for a line that has no name of its own. The count stands in
+ * for them until someone looks, and the whole difficulty is that it must not be
+ * mistaken for one of them.
+ *
+ * So it is not a plate. A plate is where construction origin lives — filled for
+ * SEMANTIC and ADJUDICATED, knocked out for MECHANICAL — and a summary spanning
+ * four origins that wore any one of them would be asserting a fifth thing that
+ * nothing constructed. What is left is the knockout alone, square, so the
+ * filament stops being read under the words without a card appearing where a
+ * claim would be, and the muted ink the lens labels use, because this is
+ * furniture rather than a name. Furniture is never a hit target: the assertions
+ * underneath stay the only things a person can take hold of.
+ */
+export function summaryEdge(
+  id: string,
+  source: string,
+  target: string,
+  paint: Paint,
+  p: MarkParams,
+  options: {
+    label: string;
+    shown: boolean;
+    /**
+     * Whether the pointer can reach it.
+     *
+     * Only while an endpoint is selected. Under hover alone the count is
+     * unreachable by construction — travelling to it means leaving the disc
+     * that is showing it — so offering a hit target there would be offering a
+     * door that closes as you walk through it.
+     */
+    interactive?: boolean;
+    /** The station the claims it stands in for will use. */
+    placement?: number;
+    offsetX?: number;
+    offsetY?: number;
+  },
+) {
+  return {
+    id,
+    type: "line",
+    source,
+    target,
+    style: {
+      // No filament of its own: the group's carrier already drew the one line
+      // these claims share, and a second stroke would invent a second link.
+      stroke: paint.ink,
+      lineWidth: 0,
+      opacity: 1,
+      strokeOpacity: 0,
+      increasedLineWidthForHitTesting: 0,
+      pointerEvents: "none" as const,
+      // An invisible label never intercepts the pointer, whatever the caller
+      // asked for: a hit region with nothing drawn in it is a claim that
+      // something is there.
+      labelPointerEvents:
+        options.interactive && options.shown ? ("auto" as const) : ("none" as const),
+      labelText: options.label,
+      labelFontFamily: FONT_SANS_FAMILY,
+      labelFontSize: p.chipLabelSize,
+      labelFontWeight: p.chipLabelWeight,
+      labelFill: paint.muted,
+      labelOffsetX: options.offsetX ?? 0,
+      labelOffsetY: options.offsetY ?? p.chipLabelNudge,
+      labelOpacity: options.shown ? 1 : 0,
+      labelBackground: true,
+      labelBackgroundOpacity: options.shown ? 1 : 0,
+      labelBackgroundFill: paint.chip,
+      labelBackgroundLineWidth: 0,
+      labelBackgroundRadius: 0,
+      labelBackgroundWidth: chipWidth(options.label, p),
+      labelBackgroundHeight: p.chipHeight,
+      labelPadding: [p.chipPaddingY, p.chipPaddingX] as [number, number],
+      labelAutoRotate: false,
+      labelPlacement: options.placement ?? 0.5,
     },
   };
 }

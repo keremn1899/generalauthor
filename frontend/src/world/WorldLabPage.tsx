@@ -333,7 +333,7 @@ export function WorldLabPage() {
                   </div>
                   <div className="reader-specimen-card">
                     <h4>Referent</h4>
-                    <ReferentPanel detail={MOCK_REFERENT} set={mockSet} requests={new Map()} onExpand={() => {}} onRetract={() => {}} onTable={() => {}} onDrop={() => {}} onClose={() => {}} />
+                    <ReferentPanel detail={MOCK_REFERENT} set={mockSet} requests={new Map()} onExpand={() => {}} onRetract={() => {}} onTable={() => {}} onDrop={() => {}} onGather={() => {}} onClose={() => {}} />
                   </div>
                   <div className="reader-specimen-card">
                     <h4>Obligation</h4>

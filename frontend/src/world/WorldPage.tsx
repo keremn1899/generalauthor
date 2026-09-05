@@ -63,6 +63,7 @@ import { FrontierTable, type Obligation } from "./FrontierTable";
 import { MARK_DEFAULTS, type MarkParams } from "./marks";
 import { RelationTable } from "./RelationTable";
 import { SchemaCanvas } from "./SchemaCanvas";
+import { fieldGraph } from "./hops";
 import { readField, writeField } from "./fieldMemory";
 import { chipKind } from "./schemaGraph";
 import type { TableChrome } from "./tableChrome";
@@ -76,6 +77,7 @@ import {
 } from "./WorldCanvas";
 import type { CameraInsets } from "./canvasFocus";
 import {
+  arrange,
   collapse,
   retractExpansion,
   dropMark,
@@ -89,6 +91,8 @@ import {
   place,
   placeDemand,
   seed,
+  type Arrangement,
+  type Point,
   type WorkingSet,
 } from "./workingSet";
 import { OverlayPanel } from "../product/OverlayPanel";
@@ -526,6 +530,7 @@ export function ReferentPanel({
   onRetract,
   onTable,
   onDrop,
+  onGather,
   onClose,
 }: {
   detail: WorldReferent | null;
@@ -535,6 +540,8 @@ export function ReferentPanel({
   onRetract: (relation: string) => void;
   onTable: (relation: string) => void;
   onDrop: () => void;
+  /** Null when nothing on the field is joined to this referent yet. */
+  onGather: (() => void) | null;
   onClose: () => void;
 }) {
   if (!detail) {
@@ -619,6 +626,11 @@ export function ReferentPanel({
         </section>
       </div>
       <footer className="world-reader__actions">
+        {onGather ? (
+          <button type="button" className="node-reader__link" onClick={onGather}>
+            Gather its neighbours
+          </button>
+        ) : null}
         <button type="button" className="node-reader__link" onClick={onDrop}>
           Take off the field
         </button>
@@ -689,6 +701,20 @@ export function WorldPage({
   const [error, setError] = useState<string | null>(null);
 
   const [set, setSet] = useState<WorkingSet>(emptySet);
+  /**
+   * What the last arrangement displaced, so it can be put back.
+   *
+   * One level, and only until the field itself changes. Arrangement is the one
+   * action that overwrites placement a person may have made by hand, so it does
+   * not get to be silent; but once matter has arrived or left, the positions it
+   * displaced are no longer a state the field was ever in, and offering to
+   * restore them would be offering a lie.
+   */
+  const [arrangeUndo, setArrangeUndo] = useState<{
+    label: string;
+    positions: Map<string, Point>;
+  } | null>(null);
+  const [arrangeToken, setArrangeToken] = useState(0);
   const [expansionRequests, dispatchExpansion] = useReducer(
     expansionRequestReducer,
     new Map(),
@@ -1247,6 +1273,67 @@ export function WorldPage({
     removeMark(selection);
   }, [removeMark, selection]);
 
+  /**
+   * Arrangement: the two ways a person may re-place matter already standing.
+   *
+   * Both suspend `existing marks never move`, so both are things someone
+   * clicked, both record what they displaced, and neither happens on its own.
+   * `arrangeToken` is what tells the canvas this frame is the exception, so
+   * the marks that move do it with `settle` — a body finding a new rest —
+   * rather than the pointer-direct `hold` every other standing update uses.
+   */
+  const applyArrange = useCallback(
+    (request: Arrangement, label: string) => {
+      const next = arrange(set, request);
+      if (next === set) return;
+      const displaced = new Map<string, Point>();
+      for (const [id, was] of set.positions) {
+        const now = next.positions.get(id);
+        if (now && (now.x !== was.x || now.y !== was.y)) displaced.set(id, was);
+      }
+      if (!displaced.size) return;
+      setArrangeUndo({ label, positions: displaced });
+      setArrangeToken((token) => token + 1);
+      setSet(next);
+    },
+    [set],
+  );
+
+  const fieldNeighbours = useMemo(() => fieldGraph(set), [set]);
+  const canGather = useCallback(
+    (id: string) => Boolean(fieldNeighbours.get(id)?.size),
+    [fieldNeighbours],
+  );
+  const onGather = useCallback(
+    (id: string) => applyArrange({ kind: "gather", subject: id }, "gather"),
+    [applyArrange],
+  );
+  const onSeparate = useCallback(
+    () => applyArrange({ kind: "separate" }, "separate"),
+    [applyArrange],
+  );
+  const onUndoArrange = useCallback(() => {
+    if (!arrangeUndo) return;
+    const restore = arrangeUndo.positions;
+    setArrangeToken((token) => token + 1);
+    setSet((current) => ({
+      ...current,
+      positions: new Map([...current.positions, ...restore]),
+    }));
+    setArrangeUndo(null);
+  }, [arrangeUndo]);
+
+  /**
+   * An undo survives only while the field it belongs to does.
+   *
+   * Keyed on membership rather than on positions, because an arrangement
+   * changes positions and must not clear its own undo the moment it lands.
+   */
+  const fieldMembership = `${set.referents.size}:${set.assertions.size}:${set.demands.size}:${set.bonds.length}`;
+  useEffect(() => {
+    setArrangeUndo(null);
+  }, [fieldMembership]);
+
   const clearField = useCallback(() => {
     for (const timer of pendingRemovals.current.values()) {
       window.clearTimeout(timer);
@@ -1537,6 +1624,7 @@ export function WorldPage({
                           show={show}
                           focusId={focus?.id ?? null}
                           focusToken={focus?.token ?? 0}
+                          arrangeToken={arrangeToken}
                           animateInitial={Boolean(selection)}
                           insets={cameraInsets}
                           ants={tuning?.ants}
@@ -1677,6 +1765,11 @@ export function WorldPage({
                         })
                       }
                       onDrop={onRemove}
+                      onGather={
+                        selection && canGather(selection.id)
+                          ? () => onGather(selection.id)
+                          : null
+                      }
                       onClose={() => setReaderOpen(false)}
                     />
                   ) : relation ? (
@@ -1795,6 +1888,30 @@ export function WorldPage({
                 : undefined
             }
           />
+          {!focusDrawn && onField ? (
+            <div
+              className="instrument__group"
+              role="group"
+              aria-label="Arrange the field"
+            >
+              <button
+                type="button"
+                onClick={onSeparate}
+                title="Push apart only what is sitting on top of something else"
+              >
+                separate
+              </button>
+              {arrangeUndo ? (
+                <button
+                  type="button"
+                  onClick={onUndoArrange}
+                  title={`Put back what ${arrangeUndo.label} displaced`}
+                >
+                  undo {arrangeUndo.label}
+                </button>
+              ) : null}
+            </div>
+          ) : null}
           {focusDrawn ? (
             <div className="instrument__group" role="group" aria-label="Clear focus">
               <button type="button" onClick={leaveVocabulary}>

@@ -58,18 +58,42 @@ export type MotionPose = {
   opacity?: number;
 };
 
+/**
+ * The one number that sets how quick the whole surface is.
+ *
+ * `emit` and `absorb` are not read from the table below — they are consequences
+ * of this field, `t = sqrt(2·travel / (gravity·pull))` — and so are the node
+ * plans, which differ only by their own `travel`. So gravity is the knob for
+ * *pace*, and every ratio the spine carries survives turning it: raising it
+ * shortened arrival, withdrawal, a body's birth and a body's collapse by the
+ * same quarter, and left a mass reading exactly as much heavier than a label as
+ * it did before.
+ *
+ * It went 220 → 391 because the field was a beat slow to answer. A quarter is a
+ * quarter of everything; the shape of the motion did not change.
+ */
 export const DEFAULT_MOTION_FIELD: MotionField = {
-  gravity: 220,
+  gravity: 391,
   travel: 8.6,
   absorbPull: 2.18,
 };
 
+/**
+ * `settle` and `hold` are stated here; `emit` and `absorb` are quoted here.
+ *
+ * The two gravity intents derive their duration from `DEFAULT_MOTION_FIELD`
+ * and ignore these values at the default — but `scaleMotionPlans` passes the
+ * whole table through when the lab runs at anything other than 1×, so a value
+ * here that disagreed with the field would make the surface change shape the
+ * moment it was slowed down to be looked at. Keep them equal to what the field
+ * produces: `sqrt(2·8.6 / 391)` and `sqrt(2·8.6 / (391·2.18))`.
+ */
 export const MOTION_DURATION_MS = {
-  emit: 280,
-  absorb: 190,
-  settle: 320,
+  emit: 210,
+  absorb: 142,
+  settle: 240,
   flow: 1000,
-  hold: 90,
+  hold: 68,
 } as const;
 
 export function cubicBezier(
@@ -320,6 +344,18 @@ export const DEFAULT_MOTION_PLANS = createMotionPlans();
  * A node is a mass, so its birth and collapse carry more inertia than chrome
  * or a selection ring. These remain emit/absorb — the same laws and curves —
  * with a larger canonical travel supplying the slower, stellar scale change.
+ *
+ * Travel is the honest knob for how heavy a body reads, and duration falls out
+ * of it: `t = sqrt(2·travel / gravity)`. So these are tuned by saying how far
+ * the body is thrown, never by naming a duration, and the ratio to the rest of
+ * the spine is preserved whichever way the field is later retuned.
+ *
+ * Travel is the honest knob for how heavy a body reads, and duration falls out
+ * of it: `t = sqrt(2·travel / gravity)`. The ratio to a label is therefore
+ * `sqrt(travel / field.travel)` and has nothing to do with gravity, which is
+ * why making the whole surface quicker left these two numbers alone. A body is
+ * still 1.45× an arrival and a collapse still 1.81× a release; both simply
+ * happen sooner.
  */
 export const NODE_BIRTH_PLAN = createMotionPlan("emit", { travel: 18 });
 export const NODE_COLLAPSE_PLAN = createMotionPlan("absorb", { travel: 28 });
@@ -344,7 +380,7 @@ export function scaleMotionPlan(plan: MotionPlan, factor: number): MotionPlan {
 /**
  * The same spine, slowed or sped for inspection.
  *
- * A design surface needs to be able to watch a 90ms `hold` happen. Scaling
+ * A design surface needs to be able to watch a 68ms `hold` happen. Scaling
  * every intent by one factor is what keeps this the same design at a
  * different speed rather than a different design: the ratios — emit against
  * absorb, hold against both — are the part of the spine that carries meaning,
