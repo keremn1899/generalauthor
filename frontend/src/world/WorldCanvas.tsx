@@ -260,6 +260,7 @@ type CanvasFrame = {
   nodes: CanvasDatum[];
   edges: CanvasDatum[];
   animateInitial: boolean;
+  fieldIds: Set<string>;
 };
 
 export type CanvasSelection =
@@ -363,6 +364,9 @@ export function WorldCanvas({
   const [stageSize, setStageSize] = useState({ width: 0, height: 0 });
   /** Marks on the field last time we drew, so growth can be noticed. */
   const drawnRef = useRef(0);
+  const drawnFieldIds = useRef(new Set([
+    ...set.referents.keys(), ...set.assertions.keys(), ...set.demands.keys(),
+  ]));
   /**
    * G6 has one mutable scene, so it also gets one reconciliation lane.
    *
@@ -671,17 +675,25 @@ export function WorldCanvas({
       const overlay = unsettled(assertion.stale, assertion.completeness);
       const kind = chipKindOf(assertion.origin);
       const chipPaint = paintFor(assertion.assertion_id, overlay);
-      nodes.push(
-        chipNode(
-          assertion.assertion_id,
-          atChip.x,
-          atChip.y,
-          assertion.relation,
-          kind,
-          chipPaint,
-          params,
-        ),
+      const chip = chipNode(
+        assertion.assertion_id,
+        atChip.x,
+        atChip.y,
+        assertion.relation,
+        kind,
+        chipPaint,
+        params,
       );
+      if (
+        selectionTreatment === "hollow" &&
+        selection?.id === assertion.assertion_id &&
+        chip.style.fillOpacity > 0
+      ) {
+        chip.style.fill = chipPaint.canvas;
+        chip.style.fillOpacity = 1;
+        chip.style.labelFill = chipPaint.ink;
+      }
+      nodes.push(chip);
       // A shelf beneath says the assertion rests on other relations; a crown
       // above says a person put it there. Both can be true of one chip — a
       // human verdict is still maintained by whatever derives from it — so
@@ -982,10 +994,14 @@ export function WorldCanvas({
                 birthPlan: lifecycleMotionRef.current.birth,
                 collapsePlan: lifecycleMotionRef.current.collapse,
                 releasePlan: motionRef.current.absorb,
+                appearancePlan: motionRef.current.hold,
                 bindingDelayMs: motionRef.current.hold.durationMs,
                 staggerWindowMs: motionRef.current.absorb.durationMs,
+                retainedNode: (id) => next.fieldIds.has(markOfElement(id)),
+                returningNode: (id) => drawnFieldIds.current.has(markOfElement(id)),
               },
             );
+            drawnFieldIds.current = next.fieldIds;
             if (graphRef.current !== graph || graph.destroyed) return;
 
             const count = next.nodes.length;
@@ -1343,7 +1359,14 @@ export function WorldCanvas({
       const next = publishContact({ type: "release" });
       if (next.phase !== "releasing") return;
       const { id } = next;
-      void animateContact(id, 1, motionRef.current.settle).finally(() => {
+      // A small contact deformation should clear within the pointer-response
+      // window. Preserve the spring curve, but do not gate selection on a
+      // full positional settle.
+      const release = scaleMotionPlan(
+        motionRef.current.settle,
+        motionRef.current.settle.durationMs / motionRef.current.hold.durationMs,
+      );
+      void animateContact(id, 1, release).finally(() => {
         publishContact({ type: "settled", id });
         queueCanvasDraw();
       });
@@ -1512,6 +1535,9 @@ export function WorldCanvas({
       nodes: data.nodes as CanvasDatum[],
       edges: data.edges as CanvasDatum[],
       animateInitial,
+      fieldIds: new Set([
+        ...set.referents.keys(), ...set.assertions.keys(), ...set.demands.keys(),
+      ]),
     };
     queueCanvasDraw();
   }, [

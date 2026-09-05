@@ -400,8 +400,8 @@ export function spokeEdge(
       // it. The stroke must not steal the drag; the role plate still takes
       // the pointer when it is named.
       pointerEvents: "none" as const,
-      labelPointerEvents: "auto" as const,
-      labelText: options.showRole ? (options.role ?? "") : "",
+      labelPointerEvents: options.showRole ? "auto" as const : "none" as const,
+      labelText: options.role ?? "",
       labelFontFamily: FONT_SANS_FAMILY,
       labelFontSize: p.roleLabelSize,
       labelFontWeight: p.roleLabelWeight,
@@ -410,9 +410,9 @@ export function spokeEdge(
       // edge's opacity is a name drawn at the strength of the line under it,
       // which is backwards: the filament is quiet so the name can be read
       // over it.
-      labelOpacity: 1,
+      labelOpacity: options.showRole ? 1 : 0,
       labelBackground: true,
-      labelBackgroundOpacity: 1,
+      labelBackgroundOpacity: options.showRole ? 1 : 0,
       labelBackgroundFill: paint.chip,
       labelBackgroundLineWidth: 0,
       labelBackgroundRadius: p.chipRadius,
@@ -559,7 +559,7 @@ export function filamentEdge(
   // or a crown from, so a derived or adjudicated binary is drawn detached —
   // see `schemaGraph`, which takes exactly that exception.
   const filled = isAuthored(options.kind);
-  const plateWidth = named && options.label ? chipWidth(options.label, p) : 0;
+  const plateWidth = options.label ? chipWidth(options.label, p) : 0;
   const carries = options.carriesFilament !== false;
   return {
     id,
@@ -581,17 +581,17 @@ export function filamentEdge(
       // Same create-order problem as a spoke: the filament is drawn through
       // the disc, on top of it. The line is not a grab target; the plate is.
       pointerEvents: "none" as const,
-      labelPointerEvents: "auto" as const,
-      labelText: named ? options.label : "",
+      labelPointerEvents: named ? "auto" as const : "none" as const,
+      labelText: options.label ?? "",
       labelFontFamily: FONT_SANS_FAMILY,
       labelFontSize: p.chipLabelSize,
       labelFontWeight: p.chipLabelWeight,
       labelFill: filled ? paint.field : paint.ink,
       labelOffsetX: options.labelOffsetX ?? 0,
       labelOffsetY: options.labelOffsetY ?? p.chipLabelNudge,
-      labelOpacity: 1,
-      labelBackground: named,
-      labelBackgroundOpacity: 1,
+      labelOpacity: named ? 1 : 0,
+      labelBackground: true,
+      labelBackgroundOpacity: named ? 1 : 0,
       labelBackgroundFill: filled ? paint.ink : paint.chip,
       labelBackgroundLineWidth: 0,
       labelBackgroundRadius: p.chipRadius,
@@ -599,12 +599,8 @@ export function filamentEdge(
       // G6's label background otherwise paints an 8px rule around a 7px
       // word, and selection tracing a 10px chip around that is the box
       // that never quite sat on the plate.
-      ...(named
-        ? {
-            labelBackgroundWidth: plateWidth,
-            labelBackgroundHeight: p.chipHeight,
-          }
-        : {}),
+      labelBackgroundWidth: plateWidth,
+      labelBackgroundHeight: p.chipHeight,
       labelPadding: [p.chipPaddingY, p.chipPaddingX] as [number, number],
       labelAutoRotate: false,
       labelPlacement: options.labelPlacement ?? 0.5,

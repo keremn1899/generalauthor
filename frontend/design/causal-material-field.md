@@ -53,7 +53,9 @@ idle -> pressed -> releasing -> idle
 
 - Pointer-down compresses a body. The initial trial uses 96% of its resting
   size and the shared `hold` plan.
-- Pointer-up removes the load and returns the body with `settle`.
+- Pointer-up removes the load with the `settle` curve compressed to the shared
+  `hold` duration. The small contact deformation must not delay selection by
+  a full positional spring.
 - A click commits selection only after release. Selection must never appear on
   pointer-down.
 - Crossing the drag threshold changes contact into manipulation. Drag release
@@ -80,8 +82,16 @@ reversible control:
 3. **Excited boundary (alternate).** The disc remains filled and the ants run
    on its material boundary.
 
-Plates and filaments keep their existing selection geometry in this slice.
-Their ants already become the plate border or run along the selected line.
+Filled assertion plates also use the aperture, preserving their label, shelf
+and crown. Their ants remain the plate border; filaments keep line selection.
+
+Hover lifts resting material toward full opacity with the shared light law.
+Labels retain their text while opacity transitions over `hold`; invisible
+labels do not intercept pointer input.
+
+Canvas find searches visible referents, assertions and demands in the working
+field. An empty field uses the directory to choose its first seed. A populated
+field never silently expands through find. Broader discovery belongs in tables.
 
 ## Arrival and withdrawal
 
@@ -98,6 +108,10 @@ Withdrawal means leaving observation, not destruction of the World entity:
 observer field releases -> constraints release -> body contracts -> remnant leaves
 ```
 
+Filtering is occlusion: retained bodies fade at full size and return at that
+same size and authored position. Only removal from the working set contracts
+mass. The two cases share the serialized lifecycle lane.
+
 Constraint release completes before body contraction begins. A new data frame
 may arrive during either phase, but the serialized canvas lane finishes the
 current physical episode and then reconciles to the newest waiting state; it
@@ -105,6 +119,26 @@ never overlaps two global scene mutations.
 
 Folding a binary filament into a plate is neither birth nor death. It should
 eventually conserve one assertion's identity while its projection changes.
+
+## Open comparison — grouped labels and explicit arrangement
+
+For multiple assertions sharing a filament, trial one compact assertion count
+at rest, expanding the individual labels on hover or focus. The count must not
+masquerade as one representative assertion, and touch needs a persistent
+expand action. Keep every assertion independently selectable. This comparison
+is pending; current individual labels now fade without replacing their text.
+
+Expansion continues to place new matter in free slots around its requested
+subject and pin existing matter during the one-shot relaxation. Its geometry
+communicates proximity to the request, not semantic cause or hierarchy.
+
+The next layout comparison should be an explicit **arrange around selection**
+action: one-hop referents around the chosen subject, assertion plates between
+their participants, and unrelated components kept separate. A second useful
+action is **separate overlaps**, conserving positions as far as possible. Both
+need a preview/undo story before implementation because arrangement is authored
+work. Directed layouts belong specifically to a derivation view, where causal
+direction is actually known. These proposals do not enable automatic relayout.
 
 ## Physics decision — a local elastic episode, not a live layout
 

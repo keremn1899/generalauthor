@@ -28,9 +28,8 @@
  * rather than the rest becoming less, and at rest, with nothing acted on, the
  * law changes nothing at all.
  *
- * `LIFT` is deliberately small. This is meant to be noticed only if you look
- * for it; anything strong enough to read as a highlight is doing the ants' job
- * with the wrong instrument.
+ * Lift makes contact visible while preserving the material's resting
+ * transparency. Selection remains a boundary treatment, distinct from light.
  */
 
 export type LightField = {
@@ -40,7 +39,7 @@ export type LightField = {
   falloff: number;
 };
 
-export const DEFAULT_LIGHT_FIELD: LightField = { lift: 0.3, falloff: 1.6 };
+export const DEFAULT_LIGHT_FIELD: LightField = { lift: 0.55, falloff: 1.6 };
 
 /**
  * How much of the way to full a mark at `hops` is carried.

@@ -104,6 +104,7 @@ import {
 import "../styles/presence.css";
 import {
   SHOW_DEFAULT,
+  assertionShown,
   relationShown,
   reveal,
   type ShowState,
@@ -269,7 +270,7 @@ export function Find({
             ))
           ) : (
             <li className="nodefind__row nodefind__row--empty">
-              nothing in this world matches
+              no matches in this search
             </li>
           )}
         </ul>
@@ -932,6 +933,34 @@ export function WorldPage({
     chooseFieldMark({ kind: "referent", id });
     revealMark(id);
   }, [chooseFieldMark, revealMark]);
+
+  // Canvas find operates on the visible working field. An empty field still
+  // needs a seed; only that initial search uses the world's directory.
+  const fieldDirectory = useMemo<Directory>(() => [
+    ...Array.from(set.referents.values(), ({ id, label }) => ({ id, label })),
+    ...Array.from(set.assertions.values())
+      .filter((item) => assertionShown(item.origin, item.mode, show))
+      .map((item) => ({ id: item.assertion_id, label: item.relation })),
+    ...set.bonds
+      .filter((item) => set.referents.has(item.source) &&
+        set.referents.has(item.target) && assertionShown(item.origin, item.mode, show))
+      .map((item) => ({ id: item.assertion_id, label: item.relation })),
+    ...(show.unresolved
+      ? Array.from(set.demands.values(), (item) => ({ id: item.key, label: item.relation }))
+      : []),
+  ], [set, show]);
+
+  const onFind = useCallback((id: string, label: string) => {
+    if (!set.referents.size && !set.assertions.size && !set.demands.size && !set.bonds.length) {
+      onSeed(id, label);
+      return;
+    }
+    chooseFieldMark({
+      kind: set.referents.has(id) ? "referent" : set.demands.has(id) ? "demand" : "assertion",
+      id,
+    });
+    revealMark(id);
+  }, [onSeed, chooseFieldMark, revealMark, set]);
 
   const onExpand = useCallback(
     async (relation: string, count: number) => {
@@ -1751,7 +1780,10 @@ export function WorldPage({
         <div className={chromeClass("instrument")}>
           <div className="gm__choosing">
             <div className="instrument__group" role="group" aria-label="find">
-              <Find directory={directory} onPick={onSeed} />
+              <Find
+                directory={set.referents.size || set.assertions.size || set.demands.size || set.bonds.length ? fieldDirectory : directory}
+                onPick={onFind}
+              />
             </div>
           </div>
           <ShowBand

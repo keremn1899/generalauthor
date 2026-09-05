@@ -41,6 +41,11 @@ export type CanvasTransition = {
 };
 
 export type CanvasMotionOptions = {
+  /** Present in the working set but hidden by an observer filter. */
+  retainedNode?: (id: string) => boolean;
+  /** Already belonged to the working field before becoming visible again. */
+  returningNode?: (id: string) => boolean;
+  appearancePlan?: MotionPlan;
   /** Retained for callers that want the canonical massive-node plans. */
   stellarNodes?: boolean;
   /** Lab-scaled forms of the same laws, when supplied. */
@@ -190,7 +195,7 @@ export async function transitionCanvasData(
     .filter(Boolean)
     .map((node) => node as CanvasDatum);
   const collapsedNodes = departingNodes.map((node) =>
-    nodePose(node, 0, LIFECYCLE_SCALE),
+    nodePose(node, 0, options.retainedNode?.(node.id) ? 1 : LIFECYCLE_SCALE),
   );
   const dyingEdges = diedEdgeIds
     .map((id) => graph.getEdgeData(id))
@@ -200,7 +205,7 @@ export async function transitionCanvasData(
     nodes: next.nodes.map((node) =>
       previousNodes.has(node.id)
         ? node
-        : nodePose(node, 0, LIFECYCLE_SCALE),
+        : nodePose(node, 0, options.returningNode?.(node.id) ? 1 : LIFECYCLE_SCALE),
     ),
     edges: next.edges.map((edge) =>
       previousEdges.has(edge.id) ? edge : edgeOpacity(edge, 0),
@@ -275,7 +280,9 @@ export async function transitionCanvasData(
     !collapsedNodes.length &&
     !dyingEdges.length;
   if (settling) {
-    graph.setOptions({ animation: planOptions(DEFAULT_MOTION_PLANS.hold) });
+    graph.setOptions({
+      animation: planOptions(options.appearancePlan ?? DEFAULT_MOTION_PLANS.hold),
+    });
   }
   graph.setData(entering as never);
   await graph.draw();
