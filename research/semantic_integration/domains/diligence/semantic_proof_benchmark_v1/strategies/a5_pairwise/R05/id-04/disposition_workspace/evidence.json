@@ -1,0 +1,58 @@
+{
+  "propositions": [
+    {
+      "proposition": "CRM row NBA-102 records company name 'Northbridge Analytics' with domain northbridge.io, country US, owner J. Patel, status active.",
+      "source_grounding": {
+        "source_path": "sources/crm.csv",
+        "location": "row NBA-102"
+      },
+      "establishes": "other",
+      "relevance": "Grounds the left referent crm:NBA-102 to the name 'Northbridge Analytics' but does not link it to the billing name 'Northbridge Analytics Inc.'"
+    },
+    {
+      "proposition": "Billing invoice records use billed_name 'Northbridge Analytics Inc.'",
+      "source_grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Northbridge Analytics Inc."
+      },
+      "establishes": "other",
+      "relevance": "Grounds the right referent billing:Northbridge Analytics Inc. to the legal-style billed name but does not link it to CRM account NBA-102"
+    },
+    {
+      "proposition": "Commercial notes state that sales uses the short name 'Northbridge Analytics' while billing and the MSA use 'Northbridge Analytics Inc.'",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "other",
+      "relevance": "Documents parallel naming variants across sales and billing channels; name similarity does not establish that crm:NBA-102 and billing:Northbridge Analytics Inc. denote the same entity"
+    },
+    {
+      "proposition": "A 2024 credit check returned a Wyoming LLC named 'Northbridge Analytics LLC'.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "unresolved_preservation",
+      "relevance": "Preserves multiple live registry-entity candidates beyond the CRM and billing names, blocking closure of an identity judgment"
+    },
+    {
+      "proposition": "Legal has not determined which registry entity is the contracting party.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "unresolved_preservation",
+      "relevance": "Explicitly records that identity between candidate referents and the contracting registry entity cannot be established from available evidence"
+    },
+    {
+      "proposition": "Commercial notes instruct to treat the registry link as unresolved.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "unresolved_preservation",
+      "relevance": "Packet preserves unresolved status for the candidate identity relation between crm:NBA-102 and billing:Northbridge Analytics Inc."
+    }
+  ]
+}

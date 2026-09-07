@@ -1,0 +1,33 @@
+{
+  "proposition": "NODI_CODE='9' on a FY2025 DMR measurement row with no numeric reported result (DMR_VALUE_NMBR empty) has a determinate regulatory/reporting meaning that can be applied uniformly across all 36 affected occurrences.",
+  "would_establish": [
+    "Workspace text (permit package for NM0020583, DMR reporting instructions, or structured codebook) that explicitly defines NODI code 9 or maps it to a named no-data / not-applicable / no-discharge state",
+    "Permit language for NM0020583 tying a specific DMR reporting mechanism (checkbox, comment, or code) to the absence of numeric results for the parameters that carry NODI 9 in the structured extract",
+    "A single coherent interpretation supported by both structured correlation and authoritative permit text for all parameter families sharing NODI 9"
+  ],
+  "would_refute": [
+    "Evidence that NODI 9 means the same thing as NODI code C (used on a different permit with different parameters and monitoring flags)",
+    "Evidence that NODI 9 uniformly means 'no discharge' for all 36 rows including optional WET retest parameters",
+    "A workspace NODI legend showing code 9 with a definition that contradicts permit-conditional monitoring for TRC or '(If required)' WET retests"
+  ],
+  "likely_authoritative_source_types": [
+    "sources/dmr_measurements.csv — occurrence profile, parameter codes, optional_monitoring_flag, permit association",
+    "sources/permit_limits.csv — limit comments, optional monitoring flags, frequency codes for NODI-9-linked limits",
+    "documents/farmington/final_permit.txt — NM0020583 monitoring/reporting conditions for TRC and WET retests",
+    "documents/farmington/statement_of_basis.txt — TRC monitoring rationale for NM0020583",
+    "Cross-permit comparison via structured rows for NODI code C on NM0000116 (to test inheritance prohibition)"
+  ],
+  "insufficient_alone": [
+    "Structured correlation showing NODI 9 appears only on permit NM0020583 with empty DMR_VALUE_NMBR",
+    "Permit footnote *5 stating TRC is monitored when chlorine is used (does not name NODI 9)",
+    "Permit text labeling WET retests as '(If required)' (does not name NODI 9)",
+    "NO DISCHARGE REPORTING instructions in documents/aztec/final_permit.txt (permit NM0028762, different facility, references checkbox not NODI code)",
+    "OPTIONAL_MONITORING_FLAG=Y on WET retest limits without a code-to-meaning mapping"
+  ],
+  "unknowable_from_structured_data_alone": [
+    "The semantic label or regulatory state encoded by NODI code 9 (no codebook table exists in structured sources)",
+    "Whether NODI 9 on chlorine rows documents conditional non-use of chlorine versus missing required monitoring evidence",
+    "Whether NODI 9 on WET retest rows documents retest-not-triggered versus other no-data states",
+    "Whether NODI 9 is interchangeable with NODI C used exclusively on permit NM0000116"
+  ]
+}

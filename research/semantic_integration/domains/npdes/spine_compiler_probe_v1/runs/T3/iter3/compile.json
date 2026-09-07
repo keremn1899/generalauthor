@@ -1,0 +1,271 @@
+{
+  "ok": true,
+  "structurally_valid": true,
+  "errors": [],
+  "spine": {
+    "referents": {
+      "Measurement": 824,
+      "LimitValue": 105,
+      "Document": 12
+    },
+    "relations": {
+      "measurement": {
+        "kind": "base",
+        "rows": 824,
+        "unbound": 0
+      },
+      "limit_row": {
+        "kind": "base",
+        "rows": 105,
+        "unbound": 0
+      },
+      "permit_document": {
+        "kind": "base",
+        "rows": 12,
+        "unbound": 0
+      },
+      "candidate_limit": {
+        "kind": "derived",
+        "rows": 0,
+        "inputs": [
+          "measurement",
+          "limit_row"
+        ],
+        "unbound": 0
+      },
+      "missing_numeric_result": {
+        "kind": "derived",
+        "rows": 0,
+        "inputs": [
+          "measurement",
+          "limit_row"
+        ],
+        "unbound": 0
+      },
+      "limit_permit_document": {
+        "kind": "derived",
+        "rows": 0,
+        "inputs": [
+          "limit_row",
+          "permit_document"
+        ],
+        "unbound": 0
+      }
+    }
+  },
+  "n_trigger_instances": 138,
+  "n_trigger_groups": 6,
+  "trigger_groups": [
+    {
+      "group_id": "g000",
+      "requirement_id": null,
+      "failure_kind": "NO_MATERIALIZABLE_PATH",
+      "relation": "candidate_limit",
+      "n_instances": 1,
+      "purpose": [],
+      "sample_subjects": [
+        {
+          "inputs": [
+            "measurement",
+            "limit_row"
+          ]
+        }
+      ],
+      "expected": "join produces rows when both inputs are nonempty"
+    },
+    {
+      "group_id": "g001",
+      "requirement_id": null,
+      "failure_kind": "NO_MATERIALIZABLE_PATH",
+      "relation": "limit_permit_document",
+      "n_instances": 1,
+      "purpose": [],
+      "sample_subjects": [
+        {
+          "inputs": [
+            "limit_row",
+            "permit_document"
+          ]
+        }
+      ],
+      "expected": "join produces rows when both inputs are nonempty"
+    },
+    {
+      "group_id": "g002",
+      "requirement_id": null,
+      "failure_kind": "NO_MATERIALIZABLE_PATH",
+      "relation": "missing_numeric_result",
+      "n_instances": 1,
+      "purpose": [],
+      "sample_subjects": [
+        {
+          "inputs": [
+            "measurement",
+            "limit_row"
+          ]
+        }
+      ],
+      "expected": "join produces rows when both inputs are nonempty"
+    },
+    {
+      "group_id": "g003",
+      "requirement_id": "monitoring_obligation",
+      "failure_kind": "CARDINALITY_OVERSATISFIED",
+      "relation": "limit_row",
+      "n_instances": 15,
+      "purpose": [
+        "B"
+      ],
+      "sample_subjects": [
+        {
+          "limit": "LimitValue:NM0000116|3610129864"
+        },
+        {
+          "limit": "LimitValue:NM0000116|3610129865"
+        },
+        {
+          "limit": "LimitValue:NM0000116|3610129867"
+        },
+        {
+          "limit": "LimitValue:NM0000116|3610129901"
+        },
+        {
+          "limit": "LimitValue:NM0000116|3610129870"
+        },
+        {
+          "limit": "LimitValue:NM0000116|3610129902"
+        },
+        {
+          "limit": "LimitValue:NM0000116|3610129871"
+        },
+        {
+          "limit": "LimitValue:NM0000116|3610129866"
+        },
+        {
+          "limit": "LimitValue:NM0000116|3610129903"
+        },
+        {
+          "limit": "LimitValue:NM0000116|3610129905"
+        },
+        {
+          "limit": "LimitValue:NM0000116|3610129906"
+        },
+        {
+          "limit": "LimitValue:NM0000116|3610129904"
+        }
+      ],
+      "expected": "cardinality ONE"
+    },
+    {
+      "group_id": "g004",
+      "requirement_id": "monitoring_obligation",
+      "failure_kind": "MULTIPLE_CANDIDATES",
+      "relation": "limit_row",
+      "n_instances": 15,
+      "purpose": [
+        "B"
+      ],
+      "sample_subjects": [
+        {
+          "limit": "LimitValue:NM0000116|3610129864"
+        },
+        {
+          "limit": "LimitValue:NM0000116|3610129865"
+        },
+        {
+          "limit": "LimitValue:NM0000116|3610129867"
+        },
+        {
+          "limit": "LimitValue:NM0000116|3610129901"
+        },
+        {
+          "limit": "LimitValue:NM0000116|3610129870"
+        },
+        {
+          "limit": "LimitValue:NM0000116|3610129902"
+        },
+        {
+          "limit": "LimitValue:NM0000116|3610129871"
+        },
+        {
+          "limit": "LimitValue:NM0000116|3610129866"
+        },
+        {
+          "limit": "LimitValue:NM0000116|3610129903"
+        },
+        {
+          "limit": "LimitValue:NM0000116|3610129905"
+        },
+        {
+          "limit": "LimitValue:NM0000116|3610129906"
+        },
+        {
+          "limit": "LimitValue:NM0000116|3610129904"
+        }
+      ],
+      "expected": "unique applicable candidate"
+    },
+    {
+      "group_id": "g005",
+      "requirement_id": "monitoring_obligation",
+      "failure_kind": "UNINTERPRETED_REQUIRED_CODE",
+      "relation": "limit_row",
+      "n_instances": 105,
+      "purpose": [
+        "B"
+      ],
+      "sample_subjects": [
+        {
+          "limit": "LimitValue:NM0020583|3610673284"
+        },
+        {
+          "limit": "LimitValue:NM0020583|3610673282"
+        },
+        {
+          "limit": "LimitValue:NM0020583|3610673283"
+        },
+        {
+          "limit": "LimitValue:NM0020583|3610673281"
+        },
+        {
+          "limit": "LimitValue:NM0000116|3610129864"
+        },
+        {
+          "limit": "LimitValue:NM0000116|3610129864"
+        },
+        {
+          "limit": "LimitValue:NM0000116|3610129865"
+        },
+        {
+          "limit": "LimitValue:NM0000116|3610129865"
+        },
+        {
+          "limit": "LimitValue:NM0020583|3610673290"
+        },
+        {
+          "limit": "LimitValue:NM0020583|3610673289"
+        },
+        {
+          "limit": "LimitValue:NM0028762|3610840344"
+        },
+        {
+          "limit": "LimitValue:NM0028762|3610840345"
+        }
+      ],
+      "expected": "optional_monitoring_flag in known ['N', 'Y']"
+    }
+  ],
+  "relation_row_counts": {
+    "measurement": 824,
+    "limit_row": 105,
+    "permit_document": 12,
+    "candidate_limit": 0,
+    "missing_numeric_result": 0,
+    "limit_permit_document": 0
+  },
+  "referent_counts": {
+    "Measurement": 824,
+    "LimitValue": 105,
+    "Document": 12
+  }
+}

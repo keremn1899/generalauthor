@@ -1,0 +1,65 @@
+{
+  "occurrence_id": "measurement:dmr_form_value_id=3896611092",
+  "semantic_question_used": "What does the NODI code 'C' signify for this no-numeric-result flow measurement (parameter 50050, monitoring period ending 10/31/2024) under permit NM0000116?",
+  "disposition": "UNRESOLVED",
+  "interpretation": "The structured DMR row for dmr_form_value_id 3896611092 records NODI_CODE=C with no numeric DMR_VALUE_NMBR for required flow monitoring (parameter 50050, limit_value_id 3610129868, optional_monitoring_flag N, sample type ES). Authoritative permit-package text for NM0000116 describes authorized intermittent storm-runoff discharges, BMP restrictions on when discharge may occur, and daily flow monitoring by estimate, but nowhere defines NODI reporting codes or states that code 'C' documents a no-discharge period, conditional non-requirement, or any other specific missing-evidence state for October 2024. Without a workspace NODI code legend, the meaning of 'C' for this occurrence cannot be established.",
+  "grounding": {
+    "permit": "NM0000116",
+    "facility_documents": "documents/gcc/",
+    "dmr_form_value_id": "3896611092",
+    "parameter_code": "50050",
+    "parameter_desc": "Flow, in conduit or thru treatment plant",
+    "monitoring_period_end_date": "10/31/2024",
+    "nodi_code": "C",
+    "dmr_value_nmbr": "",
+    "limit_value_id": "3610129868",
+    "limit_set_schedule_id": "3600833510",
+    "optional_monitoring_flag": "N",
+    "limit_sample_type_code": "ES",
+    "limit_set_name": "DISCHARGE STORM RUNOFFS FROM STORAGE",
+    "dmr_comment_text": ""
+  },
+  "documents_opened": [
+    "PASS_TASK.md",
+    "OCCURRENCE.md",
+    "documents/INDEX.md",
+    "purposes/visible_c.md",
+    "construction.py",
+    "sources/dmr_measurements.csv",
+    "sources/permit_limits.csv",
+    "documents/gcc/final_permit.txt",
+    "documents/gcc/fact_sheet.txt",
+    "documents/gcc/part_ii_appendix.txt"
+  ],
+  "snippets": [
+    {
+      "source_id": "sources/dmr_measurements.csv",
+      "text": "3602720951,NM0000116,...,50050,\"Flow, in conduit or thru treatment plant\",...,3610129868,Q2,...,3896611092,Q2,3835977355,,,,,,01/28/2025,C"
+    },
+    {
+      "source_id": "sources/permit_limits.csv",
+      "text": "3602720951,NM0000116,...,DISCHARGE STORM RUNOFFS FROM STORAGE,,3600833510,...,50050,\"Flow, in conduit or thru treatment plant\",...,3610129868,Q2,...,ENF,N,ES,01/01,..."
+    },
+    {
+      "source_id": "documents/gcc/final_permit.txt",
+      "text": "Flow                     Report MGD        Report MGD        ***               ***                1/Day        Estimate"
+    },
+    {
+      "source_id": "documents/gcc/final_permit.txt",
+      "text": "2. Discharges are restricted to overflows from the retention pond due to catastrophic or chronic precipitation events."
+    },
+    {
+      "source_id": "documents/gcc/fact_sheet.txt",
+      "text": "As previously described the permittee has not discharged in over five years and is unable to obtain a sample to analyze at the appropriate detection level."
+    },
+    {
+      "source_id": "documents/gcc/fact_sheet.txt",
+      "text": "Flow is proposed to be monitored daily by estimate. Grab sample type is proposed because a discharge would be the overflow from a retention pond."
+    },
+    {
+      "source_id": "construction.py",
+      "text": "purpose.require_interpreted(\"nodi_code_semantics\", relation=\"no_numeric_result_case\", field=\"nodi_code\", known=[\"\"], purpose=\"C\", per=\"measurement\")"
+    }
+  ],
+  "remaining_uncertainty": "Whether NODI code 'C' on this DMR row denotes a documented no-discharge period, another EPA-standard no-data indicator, or a different missing-evidence state for the October 2024 monitoring period. No NODI code definitions appear in workspace structured sources or permit-package text."
+}

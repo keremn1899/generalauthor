@@ -1,0 +1,86 @@
+{
+  "strategy": "a4_proof_obligation",
+  "trial": "R03",
+  "obligation_id": "id-02",
+  "candidate": {
+    "left": "billing:Helion Robotics Limited",
+    "right": "registry:11847201"
+  },
+  "proposed_disposition": "SAME_ENTITY",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 11847201"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Helion Robotics Limited"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "Registry row 11847201 names HELION ROBOTICS LIMITED, invoices bill Helion Robotics Limited, and commercial notes explicitly state that invoice and Companies House naming refer to the same legal entity.",
+  "proof_size": 4,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "proof_obligations": [
+    {
+      "obligation": "Establish that registry:11847201 denotes HELION ROBOTICS LIMITED",
+      "required_for": "SAME_ENTITY",
+      "satisfied": true,
+      "evidence": [
+        {
+          "source_path": "sources/company_registry.csv",
+          "location": "row 11847201"
+        }
+      ]
+    },
+    {
+      "obligation": "Establish that billing:Helion Robotics Limited denotes the entity billed as Helion Robotics Limited",
+      "required_for": "SAME_ENTITY",
+      "satisfied": true,
+      "evidence": [
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Helion Robotics Limited"
+        }
+      ]
+    },
+    {
+      "obligation": "Establish that the billing counterparty and the Companies House registry counterparty for Helion Robotics Limited are the same legal entity",
+      "required_for": "SAME_ENTITY",
+      "satisfied": true,
+      "evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    },
+    {
+      "obligation": "Establish that billing:Helion Robotics Limited and registry:11847201 denote distinct legal counterparties",
+      "required_for": "DISTINCT",
+      "satisfied": false,
+      "evidence": []
+    }
+  ],
+  "admit": {
+    "rule": "unsatisfied_obligations_present"
+  },
+  "unsatisfied": [
+    "Establish that billing:Helion Robotics Limited and registry:11847201 denote distinct legal counterparties"
+  ],
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": true,
+  "correct_same_never_proposed": false
+}

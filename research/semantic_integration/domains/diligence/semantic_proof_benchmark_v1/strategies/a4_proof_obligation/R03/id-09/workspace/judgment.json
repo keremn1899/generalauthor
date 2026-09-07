@@ -1,0 +1,54 @@
+{
+  "proposed_disposition": "UNRESOLVED",
+  "proof_obligations": [
+    {
+      "obligation": "Establish that crm:VEL-19 and billing:Vellum Print Co Ltd denote the same legal counterparty.",
+      "required_for": "SAME_ENTITY",
+      "satisfied": false,
+      "evidence": [
+        {
+          "source_path": "sources/crm.csv",
+          "location": "row VEL-19"
+        },
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Vellum Print Co Ltd"
+        }
+      ]
+    },
+    {
+      "obligation": "Establish that crm:VEL-19 and billing:Vellum Print Co Ltd denote distinct legal counterparties.",
+      "required_for": "DISTINCT",
+      "satisfied": false,
+      "evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        },
+        {
+          "source_path": "sources/crm.csv",
+          "location": "row VEL-19"
+        },
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Vellum Print Co Ltd"
+        }
+      ]
+    }
+  ],
+  "unsatisfied_obligations": [
+    "Establish that crm:VEL-19 and billing:Vellum Print Co Ltd denote the same legal counterparty.",
+    "Establish that crm:VEL-19 and billing:Vellum Print Co Ltd denote distinct legal counterparties."
+  ],
+  "supporting_evidence": [
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row VEL-19"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Vellum Print Co Ltd"
+    }
+  ],
+  "support_claim": "The packet links VEL-19 to the name \"Vellum Print Co\" and billing to \"Vellum Print Co Ltd\" but provides no explicit evidence establishing identity or distinctness between these referents."
+}

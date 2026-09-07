@@ -1,0 +1,40 @@
+{
+  "strategy": "a2_critic",
+  "trial": "R02",
+  "obligation_id": "id-08",
+  "candidate": {
+    "left": "billing:Oakfield Logistik GmbH",
+    "right": "registry:HRB 88421"
+  },
+  "proposed_disposition": "SAME_ENTITY",
+  "final_disposition": "SAME_ENTITY",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row HRB 88421"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "The registry row for HRB 88421 lists Oakfield Logistik GmbH as the registered legal name, and the commercial notes state that Handelsregister number HRB 88421 belongs to the company operating as Oakfield Logistik GmbH after its 2023 rebrand.",
+  "proof_size": 2,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "critic": {
+    "decision": "CONFIRM",
+    "reason": "The registry row identifies HRB 88421 as Oakfield Logistik GmbH, and the commercial notes explicitly state that HRB 88421 is the unchanged Handelsregister number for the company now operating as Oakfield Logistik GmbH, establishing the billing and registry referents as the same legal counterparty."
+  },
+  "critic_reason": "confirmed",
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": true,
+  "unsupported_closure": false,
+  "under_closure": false,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": false
+}

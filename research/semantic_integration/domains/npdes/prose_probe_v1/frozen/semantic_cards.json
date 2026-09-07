@@ -1,0 +1,348 @@
+[
+  {
+    "gold_id": "S-FARM-TDS-STAGE",
+    "affected_purpose": "A",
+    "semantic_discriminant": "Different numeric TDS net-increase limit regimes govern different temporal intervals; the applicable numbers are not a single permit-term constant.",
+    "required_arguments": [
+      "permit NM0020583",
+      "outfall 001",
+      "parameter TDS net increase",
+      "monitoring period (month within FY2025)",
+      "the two staged numeric regimes and their intervals"
+    ],
+    "success_condition": "The obligation must recognize that different limit regimes can govern different temporal intervals and must ask which regime applies to the relevant monitoring period.",
+    "partial_condition": "Mentions TDS net-increase limits or competing TDS numbers without asking which time-bounded regime governs the monitoring period.",
+    "failure_condition": "Treats TDS as a single untensed limit, asks only generic applicability for all parameters, or returns NO_RELEVANT_OBLIGATION.",
+    "full_markers": {
+      "all_groups": [
+        [
+          "tds",
+          "total dissolved",
+          "net increase",
+          "70295"
+        ],
+        [
+          "stage",
+          "staged",
+          "*10",
+          "*11",
+          "3 year",
+          "three year",
+          "interval",
+          "regime",
+          "time-bound",
+          "temporal",
+          "which regime",
+          "which interval"
+        ]
+      ],
+      "any": [
+        "24992",
+        "24,992",
+        "27664",
+        "27,664",
+        "449",
+        "497",
+        "time-bound",
+        "temporal",
+        "which regime",
+        "which interval"
+      ]
+    }
+  },
+  {
+    "gold_id": "S-FARM-CN-SCHEDULE",
+    "affected_purpose": "A,B",
+    "semantic_discriminant": "A compliance schedule delays final cyanide numeric limits until 12 months after the effective date; after that date the final limits govern.",
+    "required_arguments": [
+      "permit NM0020583",
+      "cyanide",
+      "schedule completion date vs FY2025 period"
+    ],
+    "success_condition": "Ask whether the final cyanide effluent limits apply to the FY2025 monitoring period given the 12-month schedule, or which cyanide regime then applies.",
+    "partial_condition": "Mentions cyanide limits without the schedule/final-vs-interim distinction.",
+    "failure_condition": "Ignores the schedule or treats cyanide as report-only.",
+    "full_markers": {
+      "all_groups": [
+        [
+          "cyanide"
+        ],
+        [
+          "schedule",
+          "12 month",
+          "twelve month",
+          "final effluent",
+          "after permit effective"
+        ]
+      ]
+    }
+  },
+  {
+    "gold_id": "S-FARM-TRC-CONDITIONAL",
+    "affected_purpose": "B,C",
+    "semantic_discriminant": "TRC monitoring is required when chlorine is used, not as routine UV-plant effluent monitoring.",
+    "required_arguments": [
+      "TRC / residual chlorine",
+      "chlorine-use event",
+      "UV disinfection as facility context"
+    ],
+    "success_condition": "Ask whether TRC monitoring (or a TRC numeric comparison) is applicable for a period given the chlorine-use condition.",
+    "partial_condition": "Mentions TRC or UV without the conditional trigger.",
+    "failure_condition": "Treats TRC as unconditionally required monthly monitoring or as irrelevant.",
+    "full_markers": {
+      "all_groups": [
+        [
+          "trc",
+          "residual chlorine",
+          "chlorine"
+        ],
+        [
+          "when",
+          "any time",
+          "conditional",
+          "used",
+          "event"
+        ]
+      ]
+    }
+  },
+  {
+    "gold_id": "S-FARM-REPORT-ONLY",
+    "affected_purpose": "A",
+    "semantic_discriminant": "Some named Farmington parameters are Report / N/A rather than enforceable numeric effluent limits.",
+    "required_arguments": [
+      "parameter identity",
+      "report vs numeric cell"
+    ],
+    "success_condition": "Ask whether a named parameter is an enforceable numeric limit or report-only monitoring for compliance comparison.",
+    "partial_condition": "Mentions Report parameters without asking whether numeric exceedance comparison applies.",
+    "failure_condition": "Treats all table rows as numeric limits.",
+    "full_markers": {
+      "all_groups": [
+        [
+          "report-only",
+          "report only",
+          "report rather than",
+          "not a numeric",
+          "numeric comparison not applicable",
+          "not enforceable numeric"
+        ]
+      ]
+    }
+  },
+  {
+    "gold_id": "S-AZTEC-WHEN-DISCHARGING",
+    "affected_purpose": "B,C",
+    "semantic_discriminant": "Marked Aztec monitoring frequencies apply when discharging; no-discharge periods do not create missing-monitoring violations.",
+    "required_arguments": [
+      "Aztec NM0028762",
+      "discharge occurrence",
+      "monitoring frequency *1"
+    ],
+    "success_condition": "Ask whether monitoring is applicable for a period because a discharge occurred, rather than assuming continuous monthly obligation.",
+    "partial_condition": "Mentions intermittent flow without the when-discharging trigger.",
+    "failure_condition": "Treats every month as required monitoring regardless of discharge.",
+    "full_markers": {
+      "all_groups": [
+        [
+          "when discharging",
+          "when-discharging"
+        ]
+      ]
+    }
+  },
+  {
+    "gold_id": "S-AZTEC-REPORT-ONLY",
+    "affected_purpose": "A",
+    "semantic_discriminant": "Aztec Flow, Cyanide Total Recoverable, and TDS are Report; TSS, TRC, and pH have numeric limits.",
+    "required_arguments": [
+      "parameter",
+      "report vs numeric"
+    ],
+    "success_condition": "Ask whether Cyanide or TDS (or Flow) quarterly Report values are numeric exceedance findings.",
+    "partial_condition": "Generic report-only question not tied to Aztec cyanide/TDS/flow.",
+    "failure_condition": "Treats cyanide or TDS as numeric effluent limits.",
+    "full_markers": {
+      "all_groups": [
+        [
+          "report"
+        ],
+        [
+          "cyanide",
+          "tds",
+          "total dissolved",
+          "flow"
+        ]
+      ]
+    }
+  },
+  {
+    "gold_id": "S-AZTEC-WET-SEASONAL",
+    "affected_purpose": "B,C",
+    "semantic_discriminant": "WET is once per permit term during the first springtime after the effective date, during irrigation season \u2014 not an automatic FY2025 monthly requirement.",
+    "required_arguments": [
+      "WET species",
+      "once-per-term / first spring / irrigation season",
+      "FY2025 vs that window"
+    ],
+    "success_condition": "Ask whether FY2025 is a required WET monitoring year given the once-per-term first-spring condition, allowing UNRESOLVED if completion evidence is absent.",
+    "partial_condition": "Mentions WET without the seasonal/once-per-term restriction.",
+    "failure_condition": "Treats WET as routine quarterly/monthly DMR monitoring for FY2025.",
+    "full_markers": {
+      "all_groups": [
+        [
+          "wet",
+          "ceriodaphnia",
+          "pimephales",
+          "whole effluent"
+        ],
+        [
+          "spring",
+          "irrigation",
+          "once per",
+          "once/term",
+          "first spring",
+          "permit term"
+        ]
+      ]
+    }
+  },
+  {
+    "gold_id": "S-AZTEC-DELTA-BHC",
+    "affected_purpose": "A,B,C",
+    "semantic_discriminant": "Delta-BHC is a special-study / source-water-intake plan obligation, not a routine DMR numeric discharge limit.",
+    "required_arguments": [
+      "Delta-BHC",
+      "study/plan vs effluent limit"
+    ],
+    "success_condition": "Ask whether Delta-BHC is a special-study obligation rather than a FY2025 numeric discharge-limit comparison, or whether DMR absence is a limit exceedance.",
+    "partial_condition": "Mentions Delta-BHC without distinguishing study from numeric limit.",
+    "failure_condition": "Treats missing Delta-BHC DMR as a discharge-limit exceedance.",
+    "full_markers": {
+      "all_groups": [
+        [
+          "delta-bhc",
+          "delta bhc",
+          "bhc"
+        ],
+        [
+          "study",
+          "special",
+          "source water",
+          "plan",
+          "intake"
+        ]
+      ]
+    }
+  },
+  {
+    "gold_id": "S-GCC-EVENT-DISCHARGE",
+    "affected_purpose": "B,C",
+    "semantic_discriminant": "Outfall 001 authorization is for specified event/source discharges (storm runoff, once-through cooling, cleaning water, Artesian well water), not continuous discharge.",
+    "required_arguments": [
+      "GCC NM0000116",
+      "outfall 001",
+      "discharge occurrence / event type"
+    ],
+    "success_condition": "Ask whether monitoring or numeric comparison is applicable only when such a discharge occurs.",
+    "partial_condition": "Mentions stormwater or cooling water without event-dependence of monitoring.",
+    "failure_condition": "Treats GCC as a continuously discharging municipal WWTP for every month.",
+    "full_markers": {
+      "all_groups": [
+        [
+          "storm runoff",
+          "once-through",
+          "artesian",
+          "when discharging",
+          "event-dependent",
+          "event dependent",
+          "no-discharge",
+          "no discharge"
+        ]
+      ]
+    }
+  },
+  {
+    "gold_id": "S-GCC-REPORT-ONLY",
+    "affected_purpose": "A",
+    "semantic_discriminant": "GCC mixes Report parameters with numeric limits; TSS daily max 50 is enforceable while TSS monthly average is Report.",
+    "required_arguments": [
+      "parameter",
+      "statistical base (monthly vs daily)",
+      "report vs numeric"
+    ],
+    "success_condition": "Ask which GCC parameters/bases are numeric exceedance comparisons versus Report-only.",
+    "partial_condition": "Generic report-only without GCC mixed TSS daily-max vs monthly-report.",
+    "failure_condition": "Treats dissolved Cu/Cd or hardness as numeric exceedances, or TSS monthly as a numeric limit.",
+    "full_markers": {
+      "all_groups": [
+        [
+          "report"
+        ],
+        [
+          "dissolved copper",
+          "dissolved cadmium",
+          "hardness",
+          "tss",
+          "suspended",
+          "50"
+        ]
+      ]
+    }
+  },
+  {
+    "gold_id": "S-GCC-WET-FIRST-DISCHARGE",
+    "affected_purpose": "B,C",
+    "semantic_discriminant": "WET is required at first discharge and at Once/5 years, not as a monthly numeric DMR limit.",
+    "required_arguments": [
+      "WET",
+      "first discharge / once per 5 years"
+    ],
+    "success_condition": "Ask whether monthly missing WET is a numeric exceedance or whether WET is event-triggered special monitoring.",
+    "partial_condition": "Mentions GCC WET without first-discharge or once/5-year trigger.",
+    "failure_condition": "Treats missing monthly WET as a numeric exceedance.",
+    "full_markers": {
+      "all_groups": [
+        [
+          "wet",
+          "ceriodaphnia",
+          "pimephales",
+          "whole effluent"
+        ],
+        [
+          "first discharge",
+          "once/5",
+          "once per 5",
+          "5 year"
+        ]
+      ]
+    }
+  },
+  {
+    "gold_id": "S-SOURCE-AUTHORITY",
+    "affected_purpose": "A,B,C",
+    "semantic_discriminant": "Operative effluent limitations and monitoring requirements are set forth in the permit Parts; fact sheets/statements of basis explain draft-permit rationale and are not independent effluent limits.",
+    "required_arguments": [
+      "document kind (permit Part vs fact sheet/SOB)",
+      "the condition being applied"
+    ],
+    "success_condition": "Ask which document class is the operative source of an effluent limitation or monitoring requirement, or whether a fact-sheet/SOB statement independently establishes a limit.",
+    "partial_condition": "Mentions fact sheet or SOB as a source without the operative-vs-rationale distinction.",
+    "failure_condition": "Treats fact-sheet/SOB numbers as independent effluent limits, or never asks the hierarchy question.",
+    "full_markers": {
+      "all_groups": [
+        [
+          "fact sheet",
+          "statement of basis",
+          "sob",
+          "operative",
+          "rationale",
+          "set forth in part",
+          "permit parts",
+          "draft permit",
+          "supporting"
+        ]
+      ]
+    }
+  }
+]

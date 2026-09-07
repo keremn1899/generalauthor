@@ -1,0 +1,81 @@
+{
+  "strategy": "a6_multistep",
+  "trial": "R01",
+  "obligation_id": "id-03",
+  "candidate": {
+    "left": "billing:Helion Robotics Limited",
+    "right": "contract:MSA-HELION-2019"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/contracts/MSA-HELION-2019.md",
+      "location": "header"
+    },
+    {
+      "source_path": "relation_contract.json",
+      "location": "algebra.transitive"
+    }
+  ],
+  "support_claim": "The packet links billing Helion Robotics Limited to Helion Robotics Ltd via a same-entity name note and names Helion Robotics Ltd as the MSA counterparty, but transitive closure is not licensed and no single grounded excerpt establishes identity between the two referents.",
+  "proof_size": 5,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "steps": [
+    {
+      "fact": "The left referent billing:Helion Robotics Limited corresponds to the billed_name Helion Robotics Limited in billing invoices.",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Helion Robotics Limited"
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "Commercial notes state that Helion Robotics Ltd and Helion Robotics Limited are the same legal entity.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Contract MSA-HELION-2019 names Helion Robotics Ltd as the counterparty.",
+      "grounding": {
+        "source_path": "sources/contracts/MSA-HELION-2019.md",
+        "location": "header"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "The relation contract sets algebra.transitive to false, so identity between the left and right referents cannot be established by chaining the Ltd/Limited equivalence with the contract counterparty linkage.",
+      "grounding": {
+        "source_path": "relation_contract.json",
+        "location": "algebra.transitive"
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "No packet excerpt directly establishes identity or distinctness between billing:Helion Robotics Limited and contract:MSA-HELION-2019.",
+      "grounding": null,
+      "mechanical": false
+    }
+  ],
+  "admit": {
+    "rule": "unresolved"
+  },
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": false,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

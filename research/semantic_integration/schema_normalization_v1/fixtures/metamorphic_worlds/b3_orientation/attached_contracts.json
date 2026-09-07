@@ -1,0 +1,168 @@
+{
+  "crm_record": {
+    "physical_table": "crm_record",
+    "physical_roles": [
+      {
+        "role_name": "account",
+        "role_type": "REFERENT",
+        "column_name": "account_id"
+      },
+      {
+        "role_name": "account_name",
+        "role_type": "TEXT",
+        "column_name": "account_name"
+      }
+    ],
+    "dispositions": [],
+    "scope": "WORLD"
+  },
+  "invoice_record": {
+    "physical_table": "invoice_record",
+    "physical_roles": [
+      {
+        "role_name": "invoice_id",
+        "role_type": "TEXT",
+        "column_name": "invoice_id"
+      },
+      {
+        "role_name": "billed_name",
+        "role_type": "TEXT",
+        "column_name": "billed_name"
+      },
+      {
+        "role_name": "amount",
+        "role_type": "REAL",
+        "column_name": "amount"
+      },
+      {
+        "role_name": "currency",
+        "role_type": "TEXT",
+        "column_name": "currency"
+      },
+      {
+        "role_name": "period",
+        "role_type": "TEXT",
+        "column_name": "period"
+      },
+      {
+        "role_name": "status",
+        "role_type": "TEXT",
+        "column_name": "status"
+      }
+    ],
+    "dispositions": [],
+    "scope": "WORLD"
+  },
+  "registry_record": {
+    "physical_table": "registry_record",
+    "physical_roles": [
+      {
+        "role_name": "company_number",
+        "role_type": "TEXT",
+        "column_name": "company_number"
+      },
+      {
+        "role_name": "legal_name",
+        "role_type": "TEXT",
+        "column_name": "legal_name"
+      },
+      {
+        "role_name": "status",
+        "role_type": "TEXT",
+        "column_name": "status"
+      }
+    ],
+    "dispositions": [],
+    "scope": "WORLD"
+  },
+  "contract_record": {
+    "physical_table": "contract_record",
+    "physical_roles": [
+      {
+        "role_name": "contract_id",
+        "role_type": "TEXT",
+        "column_name": "contract_id"
+      },
+      {
+        "role_name": "counterparty_text",
+        "role_type": "TEXT",
+        "column_name": "counterparty_text"
+      }
+    ],
+    "dispositions": [],
+    "scope": "WORLD"
+  },
+  "contract_active": {
+    "physical_table": "contract_active",
+    "physical_roles": [
+      {
+        "role_name": "contract_id",
+        "role_type": "TEXT",
+        "column_name": "contract_id"
+      },
+      {
+        "role_name": "active",
+        "role_type": "BOOLEAN",
+        "column_name": "active"
+      }
+    ],
+    "dispositions": [],
+    "scope": "WORLD"
+  },
+  "contract_clause_kind": {
+    "physical_table": "contract_clause_kind",
+    "physical_roles": [
+      {
+        "role_name": "contract_id",
+        "role_type": "TEXT",
+        "column_name": "contract_id"
+      },
+      {
+        "role_name": "clause_kind",
+        "role_type": "TEXT",
+        "column_name": "clause_kind"
+      }
+    ],
+    "dispositions": [
+      "PRESENT",
+      "ABSENT",
+      "UNRESOLVED"
+    ],
+    "scope": "WORLD"
+  },
+  "identity_judgment": {
+    "physical_table": "identity_judgment",
+    "physical_roles": [
+      {
+        "role_name": "left",
+        "role_type": "TEXT",
+        "column_name": "col_b"
+      },
+      {
+        "role_name": "right",
+        "role_type": "TEXT",
+        "column_name": "col_a"
+      },
+      {
+        "role_name": "disposition",
+        "role_type": "TEXT",
+        "column_name": "disposition"
+      }
+    ],
+    "dispositions": [
+      "SAME_ENTITY",
+      "DISTINCT",
+      "UNRESOLVED"
+    ],
+    "scope": "WORLD",
+    "algebra": {
+      "symmetric": true,
+      "transitive": false
+    },
+    "epistemic_contract": {
+      "positive_disposition": "SAME_ENTITY",
+      "negative_disposition": "DISTINCT",
+      "unresolved_disposition": "UNRESOLVED"
+    }
+  }
+}

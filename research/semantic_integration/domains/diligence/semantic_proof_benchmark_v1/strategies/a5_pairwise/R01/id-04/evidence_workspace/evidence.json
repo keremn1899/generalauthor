@@ -1,0 +1,58 @@
+{
+  "propositions": [
+    {
+      "proposition": "CRM account NBA-102 is recorded with the name \"Northbridge Analytics\" (not \"Northbridge Analytics Inc.\").",
+      "source_grounding": {
+        "source_path": "sources/crm.csv",
+        "location": "row NBA-102"
+      },
+      "establishes": "other",
+      "relevance": "Characterizes the left referent crm:NBA-102 as a CRM account labeled \"Northbridge Analytics\"."
+    },
+    {
+      "proposition": "Billing records use the billed name \"Northbridge Analytics Inc.\"",
+      "source_grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Northbridge Analytics Inc."
+      },
+      "establishes": "other",
+      "relevance": "Characterizes the right referent billing:Northbridge Analytics Inc. as the name appearing on billing documents."
+    },
+    {
+      "proposition": "Sales uses the short name \"Northbridge Analytics\" while billing and the MSA use \"Northbridge Analytics Inc.\"",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "other",
+      "relevance": "Documents naming variants across systems but does not establish legal identity between the CRM account and the billing entity."
+    },
+    {
+      "proposition": "A 2024 credit check returned a Wyoming LLC named \"Northbridge Analytics LLC\".",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "unresolved_preservation",
+      "relevance": "Introduces an additional registry entity candidate, preventing closure on a single legal counterparty."
+    },
+    {
+      "proposition": "Legal has not determined which registry entity is the contracting party.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "unresolved_preservation",
+      "relevance": "The packet explicitly states that contracting-party identity cannot be established."
+    },
+    {
+      "proposition": "The registry link should be treated as unresolved.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "unresolved_preservation",
+      "relevance": "Direct instruction to preserve unresolved status rather than resolve identity between candidate referents."
+    }
+  ]
+}

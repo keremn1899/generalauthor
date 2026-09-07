@@ -1,0 +1,57 @@
+{
+  "parent_id": "geometric_mean",
+  "parent_status": "REFINED",
+  "children": [
+    {
+      "child_id": "non_tds_comment_carryover",
+      "exact_semantic_question": "Does a DMR comment that explicitly describes TDS discharge geometric-mean reporting alter comparison semantics for non-TDS permit limit rows?",
+      "occurrence_partition_rule": "upper(DMR_COMMENT_TEXT) contains 'GEOMETRIC MEAN' AND PARAMETER_CODE != '70295'",
+      "affected_count": 24,
+      "semantic_contract": "A TDS-specific limit-set comment does not change single-period numeric comparison semantics for other parameters; ordinary structured AVG/MAX/MIN comparison applies.",
+      "evidence_grounding": [
+        "sources/permit_limits.csv rows such as LIMIT_VALUE_ID=3610673282 (PARAMETER_CODE=00310 BOD) carry TDS-only comment text with STATISTICAL_BASE_TYPE_CODE=AVG",
+        "documents/farmington/final_permit.txt footnote *6 applies only to Total Dissolved Solids discharge at Outfall 001"
+      ],
+      "disposition": "SUPPORTED_NEGATIVE",
+      "admission_status": "ADMIT_DISPOSABLE",
+      "epistemic_basis": "SOURCE_ESTABLISHED",
+      "scope": "NM0020583 permit limit set schedule 3600891019, non-TDS parameters"
+    },
+    {
+      "child_id": "tds_report_only_weekly_geom_mean",
+      "exact_semantic_question": "For TDS permit limit rows without a numeric limit value, what does the geometric-mean comment require regarding individual monitoring-period values?",
+      "occurrence_partition_rule": "upper(DMR_COMMENT_TEXT) contains 'GEOMETRIC MEAN' AND PARAMETER_CODE = '70295' AND LIMIT_VALUE_NMBR is empty",
+      "affected_count": 12,
+      "semantic_contract": "The comment requires reporting the geometric mean of weekly values for TDS discharge/intake monitoring; no numeric limit comparison is applicable to individual monitoring-period values on these rows.",
+      "evidence_grounding": [
+        "documents/farmington/final_permit.txt lines 80-85 and footnote *6: discharge and intake rows show Report (not numeric limits) with 1/Week frequency; *6 requires geometric mean of weekly values",
+        "sources/permit_limits.csv: 12 TDS rows with empty LIMIT_VALUE_NMBR and LIMIT_FREQ_OF_ANALYSIS_CODE=01/07"
+      ],
+      "disposition": "SUPPORTED_RESOLUTION",
+      "admission_status": "ADMIT_DISPOSABLE",
+      "epistemic_basis": "SOURCE_ESTABLISHED",
+      "scope": "NM0020583 TDS discharge and intake report-only limit rows"
+    },
+    {
+      "child_id": "tds_numeric_net_increase_comparison",
+      "exact_semantic_question": "For TDS permit limit rows with a numeric limit and the geometric-mean comment, does limit comparison require geometric mean of weekly values rather than the structured comparison basis?",
+      "occurrence_partition_rule": "upper(DMR_COMMENT_TEXT) contains 'GEOMETRIC MEAN' AND PARAMETER_CODE = '70295' AND LIMIT_VALUE_NMBR is non-empty",
+      "affected_count": 4,
+      "semantic_contract": "Numeric TDS net-increase enforcement uses structured AVG (30-day average per permit basis); the geometric-mean comment does not replace the comparison statistic for these rows.",
+      "evidence_grounding": [
+        "documents/farmington/final_permit.txt lines 97-98: net-increase row carries 497 mg/L numeric limit separate from *6 discharge reporting footnote",
+        "documents/farmington/statement_of_basis.txt lines 521-522, 538: TDS net incremental increase limit described as 30-day average",
+        "sources/permit_limits.csv row LIMIT_VALUE_ID=3610673300: STATISTICAL_BASE_TYPE_CODE=AVG with LIMIT_VALUE_NMBR=497",
+        "sources/dmr_measurements.csv row DMR_FORM_VALUE_ID=3831416458: monthly single value compared to 497 mg/L limit using AVG structured fields"
+      ],
+      "disposition": "SUPPORTED_NEGATIVE",
+      "admission_status": "ADMIT_DISPOSABLE",
+      "epistemic_basis": "SOURCE_ESTABLISHED",
+      "scope": "NM0020583 TDS net-increase numeric limit rows (LIMIT_VALUE_ID in {3610673300, 3610673298, 3610838803, 3610838801})"
+    }
+  ],
+  "partition_complete": true,
+  "partition_overlap": false,
+  "residual_occurrences": 0,
+  "mechanically_computable": true
+}

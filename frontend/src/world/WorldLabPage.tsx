@@ -27,6 +27,10 @@ import { SHOW_DEFAULT, type ShowState } from "./show";
 import { ShowBand } from "./ShowBand";
 import { type WorkingSet } from "./workingSet";
 import {
+  DRIFT_TUNING,
+  type DriftTuning,
+} from "./drift";
+import {
   ANT_DEFAULTS,
   MATERIAL_DEFAULTS,
   WorldCanvas,
@@ -178,6 +182,18 @@ export function WorldLabPage() {
    * and how much of the world stays readable where it does not.
    */
   const [lightField, setLightField] = useState<LightField>(DEFAULT_LIGHT_FIELD);
+  /**
+   * The live field, off by default.
+   *
+   * `STILL_RULES.marksNeverMove` is the product's, and this is the lab, so it
+   * is offered here and nowhere else. The hand is the cause and the clock:
+   * press starts the solver, release stops it, and between holds it costs
+   * nothing at all.
+   */
+  const [drift, setDrift] = useState(false);
+  const [driftTuning, setDriftTuning] = useState<DriftTuning>({
+    ...DRIFT_TUNING,
+  });
   const worldTuning = useMemo<WorldPageTuning>(
     () => ({
       params: markKnobs,
@@ -186,9 +202,13 @@ export function WorldLabPage() {
       material: materialTuning,
       selectionTreatment,
       light: lightField,
+      drift,
+      driftTuning,
     }),
     [
       antTuning,
+      drift,
+      driftTuning,
       lightField,
       markKnobs,
       materialTuning,
@@ -203,6 +223,7 @@ export function WorldLabPage() {
    * so poking at a specimen does not disturb the sandbox next door.
    */
   const [specimenSet] = useState<WorkingSet>(createSpecimenSet);
+  const [specimenHovered, setSpecimenHovered] = useState<string | null>(null);
   const [specimenSelection, setSpecimenSelection] = useState<CanvasSelection>({
     kind: "assertion",
     id: "specimen:adjudicated",
@@ -266,7 +287,7 @@ export function WorldLabPage() {
                     set={specimenSet}
                     mode={mode}
                     params={markKnobs}
-                    hovered={null}
+                    hovered={specimenHovered}
                     selection={specimenSelection}
                     show={SPECIMEN_SHOW}
                     insets={SPECIMEN_INSETS}
@@ -275,7 +296,7 @@ export function WorldLabPage() {
                     material={materialTuning}
                     selectionTreatment={selectionTreatment}
                     light={lightField}
-                    onHover={() => {}}
+                    onHover={setSpecimenHovered}
                     onSelect={setSpecimenSelection}
                     onPositions={() => {}}
                     onRemove={() => {}}
@@ -294,7 +315,7 @@ export function WorldLabPage() {
                     set={specimenSet}
                     mode={mode}
                     params={markKnobs}
-                    hovered={null}
+                    hovered={specimenHovered}
                     selection={specimenSelection}
                     show={SPECIMEN_SHOW}
                     insets={SPECIMEN_INSETS}
@@ -303,7 +324,7 @@ export function WorldLabPage() {
                     material={materialTuning}
                     selectionTreatment={selectionTreatment}
                     light={lightField}
-                    onHover={() => {}}
+                    onHover={setSpecimenHovered}
                     onSelect={setSpecimenSelection}
                     onPositions={() => {}}
                     onRemove={() => {}}
@@ -458,6 +479,88 @@ export function WorldLabPage() {
                   {speed}×
                 </button>
               ))}
+            </div>
+          </div>
+
+          <div className="ctrl-section">
+            <span className="ctrl-label">FIELD</span>
+            <div className="ctrl-group">
+              <button
+                type="button"
+                data-active={drift}
+                onClick={() => setDrift((on) => !on)}
+              >
+                {drift ? "Live" : "Still"}
+              </button>
+            </div>
+            <p className="lab-body">
+              Live runs while a mark is held down, and settles when you let
+              go. A press frees every mark and fixes the one in your hand;
+              release drops the energy to nothing over the settle time and the
+              solver stops itself. The mark you just placed keeps its place
+              through that settle and until the next press, which hands it
+              back to the field with everything else. Collision passes are the
+              main solver cost.
+            </p>
+            <div className="ctrl-sliders">
+              <LabRange
+                label={`Collision air — ${driftTuning.collidePadding}px`}
+                min={2}
+                max={28}
+                value={driftTuning.collidePadding}
+                onChange={(collidePadding) =>
+                  setDriftTuning((tuning) => ({ ...tuning, collidePadding }))
+                }
+              />
+              <LabRange
+                label={`Collision passes — ${driftTuning.collideIterations}`}
+                min={1}
+                max={4}
+                value={driftTuning.collideIterations}
+                onChange={(collideIterations) =>
+                  setDriftTuning((tuning) => ({ ...tuning, collideIterations }))
+                }
+              />
+              <LabRange
+                label={`Link pull — ${driftTuning.linkStrength.toFixed(2)}`}
+                min={0.01}
+                max={0.16}
+                step={0.01}
+                value={driftTuning.linkStrength}
+                onChange={(linkStrength) =>
+                  setDriftTuning((tuning) => ({ ...tuning, linkStrength }))
+                }
+              />
+              <LabRange
+                label={`Held energy — ${driftTuning.holdEnergy.toFixed(2)}`}
+                min={0.04}
+                max={0.4}
+                step={0.01}
+                value={driftTuning.holdEnergy}
+                onChange={(holdEnergy) =>
+                  setDriftTuning((tuning) => ({ ...tuning, holdEnergy }))
+                }
+              />
+              <LabRange
+                label={`Settle — ${driftTuning.settleMs}ms`}
+                min={80}
+                max={800}
+                step={20}
+                value={driftTuning.settleMs}
+                onChange={(settleMs) =>
+                  setDriftTuning((tuning) => ({ ...tuning, settleMs }))
+                }
+              />
+              <LabRange
+                label={`Damping — ${driftTuning.velocityDecay.toFixed(2)}`}
+                min={0.2}
+                max={0.8}
+                step={0.02}
+                value={driftTuning.velocityDecay}
+                onChange={(velocityDecay) =>
+                  setDriftTuning((tuning) => ({ ...tuning, velocityDecay }))
+                }
+              />
             </div>
           </div>
 

@@ -19,6 +19,7 @@
 import { GRAPH_DNA_CHIP, GRAPH_DNA_GEOMETRY, radixValue } from "../styles/graphDna";
 import type { GraphDnaTheme } from "../styles/graphDna";
 import { FONT_SANS_FAMILY } from "../styles/typography";
+import { WORLD_FILAMENT_EDGE } from "./filaments";
 
 /**
  * The weight the product canvas draws node labels at.
@@ -373,6 +374,7 @@ export function spokeEdge(
 ) {
   return {
     id,
+    type: WORLD_FILAMENT_EDGE,
     source,
     target,
     style: {
@@ -433,13 +435,35 @@ export function spokeEdge(
  *
  * This is the product canvas's old, measured value. It is a distance rather
  * than a percentage: a named bond must not drift toward the midpoint merely
- * because somebody dragged its other end farther away. Very short filaments
- * cap the distance before the midpoint so the plate never crosses sides.
+ * because somebody dragged its other end farther away. It is held against the
+ * rim the renderer actually clips to — see `rimDistance` — because a share of
+ * an assumed length is a percentage again, wearing a distance's clothes.
  */
 export const BOND_LABEL_ALONG_PX = 44;
 
-/** Air between stacked plates that share a filament, in graph pixels. */
-export const BOND_LABEL_STACK_GAP = 4;
+/**
+ * The same station for a spoke, which has far less room to hold it in.
+ *
+ * A bond runs disc to disc and its air is measured in hundreds of pixels; a
+ * spoke runs from a disc to the plate standing beside it, and measured across
+ * a populated field every one of its 66 spokes had a rim gap between 11 and
+ * 73px — median 50. A 44px station does not fit *any* of them, so a role name
+ * asked for one fell back to the midpoint every time, which is a ratio, which
+ * is the thing this constant exists to avoid.
+ *
+ * 16px clears the disc's rim and still fits the gap outright on nine spokes in
+ * ten. It is a distance for the same reason 44 is.
+ */
+export const SPOKE_LABEL_ALONG_PX = 16;
+
+/**
+ * Air between stacked plates that share a filament, in graph pixels.
+ *
+ * Two, not four. A plate is ten tall and carries seven-pixel text, so four
+ * made the step 14 — twice the type size, which no one sets leading at. The
+ * stack read as a list of separate things rather than one filament's names.
+ */
+export const BOND_LABEL_STACK_GAP = 2;
 
 /**
  * How many of a group's plates the filament will carry.
@@ -451,6 +475,31 @@ export const BOND_LABEL_STACK_GAP = 4;
  * opening the group requires having selected an endpoint.
  */
 export const BOND_LABEL_STACK_MAX = 4;
+
+/**
+ * The step from one plate to the next when a filament carries several names.
+ *
+ * Screen-Y, one plate height plus its air, and nothing else. Two axis-aligned
+ * boxes of equal height separated by more than that height in Y cannot
+ * overlap, whatever their widths and whatever the filament is doing — so this
+ * is both provably safe and the shortest step that is.
+ *
+ * It replaced a stack along the filament's own normal, which was the intuitive
+ * answer and was wrong twice. A normal has to clear by plate *width* when it
+ * turns horizontal, which on a near-vertical filament flung a pair of names 85
+ * pixels apart — measured on this field. And a normal turns as its mark is
+ * dragged, so the offsets moved under a stack that was supposed to be still.
+ * Constant offsets make the whole stack rigid: the station travels, the plates
+ * ride it, and nothing inside the group moves relative to anything else.
+ *
+ * What it costs: on a steep filament a Y offset slides a plate *along* the
+ * line, so a stacked plate sits up to one step nearer or further from the rim
+ * than the station it was given. Every rule that spreads plates at all pays
+ * some version of that, and one plate height is the least any of them pays.
+ */
+export function bondLabelStep(p: MarkParams): { x: number; y: number } {
+  return { x: 0, y: p.chipHeight + BOND_LABEL_STACK_GAP };
+}
 
 export type BondLabelLayout = {
   placement: number;
@@ -481,16 +530,92 @@ export function stableFilamentNormal(
   return { x: nx, y: ny };
 }
 
+/**
+ * Where a mark's rim is, as the renderer will actually clip to it.
+ *
+ * `labelPlacement` is a share of the *drawn* stroke, and the drawn stroke runs
+ * rim to rim, so turning a distance into a share requires knowing where those
+ * rims are. Assuming a radius is what made the distance drift: a plate is only
+ * `chipHeight / 2` from its centre when the stroke arrives vertically, and up
+ * to `chipWidth / 2` when it arrives along the plate, so a mark orbiting one
+ * moved its own name while nothing about the station had changed.
+ */
+export type MarkRim =
+  | { shape: "disc"; radius: number }
+  | { shape: "plate"; halfWidth: number; halfHeight: number };
+
+export function discRim(p: MarkParams): MarkRim {
+  return { shape: "disc", radius: p.discDiameter / 2 };
+}
+
+export function plateRim(text: string, p: MarkParams): MarkRim {
+  return {
+    shape: "plate",
+    halfWidth: chipWidth(text, p) / 2,
+    halfHeight: p.chipHeight / 2,
+  };
+}
+
+/**
+ * How far the rim is from the centre, along one direction.
+ *
+ * G6 clips an edge at the node's bounding box, so a rectangle's rim is
+ * whichever of its two half-extents the ray leaves through first. Measured
+ * against the running canvas: a 32×10 plate clips at 5px vertically and 16px
+ * horizontally, which is exactly this.
+ */
+export function rimDistance(rim: MarkRim, dx: number, dy: number): number {
+  if (rim.shape === "disc") return rim.radius;
+  const len = Math.hypot(dx, dy);
+  if (!(len > 1e-6)) return rim.halfHeight;
+  const cos = Math.abs(dx) / len;
+  const sin = Math.abs(dy) / len;
+  const byWidth = cos > 1e-6 ? rim.halfWidth / cos : Number.POSITIVE_INFINITY;
+  const byHeight = sin > 1e-6 ? rim.halfHeight / sin : Number.POSITIVE_INFINITY;
+  return Math.min(byWidth, byHeight);
+}
+
+/** The drawn stroke's length: centre to centre, less both rims. */
+function filamentLength(
+  source: { x: number; y: number },
+  target: { x: number; y: number },
+  fromRim: MarkRim,
+  toRim: MarkRim,
+): number {
+  const dx = target.x - source.x;
+  const dy = target.y - source.y;
+  const centres = Math.hypot(dx, dy);
+  return Math.max(
+    0,
+    centres - rimDistance(fromRim, dx, dy) - rimDistance(toRim, dx, dy),
+  );
+}
+
+/**
+ * The station, in pixels from the rim that named it.
+ *
+ * `BOND_LABEL_ALONG_PX` unconditionally, with one geometric guard: a plate
+ * cannot stand farther out than the midpoint or it would cross to the other
+ * mark's side, and on a filament shorter than twice the station the midpoint
+ * *is* the only station both ends can agree on. The two agree exactly at
+ * `2 × BOND_LABEL_ALONG_PX`, so the guard engages without a step.
+ *
+ * There used to be a `filament * 0.45` cap here and it was the bug: it took
+ * hold at a rim gap of 98px rather than 88px, and between those it made the
+ * distance a *percentage*. Measured on the running canvas, dragging one end of
+ * a bond in from 210px of air to 6px slid its name from 44px off the rim to
+ * 2.7px — the plate crawling down its own filament as the mark moved.
+ */
 export function bondLabelAlong(
   source: { x: number; y: number },
   target: { x: number; y: number },
   p: MarkParams,
-  fromRadius = p.discDiameter / 2,
-  toRadius = p.discDiameter / 2,
+  fromRim: MarkRim = discRim(p),
+  toRim: MarkRim = discRim(p),
+  station = BOND_LABEL_ALONG_PX,
 ): number {
-  const centres = Math.hypot(target.x - source.x, target.y - source.y);
-  const filament = Math.max(0, centres - fromRadius - toRadius);
-  return filament > 1 ? Math.min(BOND_LABEL_ALONG_PX, filament * 0.45) : 0;
+  const filament = filamentLength(source, target, fromRim, toRim);
+  return filament > 1 ? Math.min(station, filament / 2) : 0;
 }
 
 export function bondLabelPlacement(
@@ -498,50 +623,50 @@ export function bondLabelPlacement(
   target: { x: number; y: number },
   near: "source" | "target" | undefined,
   p: MarkParams,
-  fromRadius = p.discDiameter / 2,
-  toRadius = p.discDiameter / 2,
+  fromRim: MarkRim = discRim(p),
+  toRim: MarkRim = discRim(p),
+  station = BOND_LABEL_ALONG_PX,
 ): number {
   if (!near) return 0.5;
-  const centres = Math.hypot(target.x - source.x, target.y - source.y);
-  const filament = Math.max(0, centres - fromRadius - toRadius);
+  const filament = filamentLength(source, target, fromRim, toRim);
   if (!(filament > 1)) return 0.5;
-  const along = bondLabelAlong(source, target, p, fromRadius, toRadius);
+  const along = bondLabelAlong(source, target, p, fromRim, toRim, station);
   return near === "source" ? along / filament : 1 - along / filament;
 }
 
 /**
- * Where a bond's plate sits: a fixed distance from the acted-on rim, and a
- * perpendicular stack when several claims share the same two ends.
+ * Where a bond's plate sits: a fixed distance from the acted-on rim, plus
+ * whatever shift its place in a stack of claims earns it.
  *
- * G6's `labelOffsetX/Y` are graph-space, not rotated into the edge, so the
- * stack has to be the filament's own normal expressed as those two numbers.
- * Screen-Y was the first attempt and only looked right on a horizontal spoke.
+ * G6's `labelOffsetX/Y` are graph-space and are not rotated into the edge, so
+ * the shift arrives already resolved into those two numbers — see
+ * `bondLabelStep`, which decides how far and along what.
+ *
+ * The rims are the caller's to state. A spoke ends on a plate, and a plate
+ * handed `discRim` — or its own height as a radius — puts its name somewhere
+ * that depends on the angle the stroke arrives at.
  */
 export function bondLabelLayout(
   source: { x: number; y: number },
   target: { x: number; y: number },
   near: "source" | "target" | undefined,
-  stack: number,
+  stack: { x: number; y: number },
   p: MarkParams,
-  fromRadius = p.discDiameter / 2,
-  toRadius = p.discDiameter / 2,
+  fromRim: MarkRim = discRim(p),
+  toRim: MarkRim = discRim(p),
+  station = BOND_LABEL_ALONG_PX,
 ): BondLabelLayout {
   const placement = bondLabelPlacement(
     source,
     target,
     near,
     p,
-    fromRadius,
-    toRadius,
+    fromRim,
+    toRim,
+    station,
   );
   const nudge = p.chipLabelNudge;
-  if (!stack) return { placement, offsetX: 0, offsetY: nudge };
-  const normal = stableFilamentNormal(source, target);
-  return {
-    placement,
-    offsetX: normal.x * stack,
-    offsetY: normal.y * stack + nudge,
-  };
+  return { placement, offsetX: stack.x, offsetY: stack.y + nudge };
 }
 
 /** A plain filament, with or without its name showing. */
@@ -574,7 +699,7 @@ export function filamentEdge(
   const carries = options.carriesFilament !== false;
   return {
     id,
-    type: "line",
+    type: WORLD_FILAMENT_EDGE,
     source,
     target,
     style: {
@@ -593,6 +718,7 @@ export function filamentEdge(
       // the disc, on top of it. The line is not a grab target; the plate is.
       pointerEvents: "none" as const,
       labelPointerEvents: named ? "auto" as const : "none" as const,
+      labelCursor: named ? ("pointer" as const) : undefined,
       labelText: options.label ?? "",
       labelFontFamily: FONT_SANS_FAMILY,
       labelFontSize: p.chipLabelSize,
@@ -632,9 +758,16 @@ export function filamentEdge(
  * four origins that wore any one of them would be asserting a fifth thing that
  * nothing constructed. What is left is the knockout alone, square, so the
  * filament stops being read under the words without a card appearing where a
- * claim would be, and the muted ink the lens labels use, because this is
- * furniture rather than a name. Furniture is never a hit target: the assertions
+ * claim would be. Furniture is never a hit target either: the assertions
  * underneath stay the only things a person can take hold of.
+ *
+ * Its ink is a name's ink. Muting it was reading furniture as *quieter*, which
+ * is a light claim, and light here means proximity to what a person acted on —
+ * so a count standing exactly where its claims will stand, at the same moment,
+ * was drawn dimmer than them for a reason nothing in the field could name. The
+ * count is not a name because it has no plate, which is structure, and
+ * structure is what carries meaning here. Legibility is not the axis it is
+ * allowed to differ on.
  */
 export function summaryEdge(
   id: string,
@@ -648,10 +781,9 @@ export function summaryEdge(
     /**
      * Whether the pointer can reach it.
      *
-     * Only while an endpoint is selected. Under hover alone the count is
-     * unreachable by construction — travelling to it means leaving the disc
-     * that is showing it — so offering a hit target there would be offering a
-     * door that closes as you walk through it.
+     * Only while the count is visible. The caller keeps it visible for a
+     * selected endpoint, and also while a hovered endpoint is being read, so
+     * the pointer can move from the disc onto the count and open the claims.
      */
     interactive?: boolean;
     /** The station the claims it stands in for will use. */
@@ -662,7 +794,7 @@ export function summaryEdge(
 ) {
   return {
     id,
-    type: "line",
+    type: WORLD_FILAMENT_EDGE,
     source,
     target,
     style: {
@@ -679,11 +811,16 @@ export function summaryEdge(
       // something is there.
       labelPointerEvents:
         options.interactive && options.shown ? ("auto" as const) : ("none" as const),
+      // G6 renders the label background as a child shape. Give that shape the
+      // same hit-test policy so the visible count can open its bundle.
+      labelBackgroundPointerEvents:
+        options.interactive && options.shown ? ("auto" as const) : ("none" as const),
       labelText: options.label,
       labelFontFamily: FONT_SANS_FAMILY,
       labelFontSize: p.chipLabelSize,
       labelFontWeight: p.chipLabelWeight,
-      labelFill: paint.muted,
+      labelFill: paint.ink,
+      labelCursor: options.interactive ? ("pointer" as const) : undefined,
       labelOffsetX: options.offsetX ?? 0,
       labelOffsetY: options.offsetY ?? p.chipLabelNudge,
       labelOpacity: options.shown ? 1 : 0,

@@ -1,0 +1,110 @@
+{
+  "strategy": "a5_pairwise",
+  "trial": "R04",
+  "obligation_id": "id-17",
+  "candidate": {
+    "left": "billing:Northbridge Analytics Inc.",
+    "right": "registry:3840192"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 3840192"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Northbridge Analytics Inc."
+    }
+  ],
+  "support_claim": "Unresolved-preservation evidence shows multiple similarly named registry-eligible entities and legal has not determined which registry record is the contracting party, so identity between billing:Northbridge Analytics Inc. and registry:3840192 cannot be closed.",
+  "proof_size": 6,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "propositions": [
+    {
+      "proposition": "Billing and the MSA use the legal name \"Northbridge Analytics Inc.\"",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "other",
+      "relevance": "Characterizes the billing-side referent (left: billing:Northbridge Analytics Inc.) but does not link it to registry ID 3840192."
+    },
+    {
+      "proposition": "Sales uses the short name \"Northbridge Analytics\", which differs from the billing/MSA legal name \"Northbridge Analytics Inc.\"",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "other",
+      "relevance": "Documents internal naming variation around Northbridge; does not establish identity or distinctness between the two candidate referents."
+    },
+    {
+      "proposition": "A 2024 credit check returned a Wyoming LLC named \"Northbridge Analytics LLC\" as an additional Northbridge entity.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "unresolved_preservation",
+      "relevance": "Shows multiple live registry-eligible entities under similar names, so the link between billing:Northbridge Analytics Inc. and registry:3840192 cannot be closed on available evidence."
+    },
+    {
+      "proposition": "Legal has not determined which registry entity is the contracting party and instructs treating the registry link as unresolved.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "unresolved_preservation",
+      "relevance": "Explicitly preserves UNRESOLVED for the identity relation between the billing referent and the registry referent."
+    },
+    {
+      "proposition": "Registry ID 3840192 corresponds to an active Delaware entity named \"NORTHBRIDGE ANALYTICS INC\".",
+      "source_grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 3840192"
+      },
+      "establishes": "other",
+      "relevance": "Describes the registry-side referent (right: registry:3840192); name compatibility alone does not establish identity with the billing referent."
+    },
+    {
+      "proposition": "Billing invoices list billed_name as \"Northbridge Analytics Inc.\"",
+      "source_grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Northbridge Analytics Inc."
+      },
+      "establishes": "other",
+      "relevance": "Confirms the billing record name for the left referent; does not establish that this entity is registry ID 3840192."
+    }
+  ],
+  "admit": {
+    "rule": "evidence_preserves_unresolved"
+  },
+  "oracle": "UNRESOLVED",
+  "in_oracle": true,
+  "exact": true,
+  "unsupported_closure": false,
+  "under_closure": false,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": false
+}

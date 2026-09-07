@@ -1,0 +1,95 @@
+{
+  "obligation_id": "empty_numeric_limit",
+  "exact_semantic_question": "When LIMIT_VALUE_NMBR is empty, is the row a numeric limit, report-only monitoring, or something else?",
+  "purpose": "A",
+  "relation_contract": "empty numeric limit must be classified before comparison; absence is not a denial",
+  "candidate_interpretations": [
+    {
+      "id": "report_only_monitoring",
+      "statement": "Empty LIMIT_VALUE_NMBR denotes a monitoring/reporting requirement with no numeric effluent limit in that limit slot (permit tables show 'Report' or 'N/A' for that column)."
+    },
+    {
+      "id": "numeric_limit_elsewhere",
+      "statement": "Empty LIMIT_VALUE_NMBR on one limit-type row for a parameter does not mean no numeric limit exists; the same permit and parameter may carry the numeric limit on a sibling row with populated LIMIT_VALUE_NMBR."
+    },
+    {
+      "id": "pass_fail_non_numeric",
+      "statement": "Empty LIMIT_VALUE_NMBR on WET retest rows denotes pass/fail reporting encoded as 0/1 rather than a concentration limit."
+    },
+    {
+      "id": "conditional_or_aggregated_reporting",
+      "statement": "Empty LIMIT_VALUE_NMBR rows tied to WHEN DISCHARGING or geometric-mean reporting footnotes denote monitoring obligations whose numeric comparison applicability depends on conditions or aggregation not captured in LIMIT_VALUE_NMBR."
+    },
+    {
+      "id": "unresolved_data_gap",
+      "statement": "Empty LIMIT_VALUE_NMBR might reflect missing structured encoding rather than an established non-numeric classification, especially where permit text is not matched in this workspace."
+    }
+  ],
+  "retained_snippets": [
+    {
+      "source_id": "documents/gcc/final_permit.txt",
+      "location": "Part I Section A limitation table, lines 66-74",
+      "text": "Flow                     Report MGD        Report MGD        ***               ***                1/Day        Estimate\n\nTotal Suspended          N/A               N/A               Report            50                 1/Week               Grab\nSolids\nTotal Aluminum           0.78              0.78              0.75              0.75               1/Week               Grab\nTotal Copper             N/A               N/A               0.011             0.011              1/Week               Grab\nDissolved Copper         N/A               N/A               Report            Report             1/Week               Grab\nDissolved Cadmium        N/A               N/A               Report            Report             1/Week               Grab\nTotal Hardness           N/A               N/A               N/A               Report             1/Week               Grab",
+      "why_retained": "For NM0000116, permit text shows 'Report' (not a numeric concentration) in the 30-day-average TSS column while daily max is 50 mg/L; structured rows with empty LIMIT_VALUE_NMBR for TSS C2/AVG and dissolved copper align with Report columns."
+    },
+    {
+      "source_id": "documents/gcc/fact_sheet.txt",
+      "location": "Technology-based limitations discussion, lines 227-233",
+      "text": "The 40 CFR 411.37 ELG of 50 mg/l was the basis for establishment of TSS effluent limitation at Outfall 001. ... TSS reported maximum daily discharge did exceed the daily max limit of 50 mg/l. As a result, it is proposed in the draft permit that the permittee report 30-day average for TSS.",
+      "why_retained": "Establishes that the 30-day-average TSS slot is report-only monitoring while the numeric enforceable limit is the daily maximum, explaining why a sibling populated limit row can coexist with an empty-average row."
+    },
+    {
+      "source_id": "documents/aztec/final_permit.txt",
+      "location": "Part I limitation table, lines 78-82",
+      "text": "Flow                                Report MGD Report MGD           ***               ***       2/Week (*1)     Estimate (*2)\nTotal Suspended Solids                 N/A              N/A          20                30       1/Week (*1)         Grab\nTotal Residual Chlorine                N/A              N/A        N/A              11 µg/L      1/Day (*1)         Grab\nCyanide, Total Recoverable            Report           Report     Report             Report    1/Quarter (*1)       Grab\nTotal Dissolved Solids                Report           Report     Report             Report    1/Quarter (*1)       Grab",
+      "why_retained": "For NM0028762, flow/cyanide/TDS columns are Report-only; TSS has numeric 20/30 mg/L limits. Empty LIMIT_VALUE_NMBR on Report pollutants is report-only monitoring, not a missing numeric limit for the whole parameter."
+    },
+    {
+      "source_id": "documents/aztec/final_permit.txt",
+      "location": "Footnotes, line 93",
+      "text": "*1 When discharging.",
+      "why_retained": "Establishes conditionality for rows whose structured DMR_COMMENT_TEXT is 'WHEN DISCHARGING.'; empty LIMIT_VALUE_NMBR on those rows is not a standalone numeric limit and applicability depends on discharge occurrence."
+    },
+    {
+      "source_id": "documents/farmington/final_permit.txt",
+      "location": "Part I limitation table, lines 63-87",
+      "text": "Flow                       Report MGD      Report MGD      Report MGD     ***              ***         ***         Continuous     Totalizing Meter\n...\nTotal Dissolved Solids,                                                                                                               12-Hour\n                              Report          Report          N/A          Report        Report        N/A          1/Week\nDischarge (*6)                                                                                                                       Composite\n...\nCadmium                        N/A             N/A            N/A            N/A          N/A         Report       1/Quarter            Grab",
+      "why_retained": "For NM0020583, flow, TDS discharge/intake, and cadmium 7-day-average columns are Report-only in the permit; matches empty LIMIT_VALUE_NMBR rows for those parameters."
+    },
+    {
+      "source_id": "documents/farmington/final_permit.txt",
+      "location": "Footnotes, lines 121-122",
+      "text": "*6      Total dissolved solids measured at Outfall 001. Report the geometric mean value of weekly values.\n*7      Total dissolved solids flow weighted average measured at intake of the two drinking water treatment plants. Report the geometric mean value of weekly values.",
+      "why_retained": "Establishes geometric-mean reporting semantics for empty-limit rows whose DMR_COMMENT_TEXT references geometric mean of weekly values; these are aggregated reporting obligations, not ordinary per-period numeric limits."
+    },
+    {
+      "source_id": "sources/permit_limits.csv",
+      "location": "12 rows with DMR_COMMENT_TEXT containing PASS/FAIL encoding (e.g., LIMIT_VALUE_ID 3610673260 pattern)",
+      "text": "(PASS = 0  FAIL = 1) REPORT PASS AS '0' OR REPORT FAIL AS '1' IN CONCENTRATION MAX. ABOVE.  IF ALL TESTS PASS FOR THE FIRST YEAR OF THE PERMIT, THE FREQUENCY WILL BE REDUCED FOR YEARS 2-5 TO:  1/6 MONTHS FOR DAPHNIA PULEX & 1/YR FOR PIMEPHALES PROMELAS (SEE FOOTNOTE 9, PAGE 3 OF PART I OF PERMIT).",
+      "why_retained": "Structured permit-limit comment on empty LIMIT_VALUE_NMBR WET retest rows defines non-concentration pass/fail reporting (0/1), a third category distinct from numeric limits and ordinary report-only monitoring."
+    },
+    {
+      "source_id": "sources/permit_limits.csv",
+      "location": "All 57 rows with empty LIMIT_VALUE_NMBR; field LIMIT_TYPE_CODE",
+      "text": "LIMIT_TYPE_CODE = ENF for all 57 empty-limit rows (51 with OPTIONAL_MONITORING_FLAG = N, 6 with Y).",
+      "why_retained": "Shows LIMIT_TYPE_CODE does not disambiguate empty LIMIT_VALUE_NMBR: every empty row is marked ENF even where permit text and DMR comments establish report-only, pass/fail, or conditional monitoring rather than a numeric concentration limit in that row."
+    }
+  ],
+  "contradictory_evidence": [
+    "All 57 empty LIMIT_VALUE_NMBR rows carry LIMIT_TYPE_CODE='ENF', which construction.py treats as a known enforceability code, yet permit tables and DMR comments for many of these rows establish Report-only, pass/fail, or conditional monitoring rather than a numeric limit in that slot.",
+    "LIMIT_VALUE_TYPE_CODE is not a reliable sole classifier: Q1/Q2 rows are sometimes empty and sometimes populated for the same parameter (e.g., NM0020583 TSS has populated Q1/Q2 loading limits alongside empty geometric-mean-related flow/TDS rows), and C2 rows can be empty (report) while C3 sibling rows carry numeric limits for the same parameter.",
+    "Representative keys 3610840341|3600904607 and 3610840340|3600904607 are empty Q1/Q2 TSS rows with 'WHEN DISCHARGING.' while sibling C2/C3 rows for the same permit and parameter carry numeric limits 20 and 30 mg/L, so emptiness on those rows does not mean the parameter lacks a numeric limit."
+  ],
+  "known_limitations": [
+    "No workspace codebook defines LIMIT_VALUE_TYPE_CODE (C1/C2/C3/Q1/Q2); classification cannot be resolved from structured fields alone.",
+    "No FY2025 dmr_measurements.csv rows have empty LIMIT_VALUE_NMBR, so measurement-period applicability of these permit-limit rows cannot be tested against reported values in this workspace slice.",
+    "Pass/fail WET retest semantics are established primarily via structured DMR_COMMENT_TEXT; farmington/final_permit.txt Part II defines test failure conceptually but does not reproduce the exact PASS=0/FAIL=1 DMR encoding in retrieved sections.",
+    "WHEN DISCHARGING rows require discharge-occurrence evidence not present in structured sources; classification as conditionally applicable monitoring remains partially unresolved per period.",
+    "Blank-comment empty-limit rows (18/57) require permit-text matching per parameter; not all parameters were cross-checked against documents within the 5-document budget."
+  ],
+  "allowed_dispositions": [
+    "SUPPORTED_RESOLUTION",
+    "SUPPORTED_NEGATIVE",
+    "UNRESOLVED"
+  ]
+}

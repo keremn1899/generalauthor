@@ -1,0 +1,40 @@
+{
+  "strategy": "a2_critic",
+  "trial": "R02",
+  "obligation_id": "id-09",
+  "candidate": {
+    "left": "crm:VEL-19",
+    "right": "billing:Vellum Print Co Ltd"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row VEL-19"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Vellum Print Co Ltd"
+    }
+  ],
+  "support_claim": "CRM row VEL-19 names the account 'Vellum Print Co' while billing records the billed name as 'Vellum Print Co Ltd', but no observation links VEL-19 to that billed name or otherwise establishes they are the same legal counterparty.",
+  "proof_size": 2,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "critic": {
+    "decision": "CONFIRM",
+    "reason": "The cited CRM and billing observations show similar names for separate referents but no establishing link between VEL-19 and the billed entity, so neither SAME_ENTITY nor DISTINCT is supported."
+  },
+  "critic_reason": "cannot_upgrade",
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

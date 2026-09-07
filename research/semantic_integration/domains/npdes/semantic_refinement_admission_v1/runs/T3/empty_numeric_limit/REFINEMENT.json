@@ -1,0 +1,71 @@
+{
+  "parent_id": "empty_numeric_limit",
+  "parent_status": "REFINED",
+  "children": [
+    {
+      "child_id": "empty_limit_blank_comment_report_only",
+      "exact_semantic_question": "When LIMIT_VALUE_NMBR is empty and DMR_COMMENT_TEXT is blank, is the row a report-only monitoring requirement without a numeric effluent limit for Purpose A comparison?",
+      "occurrence_partition_rule": "has_limit_value_nmbr = false AND trim(DMR_COMMENT_TEXT) = ''",
+      "affected_count": 18,
+      "semantic_contract": "Empty numeric field with no DMR comment denotes a permit-table Report or N/A cell for that statistical-base column; the row is not a numeric comparison candidate for Purpose A.",
+      "evidence_grounding": [
+        "sources/permit_limits.csv rows with blank DMR_COMMENT_TEXT and empty LIMIT_VALUE_NMBR (18/57)",
+        "documents/gcc/final_permit.txt lines 68-74: TSS 30-day avg Report, dissolved copper Report, hardness Report while daily max carries numeric limits",
+        "documents/farmington/final_permit.txt lines 87-92: cadmium, dioxin, pentachlorophenol, aldrin, chlordane, toxaphene cells labeled Report with no numeric limit"
+      ],
+      "disposition": "SUPPORTED_RESOLUTION",
+      "admission_status": "ADMIT_DISPOSABLE",
+      "epistemic_basis": "SOURCE_ESTABLISHED",
+      "scope": "permit_limit_row where LIMIT_VALUE_NMBR empty and DMR_COMMENT_TEXT blank"
+    },
+    {
+      "child_id": "empty_limit_when_discharging_column",
+      "exact_semantic_question": "When LIMIT_VALUE_NMBR is empty and DMR_COMMENT_TEXT contains WHEN DISCHARGING, is the row a conditionally applicable or non-applicable mass-load column rather than a standing numeric effluent limit?",
+      "occurrence_partition_rule": "has_limit_value_nmbr = false AND upper(DMR_COMMENT_TEXT) contains 'WHEN DISCHARGING'",
+      "affected_count": 12,
+      "semantic_contract": "Empty mass-load or conditional columns tied to discharge occurrence are not ordinary numeric comparison limits; numeric concentration limits for the same pollutant appear on sibling rows.",
+      "evidence_grounding": [
+        "sources/permit_limits.csv: 12 rows on NM0028762 with WHEN DISCHARGING. comment and empty LIMIT_VALUE_NMBR (e.g. LIMIT_VALUE_ID=3610840340|LIMIT_SET_SCHEDULE_ID=3600904607)",
+        "documents/aztec/final_permit.txt lines 79 and 92-93: TSS mass-load N/A columns with numeric mg/L limits; footnote *1 When discharging"
+      ],
+      "disposition": "SUPPORTED_RESOLUTION",
+      "admission_status": "ADMIT_DISPOSABLE",
+      "epistemic_basis": "SOURCE_ESTABLISHED",
+      "scope": "permit_limit_row where LIMIT_VALUE_NMBR empty and DMR_COMMENT_TEXT references WHEN DISCHARGING"
+    },
+    {
+      "child_id": "empty_limit_pass_fail_wet_encoding",
+      "exact_semantic_question": "When LIMIT_VALUE_NMBR is empty and DMR_COMMENT_TEXT encodes PASS=0/FAIL=1, is the row a pass/fail WET reporting obligation rather than an ordinary numeric concentration limit?",
+      "occurrence_partition_rule": "has_limit_value_nmbr = false AND upper(DMR_COMMENT_TEXT) contains 'PASS = 0' AND upper(DMR_COMMENT_TEXT) contains 'FAIL = 1'",
+      "affected_count": 12,
+      "semantic_contract": "Empty LIMIT_VALUE_NMBR with pass=0;fail=1 unit encoding and PASS/FAIL comment instructions marks non-standard pass/fail reporting, not a missing numeric concentration limit.",
+      "evidence_grounding": [
+        "sources/permit_limits.csv: 12 farmington WET retest rows with LIMIT_UNIT_DESC=pass=0;fail=1 and PASS/FAIL DMR_COMMENT_TEXT (e.g. LIMIT_VALUE_ID=3610839676)",
+        "construction.py already emits pass_fail_reporting_semantics unresolved for these rows"
+      ],
+      "disposition": "SUPPORTED_RESOLUTION",
+      "admission_status": "ADMIT_DISPOSABLE",
+      "epistemic_basis": "SOURCE_ESTABLISHED",
+      "scope": "permit_limit_row where LIMIT_VALUE_NMBR empty and DMR_COMMENT_TEXT encodes pass/fail WET reporting"
+    },
+    {
+      "child_id": "empty_limit_geometric_mean_reporting",
+      "exact_semantic_question": "When LIMIT_VALUE_NMBR is empty and DMR_COMMENT_TEXT references geometric mean reporting, is the row an aggregated reporting requirement rather than a per-period numeric concentration limit?",
+      "occurrence_partition_rule": "has_limit_value_nmbr = false AND upper(DMR_COMMENT_TEXT) contains 'GEOMETRIC MEAN'",
+      "affected_count": 15,
+      "semantic_contract": "Geometric-mean reporting cells require aggregated interpretation across weekly values; empty LIMIT_VALUE_NMBR marks a non-per-period numeric limit column.",
+      "evidence_grounding": [
+        "sources/permit_limits.csv: 15 farmington TDS rows with geometric-mean DMR_COMMENT_TEXT and empty LIMIT_VALUE_NMBR",
+        "documents/farmington/final_permit.txt lines 97-98 and 121: TDS Report cells without numeric limits in some columns; footnote *6 defines geometric mean of weekly values"
+      ],
+      "disposition": "SUPPORTED_RESOLUTION",
+      "admission_status": "ADMIT_DISPOSABLE",
+      "epistemic_basis": "SOURCE_ESTABLISHED",
+      "scope": "permit_limit_row where LIMIT_VALUE_NMBR empty and DMR_COMMENT_TEXT references geometric mean"
+    }
+  ],
+  "partition_complete": true,
+  "partition_overlap": false,
+  "residual_occurrences": [],
+  "mechanically_computable": true
+}

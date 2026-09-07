@@ -1,0 +1,80 @@
+{
+  "strategy": "a3_entailment",
+  "trial": "R03",
+  "obligation_id": "id-10",
+  "candidate": {
+    "left": "billing:Vellum Print Co Ltd",
+    "right": "contract:SOW-VEL-2022"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [],
+  "support_claim": "Shared name text is present in both sources, but no packet evidence establishes identity or distinctness between the two referents.",
+  "proof_size": 5,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "claims": [
+    {
+      "claim": "The billing referent billing:Vellum Print Co Ltd is recorded under the billed name Vellum Print Co Ltd.",
+      "status": "ESTABLISHED",
+      "burden": "other",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Vellum Print Co Ltd"
+        }
+      ]
+    },
+    {
+      "claim": "The contract referent contract:SOW-VEL-2022 identifies Vellum Print Co Ltd as its counterparty.",
+      "status": "ESTABLISHED",
+      "burden": "other",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/contracts/SOW-VEL-2022.md",
+          "location": "header"
+        }
+      ]
+    },
+    {
+      "claim": "The billing referent billing:Vellum Print Co Ltd and the counterparty named in contract:SOW-VEL-2022 share the same textual name.",
+      "status": "ESTABLISHED",
+      "burden": "other",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Vellum Print Co Ltd"
+        },
+        {
+          "source_path": "sources/contracts/SOW-VEL-2022.md",
+          "location": "header"
+        }
+      ]
+    },
+    {
+      "claim": "billing:Vellum Print Co Ltd and contract:SOW-VEL-2022 denote the same legal counterparty.",
+      "status": "NOT_ESTABLISHED",
+      "burden": "identity",
+      "supporting_evidence": []
+    },
+    {
+      "claim": "billing:Vellum Print Co Ltd and contract:SOW-VEL-2022 denote distinct legal counterparties.",
+      "status": "NOT_ESTABLISHED",
+      "burden": "distinctness",
+      "supporting_evidence": []
+    }
+  ],
+  "admit": {
+    "rule": "proposed_unresolved"
+  },
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

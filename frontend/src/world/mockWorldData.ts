@@ -454,6 +454,49 @@ export function createMockWorkingSet(): WorkingSet {
 }
 
 /**
+ * A minimal field for the lab sandbox when nothing is stored yet.
+ *
+ * Three parallel claims on one filament are the only geometry the collapsed
+ * count can exercise, so an empty lab would otherwise have nothing to open.
+ */
+export function createLabSandboxSet(): WorkingSet {
+  const referents = new Map([
+    ["part:C300", { id: "part:C300", label: "Five-volt keyed connector" }],
+    ["bom:BOM-D", { id: "bom:BOM-D", label: "BOM-D" }],
+  ]);
+  const bond = (
+    assertion_id: string,
+    relation: string,
+    origin: "MECHANICAL" | "DERIVED" | "SEMANTIC",
+    mode: "BASE" | "DERIVED",
+  ) => ({
+    assertion_id,
+    relation,
+    origin,
+    mode,
+    stale: false,
+    completeness: "COMPLETE" as const,
+    source: "part:C300",
+    target: "bom:BOM-D",
+    spokes: [
+      { role: "part", id: "part:C300" },
+      { role: "bom_item", id: "bom:BOM-D" },
+    ],
+    scalars: [],
+  });
+  const bonds = [
+    bond("lab:bond:0", "requires_temperature", "SEMANTIC", "BASE"),
+    bond("lab:bond:1", "voltage_compatible", "DERIVED", "DERIVED"),
+    bond("lab:bond:2", "footprint_match", "SEMANTIC", "BASE"),
+  ];
+  const positions = new Map([
+    ["part:C300", { x: 420, y: 420 }],
+    ["bom:BOM-D", { x: 420, y: 180 }],
+  ]);
+  return { referents, assertions: new Map(), demands: new Map(), bonds, positions, expanded: new Set() };
+}
+
+/**
  * One mark of every construction origin, on a real field.
  *
  * The lab used to draw these by hand in SVG, and the copies had drifted: they
@@ -535,10 +578,40 @@ export function createSpecimenSet(): WorkingSet {
   // the discs at each end.
   const bonds = [
     {
-      assertion_id: "specimen:bond",
+      assertion_id: "specimen:bond:0",
       relation: "temperature_compatible",
       origin: "DERIVED",
       mode: "DERIVED",
+      stale: false,
+      completeness: "COMPLETE" as const,
+      source: "part:C300",
+      target: "bom:BOM-D",
+      spokes: [
+        { role: "part", id: "part:C300" },
+        { role: "bom_item", id: "bom:BOM-D" },
+      ],
+      scalars: [],
+    },
+    {
+      assertion_id: "specimen:bond:1",
+      relation: "voltage_compatible",
+      origin: "SEMANTIC",
+      mode: "BASE",
+      stale: false,
+      completeness: "COMPLETE" as const,
+      source: "part:C300",
+      target: "bom:BOM-D",
+      spokes: [
+        { role: "part", id: "part:C300" },
+        { role: "bom_item", id: "bom:BOM-D" },
+      ],
+      scalars: [],
+    },
+    {
+      assertion_id: "specimen:bond:2",
+      relation: "footprint_match",
+      origin: "MECHANICAL",
+      mode: "BASE",
       stale: false,
       completeness: "COMPLETE" as const,
       source: "part:C300",

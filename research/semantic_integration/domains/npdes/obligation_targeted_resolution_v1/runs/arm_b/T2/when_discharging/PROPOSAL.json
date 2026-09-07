@@ -1,0 +1,20 @@
+{
+  "interpretation": "Monitoring frequencies and associated effluent-limit compliance obligations apply only during periods when the permittee is actually discharging; no-discharge periods require no parameter monitoring and instead use NO DISCHARGE DMR reporting.",
+  "scope": "ONE_RELATION_OR_VOCABULARY",
+  "epistemic_basis": "SOURCE_ESTABLISHED",
+  "exact_grounding": [
+    "documents/aztec/final_permit.txt lines 92-94: footnote *1 = 'When discharging.'",
+    "documents/aztec/final_permit.txt lines 56-66, 72-80: monitoring frequencies marked (*1) on intermittent-flow limits",
+    "documents/aztec/final_permit.txt lines 150-153: NO DISCHARGE DMR reporting when no discharge in sampling month",
+    "documents/aztec/statement_of_basis.txt lines 506-511: discharge-conditioned monitoring schedule paraphrased",
+    "sources/permit_limits.csv: 17 rows with DMR_COMMENT_TEXT=WHEN DISCHARGING. and OPTIONAL_MONITORING_FLAG=N"
+  ],
+  "semantic_delta": "Map DMR_COMMENT_TEXT containing 'WHEN DISCHARGING' to monitoring_applicability_condition=DISCHARGE_OCCURRENCE on permit_limit and monitoring_requirement_fy2025 rows; register 'WHEN DISCHARGING.' as a known permit_limit_comment_text value; remove conditional_discharge_dependent_monitoring unresolved holes for those rows. Per-period discharge occurrence remains a separate factual input, not inferred from the comment definition.",
+  "affected_obligations": [
+    "conditional_discharge_dependent_monitoring",
+    "permit_limit_comment_text"
+  ],
+  "affected_occurrence_count": 17,
+  "remaining_uncertainty": "Structured FY2025 DMR rows do not establish whether discharge occurred in any evaluated period; NM0028762-only grounding.",
+  "admit": "ADMIT_DISPOSABLE"
+}

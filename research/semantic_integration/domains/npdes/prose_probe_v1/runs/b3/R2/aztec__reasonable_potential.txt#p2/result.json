@@ -1,0 +1,123 @@
+{
+  "candidates": [
+    {
+      "source": "aztec/reasonable_potential.pdf",
+      "locator": "Page: 2, Section: body",
+      "exact_span": "Input pollutant geometric mean concentration as micro-gram per liter (ug/l or ppb) unless other unit is specified for the parameter.",
+      "affected_purpose": "A",
+      "computation_change_reason": "Whether a reported concentration is treated as ug/l/ppb or another unit changes the numeric value used for limit comparison and exceedance determination."
+    },
+    {
+      "source": "aztec/reasonable_potential.pdf",
+      "locator": "Page: 2, Section: body",
+      "exact_span": "Effluent value reported as \"< detection level\" (DL) but the DL is greater than MQL, input \"1/2 DL\" for calculation.",
+      "affected_purpose": "combined",
+      "computation_change_reason": "For Purpose A, substituting 1/2 DL when DL exceeds MQL yields a numeric comparison value rather than treating the result as non-comparable. For Purpose C, this passage defines how a non-detect above MQL should be semantically classified and what substitute value, if any, is established from the evidence."
+    },
+    {
+      "source": "aztec/reasonable_potential.pdf",
+      "locator": "Page: 2, Section: body",
+      "exact_span": "Effluent value reported as \"< detection level\" (DL) and the DL is smaller than MQL, no data is inputted.",
+      "affected_purpose": "combined",
+      "computation_change_reason": "For Purpose A, treating the measurement as having no input data removes it from numeric limit comparison rather than assigning a substitute concentration. For Purpose C, this establishes a documented no-data state for sub-MQL non-detects versus a value-bearing result."
+    },
+    {
+      "source": "aztec/reasonable_potential.pdf",
+      "locator": "Page: 2, Section: body",
+      "exact_span": "If a less than MQL value is reported, input either the reported value or \"0\" for calculation.",
+      "affected_purpose": "combined",
+      "computation_change_reason": "For Purpose A, choosing the reported value versus zero changes whether and how an exceedance is computed. For Purpose C, the disjunctive instruction leaves ambiguous which interpretation the evidence supports for below-MQL reported values."
+    },
+    {
+      "source": "aztec/reasonable_potential.pdf",
+      "locator": "Page: 2, Section: body",
+      "exact_span": "Cd = [(F*Qa*Ca) + (Qe*2.13*Ce)] / (F*Qa + Qe)",
+      "affected_purpose": "A",
+      "computation_change_reason": "Different readings of the formula terms (including the fixed 2.13 factor and how Ce is populated under the non-detect rules above) change the computed in-stream waste concentration that may be compared against criteria or limits."
+    },
+    {
+      "source": "aztec/reasonable_potential.pdf",
+      "locator": "Page: 2, Section: body",
+      "exact_span": "F    = Fraction of stream allowed for mixing (see \"Procedures for Implementing NPDES Permits in New Mexico\")",
+      "affected_purpose": "A",
+      "computation_change_reason": "The applicable mixing fraction F directly scales Cd; uncertainty or alternate interpretation of F changes the computed concentration used for limit evaluation."
+    },
+    {
+      "source": "aztec/reasonable_potential.pdf",
+      "locator": "Page: 2, Section: body",
+      "exact_span": "Qa = Critical low flow of stream at discharge point expressed as the 4Q3 or harmonic mean flow for human health criteria",
+      "affected_purpose": "combined",
+      "computation_change_reason": "For Purpose A, selecting 4Q3 versus harmonic mean changes Qa and therefore Cd and any derived limit comparison. For Purpose B, the flow statistic choice may determine which criteria regime and associated monitoring or evaluation conditions are treated as applicable."
+    },
+    {
+      "source": "aztec/reasonable_potential.pdf",
+      "locator": "Page: 2, Section: body",
+      "exact_span": "Ce = Reported concentration in effluent",
+      "affected_purpose": "combined",
+      "computation_change_reason": "For Purpose A, what counts as the reported effluent concentration (especially after DL/MQL handling) feeds directly into Cd. For Purpose C, whether Ce is treated as a numeric report, a substituted value, or absent data affects the established evidence state."
+    },
+    {
+      "source": "aztec/reasonable_potential.pdf",
+      "locator": "Page: 2, Section: body",
+      "exact_span": "C/Ct = 1/ (1 + Kp*TSS* 10^-6)",
+      "affected_purpose": "A",
+      "computation_change_reason": "Interpretation of the dissolved-fraction conversion (including TSS source and units) changes the dissolved metal concentration derived from total measurements and thus which numeric limit applies."
+    },
+    {
+      "source": "aztec/reasonable_potential.pdf",
+      "locator": "Page: 2, Section: body",
+      "exact_span": "TSS = Total suspended solids concentration found in receiving stream (or in effluent for intermittent stream)",
+      "affected_purpose": "A",
+      "computation_change_reason": "Whether TSS is taken from the receiving stream or from effluent for intermittent streams changes Kp, C/Ct, and the resulting dissolved criteria value used for comparison."
+    },
+    {
+      "source": "aztec/reasonable_potential.pdf",
+      "locator": "Page: 2, Section: body",
+      "exact_span": "Total Metal Criteria (Ct) = Cr / (C/Ct)",
+      "affected_purpose": "A",
+      "computation_change_reason": "This defines how a dissolved criteria value Cr is converted to a total-metal comparison limit Ct; alternate interpretation changes the enforceable numeric limit applied to total-metal reports."
+    },
+    {
+      "source": "aztec/reasonable_potential.pdf",
+      "locator": "Page: 2, Section: body",
+      "exact_span": "Arsenic                 0.45                           480000     -0.73      158815.5116 0.580514257 0.26123142                                             480000           -0.73       158815.5116 0.580514257 0.26123142",
+      "affected_purpose": "A",
+      "computation_change_reason": "The tabulated Kpo, alpha, Kp, C/Ct, and dissolved values govern the numeric limit derived for arsenic; misreading stream versus lake columns or coefficient fields changes the applicable limit."
+    },
+    {
+      "source": "aztec/reasonable_potential.pdf",
+      "locator": "Page: 2, Section: body",
+      "exact_span": "Chromium III                                           3360000    -0.93      821086.0591 0.211151254               0                                        2170000          -0.27       1441440.289 0.132300449             0",
+      "affected_purpose": "A",
+      "computation_change_reason": "A dissolved value of 0 in the table may be read as a zero limit, a non-applicable placeholder, or an indication that conversion is undefined; that interpretation changes whether a numeric compliance comparison is performed."
+    },
+    {
+      "source": "aztec/reasonable_potential.pdf",
+      "locator": "Page: 2, Section: body",
+      "exact_span": "If Stream pH < 6.5, enter 750 in cell O113",
+      "affected_purpose": "A",
+      "computation_change_reason": "This pH-conditioned override replaces the hardness-derived acute aluminum criterion; whether pH triggers the override changes the applicable acute numeric limit."
+    },
+    {
+      "source": "aztec/reasonable_potential.pdf",
+      "locator": "Page: 2, Section: body",
+      "exact_span": "If Stream pH < 6.5, enter 87 in cell P113",
+      "affected_purpose": "A",
+      "computation_change_reason": "This pH-conditioned override replaces the hardness-derived chronic aluminum criterion; whether pH triggers the override changes the applicable chronic numeric limit."
+    },
+    {
+      "source": "aztec/reasonable_potential.pdf",
+      "locator": "Page: 2, Section: body",
+      "exact_span": "Cadmium (D)                                        Acute                                    e(0.8968[ln(hardness)]-3.5699)*CF1                           3.275645849                    CF1 = 1.136672 - 0.041838*ln(hardness)",
+      "affected_purpose": "A",
+      "computation_change_reason": "The hardness-dependent acute cadmium formula and CF1 correction factor determine the numeric acute limit; different hardness inputs or formula interpretation change the enforceable limit."
+    },
+    {
+      "source": "aztec/reasonable_potential.pdf",
+      "locator": "Page: 2, Section: body",
+      "exact_span": "Cadmium (D)                                        Chronic                                  e(0.7647[ln(hardness)]-4.2180)*CF2                            0.80634471                    CF2 = 1.101672 - 0.041838*ln(hardness)",
+      "affected_purpose": "A",
+      "computation_change_reason": "The hardness-dependent chronic cadmium formula and CF2 correction factor determine the numeric chronic limit; different hardness inputs or formula interpretation change the enforceable limit."
+    }
+  ]
+}

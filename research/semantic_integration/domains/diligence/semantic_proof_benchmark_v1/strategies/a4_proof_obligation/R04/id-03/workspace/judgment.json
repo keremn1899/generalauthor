@@ -1,0 +1,62 @@
+{
+  "proposed_disposition": "SAME_ENTITY",
+  "proof_obligations": [
+    {
+      "obligation": "Establish the legal entity denoted by the left referent (billing:Helion Robotics Limited).",
+      "required_for": "SAME_ENTITY",
+      "satisfied": true,
+      "evidence": [
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Helion Robotics Limited"
+        }
+      ]
+    },
+    {
+      "obligation": "Establish the legal counterparty associated with the right referent (contract:MSA-HELION-2019).",
+      "required_for": "SAME_ENTITY",
+      "satisfied": true,
+      "evidence": [
+        {
+          "source_path": "sources/contracts/MSA-HELION-2019.md",
+          "location": "header"
+        }
+      ]
+    },
+    {
+      "obligation": "Produce explicit evidence that the left and right referents denote the same legal counterparty.",
+      "required_for": "SAME_ENTITY",
+      "satisfied": true,
+      "evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    },
+    {
+      "obligation": "Produce explicit evidence that the left and right referents denote distinct legal counterparties.",
+      "required_for": "DISTINCT",
+      "satisfied": false,
+      "evidence": []
+    }
+  ],
+  "unsatisfied_obligations": [
+    "Produce explicit evidence that the left and right referents denote distinct legal counterparties."
+  ],
+  "supporting_evidence": [
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Helion Robotics Limited"
+    },
+    {
+      "source_path": "sources/contracts/MSA-HELION-2019.md",
+      "location": "header"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "Invoices bill Helion Robotics Limited, MSA-HELION-2019 names Helion Robotics Ltd. as counterparty, and commercial notes explicitly state those names refer to the same legal entity."
+}

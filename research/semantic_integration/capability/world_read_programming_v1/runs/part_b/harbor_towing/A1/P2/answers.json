@@ -1,0 +1,81 @@
+{
+  "tasks": [
+    {
+      "id": "P1",
+      "status": "ANSWERED",
+      "result": {
+        "vessel_totals": [
+          {
+            "vessel_id": "V-BAY",
+            "total_established_charges": 2280.0
+          },
+          {
+            "vessel_id": "V-NORTH",
+            "total_established_charges": 1200.0
+          },
+          {
+            "vessel_id": "V-REEF",
+            "total_established_charges": 720.0
+          }
+        ]
+      },
+      "code": "SELECT REPLACE(v.vessel_id, 'vessel:', '') AS vessel_id,\n       COALESCE(SUM(jc.charge), 0) AS total_established_charges\nFROM vessel v\nLEFT JOIN tow_job t ON t.vessel_id = REPLACE(v.vessel_id, 'vessel:', '')\nLEFT JOIN job_charge jc ON jc.job_id = t.job_id\nGROUP BY v.vessel_id\nORDER BY vessel_id",
+      "unresolved_handling": "Only rows in job_charge count as established charges. Jobs J5, J6, and J7 have no job_charge row and were excluded from vessel totals rather than treated as zero charges."
+    },
+    {
+      "id": "P2",
+      "status": "ANSWERED",
+      "result": {
+        "vessel_id": "V-BAY",
+        "jobs": [
+          {
+            "job_id": "job:J2",
+            "berth": "B4"
+          },
+          {
+            "job_id": "job:J5",
+            "berth": "B12"
+          }
+        ],
+        "berths": [
+          "B12",
+          "B4"
+        ]
+      },
+      "code": "SELECT job_id, berth\nFROM tow_job\nWHERE vessel_id = 'V-BAY'\nORDER BY job_id;\n\nSELECT DISTINCT berth\nFROM tow_job\nWHERE vessel_id = 'V-BAY'\nORDER BY berth",
+      "unresolved_handling": "All tow_job rows for V-BAY are WORLD-scoped job facts; no billing gaps affect listing jobs or berths."
+    },
+    {
+      "id": "P3",
+      "status": "ANSWERED",
+      "result": {
+        "berth": "B12",
+        "jobs": [
+          {
+            "job_id": "job:J5",
+            "vessel_id": "V-BAY"
+          },
+          {
+            "job_id": "job:J7",
+            "vessel_id": "V-REEF"
+          }
+        ],
+        "total_established_charges": 0,
+        "billing_not_established": [
+          {
+            "job_id": "job:J5",
+            "status": "insufficient_evidence",
+            "reason": "B12 after-hours towing without emergency documentation"
+          },
+          {
+            "job_id": "job:J7",
+            "status": "insufficient_evidence",
+            "reason": "B12 after-hours towing without emergency documentation"
+          }
+        ]
+      },
+      "code": "SELECT job_id, vessel_id\nFROM tow_job\nWHERE berth = 'B12'\nORDER BY job_id;\n\nSELECT COALESCE(SUM(jc.charge), 0) AS total_established_charges\nFROM tow_job t\nLEFT JOIN job_charge jc ON jc.job_id = t.job_id\nWHERE t.berth = 'B12';\n\nSELECT t.job_id, bo.status, bo.reason\nFROM tow_job t\nJOIN billing_outcome bo ON bo.job_id = t.job_id\nWHERE t.berth = 'B12' AND bo.status = 'insufficient_evidence'\nORDER BY t.job_id",
+      "unresolved_handling": "Established charges come only from job_charge (none at B12). Jobs without established billing are identified via billing_outcome status insufficient_evidence; both B12 jobs lack job_charge rows and are listed separately, not counted as zero-dollar billings."
+    }
+  ]
+}

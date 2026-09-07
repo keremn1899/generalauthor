@@ -1,0 +1,87 @@
+{
+  "obligation_id": "geometric_mean",
+  "exact_semantic_question": "What does a geometric-mean reporting comment require for comparison of individual monitoring-period values?",
+  "purpose": ["A", "B", "C"],
+  "relation_contract": "aggregated reporting is not an ordinary single-period numeric comparison",
+  "candidate_interpretations": [
+    {
+      "id": "aggregate_before_compare",
+      "description": "Individual monitoring-period DMR values must not be compared directly to the limit; compliance requires computing a geometric mean over weekly sub-period samples and comparing that aggregate (or reporting it where limits say 'Report')."
+    },
+    {
+      "id": "reporting_only",
+      "description": "The comment governs only how values are reported on the DMR (geometric mean of weekly values) while numeric limits may still use a different statistic (e.g., 30-day average) for enforcement comparison."
+    },
+    {
+      "id": "limit_set_metadata_artifact",
+      "description": "The geometric-mean comment is TDS-specific permit language propagated at limit-set level to unrelated parameters; it does not change comparison semantics for non-TDS limits."
+    },
+    {
+      "id": "unresolved",
+      "description": "Structured sources do not establish how monthly DMR values relate to weekly geometric means or which aggregation window applies for limit comparison."
+    }
+  ],
+  "retained_snippets": [
+    {
+      "source_id": "sources/permit_limits.csv",
+      "location": "row LIMIT_VALUE_ID=3610673282, LIMIT_SET_SCHEDULE_ID=3600891019",
+      "text": "DMR_COMMENT_TEXT=TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001. REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.; PARAMETER_CODE=00310 (BOD); STATISTICAL_BASE_TYPE_CODE=AVG; LIMIT_FREQ_OF_ANALYSIS_CODE=05/WK",
+      "why_retained": "Shows identical geometric-mean comment attached to a non-TDS parameter with ordinary AVG statistical base — evidence of limit-set comment carryover."
+    },
+    {
+      "source_id": "sources/permit_limits.csv",
+      "location": "row LIMIT_VALUE_ID=3610673300, LIMIT_SET_SCHEDULE_ID=3600891019",
+      "text": "DMR_COMMENT_TEXT=TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001. REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.; PARAMETER_CODE=70295 (Solids, total dissolved); STATISTICAL_BASE_TYPE_CODE=AVG; LIMIT_VALUE_NMBR=497; LIMIT_VALUE_STANDARD_UNITS=497; LIMIT_FREQ_OF_ANALYSIS_CODE=01/07",
+      "why_retained": "TDS limit row where comment text semantically applies; structured base is AVG not geometric mean; numeric limit present."
+    },
+    {
+      "source_id": "documents/farmington/final_permit.txt",
+      "location": "lines 80–82, 97–98, 121",
+      "text": "Total Dissolved Solids, Discharge (*6) … Report … 1/Week … | Total Dissolved Solids, Net Increase (*8) … 497 mg/L … 1/Week | *6 Total dissolved solids measured at Outfall 001. Report the geometric mean value of weekly values.",
+      "why_retained": "Authoritative permit footnote tying TDS discharge reporting to geometric mean of weekly values; net-increase row carries numeric 30-day-average-style limit."
+    },
+    {
+      "source_id": "documents/farmington/final_permit.txt",
+      "location": "lines 123–124",
+      "text": "*8 Net total dissolved solids calculated by taking the difference between Outfall 001 discharge and flow weighted average influent of the two drinking water treatment plants.",
+      "why_retained": "Establishes net TDS as derived quantity, not a single raw sample — supports non-single-period comparison for TDS limits."
+    },
+    {
+      "source_id": "documents/farmington/statement_of_basis.txt",
+      "location": "lines 521–522, 538",
+      "text": "temporary 30-day average TDS net incremental increase limit of 497 mg/L … EPA … revised … TDS net incremental increase limit of 497 mg/L to 449 mg/L",
+      "why_retained": "Permit basis states enforceable TDS limit is 30-day average, distinct from geometric-mean weekly reporting in footnote *6."
+    },
+    {
+      "source_id": "documents/farmington/statement_of_basis.txt",
+      "location": "lines 373–374",
+      "text": "primary contact designated use of the receiving stream are the monthly geometric mean of E. coli bacteria of 126 cfu/100 mL … and single sample of 410 cfu/100 mL",
+      "why_retained": "Shows permit package uses geometric-mean limits elsewhere with explicit monthly window — different aggregation than TDS weekly footnote; E. coli rows still carry the TDS-specific DMR comment in structured data."
+    },
+    {
+      "source_id": "sources/dmr_measurements.csv",
+      "location": "row DMR_FORM_VALUE_ID=3831416442, LIMIT_VALUE_ID=3610673282, MONITORING_PERIOD_END_DATE=10/31/2024",
+      "text": "PARAMETER_CODE=00310 (BOD); DMR_VALUE_STANDARD_UNITS=4; LIMIT_VALUE_STANDARD_UNITS=30; STATISTICAL_BASE_TYPE_CODE=AVG; DMR_VALUE_QUALIFIER_CODE==",
+      "why_retained": "Monthly single reported BOD value stored as ordinary numeric measurement despite geometric-mean comment on paired limit row."
+    },
+    {
+      "source_id": "sources/dmr_measurements.csv",
+      "location": "row DMR_FORM_VALUE_ID=3831416458, LIMIT_VALUE_ID=3610673300, MONITORING_PERIOD_END_DATE=10/31/2024",
+      "text": "PARAMETER_CODE=70295 (Solids, total dissolved); DMR_VALUE_STANDARD_UNITS=269; LIMIT_VALUE_STANDARD_UNITS=497; STATISTICAL_BASE_TYPE_CODE=AVG; DMR_VALUE_QUALIFIER_CODE==",
+      "why_retained": "Monthly TDS value reported and paired with numeric limit in structured data; no weekly sub-sample values or geometric-mean field present."
+    }
+  ],
+  "contradictory_evidence": [
+    "All 40 structured rows with the geometric-mean comment use STATISTICAL_BASE_TYPE_CODE in {AVG, MAX, MIN} — none encode geometric mean as the structured comparison basis.",
+    "DMR measurements store one value per MONITORING_PERIOD_END_DATE (monthly), not weekly sub-period samples, yet limits show LIMIT_FREQ_OF_ANALYSIS_CODE 05/WK for many affected parameters.",
+    "Statement of basis describes TDS enforcement limit as 30-day average while footnote *6 requires geometric mean of weekly values for discharge reporting — two different statistics without workspace text linking them for comparison.",
+    "BOD and other non-TDS parameters carry a comment that explicitly names only TDS, undermining a uniform interpretation across all 40 occurrences."
+  ],
+  "known_limitations": [
+    "No codebook or structured legend maps STATISTICAL_BASE_TYPE_CODE to geometric mean.",
+    "Weekly sub-period sample values are not present in dmr_measurements.csv; cannot verify whether reported monthly values are pre-aggregated geometric means.",
+    "Only NM0020583 (farmington) permit documents were opened; all 40 occurrences belong to that permit's limit set 3600645646.",
+    "Permit documents for aztec and gcc contain unrelated geometric-mean mentions (metals RP analysis, fecal coliform) not tied to this obligation's DMR_COMMENT_TEXT trigger."
+  ],
+  "allowed_dispositions": ["SUPPORTED_RESOLUTION", "SUPPORTED_NEGATIVE", "UNRESOLVED"]
+}

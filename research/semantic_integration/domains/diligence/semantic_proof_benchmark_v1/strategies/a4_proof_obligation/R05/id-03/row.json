@@ -1,0 +1,86 @@
+{
+  "strategy": "a4_proof_obligation",
+  "trial": "R05",
+  "obligation_id": "id-03",
+  "candidate": {
+    "left": "billing:Helion Robotics Limited",
+    "right": "contract:MSA-HELION-2019"
+  },
+  "proposed_disposition": "SAME_ENTITY",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Helion Robotics Limited"
+    },
+    {
+      "source_path": "sources/contracts/MSA-HELION-2019.md",
+      "location": "header"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "Invoices bill Helion Robotics Limited, MSA-HELION-2019 names Helion Robotics Ltd. as counterparty, and commercial notes explicitly state those names denote the same legal entity.",
+  "proof_size": 4,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "proof_obligations": [
+    {
+      "obligation": "Ground billing:Helion Robotics Limited to invoice records naming that billed entity",
+      "required_for": "SAME_ENTITY",
+      "satisfied": true,
+      "evidence": [
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Helion Robotics Limited"
+        }
+      ]
+    },
+    {
+      "obligation": "Ground contract:MSA-HELION-2019 to a named counterparty on that agreement",
+      "required_for": "SAME_ENTITY",
+      "satisfied": true,
+      "evidence": [
+        {
+          "source_path": "sources/contracts/MSA-HELION-2019.md",
+          "location": "header"
+        }
+      ]
+    },
+    {
+      "obligation": "Explicitly establish that the billing entity and the MSA-HELION-2019 counterparty are the same legal entity",
+      "required_for": "SAME_ENTITY",
+      "satisfied": true,
+      "evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    },
+    {
+      "obligation": "Explicitly establish that billing:Helion Robotics Limited and the counterparty to contract:MSA-HELION-2019 are distinct legal entities",
+      "required_for": "DISTINCT",
+      "satisfied": false,
+      "evidence": []
+    }
+  ],
+  "admit": {
+    "rule": "unsatisfied_obligations_present"
+  },
+  "unsatisfied": [
+    "Explicitly establish that billing:Helion Robotics Limited and the counterparty to contract:MSA-HELION-2019 are distinct legal entities"
+  ],
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": true,
+  "correct_same_never_proposed": false
+}

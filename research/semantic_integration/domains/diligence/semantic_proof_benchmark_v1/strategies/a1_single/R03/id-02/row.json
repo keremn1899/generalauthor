@@ -1,0 +1,40 @@
+{
+  "strategy": "a1_single",
+  "trial": "R03",
+  "obligation_id": "id-02",
+  "candidate": {
+    "left": "billing:Helion Robotics Limited",
+    "right": "registry:11847201"
+  },
+  "proposed_disposition": "SAME_ENTITY",
+  "final_disposition": "SAME_ENTITY",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 11847201"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Helion Robotics Limited"
+    }
+  ],
+  "support_claim": "Commercial notes state that the invoice name Helion Robotics Limited and the Companies House name are the same legal entity, registry row 11847201 records HELION ROBOTICS LIMITED, and billing records bill Helion Robotics Limited.",
+  "proof_size": 1,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "justification": "Under the identity_judgment contract, SAME_ENTITY is licensed because the packet provides establishing evidence\u2014not mere name compatibility: commercial_notes explicitly assert that the invoiced name and the Companies House name denote the same legal entity, company_registry.csv ties registry:11847201 to HELION ROBOTICS LIMITED, and invoices.json confirms billing:Helion Robotics Limited as the billed counterparty, jointly identifying both referents as one legal counterparty.",
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": true,
+  "unsupported_closure": false,
+  "under_closure": false,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": false
+}

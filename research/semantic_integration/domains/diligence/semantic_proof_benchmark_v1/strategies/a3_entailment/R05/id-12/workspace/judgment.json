@@ -1,0 +1,70 @@
+{
+  "claims": [
+    {
+      "claim": "CRM record MER-55 has account name Meridian Energy Partners",
+      "status": "ESTABLISHED",
+      "burden": "other",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/crm.csv",
+          "location": "row MER-55"
+        }
+      ]
+    },
+    {
+      "claim": "Billing records identify the counterparty as Meridian Energy Partners LLC",
+      "status": "ESTABLISHED",
+      "burden": "other",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Meridian Energy Partners LLC"
+        }
+      ]
+    },
+    {
+      "claim": "Commercial notes state that Meridian Energy Partners invoices are the advisory retainer under MSA-MER-2024",
+      "status": "ESTABLISHED",
+      "burden": "other",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    },
+    {
+      "claim": "CRM record MER-55 and the billing counterparty Meridian Energy Partners LLC denote the same legal counterparty",
+      "status": "NOT_ESTABLISHED",
+      "burden": "identity",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/crm.csv",
+          "location": "row MER-55"
+        },
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Meridian Energy Partners LLC"
+        }
+      ]
+    },
+    {
+      "claim": "CRM record MER-55 and the billing counterparty Meridian Energy Partners LLC are distinct legal counterparties",
+      "status": "NOT_ESTABLISHED",
+      "burden": "distinctness",
+      "supporting_evidence": []
+    }
+  ],
+  "disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row MER-55"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Meridian Energy Partners LLC"
+    }
+  ],
+  "support_claim": "The packet links MER-55 to the name Meridian Energy Partners and billing to Meridian Energy Partners LLC, but provides no evidence establishing that these referents are the same legal counterparty or that they are distinct."
+}

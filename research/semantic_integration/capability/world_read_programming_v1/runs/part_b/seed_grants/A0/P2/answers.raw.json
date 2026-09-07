@@ -1,0 +1,129 @@
+{
+  "tasks": [
+    {
+      "id": "P1",
+      "status": "ANSWERED",
+      "result": {
+        "organization_remaining_balances": [
+          {
+            "org_id": "ORG-HARBOR",
+            "legal_name": "Harbor Community Trust",
+            "total_remaining_undisbursed": 20000
+          },
+          {
+            "org_id": "ORG-MEADOW",
+            "legal_name": "Meadow Community Trust",
+            "total_remaining_undisbursed": 15000
+          },
+          {
+            "org_id": "ORG-RIDGE",
+            "legal_name": "Ridge Arts",
+            "total_remaining_undisbursed": 10000
+          }
+        ]
+      },
+      "code": "from pathlib import Path\nimport sys\nROOT = Path('.').resolve()\nsys.path.insert(0, str(ROOT))\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\n\nworld = ConstructionWorld.open(ROOT / 'world' / 'world.sqlite')\nrows = world.query_semantic(\"\"\"\nSELECT o.org_id, o.legal_name,\n       SUM(CAST(arb.remaining_balance AS REAL)) AS total_remaining_undisbursed\nFROM organization o\nJOIN award a ON a.org_id = o.org_id\nJOIN award_remaining_balance arb ON arb.award_id = a.award_id\nGROUP BY o.org_id, o.legal_name\nORDER BY o.org_id\n\"\"\")\nworld.close()",
+      "unresolved_handling": "All organizations have award_remaining_balance rows for every award; no unresolved quantities for this task."
+    },
+    {
+      "id": "P2",
+      "status": "ANSWERED",
+      "result": {
+        "starting_award_id": "A-101",
+        "organization": {
+          "org_id": "ORG-MEADOW",
+          "legal_name": "Meadow Community Trust",
+          "ein": "81-1111111"
+        },
+        "organization_awards": [
+          {
+            "award_id": "A-101",
+            "org_id": "ORG-MEADOW",
+            "program": "SEED-CORE",
+            "amount": "50000",
+            "start": "2024-01-01",
+            "end": "2024-12-31",
+            "status_code": "A"
+          },
+          {
+            "award_id": "A-103",
+            "org_id": "ORG-MEADOW",
+            "program": "SEED-CORE",
+            "amount": "15000",
+            "start": "2023-01-01",
+            "end": "2023-12-31",
+            "status_code": "C"
+          }
+        ],
+        "disbursements": [
+          {
+            "award_id": "A-101",
+            "date": "2024-02-15",
+            "amount": "20000"
+          },
+          {
+            "award_id": "A-101",
+            "date": "2024-06-15",
+            "amount": "15000"
+          },
+          {
+            "award_id": "A-103",
+            "date": "2023-06-01",
+            "amount": "15000"
+          }
+        ]
+      },
+      "code": "from pathlib import Path\nimport sys\nROOT = Path('.').resolve()\nsys.path.insert(0, str(ROOT))\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\n\nworld = ConstructionWorld.open(ROOT / 'world' / 'world.sqlite')\norg = world.query_semantic(\"\"\"\nSELECT o.* FROM award a\nJOIN organization o ON o.org_id = a.org_id\nWHERE a.award_id = 'A-101'\n\"\"\")\nawards = world.query_semantic(\"\"\"\nSELECT a.* FROM award a\nJOIN award b ON b.org_id = a.org_id AND b.award_id = 'A-101'\nORDER BY a.award_id\n\"\"\")\ndisbursements = world.query_semantic(\"\"\"\nSELECT d.* FROM disbursement d\nJOIN award a ON a.award_id = d.award_id\nJOIN award b ON b.org_id = a.org_id AND b.award_id = 'A-101'\nORDER BY d.award_id, d.date\n\"\"\")\nworld.close()",
+      "unresolved_handling": "Traversal from A-101 resolves fully; organization, awards, and disbursements are all present in the World."
+    },
+    {
+      "id": "P3",
+      "status": "ANSWERED",
+      "result": {
+        "active_awards": [
+          {
+            "award_id": "A-101",
+            "org_id": "ORG-MEADOW",
+            "remaining_balance": 15000,
+            "status_label": "Active"
+          },
+          {
+            "award_id": "A-102",
+            "org_id": "ORG-RIDGE",
+            "remaining_balance": 0,
+            "status_label": "Active"
+          }
+        ],
+        "active_remaining_total": 15000,
+        "unresolved_sibling_awards": [
+          {
+            "award_id": "A-105",
+            "org_id": "ORG-RIDGE",
+            "status_code": "H",
+            "remaining_balance": 10000,
+            "discovered_via_active_award": "A-102",
+            "resolution": "uninterpreted",
+            "failure_kinds": [
+              "UNINTERPRETED",
+              "EXPLICIT_UNRESOLVED"
+            ],
+            "reason": "Status code H is not listed in status_legend_entry; purpose_requirement_failure records UNINTERPRETED and EXPLICIT_UNRESOLVED for this award."
+          }
+        ],
+        "resolved_siblings_excluded": [
+          {
+            "award_id": "A-103",
+            "org_id": "ORG-MEADOW",
+            "status_code": "C",
+            "status_label": "Closed",
+            "discovered_via_active_award": "A-101",
+            "resolution": "interpreted"
+          }
+        ],
+        "note": "A-104 (ORG-HARBOR) is also unresolved globally but is not a sibling of any Active award's organization; its remaining balance (20000) is excluded from the Active total and from the unresolved sibling list."
+      },
+      "code": "from pathlib import Path\nimport sys\nROOT = Path('.').resolve()\nsys.path.insert(0, str(ROOT))\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\n\nworld = ConstructionWorld.open(ROOT / 'world' / 'world.sqlite')\n\n# Active = awards with interpretable status_label from award_status_label (legend code A)\nactive = world.query_semantic(\"\"\"\nSELECT a.award_id, a.org_id, arb.remaining_balance, asl.status_label\nFROM award a\nJOIN award_status_label asl ON asl.award_id = a.award_id\nJOIN award_remaining_balance arb ON arb.award_id = a.award_id\nWHERE asl.status_label = 'Active'\nORDER BY a.award_id\n\"\"\")\nactive_remaining_total = sum(float(r['remaining_balance']) for r in active)\n\n# Unresolved award identities from purpose_requirement_failure on award rows\nunresolved_award_ids = {\n    r['affected_identity']\n    for r in world.query_semantic(\"\"\"\n    SELECT DISTINCT affected_identity FROM purpose_requirement_failure\n    WHERE requirement_id IN ('award_status_interpretable', 'status_code_not_in_legend')\n      AND relation_name = 'award'\n      AND affected_identity LIKE 'A-%'\n    \"\"\")\n}\n\nunresolved_siblings = []\nseen = set()\nfor act in active:\n    siblings = world.query_semantic(\"\"\"\n    SELECT a.award_id, a.org_id, a.status_code, arb.remaining_balance\n    FROM award a\n    JOIN award_remaining_balance arb ON arb.award_id = a.award_id\n    WHERE a.org_id = ? AND a.award_id != ?\n    ORDER BY a.award_id\n    \"\"\", (act['org_id'], act['award_id']))\n    for sib in siblings:\n        if sib['award_id'] in unresolved_award_ids and sib['award_id'] not in seen:\n            seen.add(sib['award_id'])\n            failures = world.query_semantic(\"\"\"\n            SELECT failure_kind FROM purpose_requirement_failure\n            WHERE relation_name = 'award' AND subject_json LIKE ?\n            \"\"\", (f'%\"{sib[\"award_id\"]}\"%',))\n            unresolved_siblings.append({\n                'award_id': sib['award_id'],\n                'org_id': sib['org_id'],\n                'status_code': sib['status_code'],\n                'remaining_balance': float(sib['remaining_balance']),\n                'discovered_via_active_award': act['award_id'],\n                'failure_kinds': sorted({f['failure_kind'] for f in failures}),\n            })\n\nworld.close()",
+      "unresolved_handling": "Active remaining total includes only awards with established Active status (A-101, A-102 via award_status_label). Unresolved siblings are listed separately with their remaining balances preserved (not treated as zero). A-105 is the only unresolved sibling of an Active award's organization. A-104 is unresolved but outside the sibling scope of Active awards."
+    }
+  ]
+}

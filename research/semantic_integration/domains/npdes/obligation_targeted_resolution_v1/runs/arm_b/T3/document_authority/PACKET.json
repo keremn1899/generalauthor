@@ -1,0 +1,94 @@
+{
+  "obligation_id": "document_authority",
+  "exact_semantic_question": "Without ranking from filenames, what do inventoried permit documents establish, and which document governs if they disagree?",
+  "purpose": ["B", "C"],
+  "relation_contract": "narrative conditions require document text; filename kind is not hierarchy",
+  "candidate_interpretations": [
+    {
+      "id": "issued_authorization_binding",
+      "statement": "Documents whose text is an issued 'AUTHORIZATION TO DISCHARGE' establish enforceable permit conditions only in the Parts explicitly named on the authorization page; draft fact sheets and statements of basis establish proposed conditions and permitting rationale but not standalone enforceable authorization.",
+      "support": "gcc/final_permit.txt and farmington/final_permit.txt authorization language; gcc/fact_sheet.txt and aztec/statement_of_basis.txt draft headers; fact_sheet administrative-record language."
+    },
+    {
+      "id": "inventory_kind_hierarchy",
+      "statement": "document_kind labels in document_inventory.json establish a governing hierarchy among inventoried files.",
+      "support": "Rejected by relation contract and absence of codebook; inventory provides only path, filename, kind, permit, bytes, sha256, origin."
+    },
+    {
+      "id": "all_files_equally_enforceable",
+      "statement": "Every inventoried permit-package file establishes equally enforceable permit obligations.",
+      "support": "Rejected because draft/supporting documents self-identify as 'FOR THE DRAFT' and describe 'proposed permit' conditions used to develop the permit."
+    },
+    {
+      "id": "universal_conflict_rule",
+      "statement": "A single general workspace text states which inventoried document governs for every possible disagreement.",
+      "support": "Not found. Governance is relationship-specific: issued authorization over proposed text; incorporated appendices via explicit reference; minor_modification lacks precedence text."
+    }
+  ],
+  "retained_snippets": [
+    {
+      "source_id": "documents/gcc/final_permit.txt",
+      "location": "authorization cover, lines 19-28",
+      "text": "in accordance with this cover page and effluent limitations, monitoring requirements, and other conditions set forth in Parts I [Requirements for NPDES Permits], II [Other Conditions], and III [Standard Conditions for NPDES Permits] hereof.\n\nThis permit supersedes and replaces NPDES Permit No. NM0000116 issued November 23, 2010.\n\nThis permit shall become effective on June 1, 2021\n\nThis permit and the authorization to discharge shall expire at midnight, May 31, 2026\n\nIssued on May 24, 2021",
+      "why_retained": "Establishes that the issued authorization binds the permittee to named Parts I–III and replaces a prior issued permit."
+    },
+    {
+      "source_id": "documents/farmington/final_permit.txt",
+      "location": "authorization cover, lines 24-27",
+      "text": "in accordance with this cover page and the effluent limitations, monitoring requirements, and other conditions set forth in Part I, Part II, Part III, and Part IV hereof.\n\nThis permit supersedes and replaces NPDES Permit No. NM0020583 issued on September 30, 2016.",
+      "why_retained": "Shows issued authorization scope can include Part IV and confirms supersession of prior issued permit."
+    },
+    {
+      "source_id": "documents/gcc/final_permit.txt",
+      "location": "Part II, lines 149-150",
+      "text": "Current EPA Region 6 minimum quantification levels (MQLs) for reporting and compliance are provided in Appendix A of Part II of this permit.",
+      "why_retained": "Establishes incorporation by reference of Appendix A content into the issued permit."
+    },
+    {
+      "source_id": "documents/gcc/fact_sheet.txt",
+      "location": "header, lines 1-4",
+      "text": "NPDES PERMIT NO. NM0000116\n                                  FACT SHEET\nFOR THE DRAFT NATIONAL POLLUTANT DISCHARGE ELIMINATION SYSTEM\n(NPDES) PERMIT TO DISCHARGE TO WATERS OF THE UNITED STATES",
+      "why_retained": "Self-identifies the fact sheet as a draft-permit document, not issued authorization."
+    },
+    {
+      "source_id": "documents/gcc/fact_sheet.txt",
+      "location": "Section VIII, lines 435-437",
+      "text": "The NMAC, Section 20.6.4.8 “Antidegradation Policy and Implementation Plan” sets forth the requirements to protect designated uses through implementation of the State water quality standards. The limitations and monitoring requirements set forth in the proposed permit are",
+      "why_retained": "Attributes enforceable-style limits to the proposed permit, distinguishing explanatory text from issued conditions."
+    },
+    {
+      "source_id": "documents/gcc/fact_sheet.txt",
+      "location": "Section XVI, lines 508-510",
+      "text": "XVI. ADMINISTRATIVE RECORD\n\nThe following information was used to develop the proposed permit:",
+      "why_retained": "Establishes supporting/administrative-record role for materials used in permit development."
+    },
+    {
+      "source_id": "documents/aztec/statement_of_basis.txt",
+      "location": "header, lines 1-4",
+      "text": "NPDES PERMIT NO. NM0028762\n                     STATEMENT OF BASIS\nFOR THE DRAFT NATIONAL POLLUTANT DISCHARGE ELIMINATION SYSTEM\n(NPDES) PERMIT TO DISCHARGE TO WATERS OF THE UNITED STATES",
+      "why_retained": "Confirms statement_of_basis inventory entries are draft-permit explanatory documents by their own text."
+    },
+    {
+      "source_id": "documents/farmington/statement_of_basis.txt",
+      "location": "Section on reasonable potential monitoring, lines 593-597",
+      "text": "for Cadmium (0.05 ug/L, EPA 200.9) , 2,3,7,8-TCDD Dioxin (1.0E-5 ug/L, EPA 1613B), Pentachlorophenol (7.4 ug/L, EPA 604), Aldrin (0.004 ug/L, EPA 608), Chlordane (0.014 ug/L, EPA 608), and Toxaphene (0.24 ug/L, EPA 608)). EPA would reconsider this monitoring requirement for the final permit if the result(s) indicate no reasonable potential exists.",
+      "why_retained": "Shows draft/supporting text can differ from issued permit and explicitly defers to the final permit."
+    }
+  ],
+  "contradictory_evidence": [
+    {
+      "source_id": "documents/gcc/minor_modification.txt",
+      "location": "full file",
+      "text": "The extract contains only 'PART I – REQUIREMENTS FOR NPDES PERMITS' limit tables (e.g., Total Aluminum 0.75 mg/l) with no authorization cover, issuance date, or precedence language.",
+      "why_contradictory": "Undercuts any filename-independent inference that every distinct inventoried file is a separately governed legal instrument; this file provides numeric limits without stating its authority relative to the issued authorization."
+    }
+  ],
+  "known_limitations": [
+    "sources/document_inventory.json lists 12 files with document_kind labels but contains no textual authority or conflict-resolution rules.",
+    "Only five permit text files were opened under budget; reasonable_potential worksheets and standalone part_ii_appendix/part_iv extracts were not opened as primary documents, though farmington Part IV scope is established via farmington/final_permit.txt authorization text.",
+    "documents/gcc/minor_modification.txt lacks any governing or precedence language; workspace text does not establish whether it independently modifies the issued permit or merely duplicates Part I tables also present in documents/gcc/final_permit.txt.",
+    "No workspace text provides a general pairwise precedence rule for all inventoried kinds (e.g., reasonable_potential worksheet versus issued Part I limits) without document-specific reading and comparison.",
+    "Internal precedence among all subparts within an issued permit beyond explicit cross-references (e.g., Part I versus Part II) is not fully specified in retained snippets."
+  ],
+  "allowed_dispositions": ["SUPPORTED_RESOLUTION", "SUPPORTED_NEGATIVE", "UNRESOLVED"]
+}

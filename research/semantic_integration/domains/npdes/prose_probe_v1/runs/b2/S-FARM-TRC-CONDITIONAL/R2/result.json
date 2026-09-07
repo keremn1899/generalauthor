@@ -1,0 +1,37 @@
+{
+  "payload": [
+    {
+      "obligation_id": "oracle:S-FARM-TRC-CONDITIONAL",
+      "relation": "conditional_monitoring_applies",
+      "values": {
+        "permit": "NM0020583",
+        "parameter": "TRC"
+      },
+      "disposition": "ACCEPT",
+      "grounding": [
+        {
+          "packet": "04_packets/oracle:S-FARM-TRC-CONDITIONAL.json",
+          "location": "selected_observations[0]",
+          "source_path": "farmington/final_permit.pdf",
+          "span": "page 5 section part_i",
+          "excerpt": "This facility uses Ultraviolet disinfection. Total Residual Chlorine (TRC) shall be monitored any time chlorine is used within the treatment plant for"
+        },
+        {
+          "packet": "04_packets/oracle:S-FARM-TRC-CONDITIONAL.json",
+          "location": "selected_observations[1]",
+          "source_path": "farmington/final_permit.pdf",
+          "span": "cover page",
+          "excerpt": "This permit shall become effective on December 1, 2021. This permit and the authorization to discharge shall expire at midnight, November 30, 2026."
+        },
+        {
+          "packet": "04_packets/oracle:S-FARM-TRC-CONDITIONAL.json",
+          "location": "selected_observations[2]",
+          "source_path": "purposes/visible_a.md",
+          "span": "purpose A period",
+          "excerpt": "Federal FY2025 (2024-10-01 through 2025-09-30 inclusive)"
+        }
+      ],
+      "rationale": "The permit operative clause establishes that this UV-disinfection facility must monitor TRC only when chlorine is used within the treatment plant, not as routine UV-plant effluent monitoring. The cover-page dates show the permit is in force across Federal FY2025. Per the oracle relation contract, month-level required/not-required status when chlorine use is unevidenced is a separate question; this disposition judges whether the conditional monitoring rule applies to permit NM0020583 and parameter TRC, which the packet establishes. No chlorine-use log for FY2025 months is present (see known_missing_information), but that absence does not negate the established conditional rule structure and does not support REJECT (routine monitoring) or warrant UNRESOLVED on the applicability of the conditional framework itself."
+    }
+  ]
+}

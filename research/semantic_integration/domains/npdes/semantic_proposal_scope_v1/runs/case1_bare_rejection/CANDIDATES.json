@@ -1,0 +1,23 @@
+[
+  {
+    "id": "catalog_applicable_limits",
+    "interpretation": "Applicable limits should be enumerated from permit_limits by matching permit, outfall, parameter, and whether the monitoring period falls within each limit row's begin/end dates—not by trusting the DMR row's embedded limit_value_id and schedule_id as the sole applicable limit.",
+    "scope": "ONE_RELATION_OR_VOCABULARY",
+    "dry_run_id": "catalog_applicable_limits",
+    "why_plausible": "ISSUES.md describes this catalog-match derivation; structured overlap shows most FY2025 measurements match multiple permit_limit rows under that rule, so forcing one pair via DMR keys would contradict staged or overlapping limit intervals."
+  },
+  {
+    "id": "remove_forced_uniqueness",
+    "interpretation": "The expert rejects requiring exactly one governing limit per measurement for purpose A; keep the current pairing logic but drop the ONE cardinality requirement and leave how many limits apply unresolved.",
+    "scope": "ONE_PURPOSE",
+    "dry_run_id": "remove_forced_uniqueness",
+    "why_plausible": "ISSUES.md lists uncertainty about overlapping or staged intervals and catalog restatements; a bare rejection of the satisfied one-limit reading may target the cardinality policy rather than the join mechanics."
+  },
+  {
+    "id": "dmr_embedded_limit_authoritative",
+    "interpretation": "The expert rejects the catalog-match description of measurement_limit_pair, not the draft code: the applicable limit identity is the one carried on the DMR measurement row, and the error was mischaracterizing the construction as period-intersection catalog matching.",
+    "scope": "ONE_RELATION_OR_VOCABULARY",
+    "dry_run_id": null,
+    "why_plausible": "construction.py already pairs via DMR-embedded keys while ISSUES.md incorrectly states catalog matching; a correction could mean the issue summary was wrong, not the durable draft."
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "obligation_id": "oracle:S-AZTEC-WET-SEASONAL",
+    "relation": "special_monitoring_window_applies",
+    "values": {
+      "permit": "NM0028762",
+      "parameter": "WET"
+    },
+    "disposition": "UNRESOLVED",
+    "grounding": [
+      {
+        "packet_field": "selected_observations[0]",
+        "source_path": "aztec/final_permit.pdf",
+        "location": "page 4 section part_i"
+      },
+      {
+        "packet_field": "selected_observations[1]",
+        "source_path": "aztec/final_permit.pdf",
+        "location": "cover page"
+      },
+      {
+        "packet_field": "selected_observations[2]",
+        "source_path": "purposes/visible_a.md",
+        "location": "purpose A period"
+      },
+      {
+        "packet_field": "known_missing_information[0]"
+      }
+    ],
+    "rationale": "The packet states the operative WET schedule (once per permit term, during the first springtime after the January 1, 2022 effective date, during irrigation season) and defines the FY2025 window (2024-10-01 through 2025-09-30), but it does not establish whether the once-per-term WET test was performed or remains outstanding. Per the oracle relation contract, special_monitoring_window_applies is UNRESOLVED when compliance status cannot be established from the packet. ACCEPT would require grounding that FY2025 is established as a required WET year; REJECT would require grounding that it is established as not required. Neither burden is met: the scheduling spans alone do not close whether an outstanding once-per-term obligation affects FY2025, and known_missing_information explicitly records the absence of performance evidence. Preferring unsupported uncertainty to unsupported semantic closure, UNRESOLVED is the correct disposition."
+  }
+]

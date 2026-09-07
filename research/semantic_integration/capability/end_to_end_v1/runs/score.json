@@ -1,0 +1,2271 @@
+{
+  "construction": [
+    {
+      "domain": "harbor_towing",
+      "trial": "T1",
+      "build": "ACCEPTED",
+      "attempts": 1,
+      "iterations": [
+        {
+          "iteration": 1,
+          "reported_model": "Composer 2.5",
+          "accepted": true,
+          "reason": "",
+          "errors": []
+        }
+      ],
+      "finished_at": "2026-09-06T08:20:34.344838+00:00",
+      "coverage": {
+        "Q1": "PRESENT",
+        "Q2": "PRESENT",
+        "Q3": "PRESENT",
+        "Q4": "PRESENT",
+        "Q5": "EXPLICITLY_UNRESOLVED",
+        "Q6": "EXPLICITLY_UNRESOLVED"
+      },
+      "unsupported_closure_hits": [],
+      "hardcoded_question_strings": [],
+      "inventory": {
+        "relation_count": 9,
+        "admission": {
+          "berth_restriction": "WORLD",
+          "billable_hours": "PURPOSE",
+          "billing_outcome": "PURPOSE",
+          "effective_rate": "PURPOSE",
+          "job_charge": "PURPOSE",
+          "purpose_requirement_failure": "PURPOSE",
+          "rate_card": "WORLD",
+          "tow_job": "WORLD",
+          "vessel": "WORLD"
+        },
+        "n_assertions": 40,
+        "n_derived": 0,
+        "n_source_groundings": 25,
+        "n_failures": 6,
+        "failures": [
+          {
+            "requirement_id": "berth_b12_after_hours",
+            "affected_identity": "berth_b12_after_hours",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation_name": "berth_restriction",
+            "subject_json": "{\"berth\": \"B12\", \"job\": \"J5\", \"reason\": \"B12 commercial towing after 18:00 requires a documented emergency; no emergency log is attached (berth_notice.txt).\"}",
+            "grounding_ref": "berth_notice.txt:job_id=J5"
+          },
+          {
+            "requirement_id": "blank_billed_hours",
+            "affected_identity": "blank_billed_hours",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation_name": "tow_job",
+            "subject_json": "{\"job\": \"J6\", \"reason\": \"Blank billed_hours: clock time between start and end is not an established billable quantity (service_conditions \\u00a75).\"}",
+            "grounding_ref": "jobs.csv:job_id=J6"
+          },
+          {
+            "requirement_id": "berth_b12_after_hours",
+            "affected_identity": "berth_b12_after_hours",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation_name": "berth_restriction",
+            "subject_json": "{\"berth\": \"B12\", \"job\": \"J7\", \"reason\": \"B12 commercial towing after 18:00 requires a documented emergency; no emergency log is attached (berth_notice.txt).\"}",
+            "grounding_ref": "berth_notice.txt:job_id=J7"
+          },
+          {
+            "requirement_id": "one_outcome_per_job",
+            "affected_identity": "billing_outcome",
+            "failure_kind": "NOT_ESTABLISHED",
+            "relation_name": "billing_outcome",
+            "subject_json": "{\"relation\": \"billing_outcome\"}",
+            "grounding_ref": ""
+          },
+          {
+            "requirement_id": "billing_status_known",
+            "affected_identity": "billing_outcome",
+            "failure_kind": "NOT_ESTABLISHED",
+            "relation_name": "billing_outcome",
+            "subject_json": "{\"relation\": \"billing_outcome\"}",
+            "grounding_ref": ""
+          },
+          {
+            "requirement_id": "charge_amount_numeric",
+            "affected_identity": "job_charge",
+            "failure_kind": "NOT_ESTABLISHED",
+            "relation_name": "job_charge",
+            "subject_json": "{\"relation\": \"job_charge\"}",
+            "grounding_ref": ""
+          }
+        ],
+        "n_requirements": 8
+      },
+      "source_independent": true
+    },
+    {
+      "domain": "harbor_towing",
+      "trial": "T2",
+      "build": "ACCEPTED",
+      "attempts": 1,
+      "iterations": [
+        {
+          "iteration": 1,
+          "reported_model": "Composer 2.5",
+          "accepted": true,
+          "reason": "",
+          "errors": []
+        }
+      ],
+      "finished_at": "2026-09-06T08:21:27.225459+00:00",
+      "coverage": {
+        "Q1": "PRESENT",
+        "Q2": "PRESENT",
+        "Q3": "PRESENT",
+        "Q4": "PRESENT",
+        "Q5": "EXPLICITLY_UNRESOLVED",
+        "Q6": "EXPLICITLY_UNRESOLVED"
+      },
+      "unsupported_closure_hits": [],
+      "hardcoded_question_strings": [],
+      "inventory": {
+        "relation_count": 7,
+        "admission": {
+          "job": "WORLD",
+          "job_billable_hours": "PURPOSE",
+          "job_billing_rate": "PURPOSE",
+          "job_charge": "PURPOSE",
+          "purpose_requirement_failure": "PURPOSE",
+          "service_rate": "WORLD",
+          "vessel": "WORLD"
+        },
+        "n_assertions": 31,
+        "n_derived": 0,
+        "n_source_groundings": 14,
+        "n_failures": 5,
+        "failures": [
+          {
+            "requirement_id": "b12_after_hours_no_emergency_docs",
+            "affected_identity": "b12_after_hours_no_emergency_docs",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation_name": "job",
+            "subject_json": "{\"berth\": \"B12\", \"job_id\": \"J5\", \"reason\": \"berth_notice.txt: B12 commercial towing not permitted after 18:00 without documented emergency; no emergency log attached\", \"start_time\": \"2024-06-04 19:00\"}",
+            "grounding_ref": "berth_notice.txt"
+          },
+          {
+            "requirement_id": "blank_billed_hours",
+            "affected_identity": "blank_billed_hours",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation_name": "job",
+            "subject_json": "{\"job_id\": \"J6\", \"reason\": \"service_conditions.txt \\u00a75: blank billed_hours is not an established billable quantity\"}",
+            "grounding_ref": "service_conditions.txt"
+          },
+          {
+            "requirement_id": "b12_after_hours_no_emergency_docs",
+            "affected_identity": "b12_after_hours_no_emergency_docs",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation_name": "job",
+            "subject_json": "{\"berth\": \"B12\", \"job_id\": \"J7\", \"reason\": \"berth_notice.txt: B12 commercial towing not permitted after 18:00 without documented emergency; no emergency log attached\", \"start_time\": \"2024-06-05 20:00\"}",
+            "grounding_ref": "berth_notice.txt"
+          },
+          {
+            "requirement_id": "charge_amount_numeric",
+            "affected_identity": "job_charge",
+            "failure_kind": "NOT_ESTABLISHED",
+            "relation_name": "job_charge",
+            "subject_json": "{\"relation\": \"job_charge\"}",
+            "grounding_ref": ""
+          },
+          {
+            "requirement_id": "one_charge_per_job",
+            "affected_identity": "job_charge",
+            "failure_kind": "NOT_ESTABLISHED",
+            "relation_name": "job_charge",
+            "subject_json": "{\"relation\": \"job_charge\"}",
+            "grounding_ref": ""
+          }
+        ],
+        "n_requirements": 5
+      },
+      "source_independent": true
+    },
+    {
+      "domain": "seed_grants",
+      "trial": "T1",
+      "build": "ACCEPTED",
+      "attempts": 1,
+      "iterations": [
+        {
+          "iteration": 1,
+          "reported_model": "Composer 2.5",
+          "accepted": true,
+          "reason": "",
+          "errors": []
+        }
+      ],
+      "finished_at": "2026-09-06T08:22:07.083911+00:00",
+      "coverage": {
+        "Q1": "PRESENT",
+        "Q2": "PRESENT",
+        "Q3": "PRESENT",
+        "Q4": "PRESENT",
+        "Q5": "EXPLICITLY_UNRESOLVED",
+        "Q6": "EXPLICITLY_UNRESOLVED"
+      },
+      "unsupported_closure_hits": [],
+      "hardcoded_question_strings": [],
+      "inventory": {
+        "relation_count": 9,
+        "admission": {
+          "award": "WORLD",
+          "award_match_obligation": "WORLD",
+          "award_remaining_balance": "WORLD",
+          "award_status_label": "WORLD",
+          "disbursement": "WORLD",
+          "organization": "WORLD",
+          "program_match_rule": "WORLD",
+          "purpose_requirement_failure": "PURPOSE",
+          "status_legend_entry": "WORLD"
+        },
+        "n_assertions": 38,
+        "n_derived": 0,
+        "n_source_groundings": 30,
+        "n_failures": 8,
+        "failures": [
+          {
+            "requirement_id": "award_status_interpretable",
+            "affected_identity": "A-104",
+            "failure_kind": "UNINTERPRETED",
+            "relation_name": "award",
+            "subject_json": "{\"award_id\": \"A-104\", \"status_code\": \"S\"}",
+            "grounding_ref": ""
+          },
+          {
+            "requirement_id": "award_status_interpretable",
+            "affected_identity": "A-105",
+            "failure_kind": "UNINTERPRETED",
+            "relation_name": "award",
+            "subject_json": "{\"award_id\": \"A-105\", \"status_code\": \"H\"}",
+            "grounding_ref": ""
+          },
+          {
+            "requirement_id": "seed_core_waiver_unknown",
+            "affected_identity": "seed_core_waiver_unknown",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation_name": "award_match_obligation",
+            "subject_json": "{\"award_id\": \"A-101\", \"program\": \"SEED-CORE\", \"reason\": \"SEED-CORE requires cash match unless a written waiver is on file; this packet does not attach waiver letters.\"}",
+            "grounding_ref": ""
+          },
+          {
+            "requirement_id": "seed_core_waiver_unknown",
+            "affected_identity": "seed_core_waiver_unknown",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation_name": "award_match_obligation",
+            "subject_json": "{\"award_id\": \"A-103\", \"program\": \"SEED-CORE\", \"reason\": \"SEED-CORE requires cash match unless a written waiver is on file; this packet does not attach waiver letters.\"}",
+            "grounding_ref": ""
+          },
+          {
+            "requirement_id": "seed_core_waiver_unknown",
+            "affected_identity": "seed_core_waiver_unknown",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation_name": "award_match_obligation",
+            "subject_json": "{\"award_id\": \"A-104\", \"program\": \"SEED-CORE\", \"reason\": \"SEED-CORE requires cash match unless a written waiver is on file; this packet does not attach waiver letters.\"}",
+            "grounding_ref": ""
+          },
+          {
+            "requirement_id": "seed_core_waiver_unknown",
+            "affected_identity": "seed_core_waiver_unknown",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation_name": "award_match_obligation",
+            "subject_json": "{\"award_id\": \"A-105\", \"program\": \"SEED-CORE\", \"reason\": \"SEED-CORE requires cash match unless a written waiver is on file; this packet does not attach waiver letters.\"}",
+            "grounding_ref": ""
+          },
+          {
+            "requirement_id": "status_code_not_in_legend",
+            "affected_identity": "status_code_not_in_legend",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation_name": "award",
+            "subject_json": "{\"award_id\": \"A-104\", \"reason\": \"Office status legend is partial; this code is not listed.\", \"status_code\": \"S\"}",
+            "grounding_ref": ""
+          },
+          {
+            "requirement_id": "status_code_not_in_legend",
+            "affected_identity": "status_code_not_in_legend",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation_name": "award",
+            "subject_json": "{\"award_id\": \"A-105\", \"reason\": \"Office status legend is partial; this code is not listed.\", \"status_code\": \"H\"}",
+            "grounding_ref": ""
+          }
+        ],
+        "n_requirements": 9
+      },
+      "source_independent": true
+    },
+    {
+      "domain": "seed_grants",
+      "trial": "T2",
+      "build": "ACCEPTED",
+      "attempts": 1,
+      "iterations": [
+        {
+          "iteration": 1,
+          "reported_model": "Composer 2.5",
+          "accepted": true,
+          "reason": "",
+          "errors": []
+        }
+      ],
+      "finished_at": "2026-09-06T08:22:54.609893+00:00",
+      "coverage": {
+        "Q1": "PRESENT",
+        "Q2": "PRESENT",
+        "Q3": "PRESENT",
+        "Q4": "PRESENT",
+        "Q5": "EXPLICITLY_UNRESOLVED",
+        "Q6": "EXPLICITLY_UNRESOLVED"
+      },
+      "unsupported_closure_hits": [],
+      "hardcoded_question_strings": [],
+      "inventory": {
+        "relation_count": 9,
+        "admission": {
+          "award": "WORLD",
+          "award_cash_match_rule": "WORLD",
+          "disbursement": "WORLD",
+          "organization": "WORLD",
+          "program_cash_match": "WORLD",
+          "purpose_requirement_failure": "PURPOSE",
+          "remaining_balance": "WORLD",
+          "status_interpretation": "WORLD",
+          "status_legend": "WORLD"
+        },
+        "n_assertions": 38,
+        "n_derived": 0,
+        "n_source_groundings": 38,
+        "n_failures": 8,
+        "failures": [
+          {
+            "requirement_id": "award_status_from_legend",
+            "affected_identity": "A-104",
+            "failure_kind": "UNINTERPRETED",
+            "relation_name": "award",
+            "subject_json": "{\"award_id\": \"A-104\", \"status_code\": \"S\"}",
+            "grounding_ref": ""
+          },
+          {
+            "requirement_id": "award_status_from_legend",
+            "affected_identity": "A-105",
+            "failure_kind": "UNINTERPRETED",
+            "relation_name": "award",
+            "subject_json": "{\"award_id\": \"A-105\", \"status_code\": \"H\"}",
+            "grounding_ref": ""
+          },
+          {
+            "requirement_id": "status_not_in_legend",
+            "affected_identity": "status_not_in_legend",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation_name": "award",
+            "subject_json": "{\"award_id\": \"A-104\", \"reason\": \"Office status legend is partial; this code is used by finance and is not listed in the packet excerpt.\", \"status_code\": \"S\"}",
+            "grounding_ref": "status_fragment.txt:status_code=S"
+          },
+          {
+            "requirement_id": "status_not_in_legend",
+            "affected_identity": "status_not_in_legend",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation_name": "award",
+            "subject_json": "{\"award_id\": \"A-105\", \"reason\": \"Office status legend is partial; this code is used by finance and is not listed in the packet excerpt.\", \"status_code\": \"H\"}",
+            "grounding_ref": "status_fragment.txt:status_code=H"
+          },
+          {
+            "requirement_id": "cash_match_waiver_unknown",
+            "affected_identity": "cash_match_waiver_unknown",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation_name": "award_cash_match_rule",
+            "subject_json": "{\"award_id\": \"A-101\", \"program\": \"SEED-CORE\", \"reason\": \"SEED-CORE requires a 20% cash match unless a written waiver is on file; this packet does not attach waiver letters and absence here is not a denial that a waiver exists elsewhere.\"}",
+            "grounding_ref": "program_rules.txt:program=SEED-CORE"
+          },
+          {
+            "requirement_id": "cash_match_waiver_unknown",
+            "affected_identity": "cash_match_waiver_unknown",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation_name": "award_cash_match_rule",
+            "subject_json": "{\"award_id\": \"A-103\", \"program\": \"SEED-CORE\", \"reason\": \"SEED-CORE requires a 20% cash match unless a written waiver is on file; this packet does not attach waiver letters and absence here is not a denial that a waiver exists elsewhere.\"}",
+            "grounding_ref": "program_rules.txt:program=SEED-CORE"
+          },
+          {
+            "requirement_id": "cash_match_waiver_unknown",
+            "affected_identity": "cash_match_waiver_unknown",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation_name": "award_cash_match_rule",
+            "subject_json": "{\"award_id\": \"A-104\", \"program\": \"SEED-CORE\", \"reason\": \"SEED-CORE requires a 20% cash match unless a written waiver is on file; this packet does not attach waiver letters and absence here is not a denial that a waiver exists elsewhere.\"}",
+            "grounding_ref": "program_rules.txt:program=SEED-CORE"
+          },
+          {
+            "requirement_id": "cash_match_waiver_unknown",
+            "affected_identity": "cash_match_waiver_unknown",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation_name": "award_cash_match_rule",
+            "subject_json": "{\"award_id\": \"A-105\", \"program\": \"SEED-CORE\", \"reason\": \"SEED-CORE requires a 20% cash match unless a written waiver is on file; this packet does not attach waiver letters and absence here is not a denial that a waiver exists elsewhere.\"}",
+            "grounding_ref": "program_rules.txt:program=SEED-CORE"
+          }
+        ],
+        "n_requirements": 10
+      },
+      "source_independent": true
+    },
+    {
+      "domain": "makerspace_checkout",
+      "trial": "T1",
+      "build": "ACCEPTED",
+      "attempts": 1,
+      "iterations": [
+        {
+          "iteration": 1,
+          "reported_model": "Composer 2.5",
+          "accepted": true,
+          "reason": "",
+          "errors": []
+        }
+      ],
+      "finished_at": "2026-09-06T08:23:45.395250+00:00",
+      "coverage": {
+        "Q1": "PRESENT",
+        "Q2": "PRESENT",
+        "Q3": "PRESENT",
+        "Q4": "PRESENT",
+        "Q5": "EXPLICITLY_UNRESOLVED",
+        "Q6": "EXPLICITLY_UNRESOLVED"
+      },
+      "unsupported_closure_hits": [],
+      "hardcoded_question_strings": [],
+      "inventory": {
+        "relation_count": 7,
+        "admission": {
+          "checkout_authorization": "PURPOSE",
+          "checkout_fee": "PURPOSE",
+          "checkout_record": "WORLD",
+          "member_record": "WORLD",
+          "purpose_requirement_failure": "PURPOSE",
+          "tool_identity_remap": "WORLD",
+          "tool_record": "WORLD"
+        },
+        "n_assertions": 29,
+        "n_derived": 0,
+        "n_source_groundings": 27,
+        "n_failures": 1,
+        "failures": [
+          {
+            "requirement_id": "checkout_note_meaning",
+            "affected_identity": "checkout_note_meaning",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation_name": "checkout_record",
+            "subject_json": "{\"checkout\": \"C5\", \"note\": \"PENDING\", \"reason\": \"shop_rules.txt does not define PENDING\"}",
+            "grounding_ref": "checkout_id=C5"
+          }
+        ],
+        "n_requirements": 5
+      },
+      "source_independent": true
+    },
+    {
+      "domain": "makerspace_checkout",
+      "trial": "T2",
+      "build": "ACCEPTED",
+      "attempts": 1,
+      "iterations": [
+        {
+          "iteration": 1,
+          "reported_model": "Composer 2.5",
+          "accepted": true,
+          "reason": "",
+          "errors": []
+        }
+      ],
+      "finished_at": "2026-09-06T08:24:31.671424+00:00",
+      "coverage": {
+        "Q1": "PRESENT",
+        "Q2": "PRESENT",
+        "Q3": "PRESENT",
+        "Q4": "PRESENT",
+        "Q5": "EXPLICITLY_UNRESOLVED",
+        "Q6": "EXPLICITLY_UNRESOLVED"
+      },
+      "unsupported_closure_hits": [],
+      "hardcoded_question_strings": [],
+      "inventory": {
+        "relation_count": 11,
+        "admission": {
+          "after_hours_rule": "PURPOSE",
+          "checkout": "WORLD",
+          "checkout_authorization": "PURPOSE",
+          "checkout_fee": "PURPOSE",
+          "checkout_resolved_tool": "PURPOSE",
+          "member": "WORLD",
+          "member_cert": "WORLD",
+          "note_interpretation": "PURPOSE",
+          "purpose_requirement_failure": "PURPOSE",
+          "tool": "WORLD",
+          "tool_identity_remap": "WORLD"
+        },
+        "n_assertions": 44,
+        "n_derived": 0,
+        "n_source_groundings": 16,
+        "n_failures": 5,
+        "failures": [
+          {
+            "requirement_id": "pending_note_meaning",
+            "affected_identity": "pending_note_meaning",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation_name": "checkout",
+            "subject_json": "{\"checkout_id\": \"C5\", \"note\": \"PENDING\", \"reason\": \"shop_rules.txt does not define checkout note PENDING\"}",
+            "grounding_ref": ""
+          },
+          {
+            "requirement_id": "checkout_authorization_populated",
+            "affected_identity": "checkout_authorization",
+            "failure_kind": "NOT_ESTABLISHED",
+            "relation_name": "checkout_authorization",
+            "subject_json": "{\"relation\": \"checkout_authorization\"}",
+            "grounding_ref": ""
+          },
+          {
+            "requirement_id": "checkout_fee_populated",
+            "affected_identity": "checkout_fee",
+            "failure_kind": "NOT_ESTABLISHED",
+            "relation_name": "checkout_fee",
+            "subject_json": "{\"relation\": \"checkout_fee\"}",
+            "grounding_ref": ""
+          },
+          {
+            "requirement_id": "fee_total_numeric",
+            "affected_identity": "checkout_fee",
+            "failure_kind": "NOT_ESTABLISHED",
+            "relation_name": "checkout_fee",
+            "subject_json": "{\"relation\": \"checkout_fee\"}",
+            "grounding_ref": ""
+          },
+          {
+            "requirement_id": "checkout_note_interpreted",
+            "affected_identity": "C5",
+            "failure_kind": "UNINTERPRETED",
+            "relation_name": "checkout",
+            "subject_json": "{\"checkout_id\": \"C5\", \"note\": \"PENDING\"}",
+            "grounding_ref": ""
+          }
+        ],
+        "n_requirements": 5
+      },
+      "source_independent": true
+    }
+  ],
+  "consumers": [
+    {
+      "domain": "harbor_towing",
+      "kind": "WORLD",
+      "trial": "C1",
+      "status": "ANSWERED",
+      "reported_model": "Composer 2.5",
+      "tools": {
+        "tool_calls_started": 17,
+        "shell_calls": 4,
+        "read_calls": 8,
+        "write_calls": 0,
+        "python_executions_guess": 4,
+        "mentioned_paths": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/318e3ce9feca897464b707f72f360d48/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/318e3ce9feca897464b707f72f360d48/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/318e3ce9feca897464b707f72f360d48/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/318e3ce9feca897464b707f72f360d48",
+          "inspect_world.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/318e3ce9feca897464b707f72f360d48/inspect_world.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/318e3ce9feca897464b707f72f360d48/taskview/README.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/318e3ce9feca897464b707f72f360d48/taskview/agent_surface.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/318e3ce9feca897464b707f72f360d48",
+          "/",
+          "/",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/318e3ce9feca897464b707f72f360d48",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/318e3ce9feca897464b707f72f360d48/world/world.purpose.json",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/318e3ce9feca897464b707f72f360d48",
+          "/",
+          "/",
+          "/",
+          "/",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/318e3ce9feca897464b707f72f360d48/README.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/318e3ce9feca897464b707f72f360d48",
+          "/",
+          "/",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/318e3ce9feca897464b707f72f360d48/answers.json"
+        ]
+      },
+      "exploration": {
+        "reads": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/318e3ce9feca897464b707f72f360d48/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/318e3ce9feca897464b707f72f360d48/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/318e3ce9feca897464b707f72f360d48/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/318e3ce9feca897464b707f72f360d48/inspect_world.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/318e3ce9feca897464b707f72f360d48/taskview/README.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/318e3ce9feca897464b707f72f360d48/taskview/agent_surface.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/318e3ce9feca897464b707f72f360d48/world/world.purpose.json",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/318e3ce9feca897464b707f72f360d48/README.md"
+        ],
+        "writes": [],
+        "shells": [
+          "cd /tmp/world-experiment/e2e-semantic-compilation-v1/318e3ce9feca897464b707f72f360d48 && python3 inspect_world.py",
+          "cd /tmp/world-experiment/e2e-semantic-compilation-v1/318e3ce9feca897464b707f72f360d48 && python3 << 'PY'\nimport json\nimport sys\nfrom pathlib import Path\nROOT = Path('.').resolve()\nsys.path.insert(0, str(ROOT))\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\n\ndb = ROOT / \"world\" / \"world.sqlite\"\nworld = ConstructionWorld.open(db)\n\nqueries = {\n    \"tow_job\": \"SELECT * FROM tow_job ORDER BY job_id\",\n    \"effective_rate\": \"SELECT * FROM effective_rate ORDER BY job_id\",\n ",
+          "cd /tmp/world-experiment/e2e-semantic-compilation-v1/318e3ce9feca897464b707f72f360d48 && python3 << 'PY'\nimport json, sys\nfrom pathlib import Path\nROOT = Path('.').resolve()\nsys.path.insert(0, str(ROOT))\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\nworld = ConstructionWorld.open(ROOT / \"world\" / \"world.sqlite\")\n\n# List all tables\nimport sqlite3\nconn = sqlite3.connect(ROOT / \"world\" / \"world.sqlite\")\ntables = conn.execute(\"SELECT name FROM sqlite_master WHERE type=",
+          "cd /tmp/world-experiment/e2e-semantic-compilation-v1/318e3ce9feca897464b707f72f360d48 && python3 << 'PY'\nimport json, sys\nfrom pathlib import Path\nROOT = Path('.').resolve()\nsys.path.insert(0, str(ROOT))\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\nworld = ConstructionWorld.open(ROOT / \"world\" / \"world.sqlite\")\n\n# Q3 variants\nblank = world.query_semantic(\"SELECT job_id, billed_hours FROM tow_job WHERE billed_hours IS NULL OR billed_hours = ''\")\nno_bh = world.query"
+        ],
+        "n_reads": 8,
+        "n_writes": 0,
+        "n_shells": 4
+      },
+      "n_sql_hint": 5,
+      "finished_at": "2026-09-06T08:26:54.047415+00:00",
+      "classifications": {
+        "Q1": "CORRECT",
+        "Q2": "CORRECT",
+        "Q3": "INCORRECT",
+        "Q4": "CORRECT",
+        "Q5": "UNRESOLVED_CORRECTLY",
+        "Q6": "UNSUPPORTED_CLOSURE"
+      },
+      "answers": {
+        "Q1": {
+          "id": "Q1",
+          "status": "ANSWERED",
+          "value": 240,
+          "rationale": "The effective_rate relation establishes job J1 at 240 currency units per hour (TOW rate after service conditions)."
+        },
+        "Q2": {
+          "id": "Q2",
+          "status": "ANSWERED",
+          "value": 180,
+          "rationale": "For job J4 (service_code ASST), effective_rate applies the ESCORT rate_card row at 180 per hour per service conditions section 4."
+        },
+        "Q3": {
+          "id": "Q3",
+          "status": "ANSWERED",
+          "value": 3,
+          "rationale": "Three jobs (J5, J6, J7) have no row in the billable_hours relation, which records established billable hours; J6 also has a blank billed_hours field on tow_job."
+        },
+        "Q4": {
+          "id": "Q4",
+          "status": "ANSWERED",
+          "value": 2280,
+          "rationale": "job_charge establishes 2280 for J2: 8 hours at 240/hr plus 1 hour overtime at 1.5x for vessel V-BAY day total exceeding 8 hours."
+        },
+        "Q5": {
+          "id": "Q5",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "No relation in the World establishes a fuel surcharge for any job; J3's job_charge of 240 is based solely on 2 hours at 120/hr with no surcharge component."
+        },
+        "Q6": {
+          "id": "Q6",
+          "status": "ANSWERED",
+          "value": false,
+          "rationale": "J7 is at berth B12 starting at 20:00 (after 18:00) with service TOW; billing_outcome is insufficient_evidence and purpose_requirement_failure records that no emergency documentation is attached for B12 after-hours commercial towing."
+        }
+      }
+    },
+    {
+      "domain": "harbor_towing",
+      "kind": "WORLD",
+      "trial": "C2",
+      "status": "ANSWERED",
+      "reported_model": "Composer 2.5",
+      "tools": {
+        "tool_calls_started": 14,
+        "shell_calls": 3,
+        "read_calls": 6,
+        "write_calls": 0,
+        "python_executions_guess": 3,
+        "mentioned_paths": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c2f40d88a3f5d2d9da3be7bcd10d1780/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c2f40d88a3f5d2d9da3be7bcd10d1780/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c2f40d88a3f5d2d9da3be7bcd10d1780/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c2f40d88a3f5d2d9da3be7bcd10d1780/inspect_world.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c2f40d88a3f5d2d9da3be7bcd10d1780",
+          "inspect_world.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c2f40d88a3f5d2d9da3be7bcd10d1780",
+          "Path(\"world/world.sqlite\")",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c2f40d88a3f5d2d9da3be7bcd10d1780",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c2f40d88a3f5d2d9da3be7bcd10d1780",
+          "sqlite3.connect(\"world/world.sqlite\")",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c2f40d88a3f5d2d9da3be7bcd10d1780/world/world.purpose.json",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c2f40d88a3f5d2d9da3be7bcd10d1780/README.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c2f40d88a3f5d2d9da3be7bcd10d1780/answers.json"
+        ]
+      },
+      "exploration": {
+        "reads": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c2f40d88a3f5d2d9da3be7bcd10d1780/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c2f40d88a3f5d2d9da3be7bcd10d1780/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c2f40d88a3f5d2d9da3be7bcd10d1780/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c2f40d88a3f5d2d9da3be7bcd10d1780/inspect_world.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c2f40d88a3f5d2d9da3be7bcd10d1780/world/world.purpose.json",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c2f40d88a3f5d2d9da3be7bcd10d1780/README.md"
+        ],
+        "writes": [],
+        "shells": [
+          "cd /tmp/world-experiment/e2e-semantic-compilation-v1/c2f40d88a3f5d2d9da3be7bcd10d1780 && PYTHONPATH=. python3 inspect_world.py",
+          "cd /tmp/world-experiment/e2e-semantic-compilation-v1/c2f40d88a3f5d2d9da3be7bcd10d1780 && PYTHONPATH=. python3 <<'PY'\nimport json\nfrom pathlib import Path\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\n\ndb = Path(\"world/world.sqlite\")\nworld = ConstructionWorld.open(db)\n\nqueries = {\n    \"effective_rate_all\": \"SELECT * FROM effective_rate ORDER BY job_id\",\n    \"effective_rate_J1\": \"SELECT * FROM effective_rate WHERE job_id = 'J1'\",\n    \"effective_rate_J4\": \"SELECT * FR",
+          "cd /tmp/world-experiment/e2e-semantic-compilation-v1/c2f40d88a3f5d2d9da3be7bcd10d1780 && PYTHONPATH=. python3 <<'PY'\nimport sqlite3\nconn = sqlite3.connect(\"world/world.sqlite\")\ncur = conn.cursor()\ncur.execute(\"SELECT name FROM sqlite_master WHERE type='table' ORDER BY name\")\nprint(\"Tables:\", [r[0] for r in cur.fetchall()])\nfor t in ['effective_rate','billable_hours','job_charge','billing_outcome','tow_job','purpose_requirement_failure']:\n    cur.execute(f\"PRAGMA table_info({t})\")\n    print(f\"\\n{"
+        ],
+        "n_reads": 6,
+        "n_writes": 0,
+        "n_shells": 3
+      },
+      "n_sql_hint": 4,
+      "finished_at": "2026-09-06T08:27:26.327215+00:00",
+      "classifications": {
+        "Q1": "CORRECT",
+        "Q2": "CORRECT",
+        "Q3": "INCORRECT",
+        "Q4": "CORRECT",
+        "Q5": "UNRESOLVED_CORRECTLY",
+        "Q6": "UNSUPPORTED_CLOSURE"
+      },
+      "answers": {
+        "Q1": {
+          "id": "Q1",
+          "status": "ANSWERED",
+          "value": 240,
+          "rationale": "The effective_rate relation establishes job J1 at 240 currency units per hour for service code TOW, per the named rate_card rate under service conditions \u00a71."
+        },
+        "Q2": {
+          "id": "Q2",
+          "status": "ANSWERED",
+          "value": 180,
+          "rationale": "The effective_rate relation establishes job J4 (ASST) at 180 currency units per hour, billing ASST jobs using the ESCORT rate_card row per service conditions \u00a74."
+        },
+        "Q3": {
+          "id": "Q3",
+          "status": "ANSWERED",
+          "value": 3,
+          "rationale": "Seven tow jobs exist but only four (J1\u2013J4) have rows in the billable_hours relation; J5, J6, and J7 lack an established billed_hours quantity (J6 additionally flagged by the blank_billed_hours purpose requirement failure)."
+        },
+        "Q4": {
+          "id": "Q4",
+          "status": "ANSWERED",
+          "value": 2280,
+          "rationale": "The job_charge relation establishes a charge of 2280 for job J2 (8h at 240/hr plus 1h overtime at 1.5\u00d7, vessel V-BAY day total 9h > 8 per service conditions \u00a72)."
+        },
+        "Q5": {
+          "id": "Q5",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "The World contains no relation or assertion establishing a fuel surcharge amount for job J3; job_charge for J3 is based solely on 2h at 120/hr with no surcharge component."
+        },
+        "Q6": {
+          "id": "Q6",
+          "status": "ANSWERED",
+          "value": false,
+          "rationale": "Job J7 is at berth B12 starting at 20:00 (after 18:00). The billing_outcome marks it insufficient_evidence for B12 after-hours towing without emergency documentation, and purpose_requirement_failure records that no emergency log is attached for J7."
+        }
+      }
+    },
+    {
+      "domain": "harbor_towing",
+      "kind": "WORLD",
+      "trial": "C3",
+      "status": "ANSWERED",
+      "reported_model": "Composer 2.5",
+      "tools": {
+        "tool_calls_started": 11,
+        "shell_calls": 2,
+        "read_calls": 6,
+        "write_calls": 0,
+        "python_executions_guess": 2,
+        "mentioned_paths": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90/inspect_world.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90",
+          "inspect_world.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90/research/semantic_integration/runtime_v0/world.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90",
+          "/",
+          "/",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90/world/world.purpose.json",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90/answers.json"
+        ]
+      },
+      "exploration": {
+        "reads": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90/inspect_world.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90/research/semantic_integration/runtime_v0/world.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90/world/world.purpose.json"
+        ],
+        "writes": [],
+        "shells": [
+          "cd /tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90 && python3 inspect_world.py",
+          "cd /tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90 && python3 << 'PY'\nimport json\nimport sys\nfrom pathlib import Path\n\nROOT = Path('.').resolve()\nsys.path.insert(0, str(ROOT))\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\n\ndb = ROOT / \"world\" / \"world.sqlite\"\nworld = ConstructionWorld.open(db)\n\nqueries = {\n    \"tow_job\": \"SELECT * FROM tow_job ORDER BY job_id\",\n    \"effective_rate\": \"SELECT * FROM effective_rate ORDER BY job_id\",\n"
+        ],
+        "n_reads": 6,
+        "n_writes": 0,
+        "n_shells": 2
+      },
+      "n_sql_hint": 2,
+      "finished_at": "2026-09-06T08:27:57.783548+00:00",
+      "classifications": {
+        "Q1": "CORRECT",
+        "Q2": "CORRECT",
+        "Q3": "INCORRECT",
+        "Q4": "CORRECT",
+        "Q5": "UNRESOLVED_CORRECTLY",
+        "Q6": "UNSUPPORTED_CLOSURE"
+      },
+      "answers": {
+        "Q1": {
+          "id": "Q1",
+          "status": "ANSWERED",
+          "value": 240,
+          "rationale": "The effective_rate relation establishes job J1 at 240 currency units per hour (TOW service code, per service conditions \u00a71)."
+        },
+        "Q2": {
+          "id": "Q2",
+          "status": "ANSWERED",
+          "value": 180,
+          "rationale": "Although J4's tow_job service_code is ASST, effective_rate maps it to the ESCORT rate_card row at 180 per hour (service conditions \u00a74)."
+        },
+        "Q3": {
+          "id": "Q3",
+          "status": "ANSWERED",
+          "value": 3,
+          "rationale": "Seven tow jobs exist but only four have rows in billable_hours (J1\u2013J4). J5, J6, and J7 lack an established billable-hours quantity\u2014J6 due to blank billed_hours and J5/J7 due to unresolved B12 after-hours berth restrictions."
+        },
+        "Q4": {
+          "id": "Q4",
+          "status": "ANSWERED",
+          "value": 2280,
+          "rationale": "job_charge establishes J2 at 2280: 8 hours at 240/hr plus 1 hour overtime at 1.5\u00d7 (vessel V-BAY day total 9h > 8; service conditions \u00a72)."
+        },
+        "Q5": {
+          "id": "Q5",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "No relation in the World records a fuel surcharge for any job. J3's job_charge of 240 is explained solely as 2h at 120/hr with no surcharge component."
+        },
+        "Q6": {
+          "id": "Q6",
+          "status": "ANSWERED",
+          "value": false,
+          "rationale": "J7 is at berth B12 starting at 20:00 (after 18:00). billing_outcome marks it insufficient_evidence because B12 after-hours commercial towing lacks emergency documentation, and purpose_requirement_failure records EXPLICIT_UNRESOLVED for berth_b12_after_hours on J7."
+        }
+      }
+    },
+    {
+      "domain": "harbor_towing",
+      "kind": "RAW",
+      "trial": "C1",
+      "status": "ANSWERED",
+      "reported_model": "Composer 2.5",
+      "tools": {
+        "tool_calls_started": 11,
+        "shell_calls": 0,
+        "read_calls": 8,
+        "write_calls": 0,
+        "python_executions_guess": 0,
+        "mentioned_paths": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c398fce8fd0ba4cfa3a6d8bf949db655/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c398fce8fd0ba4cfa3a6d8bf949db655/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c398fce8fd0ba4cfa3a6d8bf949db655/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c398fce8fd0ba4cfa3a6d8bf949db655/sources/vessels.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c398fce8fd0ba4cfa3a6d8bf949db655/sources/rate_card.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c398fce8fd0ba4cfa3a6d8bf949db655/sources/jobs.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c398fce8fd0ba4cfa3a6d8bf949db655/sources/service_conditions.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c398fce8fd0ba4cfa3a6d8bf949db655/sources/berth_notice.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c398fce8fd0ba4cfa3a6d8bf949db655/answers.json"
+        ]
+      },
+      "exploration": {
+        "reads": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c398fce8fd0ba4cfa3a6d8bf949db655/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c398fce8fd0ba4cfa3a6d8bf949db655/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c398fce8fd0ba4cfa3a6d8bf949db655/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c398fce8fd0ba4cfa3a6d8bf949db655/sources/vessels.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c398fce8fd0ba4cfa3a6d8bf949db655/sources/rate_card.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c398fce8fd0ba4cfa3a6d8bf949db655/sources/jobs.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c398fce8fd0ba4cfa3a6d8bf949db655/sources/service_conditions.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/c398fce8fd0ba4cfa3a6d8bf949db655/sources/berth_notice.txt"
+        ],
+        "writes": [],
+        "shells": [],
+        "n_reads": 8,
+        "n_writes": 0,
+        "n_shells": 0
+      },
+      "n_sql_hint": 0,
+      "finished_at": "2026-09-06T08:28:24.229339+00:00",
+      "classifications": {
+        "Q1": "CORRECT",
+        "Q2": "CORRECT",
+        "Q3": "CORRECT",
+        "Q4": "CORRECT",
+        "Q5": "UNRESOLVED_CORRECTLY",
+        "Q6": "UNRESOLVED_CORRECTLY"
+      },
+      "answers": {
+        "Q1": {
+          "id": "Q1",
+          "status": "ANSWERED",
+          "value": 240,
+          "rationale": "Job J1 uses service_code TOW. rate_card.csv lists TOW at 240 currency units per hour, and service_conditions.txt \u00a71 states named rate_card rates apply by service with no exception for TOW."
+        },
+        "Q2": {
+          "id": "Q2",
+          "status": "ANSWERED",
+          "value": 180,
+          "rationale": "Job J4 uses service_code ASST. service_conditions.txt \u00a74 directs billing ASST jobs using the ESCORT rate_card row, not the ASST row. rate_card.csv lists ESCORT at 180 currency units per hour."
+        },
+        "Q3": {
+          "id": "Q3",
+          "status": "ANSWERED",
+          "value": 1,
+          "rationale": "service_conditions.txt \u00a75 states blank billed_hours is not an established billable quantity. In jobs.csv, only J6 has a blank billed_hours field; all other jobs (J1\u2013J5, J7) have numeric values."
+        },
+        "Q4": {
+          "id": "Q4",
+          "status": "ANSWERED",
+          "value": 2280,
+          "rationale": "J2 has established billed_hours of 9 for service_code TOW at 240/hour. service_conditions.txt \u00a72 applies overtime: the first 8 hours bill at 240 (1920), and the 1 hour beyond 8 on that calendar day for vessel V-BAY bills at 1.5\u00d7240 (360), totaling 2280."
+        },
+        "Q5": {
+          "id": "Q5",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "service_conditions.txt \u00a76 states fuel surcharges are published in a separate circular and that this excerpt does not contain a fuel schedule. No fuel surcharge amount for J3 appears in the available sources."
+        },
+        "Q6": {
+          "id": "Q6",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "J7 occurred at berth B12 starting at 20:00 (after 18:00). berth_notice.txt permits commercial towing at B12 after 18:00 only for a documented emergency, but explicitly states no emergency log is attached and that documentation is not included in this packet. The evidence does not establish whether a documented emergency authorized J7."
+        }
+      }
+    },
+    {
+      "domain": "harbor_towing",
+      "kind": "RAW",
+      "trial": "C2",
+      "status": "ANSWERED",
+      "reported_model": "Composer 2.5",
+      "tools": {
+        "tool_calls_started": 11,
+        "shell_calls": 0,
+        "read_calls": 8,
+        "write_calls": 0,
+        "python_executions_guess": 0,
+        "mentioned_paths": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/a6060c2d5d69d635de1fa9d8f5b0c3fb/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/a6060c2d5d69d635de1fa9d8f5b0c3fb/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/a6060c2d5d69d635de1fa9d8f5b0c3fb/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/a6060c2d5d69d635de1fa9d8f5b0c3fb/sources/jobs.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/a6060c2d5d69d635de1fa9d8f5b0c3fb/sources/rate_card.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/a6060c2d5d69d635de1fa9d8f5b0c3fb/sources/service_conditions.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/a6060c2d5d69d635de1fa9d8f5b0c3fb/sources/berth_notice.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/a6060c2d5d69d635de1fa9d8f5b0c3fb/sources/vessels.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/a6060c2d5d69d635de1fa9d8f5b0c3fb/answers.json"
+        ]
+      },
+      "exploration": {
+        "reads": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/a6060c2d5d69d635de1fa9d8f5b0c3fb/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/a6060c2d5d69d635de1fa9d8f5b0c3fb/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/a6060c2d5d69d635de1fa9d8f5b0c3fb/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/a6060c2d5d69d635de1fa9d8f5b0c3fb/sources/jobs.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/a6060c2d5d69d635de1fa9d8f5b0c3fb/sources/rate_card.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/a6060c2d5d69d635de1fa9d8f5b0c3fb/sources/service_conditions.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/a6060c2d5d69d635de1fa9d8f5b0c3fb/sources/berth_notice.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/a6060c2d5d69d635de1fa9d8f5b0c3fb/sources/vessels.csv"
+        ],
+        "writes": [],
+        "shells": [],
+        "n_reads": 8,
+        "n_writes": 0,
+        "n_shells": 0
+      },
+      "n_sql_hint": 0,
+      "finished_at": "2026-09-06T08:28:49.736880+00:00",
+      "classifications": {
+        "Q1": "CORRECT",
+        "Q2": "CORRECT",
+        "Q3": "CORRECT",
+        "Q4": "CORRECT",
+        "Q5": "UNRESOLVED_CORRECTLY",
+        "Q6": "UNRESOLVED_CORRECTLY"
+      },
+      "answers": {
+        "Q1": {
+          "id": "Q1",
+          "status": "ANSWERED",
+          "value": 240,
+          "rationale": "J1 has service_code TOW with billed_hours 4 on 2024-06-03. rate_card.csv lists TOW at 240 per hour, and no service_conditions override applies (not overtime, STBY, or ASST)."
+        },
+        "Q2": {
+          "id": "Q2",
+          "status": "ANSWERED",
+          "value": 180,
+          "rationale": "J4 has service_code ASST. service_conditions.txt section 4 requires ASST jobs to be billed using the ESCORT rate_card row, not the ASST row. rate_card.csv lists ESCORT at 180 per hour."
+        },
+        "Q3": {
+          "id": "Q3",
+          "status": "ANSWERED",
+          "value": 1,
+          "rationale": "service_conditions.txt section 5 states blank billed_hours is not an established billable quantity. In jobs.csv, only J6 has a blank billed_hours field; all other jobs have a numeric value."
+        },
+        "Q4": {
+          "id": "Q4",
+          "status": "ANSWERED",
+          "value": 2280,
+          "rationale": "J2 has service_code TOW with billed_hours 9 on a single calendar day (2024-06-03). Base rate is 240/hour. service_conditions.txt section 2 applies 1.5x to hours beyond 8: (8 \u00d7 240) + (1 \u00d7 240 \u00d7 1.5) = 1920 + 360 = 2280."
+        },
+        "Q5": {
+          "id": "Q5",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "service_conditions.txt section 6 states fuel surcharges are published in a separate circular and that this excerpt does not contain a fuel schedule. No fuel surcharge amount for J3 appears in the evidence packet."
+        },
+        "Q6": {
+          "id": "Q6",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "J7 is a TOW at berth B12 starting at 20:00 on 2024-06-05, which is after 18:00. berth_notice.txt requires a documented emergency for commercial towing at B12 after 18:00, but states no emergency log is attached and documentation is held by the night desk. The packet does not establish whether documented emergency authorization exists."
+        }
+      }
+    },
+    {
+      "domain": "harbor_towing",
+      "kind": "RAW",
+      "trial": "C3",
+      "status": "ANSWERED",
+      "reported_model": "Composer 2.5",
+      "tools": {
+        "tool_calls_started": 11,
+        "shell_calls": 0,
+        "read_calls": 8,
+        "write_calls": 0,
+        "python_executions_guess": 0,
+        "mentioned_paths": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/e9f97bcd51c40ff5df5657ae35a73644/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/e9f97bcd51c40ff5df5657ae35a73644/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/e9f97bcd51c40ff5df5657ae35a73644/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/e9f97bcd51c40ff5df5657ae35a73644/sources/jobs.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/e9f97bcd51c40ff5df5657ae35a73644/sources/rate_card.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/e9f97bcd51c40ff5df5657ae35a73644/sources/vessels.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/e9f97bcd51c40ff5df5657ae35a73644/sources/service_conditions.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/e9f97bcd51c40ff5df5657ae35a73644/sources/berth_notice.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/e9f97bcd51c40ff5df5657ae35a73644/answers.json"
+        ]
+      },
+      "exploration": {
+        "reads": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/e9f97bcd51c40ff5df5657ae35a73644/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/e9f97bcd51c40ff5df5657ae35a73644/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/e9f97bcd51c40ff5df5657ae35a73644/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/e9f97bcd51c40ff5df5657ae35a73644/sources/jobs.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/e9f97bcd51c40ff5df5657ae35a73644/sources/rate_card.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/e9f97bcd51c40ff5df5657ae35a73644/sources/vessels.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/e9f97bcd51c40ff5df5657ae35a73644/sources/service_conditions.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/e9f97bcd51c40ff5df5657ae35a73644/sources/berth_notice.txt"
+        ],
+        "writes": [],
+        "shells": [],
+        "n_reads": 8,
+        "n_writes": 0,
+        "n_shells": 0
+      },
+      "n_sql_hint": 0,
+      "finished_at": "2026-09-06T08:29:14.569424+00:00",
+      "classifications": {
+        "Q1": "CORRECT",
+        "Q2": "CORRECT",
+        "Q3": "CORRECT",
+        "Q4": "CORRECT",
+        "Q5": "UNRESOLVED_CORRECTLY",
+        "Q6": "UNRESOLVED_CORRECTLY"
+      },
+      "answers": {
+        "Q1": {
+          "id": "Q1",
+          "status": "ANSWERED",
+          "value": 240,
+          "rationale": "Job J1 uses service_code TOW with 4 billed_hours on 2024-06-03 (jobs.csv). Service conditions \u00a71 apply the rate_card TOW row at 240 per hour. Vessel V-NORTH has only this job that day, so no overtime adjustment under \u00a72 (under 8 hours)."
+        },
+        "Q2": {
+          "id": "Q2",
+          "status": "ANSWERED",
+          "value": 180,
+          "rationale": "Job J4 is coded ASST (jobs.csv). Service conditions \u00a74 require billing ASST jobs at the ESCORT rate_card row, not the ASST row. ESCORT is 180 per hour (rate_card.csv)."
+        },
+        "Q3": {
+          "id": "Q3",
+          "status": "ANSWERED",
+          "value": 1,
+          "rationale": "Service conditions \u00a75 state that blank billed_hours is not an established billable quantity. Only job J6 has a blank billed_hours field in jobs.csv; all other jobs have a numeric value."
+        },
+        "Q4": {
+          "id": "Q4",
+          "status": "ANSWERED",
+          "value": 2280,
+          "rationale": "Job J2 is TOW with 9 billed_hours for vessel V-BAY on 2024-06-03 (jobs.csv). Base rate is 240/hr (rate_card.csv). Service conditions \u00a72: hours beyond 8 in one calendar day for a single vessel are charged at 1.5\u00d7 for those extra hours only. V-BAY has no other jobs that day, so 8\u00d7240 + 1\u00d7(240\u00d71.5) = 1920 + 360 = 2280."
+        },
+        "Q5": {
+          "id": "Q5",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "Service conditions \u00a76 state fuel surcharges are published in a separate circular and that this excerpt does not contain a fuel schedule. No fuel surcharge schedule is present in the sources folder, so no fuel surcharge amount for job J3 can be established."
+        },
+        "Q6": {
+          "id": "Q6",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "Job J7 is a TOW at berth B12 from 20:00\u201321:30 on 2024-06-05 (jobs.csv), which is after 18:00. Berth notice states commercial towing at B12 after 18:00 is permitted only for a documented emergency, but explicitly notes that no emergency log is attached and documentation is not included in the packet. The job comment ('after hours') does not constitute documented emergency authorization."
+        }
+      }
+    },
+    {
+      "domain": "seed_grants",
+      "kind": "WORLD",
+      "trial": "C1",
+      "status": "ANSWERED",
+      "reported_model": "Composer 2.5",
+      "tools": {
+        "tool_calls_started": 11,
+        "shell_calls": 2,
+        "read_calls": 6,
+        "write_calls": 0,
+        "python_executions_guess": 2,
+        "mentioned_paths": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6128cd9a11c804178aa338b733aec306/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6128cd9a11c804178aa338b733aec306/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6128cd9a11c804178aa338b733aec306/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6128cd9a11c804178aa338b733aec306/inspect_world.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6128cd9a11c804178aa338b733aec306",
+          "inspect_world.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6128cd9a11c804178aa338b733aec306",
+          "Path(\"world/world.sqlite\")",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6128cd9a11c804178aa338b733aec306/world/world.purpose.json",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6128cd9a11c804178aa338b733aec306",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6128cd9a11c804178aa338b733aec306/research/semantic_integration/runtime_v0/purpose.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6128cd9a11c804178aa338b733aec306/answers.json"
+        ]
+      },
+      "exploration": {
+        "reads": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6128cd9a11c804178aa338b733aec306/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6128cd9a11c804178aa338b733aec306/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6128cd9a11c804178aa338b733aec306/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6128cd9a11c804178aa338b733aec306/inspect_world.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6128cd9a11c804178aa338b733aec306/world/world.purpose.json",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6128cd9a11c804178aa338b733aec306/research/semantic_integration/runtime_v0/purpose.py"
+        ],
+        "writes": [],
+        "shells": [
+          "cd /tmp/world-experiment/e2e-semantic-compilation-v1/6128cd9a11c804178aa338b733aec306 && PYTHONPATH=. python3 inspect_world.py",
+          "cd /tmp/world-experiment/e2e-semantic-compilation-v1/6128cd9a11c804178aa338b733aec306 && PYTHONPATH=. python3 << 'PY'\nimport json\nfrom pathlib import Path\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\n\ndb = Path(\"world/world.sqlite\")\nworld = ConstructionWorld.open(db)\n\nqueries = {\n    \"award\": \"SELECT * FROM award ORDER BY award_id\",\n    \"award_remaining_balance\": \"SELECT * FROM award_remaining_balance ORDER BY award_id\",\n    \"award_match_obligation\": \"SELECT * FRO"
+        ],
+        "n_reads": 6,
+        "n_writes": 0,
+        "n_shells": 2
+      },
+      "n_sql_hint": 3,
+      "finished_at": "2026-09-06T08:29:50.217724+00:00",
+      "classifications": {
+        "Q1": "CORRECT",
+        "Q2": "CORRECT",
+        "Q3": "CORRECT",
+        "Q4": "CORRECT",
+        "Q5": "UNRESOLVED_CORRECTLY",
+        "Q6": "UNRESOLVED_CORRECTLY"
+      },
+      "answers": {
+        "Q1": {
+          "id": "Q1",
+          "status": "ANSWERED",
+          "value": 15000,
+          "rationale": "award_remaining_balance establishes A-101 with award_amount 50000, disbursed_total 35000, and remaining_balance 15000."
+        },
+        "Q2": {
+          "id": "Q2",
+          "status": "ANSWERED",
+          "value": 0,
+          "rationale": "award_match_obligation for A-102 (SEED-FAST) establishes match_required no and match_rate 0; program_match_rule for SEED-FAST also sets match_required no."
+        },
+        "Q3": {
+          "id": "Q3",
+          "status": "ANSWERED",
+          "value": 2,
+          "rationale": "status_legend_entry defines code A as Active. award_status_label interprets only A-101 and A-102 as Active; A-104 and A-105 are flagged UNINTERPRETED in purpose_requirement_failure."
+        },
+        "Q4": {
+          "id": "Q4",
+          "status": "ANSWERED",
+          "value": 10000,
+          "rationale": "award_match_obligation for A-101 establishes match_required yes and match_rate 0.20 on a 50000 award amount, yielding a required cash match of 10000."
+        },
+        "Q5": {
+          "id": "Q5",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "A-104 carries status_code S, but status_legend_entry lists only A and C. purpose_requirement_failure records status_code_not_in_legend and award_status_interpretable UNINTERPRETED for A-104, so S cannot be interpreted."
+        },
+        "Q6": {
+          "id": "Q6",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "purpose_requirement_failure records seed_core_waiver_unknown as EXPLICIT_UNRESOLVED for A-105 because the packet does not attach waiver letters; waiver status cannot be established."
+        }
+      }
+    },
+    {
+      "domain": "seed_grants",
+      "kind": "WORLD",
+      "trial": "C2",
+      "status": "ANSWERED",
+      "reported_model": "Composer 2.5",
+      "tools": {
+        "tool_calls_started": 14,
+        "shell_calls": 4,
+        "read_calls": 6,
+        "write_calls": 0,
+        "python_executions_guess": 4,
+        "mentioned_paths": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f5baaa0b7aba85c1a752ec150a3216b/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f5baaa0b7aba85c1a752ec150a3216b/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f5baaa0b7aba85c1a752ec150a3216b/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f5baaa0b7aba85c1a752ec150a3216b/inspect_world.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f5baaa0b7aba85c1a752ec150a3216b",
+          "inspect_world.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f5baaa0b7aba85c1a752ec150a3216b",
+          "sqlite3.connect('world/world.sqlite')",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f5baaa0b7aba85c1a752ec150a3216b",
+          "/",
+          "/",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f5baaa0b7aba85c1a752ec150a3216b/world/world.purpose.json",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f5baaa0b7aba85c1a752ec150a3216b",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f5baaa0b7aba85c1a752ec150a3216b/README.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f5baaa0b7aba85c1a752ec150a3216b",
+          "/",
+          "/",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f5baaa0b7aba85c1a752ec150a3216b/answers.json"
+        ]
+      },
+      "exploration": {
+        "reads": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f5baaa0b7aba85c1a752ec150a3216b/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f5baaa0b7aba85c1a752ec150a3216b/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f5baaa0b7aba85c1a752ec150a3216b/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f5baaa0b7aba85c1a752ec150a3216b/inspect_world.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f5baaa0b7aba85c1a752ec150a3216b/world/world.purpose.json",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f5baaa0b7aba85c1a752ec150a3216b/README.md"
+        ],
+        "writes": [],
+        "shells": [
+          "cd /tmp/world-experiment/e2e-semantic-compilation-v1/6f5baaa0b7aba85c1a752ec150a3216b && python3 inspect_world.py",
+          "cd /tmp/world-experiment/e2e-semantic-compilation-v1/6f5baaa0b7aba85c1a752ec150a3216b && python3 -c \"\nimport sqlite3\nconn = sqlite3.connect('world/world.sqlite')\ncur = conn.cursor()\ncur.execute(\\\"SELECT name FROM sqlite_master WHERE type='table' ORDER BY name\\\")\ntables = [r[0] for r in cur.fetchall()]\nprint('Tables:', tables)\nfor t in tables:\n    print(f'\\n=== {t} ===')\n    cur.execute(f'PRAGMA table_info({t})')\n    for col in cur.fetchall():\n        print(col)\n    cur.execute(f'SELECT COUNT(*) ",
+          "cd /tmp/world-experiment/e2e-semantic-compilation-v1/6f5baaa0b7aba85c1a752ec150a3216b && python3 << 'PY'\nimport json\nimport sys\nfrom pathlib import Path\nROOT = Path('.').resolve()\nsys.path.insert(0, str(ROOT))\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\n\ndb = ROOT / \"world\" / \"world.sqlite\"\nworld = ConstructionWorld.open(db)\n\nqueries = {\n    \"award\": \"SELECT * FROM award ORDER BY award_id\",\n    \"award_remaining_balance\": \"SELECT * FROM award_remaining_balance ORD",
+          "cd /tmp/world-experiment/e2e-semantic-compilation-v1/6f5baaa0b7aba85c1a752ec150a3216b && python3 << 'PY'\nimport json, sys\nfrom pathlib import Path\nROOT = Path('.').resolve()\nsys.path.insert(0, str(ROOT))\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\nworld = ConstructionWorld.open(ROOT / \"world\" / \"world.sqlite\")\n\n# Compute cash match amounts\nrows = world.query_semantic(\"\"\"\nSELECT a.award_id, a.amount, amo.match_required, amo.match_rate,\n       CAST(a.amount AS REAL"
+        ],
+        "n_reads": 6,
+        "n_writes": 0,
+        "n_shells": 4
+      },
+      "n_sql_hint": 6,
+      "finished_at": "2026-09-06T08:30:29.381956+00:00",
+      "classifications": {
+        "Q1": "CORRECT",
+        "Q2": "CORRECT",
+        "Q3": "CORRECT",
+        "Q4": "CORRECT",
+        "Q5": "UNRESOLVED_CORRECTLY",
+        "Q6": "UNRESOLVED_CORRECTLY"
+      },
+      "answers": {
+        "Q1": {
+          "id": "Q1",
+          "status": "ANSWERED",
+          "value": 15000,
+          "rationale": "award_remaining_balance establishes remaining_balance 15000 for A-101 (award_amount 50000 minus disbursed_total 35000)."
+        },
+        "Q2": {
+          "id": "Q2",
+          "status": "ANSWERED",
+          "value": 0,
+          "rationale": "award_match_obligation for A-102 (SEED-FAST) establishes match_required no and match_rate 0, so no cash match is required."
+        },
+        "Q3": {
+          "id": "Q3",
+          "status": "ANSWERED",
+          "value": 2,
+          "rationale": "award_status_label has two rows with status_code A and status_label Active (A-101 and A-102), matching legend code A meaning Active in status_legend_entry."
+        },
+        "Q4": {
+          "id": "Q4",
+          "status": "ANSWERED",
+          "value": 10000,
+          "rationale": "award_match_obligation for A-101 establishes match_required yes and match_rate 0.20 on a 50000 award amount, yielding a required cash match of 10000."
+        },
+        "Q5": {
+          "id": "Q5",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "A-104 has status_code S, but status_legend_entry only defines A and C. purpose_requirement_failure records award_status_interpretable UNINTERPRETED and status_code_not_in_legend EXPLICIT_UNRESOLVED for this award, so S cannot be interpreted from the office legend."
+        },
+        "Q6": {
+          "id": "Q6",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "A-105 is SEED-CORE where program_match_rule allows waiver_possible yes, but purpose_requirement_failure records seed_core_waiver_unknown EXPLICIT_UNRESOLVED for A-105 because the packet does not include waiver letters; waiver status cannot be established."
+        }
+      }
+    },
+    {
+      "domain": "seed_grants",
+      "kind": "WORLD",
+      "trial": "C3",
+      "status": "ANSWERED",
+      "reported_model": "Composer 2.5",
+      "tools": {
+        "tool_calls_started": 11,
+        "shell_calls": 3,
+        "read_calls": 5,
+        "write_calls": 0,
+        "python_executions_guess": 3,
+        "mentioned_paths": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/1806f24a0af126093333c43227b94079/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/1806f24a0af126093333c43227b94079/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/1806f24a0af126093333c43227b94079/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/1806f24a0af126093333c43227b94079/inspect_world.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/1806f24a0af126093333c43227b94079",
+          "inspect_world.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/1806f24a0af126093333c43227b94079",
+          "/",
+          "/",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/1806f24a0af126093333c43227b94079/world/world.purpose.json",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/1806f24a0af126093333c43227b94079",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/1806f24a0af126093333c43227b94079",
+          "/",
+          "/",
+          "/",
+          "/",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/1806f24a0af126093333c43227b94079/answers.json"
+        ]
+      },
+      "exploration": {
+        "reads": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/1806f24a0af126093333c43227b94079/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/1806f24a0af126093333c43227b94079/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/1806f24a0af126093333c43227b94079/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/1806f24a0af126093333c43227b94079/inspect_world.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/1806f24a0af126093333c43227b94079/world/world.purpose.json"
+        ],
+        "writes": [],
+        "shells": [
+          "cd /tmp/world-experiment/e2e-semantic-compilation-v1/1806f24a0af126093333c43227b94079 && python3 inspect_world.py",
+          "cd /tmp/world-experiment/e2e-semantic-compilation-v1/1806f24a0af126093333c43227b94079 && python3 <<'PY'\nimport json\nimport sys\nfrom pathlib import Path\n\nROOT = Path('.').resolve()\nsys.path.insert(0, str(ROOT))\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\n\nworld = ConstructionWorld.open(ROOT / \"world\" / \"world.sqlite\")\n\nqueries = {\n    \"award\": \"SELECT * FROM award ORDER BY award_id\",\n    \"award_remaining_balance\": \"SELECT * FROM award_remaining_balance ORDER BY aw",
+          "cd /tmp/world-experiment/e2e-semantic-compilation-v1/1806f24a0af126093333c43227b94079 && python3 <<'PY'\nimport json, sys\nfrom pathlib import Path\nROOT = Path('.').resolve()\nsys.path.insert(0, str(ROOT))\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\nworld = ConstructionWorld.open(ROOT / \"world\" / \"world.sqlite\")\n\n# Q3: count established Active (legend A)\nrows = world.query_semantic(\"\"\"\nSELECT a.award_id, a.status_code, l.status_label\nFROM award a\nJOIN award_status_l"
+        ],
+        "n_reads": 5,
+        "n_writes": 0,
+        "n_shells": 3
+      },
+      "n_sql_hint": 4,
+      "finished_at": "2026-09-06T08:31:02.126783+00:00",
+      "classifications": {
+        "Q1": "CORRECT",
+        "Q2": "CORRECT",
+        "Q3": "CORRECT",
+        "Q4": "UNRESOLVED_INCORRECTLY",
+        "Q5": "UNRESOLVED_CORRECTLY",
+        "Q6": "UNRESOLVED_CORRECTLY"
+      },
+      "answers": {
+        "Q1": {
+          "id": "Q1",
+          "status": "ANSWERED",
+          "value": 15000,
+          "rationale": "The award_remaining_balance relation for A-101 records award_amount 50000, disbursed_total 35000, and remaining_balance 15000."
+        },
+        "Q2": {
+          "id": "Q2",
+          "status": "ANSWERED",
+          "value": 0,
+          "rationale": "For A-102 (SEED-FAST), award_match_obligation establishes match_required no and match_rate 0, so no cash match is required."
+        },
+        "Q3": {
+          "id": "Q3",
+          "status": "ANSWERED",
+          "value": 2,
+          "rationale": "award_status_label interprets status_code A as Active for A-101 and A-102. A-104 and A-105 have uninterpreted status codes; A-103 is Closed."
+        },
+        "Q4": {
+          "id": "Q4",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "A-101 is SEED-CORE with match_rate 0.20, but purpose_requirement_failure records seed_core_waiver_unknown for A-101 on award_match_obligation because the packet lacks waiver letters, so the required cash-match amount cannot be established confidently."
+        },
+        "Q5": {
+          "id": "Q5",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "A-104 carries status_code S, which is absent from status_legend_entry and flagged by purpose_requirement_failure (status_code_not_in_legend and award_status_interpretable UNINTERPRETED), so its meaning is not established."
+        },
+        "Q6": {
+          "id": "Q6",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "purpose_requirement_failure records seed_core_waiver_unknown for A-105 (SEED-CORE) as EXPLICIT_UNRESOLVED because the packet does not attach waiver letters, so waiver status cannot be determined."
+        }
+      }
+    },
+    {
+      "domain": "seed_grants",
+      "kind": "RAW",
+      "trial": "C1",
+      "status": "ANSWERED",
+      "reported_model": "Composer 2.5",
+      "tools": {
+        "tool_calls_started": 11,
+        "shell_calls": 0,
+        "read_calls": 8,
+        "write_calls": 0,
+        "python_executions_guess": 0,
+        "mentioned_paths": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/7c043adae43cd7164a7381000ec0cd44/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/7c043adae43cd7164a7381000ec0cd44/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/7c043adae43cd7164a7381000ec0cd44/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/7c043adae43cd7164a7381000ec0cd44/sources/awards.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/7c043adae43cd7164a7381000ec0cd44/sources/disbursements.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/7c043adae43cd7164a7381000ec0cd44/sources/program_rules.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/7c043adae43cd7164a7381000ec0cd44/sources/status_fragment.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/7c043adae43cd7164a7381000ec0cd44/sources/orgs.json",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/7c043adae43cd7164a7381000ec0cd44/answers.json"
+        ]
+      },
+      "exploration": {
+        "reads": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/7c043adae43cd7164a7381000ec0cd44/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/7c043adae43cd7164a7381000ec0cd44/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/7c043adae43cd7164a7381000ec0cd44/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/7c043adae43cd7164a7381000ec0cd44/sources/awards.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/7c043adae43cd7164a7381000ec0cd44/sources/disbursements.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/7c043adae43cd7164a7381000ec0cd44/sources/program_rules.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/7c043adae43cd7164a7381000ec0cd44/sources/status_fragment.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/7c043adae43cd7164a7381000ec0cd44/sources/orgs.json"
+        ],
+        "writes": [],
+        "shells": [],
+        "n_reads": 8,
+        "n_writes": 0,
+        "n_shells": 0
+      },
+      "n_sql_hint": 0,
+      "finished_at": "2026-09-06T08:31:22.192409+00:00",
+      "classifications": {
+        "Q1": "CORRECT",
+        "Q2": "CORRECT",
+        "Q3": "CORRECT",
+        "Q4": "CORRECT",
+        "Q5": "UNRESOLVED_CORRECTLY",
+        "Q6": "UNRESOLVED_CORRECTLY"
+      },
+      "answers": {
+        "Q1": {
+          "id": "Q1",
+          "status": "ANSWERED",
+          "value": 15000,
+          "rationale": "A-101 has an award amount of 50,000 (awards.csv) and recorded disbursements of 20,000 and 15,000 (disbursements.csv), totaling 35,000. Per program_rules.txt, remaining obligation equals award amount minus disbursements: 50,000 \u2212 35,000 = 15,000."
+        },
+        "Q2": {
+          "id": "Q2",
+          "status": "ANSWERED",
+          "value": 0,
+          "rationale": "A-102 is a SEED-FAST award (awards.csv). program_rules.txt states that SEED-FAST awards have no cash-match requirement."
+        },
+        "Q3": {
+          "id": "Q3",
+          "status": "ANSWERED",
+          "value": 2,
+          "rationale": "awards.csv lists status_code A for A-101 and A-102 only. status_fragment.txt confirms A means Active. No other awards carry code A."
+        },
+        "Q4": {
+          "id": "Q4",
+          "status": "ANSWERED",
+          "value": 10000,
+          "rationale": "A-101 is a SEED-CORE award of 50,000 (awards.csv). program_rules.txt requires a cash match of 20% of the award amount for SEED-CORE awards unless a written waiver is on file. No waiver for A-101 appears in this packet, so the required match is 20% \u00d7 50,000 = 10,000."
+        },
+        "Q5": {
+          "id": "Q5",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "A-104 has status_code S (awards.csv), but status_fragment.txt only defines A (Active) and C (Closed) and explicitly states that other codes are not listed. The meaning of S cannot be established from this packet."
+        },
+        "Q6": {
+          "id": "Q6",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "A-105 is a SEED-CORE award subject to the 20% cash-match rule unless waived (program_rules.txt). The packet does not include waiver letters, and program_rules.txt states that absence of a waiver in this packet is not a denial that one exists elsewhere. Whether the requirement was waived cannot be established."
+        }
+      }
+    },
+    {
+      "domain": "seed_grants",
+      "kind": "RAW",
+      "trial": "C2",
+      "status": "ANSWERED",
+      "reported_model": "Composer 2.5",
+      "tools": {
+        "tool_calls_started": 11,
+        "shell_calls": 0,
+        "read_calls": 9,
+        "write_calls": 0,
+        "python_executions_guess": 0,
+        "mentioned_paths": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/5dab2eed320b0f7a7634f4271205349b/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/5dab2eed320b0f7a7634f4271205349b/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/5dab2eed320b0f7a7634f4271205349b/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/5dab2eed320b0f7a7634f4271205349b/sources/awards.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/5dab2eed320b0f7a7634f4271205349b/sources/disbursements.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/5dab2eed320b0f7a7634f4271205349b/sources/program_rules.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/5dab2eed320b0f7a7634f4271205349b/sources/status_fragment.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/5dab2eed320b0f7a7634f4271205349b/sources/orgs.json",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/5dab2eed320b0f7a7634f4271205349b/README.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/5dab2eed320b0f7a7634f4271205349b/answers.json"
+        ]
+      },
+      "exploration": {
+        "reads": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/5dab2eed320b0f7a7634f4271205349b/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/5dab2eed320b0f7a7634f4271205349b/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/5dab2eed320b0f7a7634f4271205349b/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/5dab2eed320b0f7a7634f4271205349b/sources/awards.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/5dab2eed320b0f7a7634f4271205349b/sources/disbursements.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/5dab2eed320b0f7a7634f4271205349b/sources/program_rules.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/5dab2eed320b0f7a7634f4271205349b/sources/status_fragment.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/5dab2eed320b0f7a7634f4271205349b/sources/orgs.json",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/5dab2eed320b0f7a7634f4271205349b/README.md"
+        ],
+        "writes": [],
+        "shells": [],
+        "n_reads": 9,
+        "n_writes": 0,
+        "n_shells": 0
+      },
+      "n_sql_hint": 0,
+      "finished_at": "2026-09-06T08:31:42.064560+00:00",
+      "classifications": {
+        "Q1": "CORRECT",
+        "Q2": "CORRECT",
+        "Q3": "CORRECT",
+        "Q4": "CORRECT",
+        "Q5": "UNRESOLVED_CORRECTLY",
+        "Q6": "UNRESOLVED_CORRECTLY"
+      },
+      "answers": {
+        "Q1": {
+          "id": "Q1",
+          "status": "ANSWERED",
+          "value": 15000,
+          "rationale": "A-101 has an award amount of 50,000 (awards.csv). Recorded disbursements total 35,000 (20,000 on 2024-02-15 plus 15,000 on 2024-06-15 in disbursements.csv). program_rules.txt defines remaining obligation as award amount minus sum of disbursements: 50,000 - 35,000 = 15,000."
+        },
+        "Q2": {
+          "id": "Q2",
+          "status": "ANSWERED",
+          "value": 0,
+          "rationale": "A-102 is a SEED-FAST award (awards.csv). program_rules.txt states that SEED-FAST awards have no cash-match requirement."
+        },
+        "Q3": {
+          "id": "Q3",
+          "status": "ANSWERED",
+          "value": 2,
+          "rationale": "status_fragment.txt defines code A as Active. awards.csv lists status_code A for A-101 and A-102 only; A-103 is C, A-104 is S, and A-105 is H."
+        },
+        "Q4": {
+          "id": "Q4",
+          "status": "ANSWERED",
+          "value": 10000,
+          "rationale": "A-101 is a SEED-CORE award with amount 50,000 (awards.csv). program_rules.txt requires a cash match of 20% of the award amount for SEED-CORE awards: 0.20 \u00d7 50,000 = 10,000. No waiver for A-101 appears in this packet."
+        },
+        "Q5": {
+          "id": "Q5",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "A-104 has status_code S (awards.csv), but status_fragment.txt only defines A (Active) and C (Closed) and states that other codes used by finance are not listed. The packet does not establish what S means."
+        },
+        "Q6": {
+          "id": "Q6",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "A-105 is a SEED-CORE award subject to the 20% cash-match rule (program_rules.txt), but the packet does not include waiver letters. program_rules.txt explicitly states that absence of a waiver in this packet is not a denial that a waiver exists elsewhere, so waiver status for A-105 cannot be established."
+        }
+      }
+    },
+    {
+      "domain": "seed_grants",
+      "kind": "RAW",
+      "trial": "C3",
+      "status": "ANSWERED",
+      "reported_model": "Composer 2.5",
+      "tools": {
+        "tool_calls_started": 11,
+        "shell_calls": 0,
+        "read_calls": 8,
+        "write_calls": 0,
+        "python_executions_guess": 0,
+        "mentioned_paths": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/1e52de46fe311a10e8584af35533a9d1/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/1e52de46fe311a10e8584af35533a9d1/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/1e52de46fe311a10e8584af35533a9d1/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/1e52de46fe311a10e8584af35533a9d1/sources/awards.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/1e52de46fe311a10e8584af35533a9d1/sources/disbursements.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/1e52de46fe311a10e8584af35533a9d1/sources/program_rules.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/1e52de46fe311a10e8584af35533a9d1/sources/status_fragment.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/1e52de46fe311a10e8584af35533a9d1/sources/orgs.json",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/1e52de46fe311a10e8584af35533a9d1/answers.json"
+        ]
+      },
+      "exploration": {
+        "reads": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/1e52de46fe311a10e8584af35533a9d1/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/1e52de46fe311a10e8584af35533a9d1/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/1e52de46fe311a10e8584af35533a9d1/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/1e52de46fe311a10e8584af35533a9d1/sources/awards.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/1e52de46fe311a10e8584af35533a9d1/sources/disbursements.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/1e52de46fe311a10e8584af35533a9d1/sources/program_rules.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/1e52de46fe311a10e8584af35533a9d1/sources/status_fragment.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/1e52de46fe311a10e8584af35533a9d1/sources/orgs.json"
+        ],
+        "writes": [],
+        "shells": [],
+        "n_reads": 8,
+        "n_writes": 0,
+        "n_shells": 0
+      },
+      "n_sql_hint": 0,
+      "finished_at": "2026-09-06T08:32:08.125520+00:00",
+      "classifications": {
+        "Q1": "CORRECT",
+        "Q2": "CORRECT",
+        "Q3": "CORRECT",
+        "Q4": "CORRECT",
+        "Q5": "UNRESOLVED_CORRECTLY",
+        "Q6": "UNRESOLVED_CORRECTLY"
+      },
+      "answers": {
+        "Q1": {
+          "id": "Q1",
+          "status": "ANSWERED",
+          "value": 15000,
+          "rationale": "Award A-101 has an award amount of 50,000 (awards.csv). Recorded disbursements total 35,000 (20,000 on 2024-02-15 plus 15,000 on 2024-06-15 in disbursements.csv). Per program_rules.txt, remaining obligation equals award amount minus sum of disbursements: 50,000 \u2212 35,000 = 15,000."
+        },
+        "Q2": {
+          "id": "Q2",
+          "status": "ANSWERED",
+          "value": 0,
+          "rationale": "Award A-102 is a SEED-FAST award (awards.csv). program_rules.txt states that SEED-FAST awards have no cash-match requirement."
+        },
+        "Q3": {
+          "id": "Q3",
+          "status": "ANSWERED",
+          "value": 2,
+          "rationale": "status_fragment.txt establishes that legend code A means Active. awards.csv shows status_code A for A-101 and A-102. No other awards carry code A."
+        },
+        "Q4": {
+          "id": "Q4",
+          "status": "ANSWERED",
+          "value": 10000,
+          "rationale": "Award A-101 is SEED-CORE with an award amount of 50,000 (awards.csv). program_rules.txt requires a cash match equal to 20% of the award amount for SEED-CORE awards unless a written waiver is on file. 20% of 50,000 = 10,000. The packet does not include a waiver letter for A-101, so the applicable rule yields a required match of 10,000."
+        },
+        "Q5": {
+          "id": "Q5",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "Award A-104 has status_code S (awards.csv), but status_fragment.txt is a partial legend listing only A (Active) and C (Closed). It explicitly states that other codes are used by finance and are not listed here. The packet does not define what S means."
+        },
+        "Q6": {
+          "id": "Q6",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "Award A-105 is SEED-CORE (awards.csv), which normally requires a 20% cash match unless a written waiver is on file (program_rules.txt). The packet does not attach waiver letters, and program_rules.txt notes that absence of a waiver in this packet is not a denial that one exists elsewhere. No source establishes whether a waiver was granted for A-105."
+        }
+      }
+    },
+    {
+      "domain": "makerspace_checkout",
+      "kind": "WORLD",
+      "trial": "C1",
+      "status": "ANSWERED",
+      "reported_model": "Composer 2.5",
+      "tools": {
+        "tool_calls_started": 13,
+        "shell_calls": 3,
+        "read_calls": 7,
+        "write_calls": 0,
+        "python_executions_guess": 3,
+        "mentioned_paths": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f/inspect_world.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f",
+          "inspect_world.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f",
+          "/",
+          "/",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f/world/world.purpose.json",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f",
+          "sqlite3.connect('world/world.sqlite')",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f/world/world.admission.json",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f/world/world.sqlite.origins.json",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f/answers.json"
+        ]
+      },
+      "exploration": {
+        "reads": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f/inspect_world.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f/world/world.purpose.json",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f/world/world.admission.json",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f/world/world.sqlite.origins.json"
+        ],
+        "writes": [],
+        "shells": [
+          "cd /tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f && python3 inspect_world.py",
+          "cd /tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f && python3 << 'PY'\nimport json\nimport sys\nfrom pathlib import Path\n\nROOT = Path('.').resolve()\nsys.path.insert(0, str(ROOT))\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\n\ndb = ROOT / \"world\" / \"world.sqlite\"\nworld = ConstructionWorld.open(db)\n\nqueries = {\n    \"checkout_record\": \"SELECT * FROM checkout_record ORDER BY checkout_id\",\n    \"checkout_authorization\": \"SELECT * FROM chec",
+          "cd /tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f && python3 << 'PY'\nimport sqlite3\nconn = sqlite3.connect('world/world.sqlite')\ncur = conn.cursor()\ncur.execute(\"SELECT name FROM sqlite_master WHERE type='table' ORDER BY name\")\nprint(\"Tables:\", [r[0] for r in cur.fetchall()])\nfor t in cur.execute(\"SELECT name FROM sqlite_master WHERE type='table'\").fetchall():\n    tname = t[0]\n    if tname.startswith('sqlite_'):\n        continue\n    print(f\"\\n--- {tname} schem"
+        ],
+        "n_reads": 7,
+        "n_writes": 0,
+        "n_shells": 3
+      },
+      "n_sql_hint": 4,
+      "finished_at": "2026-09-06T08:32:35.068484+00:00",
+      "classifications": {
+        "Q1": "CORRECT",
+        "Q2": "CORRECT",
+        "Q3": "CORRECT",
+        "Q4": "CORRECT",
+        "Q5": "UNRESOLVED_CORRECTLY",
+        "Q6": "UNRESOLVED_CORRECTLY"
+      },
+      "answers": {
+        "Q1": {
+          "id": "Q1",
+          "status": "ANSWERED",
+          "value": 12.0,
+          "rationale": "checkout_fee establishes C6 at $12.00: tool L1 remaps to LASER-A via tool_identity_remap, hourly rate $12, 1 hour, no after-hours multiplier."
+        },
+        "Q2": {
+          "id": "Q2",
+          "status": "ANSWERED",
+          "value": 18.0,
+          "rationale": "checkout_fee establishes C7 at $18.00: LASER-A at $12/hr for 1 hour with a 1.5\u00d7 after-hours multiplier (21:15\u201322:15 checkout)."
+        },
+        "Q3": {
+          "id": "Q3",
+          "status": "ANSWERED",
+          "value": 1,
+          "rationale": "checkout_authorization shows one checkout (C4) as unauthorized with basis 'missing required certification LASER-1'; member M-19 has no certs and LASER-A requires LASER-1."
+        },
+        "Q4": {
+          "id": "Q4",
+          "status": "ANSWERED",
+          "value": 24.0,
+          "rationale": "checkout_fee establishes C1 at $24.00: LASER-A at $12/hr for 2 hours with no after-hours multiplier."
+        },
+        "Q5": {
+          "id": "Q5",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "purpose_requirement_failure records checkout_note_meaning as EXPLICIT_UNRESOLVED for C5's PENDING note; the World does not define what PENDING means."
+        },
+        "Q6": {
+          "id": "Q6",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "No relation in the World establishes insurance rider coverage for any member or checkout; C2 is authorized for CNC use but coverage is not evidenced."
+        }
+      }
+    },
+    {
+      "domain": "makerspace_checkout",
+      "kind": "WORLD",
+      "trial": "C2",
+      "status": "ANSWERED",
+      "reported_model": "Composer 2.5",
+      "tools": {
+        "tool_calls_started": 16,
+        "shell_calls": 3,
+        "read_calls": 9,
+        "write_calls": 0,
+        "python_executions_guess": 3,
+        "mentioned_paths": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/10e11fad0e68d625d91c384af310f05c/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/10e11fad0e68d625d91c384af310f05c/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/10e11fad0e68d625d91c384af310f05c/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/10e11fad0e68d625d91c384af310f05c",
+          "inspect_world.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/10e11fad0e68d625d91c384af310f05c/inspect_world.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/10e11fad0e68d625d91c384af310f05c/taskview/agent_surface.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/10e11fad0e68d625d91c384af310f05c",
+          "/",
+          "/",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/10e11fad0e68d625d91c384af310f05c/world/world.purpose.json",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/10e11fad0e68d625d91c384af310f05c/world/world.admission.json",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/10e11fad0e68d625d91c384af310f05c",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/10e11fad0e68d625d91c384af310f05c/README.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/10e11fad0e68d625d91c384af310f05c",
+          "sqlite3.connect('world/world.sqlite')",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/10e11fad0e68d625d91c384af310f05c/world/world.sqlite.origins.json",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/10e11fad0e68d625d91c384af310f05c/answers.json"
+        ]
+      },
+      "exploration": {
+        "reads": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/10e11fad0e68d625d91c384af310f05c/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/10e11fad0e68d625d91c384af310f05c/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/10e11fad0e68d625d91c384af310f05c/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/10e11fad0e68d625d91c384af310f05c/inspect_world.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/10e11fad0e68d625d91c384af310f05c/taskview/agent_surface.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/10e11fad0e68d625d91c384af310f05c/world/world.purpose.json",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/10e11fad0e68d625d91c384af310f05c/world/world.admission.json",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/10e11fad0e68d625d91c384af310f05c/README.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/10e11fad0e68d625d91c384af310f05c/world/world.sqlite.origins.json"
+        ],
+        "writes": [],
+        "shells": [
+          "cd /tmp/world-experiment/e2e-semantic-compilation-v1/10e11fad0e68d625d91c384af310f05c && python3 inspect_world.py",
+          "cd /tmp/world-experiment/e2e-semantic-compilation-v1/10e11fad0e68d625d91c384af310f05c && python3 <<'PY'\nimport json\nfrom pathlib import Path\nimport sys\nROOT = Path('.').resolve()\nsys.path.insert(0, str(ROOT))\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\n\ndb = ROOT / \"world\" / \"world.sqlite\"\nworld = ConstructionWorld.open(db)\n\nqueries = {\n    \"checkout_record\": \"SELECT * FROM checkout_record ORDER BY checkout_id\",\n    \"checkout_authorization\": \"SELECT * FROM checko",
+          "cd /tmp/world-experiment/e2e-semantic-compilation-v1/10e11fad0e68d625d91c384af310f05c && python3 <<'PY'\nimport sqlite3\nconn = sqlite3.connect('world/world.sqlite')\ntables = conn.execute(\"SELECT name FROM sqlite_master WHERE type='table' ORDER BY name\").fetchall()\nprint(\"Tables:\", [t[0] for t in tables])\nfor t in tables:\n    name = t[0]\n    if 'insur' in name.lower() or 'cover' in name.lower() or 'rider' in name.lower():\n        print(name, conn.execute(f\"SELECT * FROM {name}\").fetchall())\nconn.c"
+        ],
+        "n_reads": 9,
+        "n_writes": 0,
+        "n_shells": 3
+      },
+      "n_sql_hint": 4,
+      "finished_at": "2026-09-06T08:33:07.449415+00:00",
+      "classifications": {
+        "Q1": "CORRECT",
+        "Q2": "CORRECT",
+        "Q3": "CORRECT",
+        "Q4": "CORRECT",
+        "Q5": "UNRESOLVED_CORRECTLY",
+        "Q6": "UNRESOLVED_CORRECTLY"
+      },
+      "answers": {
+        "Q1": {
+          "id": "Q1",
+          "status": "ANSWERED",
+          "value": 12.0,
+          "rationale": "The checkout_fee relation establishes a total_fee of 12.0 for C6, based on the resolved tool LASER-A (via identity remap from L1), hourly rate 12, 1 hour, and no after-hours multiplier."
+        },
+        "Q2": {
+          "id": "Q2",
+          "status": "ANSWERED",
+          "value": 18.0,
+          "rationale": "The checkout_fee relation establishes a total_fee of 18.0 for C7: LASER-A at hourly rate 12 for 1 hour with a 1.5 after-hours multiplier."
+        },
+        "Q3": {
+          "id": "Q3",
+          "status": "ANSWERED",
+          "value": 1,
+          "rationale": "Only checkout C4 is established as unauthorized in checkout_authorization, with basis 'missing required certification LASER-1'. All other checkouts are authorized."
+        },
+        "Q4": {
+          "id": "Q4",
+          "status": "ANSWERED",
+          "value": 24.0,
+          "rationale": "The checkout_fee relation establishes a total_fee of 24.0 for C1: LASER-A at hourly rate 12 for 2 hours with no after-hours multiplier."
+        },
+        "Q5": {
+          "id": "Q5",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "The World records an EXPLICIT_UNRESOLVED purpose requirement failure for checkout_note_meaning on C5; the note value PENDING is not defined by shop rules, so its meaning is not established."
+        },
+        "Q6": {
+          "id": "Q6",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "The World contains no relation or assertion about insurance riders or coverage for members; nothing establishes whether M-18 is covered for CNC use during C2."
+        }
+      }
+    },
+    {
+      "domain": "makerspace_checkout",
+      "kind": "WORLD",
+      "trial": "C3",
+      "status": "ANSWERED",
+      "reported_model": "Composer 2.5",
+      "tools": {
+        "tool_calls_started": 13,
+        "shell_calls": 3,
+        "read_calls": 7,
+        "write_calls": 0,
+        "python_executions_guess": 3,
+        "mentioned_paths": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/60e57f90b7d517789386a1811d3e0a28/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/60e57f90b7d517789386a1811d3e0a28/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/60e57f90b7d517789386a1811d3e0a28/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/60e57f90b7d517789386a1811d3e0a28/inspect_world.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/60e57f90b7d517789386a1811d3e0a28",
+          "inspect_world.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/60e57f90b7d517789386a1811d3e0a28/taskview/README.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/60e57f90b7d517789386a1811d3e0a28/research/semantic_integration/runtime_v0/world.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/60e57f90b7d517789386a1811d3e0a28",
+          "Path(\"world/world.sqlite\")",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/60e57f90b7d517789386a1811d3e0a28",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/60e57f90b7d517789386a1811d3e0a28/world/world.purpose.json",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/60e57f90b7d517789386a1811d3e0a28",
+          "Path(\"world/world.sqlite\")",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/60e57f90b7d517789386a1811d3e0a28/answers.json"
+        ]
+      },
+      "exploration": {
+        "reads": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/60e57f90b7d517789386a1811d3e0a28/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/60e57f90b7d517789386a1811d3e0a28/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/60e57f90b7d517789386a1811d3e0a28/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/60e57f90b7d517789386a1811d3e0a28/inspect_world.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/60e57f90b7d517789386a1811d3e0a28/taskview/README.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/60e57f90b7d517789386a1811d3e0a28/research/semantic_integration/runtime_v0/world.py",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/60e57f90b7d517789386a1811d3e0a28/world/world.purpose.json"
+        ],
+        "writes": [],
+        "shells": [
+          "cd /tmp/world-experiment/e2e-semantic-compilation-v1/60e57f90b7d517789386a1811d3e0a28 && PYTHONPATH=. python3 inspect_world.py",
+          "cd /tmp/world-experiment/e2e-semantic-compilation-v1/60e57f90b7d517789386a1811d3e0a28 && PYTHONPATH=. python3 <<'PY'\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\nfrom pathlib import Path\nimport json\n\ndb = Path(\"world/world.sqlite\")\nworld = ConstructionWorld.open(db)\n\nqueries = {\n    \"checkout_record\": \"SELECT * FROM checkout_record ORDER BY checkout_id\",\n    \"checkout_authorization\": \"SELECT * FROM checkout_authorization ORDER BY checkout_id\",\n    \"checkout_fee\": ",
+          "cd /tmp/world-experiment/e2e-semantic-compilation-v1/60e57f90b7d517789386a1811d3e0a28 && PYTHONPATH=. python3 <<'PY'\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\nfrom pathlib import Path\nimport sqlite3\n\ndb = Path(\"world/world.sqlite\")\nconn = sqlite3.connect(f\"file:{db}?mode=ro\", uri=True)\ntables = conn.execute(\"SELECT name FROM sqlite_master WHERE type='table' ORDER BY name\").fetchall()\nprint(\"Tables:\", [t[0] for t in tables])\nconn.close()\nPY"
+        ],
+        "n_reads": 7,
+        "n_writes": 0,
+        "n_shells": 3
+      },
+      "n_sql_hint": 3,
+      "finished_at": "2026-09-06T08:33:32.114671+00:00",
+      "classifications": {
+        "Q1": "CORRECT",
+        "Q2": "CORRECT",
+        "Q3": "CORRECT",
+        "Q4": "CORRECT",
+        "Q5": "UNRESOLVED_CORRECTLY",
+        "Q6": "UNRESOLVED_CORRECTLY"
+      },
+      "answers": {
+        "Q1": {
+          "id": "Q1",
+          "status": "ANSWERED",
+          "value": "12.0",
+          "rationale": "The checkout_fee relation establishes total_fee 12.0 for checkout:C6. C6 checked out tool L1, which remaps to LASER-A; the fee is 1 hour at hourly_rate 12 with after_hours_multiplier 1."
+        },
+        "Q2": {
+          "id": "Q2",
+          "status": "ANSWERED",
+          "value": "18.0",
+          "rationale": "The checkout_fee relation establishes total_fee 18.0 for checkout:C7. C7 used LASER-A for 1 hour at hourly_rate 12 with after_hours_multiplier 1.5 (after-hours)."
+        },
+        "Q3": {
+          "id": "Q3",
+          "status": "ANSWERED",
+          "value": 1,
+          "rationale": "Exactly one checkout is established as unauthorized in checkout_authorization: checkout:C4 has status unauthorized with basis missing required certification LASER-1. Member M-19 lacks LASER-1 required for LASER-A."
+        },
+        "Q4": {
+          "id": "Q4",
+          "status": "ANSWERED",
+          "value": "24.0",
+          "rationale": "The checkout_fee relation establishes total_fee 24.0 for checkout:C1. C1 used LASER-A for 2 hours at hourly_rate 12 with after_hours_multiplier 1."
+        },
+        "Q5": {
+          "id": "Q5",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "C5 has note PENDING in checkout_record, but purpose_requirement_failure records checkout_note_meaning as EXPLICIT_UNRESOLVED because shop rules do not define PENDING. The World does not establish what this note means."
+        },
+        "Q6": {
+          "id": "Q6",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "No relation in the World establishes insurance rider coverage for any member or checkout. C2 is authorized and fee-bearing for member M-18 on CNC-1, but coverage is not evidenced in the compiled World."
+        }
+      }
+    },
+    {
+      "domain": "makerspace_checkout",
+      "kind": "RAW",
+      "trial": "C1",
+      "status": "ANSWERED",
+      "reported_model": "Composer 2.5",
+      "tools": {
+        "tool_calls_started": 11,
+        "shell_calls": 0,
+        "read_calls": 8,
+        "write_calls": 0,
+        "python_executions_guess": 0,
+        "mentioned_paths": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/ef9004cd262a0359332d431572e8f97b/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/ef9004cd262a0359332d431572e8f97b/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/ef9004cd262a0359332d431572e8f97b/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/ef9004cd262a0359332d431572e8f97b/sources/shop_rules.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/ef9004cd262a0359332d431572e8f97b/sources/members.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/ef9004cd262a0359332d431572e8f97b/sources/tools.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/ef9004cd262a0359332d431572e8f97b/sources/checkouts.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/ef9004cd262a0359332d431572e8f97b/sources/adr.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/ef9004cd262a0359332d431572e8f97b/answers.json"
+        ]
+      },
+      "exploration": {
+        "reads": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/ef9004cd262a0359332d431572e8f97b/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/ef9004cd262a0359332d431572e8f97b/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/ef9004cd262a0359332d431572e8f97b/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/ef9004cd262a0359332d431572e8f97b/sources/shop_rules.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/ef9004cd262a0359332d431572e8f97b/sources/members.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/ef9004cd262a0359332d431572e8f97b/sources/tools.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/ef9004cd262a0359332d431572e8f97b/sources/checkouts.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/ef9004cd262a0359332d431572e8f97b/sources/adr.txt"
+        ],
+        "writes": [],
+        "shells": [],
+        "n_reads": 8,
+        "n_writes": 0,
+        "n_shells": 0
+      },
+      "n_sql_hint": 0,
+      "finished_at": "2026-09-06T08:33:55.696017+00:00",
+      "classifications": {
+        "Q1": "CORRECT",
+        "Q2": "CORRECT",
+        "Q3": "CORRECT",
+        "Q4": "CORRECT",
+        "Q5": "UNRESOLVED_CORRECTLY",
+        "Q6": "UNRESOLVED_CORRECTLY"
+      },
+      "answers": {
+        "Q1": {
+          "id": "Q1",
+          "status": "ANSWERED",
+          "value": 12,
+          "rationale": "C6 lists tool L1 for 1 hour (15:00\u201316:00, before 21:00). adr.txt establishes L1 is LASER-A, which has hourly_fee 12 (tools.csv). M-17 holds LASER-1, so the checkout is authorized. Fee: 1 \u00d7 12 = 12."
+        },
+        "Q2": {
+          "id": "Q2",
+          "status": "ANSWERED",
+          "value": 18,
+          "rationale": "C7 uses LASER-A for 1 hour (21:15\u201322:15). M-17 has LASER-1 (authorized). hourly_fee is 12 (tools.csv). shop_rules.txt multiplies hourly_fee by 1.5 after 21:00. Fee: 12 \u00d7 1.5 \u00d7 1 = 18."
+        },
+        "Q3": {
+          "id": "Q3",
+          "status": "ANSWERED",
+          "value": 1,
+          "rationale": "shop_rules.txt requires LASER-1 for laser cutter and CNC-1 for CNC mill; unauthorized without certification. C4 (M-19, LASER-A) is the only checkout where the member (M-19, no certs in members.csv) lacks the required cert (LASER-1 for LASER-A). All other checkouts match member certs or use SAW-1, which requires no cert."
+        },
+        "Q4": {
+          "id": "Q4",
+          "status": "ANSWERED",
+          "value": 24,
+          "rationale": "C1 uses LASER-A for 2 hours (18:00\u201320:00, before 21:00). M-17 has LASER-1 (authorized). hourly_fee is 12. Fee: 12 \u00d7 2 = 24."
+        },
+        "Q5": {
+          "id": "Q5",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "C5 has note PENDING, but shop_rules.txt only defines HOLD ('parked in the bay, not an extra billed day') and explicitly states 'This posting does not define other checkout notes.' No source in the packet defines PENDING."
+        },
+        "Q6": {
+          "id": "Q6",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "C2 is M-18 using CNC-1, but none of the provided sources (shop_rules.txt, members.csv, tools.csv, checkouts.csv, adr.txt) mention insurance or riders. Coverage cannot be established."
+        }
+      }
+    },
+    {
+      "domain": "makerspace_checkout",
+      "kind": "RAW",
+      "trial": "C2",
+      "status": "ANSWERED",
+      "reported_model": "Composer 2.5",
+      "tools": {
+        "tool_calls_started": 12,
+        "shell_calls": 0,
+        "read_calls": 9,
+        "write_calls": 0,
+        "python_executions_guess": 0,
+        "mentioned_paths": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/30782228b87e69bee7e3eb8fcbe2653b/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/30782228b87e69bee7e3eb8fcbe2653b/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/30782228b87e69bee7e3eb8fcbe2653b/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/30782228b87e69bee7e3eb8fcbe2653b/sources/shop_rules.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/30782228b87e69bee7e3eb8fcbe2653b/sources/checkouts.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/30782228b87e69bee7e3eb8fcbe2653b/sources/members.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/30782228b87e69bee7e3eb8fcbe2653b/sources/tools.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/30782228b87e69bee7e3eb8fcbe2653b/sources/adr.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/30782228b87e69bee7e3eb8fcbe2653b/README.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/30782228b87e69bee7e3eb8fcbe2653b/answers.json"
+        ]
+      },
+      "exploration": {
+        "reads": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/30782228b87e69bee7e3eb8fcbe2653b/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/30782228b87e69bee7e3eb8fcbe2653b/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/30782228b87e69bee7e3eb8fcbe2653b/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/30782228b87e69bee7e3eb8fcbe2653b/sources/shop_rules.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/30782228b87e69bee7e3eb8fcbe2653b/sources/checkouts.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/30782228b87e69bee7e3eb8fcbe2653b/sources/members.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/30782228b87e69bee7e3eb8fcbe2653b/sources/tools.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/30782228b87e69bee7e3eb8fcbe2653b/sources/adr.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/30782228b87e69bee7e3eb8fcbe2653b/README.md"
+        ],
+        "writes": [],
+        "shells": [],
+        "n_reads": 9,
+        "n_writes": 0,
+        "n_shells": 0
+      },
+      "n_sql_hint": 0,
+      "finished_at": "2026-09-06T08:34:22.419892+00:00",
+      "classifications": {
+        "Q1": "CORRECT",
+        "Q2": "CORRECT",
+        "Q3": "CORRECT",
+        "Q4": "CORRECT",
+        "Q5": "UNRESOLVED_CORRECTLY",
+        "Q6": "UNRESOLVED_CORRECTLY"
+      },
+      "answers": {
+        "Q1": {
+          "id": "Q1",
+          "status": "ANSWERED",
+          "value": 12,
+          "rationale": "C6 lists tool L1; adr.txt establishes L1 is LASER-A. M-17 holds LASER-1, satisfying LASER-A's cert requirement. tools.csv sets LASER-A hourly_fee at 12. C6 ran 15:00\u201316:00 (before 21:00), with 1 hour marked, so no after-hours multiplier applies: 12 \u00d7 1 = 12."
+        },
+        "Q2": {
+          "id": "Q2",
+          "status": "ANSWERED",
+          "value": 18,
+          "rationale": "C7 uses LASER-A for M-17, who holds LASER-1. tools.csv sets LASER-A hourly_fee at 12. C7 ran 21:15\u201322:15 (after 21:00), so shop_rules.txt applies the 1.5\u00d7 after-hours multiplier on 1 hour marked: 12 \u00d7 1.5 = 18."
+        },
+        "Q3": {
+          "id": "Q3",
+          "status": "ANSWERED",
+          "value": 1,
+          "rationale": "Per shop_rules.txt, laser cutter use requires LASER-1 and CNC use requires CNC-1; checkout without required certification is unauthorized. C4 (M-19, LASER-A) is the only checkout where the member lacks the tool's required cert: M-19 has no certs and LASER-A requires LASER-1. All other checkouts either match required certs or use SAW-1, which has no cert_required."
+        },
+        "Q4": {
+          "id": "Q4",
+          "status": "ANSWERED",
+          "value": 24,
+          "rationale": "C1 uses LASER-A for M-17, who holds LASER-1. tools.csv sets LASER-A hourly_fee at 12. C1 ran 18:00\u201320:00 (before 21:00), with 2 hours marked, so no after-hours multiplier applies: 12 \u00d7 2 = 24."
+        },
+        "Q5": {
+          "id": "Q5",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "C5 has note PENDING, but shop_rules.txt only defines HOLD (tool parked in bay; not an extra billed day) and explicitly states it does not define other checkout notes. No source in the packet defines PENDING."
+        },
+        "Q6": {
+          "id": "Q6",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "C2 is M-18 using CNC-1. members.csv, tools.csv, checkouts.csv, shop_rules.txt, and adr.txt contain no insurance rider or coverage information for any member or tool use."
+        }
+      }
+    },
+    {
+      "domain": "makerspace_checkout",
+      "kind": "RAW",
+      "trial": "C3",
+      "status": "ANSWERED",
+      "reported_model": "Composer 2.5",
+      "tools": {
+        "tool_calls_started": 10,
+        "shell_calls": 0,
+        "read_calls": 8,
+        "write_calls": 0,
+        "python_executions_guess": 0,
+        "mentioned_paths": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f1e2c7181b038a4c3919c69f738702d/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f1e2c7181b038a4c3919c69f738702d/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f1e2c7181b038a4c3919c69f738702d/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f1e2c7181b038a4c3919c69f738702d/sources/shop_rules.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f1e2c7181b038a4c3919c69f738702d/sources/checkouts.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f1e2c7181b038a4c3919c69f738702d/sources/members.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f1e2c7181b038a4c3919c69f738702d/sources/tools.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f1e2c7181b038a4c3919c69f738702d/sources/adr.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f1e2c7181b038a4c3919c69f738702d/answers.json"
+        ]
+      },
+      "exploration": {
+        "reads": [
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f1e2c7181b038a4c3919c69f738702d/CONSUMER.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f1e2c7181b038a4c3919c69f738702d/purpose.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f1e2c7181b038a4c3919c69f738702d/QUESTIONS.md",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f1e2c7181b038a4c3919c69f738702d/sources/shop_rules.txt",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f1e2c7181b038a4c3919c69f738702d/sources/checkouts.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f1e2c7181b038a4c3919c69f738702d/sources/members.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f1e2c7181b038a4c3919c69f738702d/sources/tools.csv",
+          "/tmp/world-experiment/e2e-semantic-compilation-v1/6f1e2c7181b038a4c3919c69f738702d/sources/adr.txt"
+        ],
+        "writes": [],
+        "shells": [],
+        "n_reads": 8,
+        "n_writes": 0,
+        "n_shells": 0
+      },
+      "n_sql_hint": 0,
+      "finished_at": "2026-09-06T08:34:44.739679+00:00",
+      "classifications": {
+        "Q1": "CORRECT",
+        "Q2": "CORRECT",
+        "Q3": "CORRECT",
+        "Q4": "CORRECT",
+        "Q5": "UNRESOLVED_CORRECTLY",
+        "Q6": "UNRESOLVED_CORRECTLY"
+      },
+      "answers": {
+        "Q1": {
+          "id": "Q1",
+          "status": "ANSWERED",
+          "value": 12,
+          "rationale": "C6 lists tool_id L1; adr.txt remaps L1 to LASER-A (hourly_fee 12). Member M-17 holds LASER-1, satisfying the laser certification requirement. Checkout runs 15:00\u201316:00 on 2024-07-03 (before 21:00), so no after-hours multiplier applies. Fee = 12 \u00d7 1 hour = 12."
+        },
+        "Q2": {
+          "id": "Q2",
+          "status": "ANSWERED",
+          "value": 18,
+          "rationale": "C7 uses LASER-A (hourly_fee 12) for member M-17, who holds LASER-1. Checkout runs 21:15\u201322:15 on 2024-07-04, entirely after 21:00; shop_rules.txt applies a 1.5\u00d7 after-hours multiplier. Fee = 12 \u00d7 1 hour \u00d7 1.5 = 18."
+        },
+        "Q3": {
+          "id": "Q3",
+          "status": "ANSWERED",
+          "value": 1,
+          "rationale": "LASER-A requires LASER-1 and CNC-1 requires CNC-1 per shop_rules.txt. C4 (M-19 on LASER-A) is the only checkout where the member lacks the required certification: M-19's certs field does not include LASER-1. All other checkouts either match required certs or use tools with no cert_required."
+        },
+        "Q4": {
+          "id": "Q4",
+          "status": "ANSWERED",
+          "value": 24,
+          "rationale": "C1 uses LASER-A (hourly_fee 12) for member M-17, who holds LASER-1. Checkout runs 18:00\u201320:00 on 2024-07-01 (before 21:00), with 2 hours marked. Fee = 12 \u00d7 2 = 24."
+        },
+        "Q5": {
+          "id": "Q5",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "C5 carries note PENDING, but shop_rules.txt only defines HOLD and explicitly states the posting does not define other checkout notes. No source in the packet explains PENDING."
+        },
+        "Q6": {
+          "id": "Q6",
+          "status": "UNRESOLVED",
+          "value": null,
+          "rationale": "C2 is M-18 on CNC-1, but no source in the packet mentions insurance, riders, or coverage for any member. Coverage cannot be established from the evidence provided."
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,268 @@
+{
+  "contract_version": "P0",
+  "view_id": "diligence-world",
+  "period": {
+    "label": "Federal FY2025",
+    "start": "2024-10-01",
+    "end": "2025-09-30",
+    "inclusive": true
+  },
+  "world_vs_purpose_boundary": {
+    "world_eligible": "Propositions whose meaning and truth conditions do not depend on which analytical purpose is active — e.g., permit text extracts, DMR row facts, limit schedule tuples, monitoring-period dates, NODI codes as reported.",
+    "purpose_only": "Applicability judgments, compliance comparisons, obligation verdicts, missing-evidence classifications, and policy thresholds that exist only because purposes A/B/C ask for them. These must not be persisted as unconditional World truth.",
+    "explicit_dependency_rule": "When a world relation must carry purpose-dependent meaning, encode the dependency as explicit relation arguments rather than collapsing into a single purpose-tainted predicate."
+  },
+  "purposes": {
+    "A": {
+      "objective": "For Federal FY2025, determine which enforceable numeric discharge limit applies to each relevant facility, discharge point, parameter, and monitoring period for which reported measurements exist. For each such measurement–limit pairing, determine whether the reported value exceeds the applicable limit. Distinguish enforceable numeric limits from report-only monitoring or monitoring for which no numeric compliance comparison is applicable. Preserve uncertainty wherever limit applicability cannot be established from available evidence.",
+      "universe_scope": {
+        "temporal": "Monitoring periods whose end dates fall within 2024-10-01 through 2025-09-30 (Federal FY2025), inclusive.",
+        "facilities": "NPDES-permitted facilities represented in the workspace source manifest and structured DMR/limit extracts (currently NM0020583, NM0028762, NM0000116).",
+        "entities": "Facility, discharge/outfall feature, parameter, monitoring period, reported measurement (including numeric DMR values and qualifier-bearing results), and candidate permit limit values drawn from compiled sources.",
+        "inclusion_trigger": "A row is in scope when a reported measurement exists for a facility–feature–parameter–monitoring-period tuple within the FY2025 window. Candidate limits are drawn from permit/limit schedules overlapping that period.",
+        "exclusions": "Monitoring periods without any reported measurement are out of scope for Purpose A (handled by Purpose C). Requirements with no numeric limit and no numeric measurement are out of scope for exceedance comparison."
+      },
+      "required_output_shape": {
+        "path": "purpose_ir/a/output.json",
+        "top_level_keys": ["purpose", "rows", "unresolved"],
+        "purpose_literal": "applicable_discharge_limits",
+        "rows": {
+          "description": "List of evaluated measurement–limit pair objects.",
+          "minimum_fields_per_row": [
+            "facility identifier",
+            "discharge point / permit feature",
+            "parameter",
+            "monitoring period",
+            "reported measurement reference or value summary",
+            "applicable limit identification (when established)",
+            "limit applicability status",
+            "limit category (enforceable numeric vs report-only vs no numeric comparison)",
+            "exceedance determination (when comparison is applicable)",
+            "grounding references to world-compiled evidence"
+          ]
+        },
+        "unresolved": {
+          "description": "List of measurement–limit cases whose applicability or comparison cannot be established from available evidence."
+        }
+      },
+      "required_semantic_distinctions": {
+        "limit_kind": [
+          "enforceable numeric limit eligible for compliance comparison",
+          "report-only monitoring (numeric or qualitative reporting without enforceable numeric comparison)",
+          "monitoring for which no numeric compliance comparison is applicable (non-numeric, qualitative-only, or structurally incomparable)"
+        ],
+        "applicability": [
+          "a single enforceable numeric limit is established as applicable for the tuple and period",
+          "no enforceable numeric limit applies (report-only or non-comparable regime)",
+          "applicability cannot be established (unresolved)"
+        ],
+        "exceedance": [
+          "measurement exceeds applicable enforceable numeric limit",
+          "measurement does not exceed applicable enforceable numeric limit",
+          "exceedance comparison not applicable (no enforceable numeric limit or no comparable numeric result)",
+          "exceedance cannot be determined (unresolved applicability or unit/statistical-base mismatch)"
+        ],
+        "world_vs_purpose": {
+          "world": "Existence of permit limits, DMR values, units, statistical bases, limit effective dates, seasonal flags, limit type codes (e.g., ENF), optional-monitoring flags as compiled from sources.",
+          "purpose": "Which limit is selected as applicable for comparison, whether a limit is treated as enforceable-numeric for this analysis, and the exceedance verdict."
+        }
+      },
+      "epistemic_requirements": {
+        "grounding": "Every established applicability and exceedance assertion must cite grounding to compiled source observations (structured CSV rows, permit extracts) or C3 resolution packets with evidence.",
+        "no_hidden_oracle": "Unresolved is a legitimate output when permit conditions, limit schedules, unit conversions, or statistical-base alignment cannot be resolved from available evidence.",
+        "no_closed_world_negation": "Absence of a located limit row must not be silently treated as proof that no limit exists; record unresolved or explicit negative only when evidence supports it.",
+        "revision_awareness": "Outputs must remain valid under kernel stale/current semantics; prefer referencing stable referent IDs over re-deriving identity ad hoc."
+      },
+      "allowed_unresolved_states": [
+        "cannot determine which limit (if any) applies to the measurement tuple for the monitoring period",
+        "multiple candidate limits with insufficient evidence to disambiguate",
+        "limit schedule or seasonal/month applicability ambiguous for the period",
+        "unit or statistical-base mismatch prevents numeric comparison even when both limit and measurement exist",
+        "permit condition text needed to choose among limit sets is absent or ambiguous",
+        "measurement qualifier or non-numeric result prevents exceedance comparison despite an enforceable limit"
+      ],
+      "completeness_expectations": {
+        "rows_coverage": "Every in-scope reported measurement within FY2025 appears in rows (evaluated) or unresolved (with reason).",
+        "pairing": "For each in-scope measurement, all candidate enforceable limits from compiled schedules are either matched to an applicable limit, classified as non-applicable (report-only / non-comparable), or listed in unresolved.",
+        "receipt": "Purpose output should be derivable from world.sqlite relations with a completeness receipt over the compiled measurement and limit universes.",
+        "cross_purpose": "Measurements lacking numeric results are not forced into Purpose A rows; they are deferred to Purpose C without treating absence as compliance."
+      },
+      "purpose_specific_policies": {
+        "enforceable_numeric_threshold": "Treat a limit as enforceable-numeric for comparison only when compiled evidence supports an ENF-type (or equivalent) numeric limit with a defined numeric threshold and a comparable reported numeric measurement for the same parameter, feature, period, and compatible statistical base/unit.",
+        "report_only_classification": "Classify as report-only when the limit or permit language indicates monitoring/reporting without an enforceable numeric effluent limit, or when OPTIONAL_MONITORING_FLAG and limit typing indicate non-enforcement.",
+        "non_comparable_classification": "Classify as no numeric comparison when results are qualitative, pass/fail coded without numeric threshold, toxicity endpoints without numeric conversion policy, or NODI-coded non-results.",
+        "comparison_policy": "Exceedance is purpose-side numeric comparison using the applicable enforceable limit threshold and reported value under an explicit unit/statistical-base alignment rule documented in the row or derivation.",
+        "seasonal_and_schedule_policy": "Limit applicability across months, seasons, and limit-set designators follows compiled schedule fields first; permit-text disambiguation is required only when schedules underdetermine selection.",
+        "uncertainty_preservation": "When applicability cannot be established, emit unresolved rather than defaulting to the nearest limit or assuming compliance."
+      }
+    },
+    "B": {
+      "objective": "For Federal FY2025, determine which monitoring requirements were actually applicable for the selected facilities, including requirements that depend on discharge occurrence, season, permit year, special studies, event conditions, or other permit conditions. For each evaluated requirement, determine whether evidence establishes that monitoring was required, establishes that it was not required, or leaves applicability unresolved.",
+      "universe_scope": {
+        "temporal": "Federal FY2025 (2024-10-01 through 2025-09-30, inclusive).",
+        "facilities": "Selected facilities in the workspace source manifest (NM0020583, NM0028762, NM0000116).",
+        "entities": "Monitoring requirements as expressed in permit schedules, limit sets, frequency codes, parameters, discharge features, and condition-triggered obligations (including special studies and event-driven requirements).",
+        "inclusion_trigger": "A requirement is in scope when it appears in compiled permit/limit/monitoring schedules for a selected facility and could apply during some portion of FY2025.",
+        "exclusions": "Post-FY2025 obligations outside the period unless they govern monitoring due within FY2025. Generic regulatory background not tied to facility-specific permit terms."
+      },
+      "required_output_shape": {
+        "path": "purpose_ir/b/output.json",
+        "top_level_keys": ["purpose", "rows", "unresolved"],
+        "purpose_literal": "monitoring_obligations",
+        "rows": {
+          "description": "List of evaluated monitoring requirements and their applicability verdict.",
+          "minimum_fields_per_row": [
+            "facility identifier",
+            "requirement identification (parameter, feature, frequency, limit set, or permit condition anchor)",
+            "applicability period or trigger context within FY2025",
+            "applicability verdict (required / not required / unresolved)",
+            "condition dependencies evaluated (discharge occurrence, season, permit year, special study, event, etc.)",
+            "grounding references to world-compiled evidence"
+          ]
+        },
+        "unresolved": {
+          "description": "List of requirements whose applicability cannot be established from available evidence."
+        }
+      },
+      "required_semantic_distinctions": {
+        "applicability_verdict": [
+          "monitoring was required for the evaluated period or trigger context",
+          "monitoring was not required for the evaluated period or trigger context",
+          "applicability cannot be established (unresolved)"
+        ],
+        "condition_dependency": [
+          "unconditional schedule-based requirement",
+          "discharge-occurrence-dependent",
+          "seasonal or monthly schedule-dependent",
+          "permit-year or limit-set-version-dependent",
+          "special-study or one-time obligation",
+          "event-condition or non-routine trigger",
+          "other permit-condition-gated requirement"
+        ],
+        "world_vs_purpose": {
+          "world": "Permit schedule tuples, frequency codes, parameter lists, effective dates, optional-monitoring flags, and documented discharge/no-discharge reports as compiled facts.",
+          "purpose": "Whether a compiled requirement actually applied in FY2025 given evaluated conditions, and the required/not-required/unresolved verdict."
+        }
+      },
+      "epistemic_requirements": {
+        "grounding": "Each required/not-required verdict must be grounded to permit schedules, DMR submission patterns, or C3 resolution with cited evidence packets.",
+        "conditional_logic_explicit": "When applicability hinges on discharge occurrence, season, or events, the evaluated condition state must be explicit in the row — not assumed from missing data.",
+        "no_missing_data_as_negative": "Lack of measurements alone does not establish that monitoring was not required; distinguish evidence of non-requirement from mere absence of results.",
+        "no_closed_world_negation": "Do not infer non-requirement from failure to find a schedule row; unresolved is allowed."
+      },
+      "allowed_unresolved_states": [
+        "permit condition text insufficient to determine whether a conditional requirement activated in FY2025",
+        "discharge occurrence during the period cannot be established from available evidence",
+        "conflicting schedule rows or permit modifications without clear precedence",
+        "special-study or event trigger referenced but occurrence in FY2025 not documented",
+        "seasonal or permit-year boundary ambiguity for requirement effective dates",
+        "frequency or parameter scope ambiguous across limit sets"
+      ],
+      "completeness_expectations": {
+        "rows_coverage": "Each compiled monitoring requirement that could apply to a selected facility during FY2025 is evaluated in rows or listed in unresolved.",
+        "verdict_trichotomy": "Every evaluated requirement receives exactly one of: required, not required, or unresolved — no silent omission.",
+        "receipt": "Derivation over world.sqlite monitoring-schedule and condition relations with completeness receipt over the requirement universe.",
+        "cross_purpose": "Purpose B establishes whether monitoring was required; Purpose C handles semantic interpretation when required monitoring lacks an ordinary numeric result."
+      },
+      "purpose_specific_policies": {
+        "selected_facilities_policy": "Evaluate obligations only for facilities explicitly in the workspace manifest unless world compilation expands the facility set with grounded additions.",
+        "conditional_activation_policy": "A conditional requirement is required only when compiled evidence establishes both the requirement and the activating condition for the relevant FY2025 interval; otherwise not-required only if evidence positively establishes non-activation, else unresolved.",
+        "schedule_precedence_policy": "When permit modifications overlap, prefer effective-dated compiled rows and document precedence reasoning in grounding; unresolved when precedence cannot be established.",
+        "optional_monitoring_policy": "Requirements flagged optional in compiled schedules are not treated as mandatory unless permit text or C3 resolution establishes otherwise.",
+        "frequency_interpretation_policy": "Map EPA frequency codes to obligation intervals within FY2025 using explicit interpretation rules; mark unresolved when code semantics are ambiguous for the period.",
+        "non_requirement_evidence_policy": "Not-required verdicts require positive evidence (e.g., documented no discharge, explicit waiver, schedule exclusion for the period) — not default from missing DMR rows."
+      }
+    },
+    "C": {
+      "objective": "For Federal FY2025 monitoring expectations without an ordinary numeric reported result, determine what the available evidence establishes. Distinguish documented no-discharge periods, periods where conditional monitoring was not required, other documented no-data states, required monitoring that appears to lack adequate evidence, and cases that remain unresolved. Do not treat missing data by itself as evidence of compliance or violation.",
+      "universe_scope": {
+        "temporal": "Federal FY2025 (2024-10-01 through 2025-09-30, inclusive).",
+        "facilities": "Selected facilities in the workspace source manifest (NM0020583, NM0028762, NM0000116).",
+        "entities": "Monitoring expectations (from schedules/obligations) paired with DMR rows lacking ordinary numeric results — including NODI-coded submissions, blank values, qualifier-only results, and absent expected submissions.",
+        "inclusion_trigger": "A case is in scope when (a) a monitoring expectation exists for a facility–parameter–feature–period tuple in FY2025 and (b) the available reported result is not an ordinary numeric value suitable for Purpose A exceedance comparison, or no result is present.",
+        "exclusions": "Tuples with ordinary numeric reported results covered by Purpose A. Generic data-quality issues outside NPDES monitoring semantics."
+      },
+      "required_output_shape": {
+        "path": "purpose_ir/c/output.json",
+        "top_level_keys": ["purpose", "rows", "unresolved"],
+        "purpose_literal": "missing_evidence_semantics",
+        "rows": {
+          "description": "List of evaluated no-result / NODI / missing-evidence cases and the established semantic state.",
+          "minimum_fields_per_row": [
+            "facility identifier",
+            "discharge point / permit feature",
+            "parameter",
+            "monitoring period or expectation interval",
+            "observed result form (NODI code, blank, qualifier-only, absent submission, etc.)",
+            "established_state classification",
+            "grounding references to world-compiled evidence"
+          ]
+        },
+        "unresolved": {
+          "description": "List of cases that remain unresolved after evidence evaluation."
+        }
+      },
+      "required_semantic_distinctions": {
+        "established_state": [
+          "documented no-discharge period for the feature/parameter context",
+          "conditional monitoring not required for the period (condition positively established)",
+          "other documented no-data state (permitted NODI or equivalent documented reason)",
+          "required monitoring appears to lack adequate evidence (expectation active but evidence insufficient)",
+          "unresolved — evidence does not establish any of the above"
+        ],
+        "evidence_vs_absence": [
+          "positive documentary evidence supporting the classified state",
+          "mere absence of a numeric result (insufficient alone for compliance or violation)",
+          "NODI or DMR comment as documentary signal (when grounded to source)"
+        ],
+        "world_vs_purpose": {
+          "world": "NODI codes, DMR submission presence/absence, no-discharge reports, permit schedule tuples, and permit text extracts as compiled.",
+          "purpose": "Semantic classification of what missing/non-numeric evidence establishes about the monitoring expectation — not a compliance/violation verdict."
+        }
+      },
+      "epistemic_requirements": {
+        "grounding": "Each established_state classification must cite grounded source evidence (DMR row, NODI code, permit text extract, no-discharge documentation) or a C3 resolution packet.",
+        "anti_conflation": "Missing data must never be silently mapped to compliance or violation; Purpose C classifies evidential meaning only.",
+        "link_to_obligations": "When monitoring was required (per Purpose B or independent C3 resolution), distinguish documented excuse states from inadequate-evidence states.",
+        "no_closed_world_negation": "Absence of a submission is not proof of no-discharge or non-requirement without supporting documentary evidence."
+      },
+      "allowed_unresolved_states": [
+        "monitoring expectation applicability itself unresolved (defer cross-reference to Purpose B unresolved)",
+        "NODI or comment code present but semantics for the parameter/period cannot be determined",
+        "conflicting signals between schedule expectation and submitted DMR form",
+        "no-discharge claim referenced but not documented for the specific period/feature",
+        "cannot determine whether missing submission reflects late filing outside FY2025 window vs true gap"
+      ],
+      "completeness_expectations": {
+        "rows_coverage": "Every in-scope no-result or missing-evidence case within FY2025 appears in rows (classified) or unresolved.",
+        "classification_exhaustion": "Each case receives one established_state label or is listed in unresolved — no silent default to compliance.",
+        "receipt": "Derivation over world.sqlite DMR, NODI, schedule, and no-discharge relations with completeness receipt over the missing-evidence universe.",
+        "cross_purpose": "Purpose A handles numeric exceedance; Purpose B handles whether monitoring was required; Purpose C handles evidential meaning when results are absent or non-ordinary."
+      },
+      "purpose_specific_policies": {
+        "missing_not_compliance_policy": "Never infer compliance or violation from missing numeric data alone; at most classify as inadequate evidence or unresolved.",
+        "nodi_interpretation_policy": "Map NODI codes to established states only with grounded code semantics and parameter context; unresolved when code meaning is ambiguous.",
+        "no_discharge_policy": "Classify as documented no-discharge only when positive evidence (DMR NODI, permit-recognized no-discharge report, or equivalent) is grounded for the feature and period.",
+        "conditional_not_required_policy": "Classify as conditional monitoring not required only when Purpose B-style condition evaluation (or equivalent C3 resolution) positively establishes non-activation for the period.",
+        "inadequate_evidence_policy": "Classify as required monitoring lacking adequate evidence when monitoring obligation is established (or assumed from compiled schedule with explicit caveat) and no satisfactory documentary excuse exists.",
+        "deferral_policy": "When monitoring requirement applicability is itself unresolved, list in unresolved or cross-reference Purpose B rather than forcing a missing-evidence classification."
+      }
+    }
+  },
+  "cross_purpose_coordination": {
+    "division_of_labor": {
+      "A": "Numeric limit applicability and exceedance for reported measurements.",
+      "B": "Whether monitoring was required under permit conditions.",
+      "C": "What missing or non-ordinary results mean evidentially."
+    },
+    "shared_period": "All purposes share Federal FY2025 boundaries.",
+    "shared_facility_set": "All purposes share the manifest facility set unless world compilation adds grounded facilities.",
+    "unresolved_propagation": "Unresolved from B may constrain C classifications; unresolved from limit applicability in A must not be conflated with missing-evidence semantics in C.",
+    "no_purpose_d": "Purpose D is not in scope for this contract."
+  },
+  "limitations": {
+    "pass_scope": "P0 compiles intentions only; no domain relations authored and no world.sqlite compilation performed in this pass.",
+    "source_visibility": "Contract reflects visible purposes A/B/C and workspace manifest; permit PDF semantics are not pre-interpreted here.",
+    "prior_passes": "No prior pass artifacts were present to incorporate; no repair attempted."
+  }
+}

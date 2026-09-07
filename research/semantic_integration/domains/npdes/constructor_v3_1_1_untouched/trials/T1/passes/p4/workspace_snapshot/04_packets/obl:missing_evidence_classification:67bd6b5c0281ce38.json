@@ -1,0 +1,22 @@
+{
+  "obligation_id": "obl:missing_evidence_classification:67bd6b5c0281ce38",
+  "selected_observations": [
+    {
+      "source_path": "sources/structured/dmr_measurements.csv",
+      "location": "line 340; DMR_EVENT_ID=3621391575; DMR_VALUE_ID=3853940561",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0020583; PERM_FEATURE_NMBR=001; PARAMETER_CODE=50060; PARAMETER_DESC=Chlorine, total residual; MONITORING_PERIOD_END_DATE=08/31/2025; DMR_EVENT_ID=3621391575; DMR_VALUE_ID=3853940561; NODI_CODE=9"
+    },
+    {
+      "source_path": "sources/structured/permit_limits.csv",
+      "location": "line 67; DMR_COMMENT_TEXT on limit:3606239982:3610673291",
+      "excerpt": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES."
+    }
+  ],
+  "selection_rationale": "Centers on NODI-coded or absent numeric DMR reporting plus any structured permit comment tied to the parameter schedule.",
+  "known_missing_information": [
+    "02_mechanical_world/world.sqlite not present in workspace; evidence selected directly from structured CSV sources using P2 join rules.",
+    "Permit PDF sources listed in sources/source_manifest.json were not ingested; permit_stated_condition packets use structured DMR_COMMENT_TEXT only.",
+    "Classification may depend on documented_no_discharge_assertion adjudication and Purpose B obligation context.",
+    "NODI code semantics require permit/DMR documentary interpretation beyond the coded value alone."
+  ]
+}

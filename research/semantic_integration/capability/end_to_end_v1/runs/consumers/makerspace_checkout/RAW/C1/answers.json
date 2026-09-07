@@ -1,0 +1,40 @@
+{
+  "answers": [
+    {
+      "id": "Q1",
+      "status": "ANSWERED",
+      "value": 12,
+      "rationale": "C6 lists tool L1 for 1 hour (15:00\u201316:00, before 21:00). adr.txt establishes L1 is LASER-A, which has hourly_fee 12 (tools.csv). M-17 holds LASER-1, so the checkout is authorized. Fee: 1 \u00d7 12 = 12."
+    },
+    {
+      "id": "Q2",
+      "status": "ANSWERED",
+      "value": 18,
+      "rationale": "C7 uses LASER-A for 1 hour (21:15\u201322:15). M-17 has LASER-1 (authorized). hourly_fee is 12 (tools.csv). shop_rules.txt multiplies hourly_fee by 1.5 after 21:00. Fee: 12 \u00d7 1.5 \u00d7 1 = 18."
+    },
+    {
+      "id": "Q3",
+      "status": "ANSWERED",
+      "value": 1,
+      "rationale": "shop_rules.txt requires LASER-1 for laser cutter and CNC-1 for CNC mill; unauthorized without certification. C4 (M-19, LASER-A) is the only checkout where the member (M-19, no certs in members.csv) lacks the required cert (LASER-1 for LASER-A). All other checkouts match member certs or use SAW-1, which requires no cert."
+    },
+    {
+      "id": "Q4",
+      "status": "ANSWERED",
+      "value": 24,
+      "rationale": "C1 uses LASER-A for 2 hours (18:00\u201320:00, before 21:00). M-17 has LASER-1 (authorized). hourly_fee is 12. Fee: 12 \u00d7 2 = 24."
+    },
+    {
+      "id": "Q5",
+      "status": "UNRESOLVED",
+      "value": null,
+      "rationale": "C5 has note PENDING, but shop_rules.txt only defines HOLD ('parked in the bay, not an extra billed day') and explicitly states 'This posting does not define other checkout notes.' No source in the packet defines PENDING."
+    },
+    {
+      "id": "Q6",
+      "status": "UNRESOLVED",
+      "value": null,
+      "rationale": "C2 is M-18 using CNC-1, but none of the provided sources (shop_rules.txt, members.csv, tools.csv, checkouts.csv, adr.txt) mention insurance or riders. Coverage cannot be established."
+    }
+  ]
+}

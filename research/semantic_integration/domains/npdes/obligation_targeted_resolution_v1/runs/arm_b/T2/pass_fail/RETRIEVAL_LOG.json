@@ -1,0 +1,46 @@
+{
+  "structured_inspected": [
+    {
+      "source_id": "sources/permit_limits.csv",
+      "action": "grep and read header; inspected all 12 rows with PASS = 0 / FAIL = 1 in DMR_COMMENT_TEXT (limit set 3600657354, permit NM0020583)",
+      "fields": ["DMR_COMMENT_TEXT", "LIMIT_VALUE_NMBR", "LIMIT_UNIT_DESC", "PARAMETER_CODE", "PARAMETER_DESC", "LIMIT_VALUE_QUALIFIER_CODE", "STATISTICAL_BASE_TYPE_CODE", "OPTIONAL_MONITORING_FLAG"]
+    },
+    {
+      "source_id": "sources/dmr_measurements.csv",
+      "action": "grep representative FY2025 rows for LIMIT_VALUE_IDs 3610839676 (retest #1, optional) and 3610839682 (TEM3D pass/fail)",
+      "fields": ["DMR_VALUE_NMBR", "DMR_VALUE_STANDARD_UNITS", "DMR_VALUE_QUALIFIER_CODE", "LIMIT_VALUE_NMBR", "LIMIT_VALUE_STANDARD_UNITS", "NODI_CODE", "MONITORING_PERIOD_END_DATE"]
+    },
+    {
+      "source_id": "sources/document_inventory.json",
+      "action": "read to map permit NM0020583 to farmington document package",
+      "fields": ["permit", "path", "document_kind"]
+    }
+  ],
+  "documents_opened": [
+    "documents/farmington/final_permit.txt"
+  ],
+  "sections_inspected": [
+    "documents/farmington/final_permit.txt — Part I, Page 3: WHOLE EFFLUENT TOXICITY TESTING schedule and footnote *9",
+    "documents/farmington/final_permit.txt — Part II, Section D: NOEC definition and acute test failure definition",
+    "documents/farmington/final_permit.txt — Part II, Section 3.c: DMR reporting requirement table (TEM3D/TEM6C, retest codes, TOM3D/TOM6C)"
+  ],
+  "snippets_inspected": [
+    "sources/permit_limits.csv — DMR_COMMENT_TEXT for limit set QUARTERLY 48-HR. ACUTE NOEC FRESHWATER TOXICITY",
+    "sources/permit_limits.csv — TEM3D row (LIMIT_VALUE_ID 3610839682): empty LIMIT_VALUE_NMBR, unit pass=0;fail=1",
+    "sources/permit_limits.csv — TOM3D row (LIMIT_VALUE_ID 3610839684): LIMIT_VALUE_NMBR 23, unit %, same DMR comment on limit set",
+    "sources/dmr_measurements.csv — TEM3D FY2025 row DMR_FORM_VALUE_ID 3920662053: DMR_VALUE_NMBR 0, limit empty",
+    "sources/dmr_measurements.csv — retest #1 FY2025 rows (LIMIT_VALUE_ID 3610839676): empty DMR_VALUE_NMBR, NODI_CODE 9",
+    "documents/farmington/final_permit.txt — Part I WET lines 106-109, footnote *9 lines 125-126",
+    "documents/farmington/final_permit.txt — Part II acute test failure definition lines 390-394",
+    "documents/farmington/final_permit.txt — Part II DMR reporting table lines 512-526"
+  ],
+  "queries_or_actions": [
+    "grep PASS = 0|FAIL = 1 across workspace",
+    "grep NM0020583|PASS|FAIL|footnote|NOEC|toxicity in documents/",
+    "grep LIMIT_VALUE_ID 3610839676|3610839682 in dmr_measurements.csv",
+    "read permit_limits.csv header",
+    "read farmington/final_permit.txt Part I page 3 and Part II WET reporting sections"
+  ],
+  "n_documents_opened": 1,
+  "approx_chars_inspected": 4200
+}

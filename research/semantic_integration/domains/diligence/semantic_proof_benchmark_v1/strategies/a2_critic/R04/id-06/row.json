@@ -1,0 +1,48 @@
+{
+  "strategy": "a2_critic",
+  "trial": "R04",
+  "obligation_id": "id-06",
+  "candidate": {
+    "left": "crm:OAK-77",
+    "right": "billing:Oakfield Logistik GmbH"
+  },
+  "proposed_disposition": "SAME_ENTITY",
+  "final_disposition": "SAME_ENTITY",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row OAK-77"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row HRB 88421"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Oakfield Logistik GmbH"
+    }
+  ],
+  "support_claim": "Commercial notes record that Oakfield Logistics GmbH rebranded to Oakfield Logistik GmbH with unchanged register number HRB 88421 while CRM still shows the old English-facing name, and CRM row OAK-77 names Oakfield Logistics while billing and the registry under HRB 88421 name Oakfield Logistik GmbH.",
+  "proof_size": 2,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "critic": {
+    "decision": "CONFIRM",
+    "reason": "The cited packet evidence establishes that CRM OAK-77's English-facing name Oakfield Logistics is the pre-rebrand form of Oakfield Logistik GmbH (unchanged HRB 88421 per commercial notes, registry, and billing), satisfying the contract's requirement for establishing evidence of same legal counterparty."
+  },
+  "critic_reason": "confirmed",
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": true,
+  "unsupported_closure": false,
+  "under_closure": false,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": false
+}

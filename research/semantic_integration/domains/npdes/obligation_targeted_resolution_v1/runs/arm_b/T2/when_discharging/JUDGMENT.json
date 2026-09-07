@@ -1,0 +1,35 @@
+{
+  "disposition": "SUPPORTED_RESOLUTION",
+  "grounding": [
+    {
+      "source_id": "documents/aztec/final_permit.txt",
+      "location": "lines 92-94",
+      "proposition": "Permit footnote *1 is defined as 'When discharging.' and is the authoritative text behind DMR_COMMENT_TEXT 'WHEN DISCHARGING.'"
+    },
+    {
+      "source_id": "documents/aztec/final_permit.txt",
+      "location": "lines 56-66, 72-80",
+      "proposition": "Effluent limit monitoring frequencies for intermittent-flow Outfall 001 are marked with footnote (*1), tying scheduled monitoring to the discharge condition."
+    },
+    {
+      "source_id": "documents/aztec/final_permit.txt",
+      "location": "lines 150-153",
+      "proposition": "When there is no discharge during the sampling month, the permittee must mark the NO DISCHARGE box on the DMR instead of performing parameter monitoring for that month."
+    },
+    {
+      "source_id": "documents/aztec/statement_of_basis.txt",
+      "location": "lines 506-511",
+      "proposition": "The statement of basis paraphrases the same discharge-conditioned monitoring schedule (flow daily, TRC daily, pH weekly, TDS and cyanide quarterly) using explicit 'when discharging' language."
+    },
+    {
+      "source_id": "sources/permit_limits.csv",
+      "location": "aggregate over 17 rows with DMR_COMMENT_TEXT containing WHEN DISCHARGING",
+      "proposition": "All 17 structured rows carrying this comment have OPTIONAL_MONITORING_FLAG=N, refuting optional-monitoring and limit-voiding readings."
+    }
+  ],
+  "interpretation": "Monitoring frequencies and associated effluent-limit compliance obligations apply only during periods when the permittee is actually discharging; no-discharge periods require no parameter monitoring and instead use NO DISCHARGE DMR reporting.",
+  "epistemic_basis": "SOURCE_ESTABLISHED",
+  "scope": "ONE_RELATION_OR_VOCABULARY",
+  "remaining_uncertainty": "Whether discharge actually occurred during any specific FY2025 monitoring period is not established from structured DMR data (140 FY2025 measurement rows for these limit_value_ids have blank NODI_CODE and numeric DMR_VALUE_NMBR). Resolution is grounded in the NM0028762 aztec permit package and may not generalize to other permits.",
+  "failure_mode_if_unresolved": null
+}

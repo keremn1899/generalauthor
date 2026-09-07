@@ -1,0 +1,49 @@
+{
+  "propositions": [
+    {
+      "proposition": "The billing referent billing:Vellum Print Co Ltd is associated with the billed name \"Vellum Print Co Ltd\" in invoice records.",
+      "source_grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      },
+      "establishes": "other",
+      "relevance": "Grounds the left referent to a specific legal name appearing in billing data."
+    },
+    {
+      "proposition": "Contract SOW-VEL-2022 identifies its counterparty as \"Vellum Print Co Ltd\".",
+      "source_grounding": {
+        "source_path": "sources/contracts/SOW-VEL-2022.md",
+        "location": "header"
+      },
+      "establishes": "other",
+      "relevance": "Grounds the right referent (contract:SOW-VEL-2022) to a named counterparty in the contract header."
+    },
+    {
+      "proposition": "The billed name \"Vellum Print Co Ltd\" and the SOW-VEL-2022 counterparty name \"Vellum Print Co Ltd\" are identical strings.",
+      "source_grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      },
+      "establishes": "unresolved_preservation",
+      "relevance": "Both referents share the same name string, but name similarity alone does not meet the burden for SAME_ENTITY under the grounding contract."
+    },
+    {
+      "proposition": "SOW-VEL-2022 was effective 18 January 2022 and expired 31 December 2023 without renewal.",
+      "source_grounding": {
+        "source_path": "sources/contracts/SOW-VEL-2022.md",
+        "location": "header"
+      },
+      "establishes": "other",
+      "relevance": "Provides temporal context for the contract referent; does not establish identity or distinctness between the billing and contract referents."
+    },
+    {
+      "proposition": "SOW-VEL-2022 contains no change-of-control clause and permits unrestricted assignment.",
+      "source_grounding": {
+        "source_path": "sources/contracts/SOW-VEL-2022.md",
+        "location": "header"
+      },
+      "establishes": "other",
+      "relevance": "Describes assignment and control terms of the contract; does not establish identity or distinctness between the billing and contract referents."
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "proposition": "The DMR comment 'WHEN DISCHARGING' (permit footnote *1) conditions stated monitoring frequencies on actual discharge occurrence at Outfall 001; numeric effluent limits remain in force for discharges when they occur; whether discharge occurred in a given monitoring period is a separate factual determination not encoded in structured limit rows.",
+  "would_establish": [
+    "Permit Part I.A footnote *1 text and its attachment to MEASUREMENT FREQUENCY entries marked (*1)",
+    "Statement of Basis narrative tying specific parameters to 'when discharging' monitoring schedules",
+    "Permit NO DISCHARGE reporting instruction for months with no discharge",
+    "Permit characterization of Outfall 001 as intermittent flow with episodic backwash discharges"
+  ],
+  "would_refute": [
+    "Permit text placing (*1) on effluent limit values themselves rather than monitoring frequencies",
+    "Structured evidence that OPTIONAL_MONITORING_FLAG=Y for these rows",
+    "A structured CSV field that directly records discharge occurrence per monitoring period",
+    "Permit language stating limits are waived or inapplicable whenever discharge is intermittent"
+  ],
+  "likely_authoritative_source_types": [
+    "final_permit narrative for NM0028762 (Aztec) — sole permit bearing all 17 WHEN DISCHARGING rows",
+    "statement_of_basis for NM0028762 explaining monitoring frequency rationale",
+    "permit_limits.csv rows linking DMR_COMMENT_TEXT to limit sets and parameters"
+  ],
+  "insufficient_alone": [
+    "DMR_COMMENT_TEXT string in permit_limits.csv without permit-package footnote context",
+    "LIMIT_FREQ_OF_ANALYSIS_CODE and LIMIT_SAMPLE_TYPE_CODE without permit narrative",
+    "OPTIONAL_MONITORING_FLAG=N (does not encode discharge-conditioning semantics)",
+    "DMR measurement rows showing reported values without establishing no-discharge periods"
+  ],
+  "unknowable_from_structured_data_alone": [
+    "Whether discharge actually occurred during any specific FY2025 monitoring period",
+    "How permittee should mark or report no-discharge months beyond what permit narrative states",
+    "Whether a reported numeric value was collected on a discharge day versus a non-discharge day within a month"
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "steps": [
+    {
+      "fact": "The candidate pair is left=billing:Vellum Print Co Ltd and right=contract:SOW-VEL-2022 under relation identity_judgment.",
+      "grounding": {
+        "source_path": "candidate.json",
+        "location": "left, right, relation"
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "The billing observation records billed_name Vellum Print Co Ltd.",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "SOW-VEL-2022 lists Counterparty: Vellum Print Co Ltd.",
+      "grounding": {
+        "source_path": "sources/contracts/SOW-VEL-2022.md",
+        "location": "header"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "The packet supplies no legal identifier, uniqueness claim, or explicit identity link between the billing referent and the contract counterparty.",
+      "grounding": null,
+      "mechanical": false
+    },
+    {
+      "fact": "Shared name text alone does not satisfy the SAME_ENTITY burden under the grounding contract; absence of identity evidence does not satisfy the DISTINCT burden.",
+      "grounding": {
+        "source_path": "relation_contract.json",
+        "location": "grounding_contract"
+      },
+      "mechanical": false
+    }
+  ],
+  "disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Vellum Print Co Ltd"
+    },
+    {
+      "source_path": "sources/contracts/SOW-VEL-2022.md",
+      "location": "header"
+    }
+  ],
+  "support_claim": "Both referents are associated with the name Vellum Print Co Ltd, but the packet provides no legal identifier or other establishing evidence of identity or distinctness."
+}

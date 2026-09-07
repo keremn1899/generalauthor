@@ -1,0 +1,24 @@
+{
+  "obligation_id": "identity_judgment:0003",
+  "selected_observations": [
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "invoice_id=INV-1001",
+      "excerpt": "{\n  \"invoice_id\": \"INV-1001\",\n  \"billed_name\": \"Helion Robotics Limited\",\n  \"vat_or_tax_id\": \"GB884210193\",\n  \"amount\": 180000,\n  \"currency\": \"GBP\",\n  \"period\": \"2024-Q4\",\n  \"status\": \"paid\"\n}"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "company_number=11847299",
+      "excerpt": "company_number,legal_name,jurisdiction,status\n11847299,HELION INDUSTRIAL SYSTEMS LTD,England and Wales,active"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "internal note",
+      "excerpt": "Helion Robotics Ltd is the operating name used in CRM. Invoices and Companies House use Helion Robotics Limited. That is the same legal entity. Helion Industrial Systems Ltd is a different company; it sold sensors to us in 2018 and has no current MSA."
+    }
+  ],
+  "selection_rationale": "Pair links billing:Helion Robotics Limited and registry:11847299. Selected one authoritative excerpt per referent plus any internal commercial note that names the relationship or ambiguity.",
+  "known_missing_information": [
+    "Additional 1 invoice(s) share billed_name 'Helion Robotics Limited' but only one representative excerpt included."
+  ]
+}

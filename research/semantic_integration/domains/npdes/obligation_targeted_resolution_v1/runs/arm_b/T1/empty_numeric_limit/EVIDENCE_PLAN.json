@@ -1,0 +1,28 @@
+{
+  "proposition": "When LIMIT_VALUE_NMBR is empty in permit limit or DMR rows, the row has a single uniform semantic class: numeric effluent limit, report-only monitoring requirement, or another distinct non-numeric category.",
+  "would_establish": [
+    "Permit Part I limit tables showing 'Report' or 'N/A' in the cell corresponding to an empty LIMIT_VALUE_NMBR row, while a sibling row for the same pollutant carries the numeric limit in another statistical-base column",
+    "Structured rows where empty LIMIT_VALUE_NMBR co-occurs with non-numeric unit descriptors (for example pass=0;fail=1) or DMR_COMMENT_TEXT describing pass/fail or geometric-mean reporting rather than a concentration limit",
+    "Permit footnotes tying specific limit-table cells to monitoring/reporting-only obligations (for example 'Report the geometric mean value of weekly values') without stating a numeric effluent limit for that cell"
+  ],
+  "would_refute": [
+    "A workspace codebook or permit narrative stating that empty LIMIT_VALUE_NMBR always denotes a numeric limit stored elsewhere",
+    "Document or structured evidence that every empty LIMIT_VALUE_NMBR row is interchangeable report-only monitoring with no special pass/fail or N/A-column semantics",
+    "Demonstration that all 57 empty-limit rows share one classification rule sufficient for numeric comparison under Purpose A"
+  ],
+  "likely_authoritative_source_types": [
+    "sources/permit_limits.csv and sources/dmr_measurements.csv field co-occurrence patterns for empty LIMIT_VALUE_NMBR rows",
+    "documents/*/final_permit.txt Part I effluent limit tables mapping Report/N/A cells to monitoring requirements",
+    "DMR_COMMENT_TEXT and unit-code fields on empty-limit structured rows (pass/fail encoding, geometric mean instructions, WHEN DISCHARGING qualifiers)"
+  ],
+  "insufficient_alone": [
+    "LIMIT_TYPE_CODE=ENF on all 57 empty rows (enforceability flag does not establish a numeric limit value)",
+    "Presence of LIMIT_VALUE_STANDARD_UNITS unit metadata without LIMIT_VALUE_NMBR (units alone do not supply a comparison value)",
+    "Document inventory or parameter names without the Part I limit-table cell text for the matching statistical base"
+  ],
+  "unknowable_from_structured_data_alone": [
+    "Whether an empty LIMIT_VALUE_NMBR row marked ENF is report-only because the permit table cell is 'Report' rather than a numeric limit",
+    "Whether empty Q1/Q2 mass-load rows are non-applicable N/A columns versus active numeric limits",
+    "Full pass/fail WET compliance semantics where only DMR_COMMENT_TEXT and unit descriptors exist and permit PDF text lacks the PASS=0/FAIL=1 instruction"
+  ]
+}

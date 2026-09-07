@@ -1,0 +1,33 @@
+{
+  "parent": "nodi_9",
+  "children": [
+    {
+      "obligation_id": "nodi_9_wet_optional_retest",
+      "exact_semantic_question": "What does NODI code 9 mean for a FY2025 no-numeric-result DMR row on optional WET retest parameters (22415, 22416, 22418, 22419, 51443, 51444) with OPTIONAL_MONITORING_FLAG=Y and LIMIT_FREQ_OF_ANALYSIS_CODE=09/99?",
+      "occurrence_count": 24
+    },
+    {
+      "obligation_id": "nodi_9_trc_conditional",
+      "exact_semantic_question": "What does NODI code 9 mean for a FY2025 no-numeric-result DMR row on parameter 50060 (Chlorine, total residual) with OPTIONAL_MONITORING_FLAG=N and daily grab monitoring conditioned by footnote *5?",
+      "occurrence_count": 12
+    }
+  ],
+  "why_necessary": "All 36 NODI=9 rows share empty DMR_VALUE_NMBR and permit NM0020583, but retrieved evidence partitions them into two monitoring regimes: optional conditional WET retest lines labeled '(If required)' in the permit versus nominally required daily TRC monitoring that footnote *5 conditions on chlorine use. A single code-9 interpretation would conflate permitted optional omission with conditional non-activation of a scheduled parameter.",
+  "occurrence_partition": {
+    "nodi_9_wet_optional_retest": {
+      "permit": "NM0020583",
+      "parameters": ["22415", "22416", "22418", "22419", "51443", "51444"],
+      "optional_monitoring_flag": "Y",
+      "limit_freq_of_analysis_code": "09/99",
+      "dmr_form_value_ids_example": ["3920662047", "3920662059", "3920662071", "3920662083"]
+    },
+    "nodi_9_trc_conditional": {
+      "permit": "NM0020583",
+      "parameters": ["50060"],
+      "optional_monitoring_flag": "N",
+      "limit_freq_of_analysis_code": "01/01",
+      "dmr_form_value_ids_example": ["3920642644", "3920642676", "3920642708"]
+    }
+  },
+  "mechanically_computable": true
+}

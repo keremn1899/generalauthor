@@ -1,0 +1,77 @@
+[
+  {
+    "id": "limit_set_metadata_artifact",
+    "interpretation": "The geometric-mean DMR comment is TDS footnote language propagated at limit-set schedule level; for non-TDS parameters it does not alter comparison semantics.",
+    "scope": "24 permit_limit rows with PARAMETER_CODE != 70295 in limit set 3600645646 schedule 3600891019",
+    "epistemic_basis": "SOURCE_ESTABLISHED",
+    "exact_grounding": [
+      "sources/permit_limits.csv: identical TDS-specific DMR_COMMENT_TEXT on BOD row LIMIT_VALUE_ID=3610673282",
+      "sources/dmr_measurements.csv: monthly BOD value compared using AVG fields despite comment on paired limit"
+    ],
+    "semantic_delta": "Skip aggregated_reporting_requirement unresolved emission when PARAMETER_CODE != '70295'.",
+    "admit": true,
+    "remaining_uncertainty": "None for this partition; structured AVG/MAX/MIN bases govern non-TDS comparisons."
+  },
+  {
+    "id": "tds_discharge_weekly_geometric_mean_reporting",
+    "interpretation": "TDS discharge rows require reporting the geometric mean of weekly Outfall 001 values per footnote *6; they are report-only limits without numeric comparison on that schedule row.",
+    "scope": "4 permit_limit rows with PARAMETER_CODE=70295 and MONITORING_LOCATION_CODE=1",
+    "epistemic_basis": "SOURCE_ESTABLISHED",
+    "exact_grounding": [
+      "documents/farmington/final_permit.txt footnote *6",
+      "documents/farmington/final_permit.txt TDS Discharge (*6) table columns marked Report"
+    ],
+    "semantic_delta": "Skip aggregated_reporting_requirement unresolved emission when PARAMETER_CODE='70295' and MONITORING_LOCATION_CODE='1'.",
+    "admit": true,
+    "remaining_uncertainty": "Whether monthly DMR slots store pre-computed weekly geometric means cannot be verified without weekly sub-sample data."
+  },
+  {
+    "id": "tds_net_increase_thirty_day_avg_enforcement",
+    "interpretation": "TDS net-increase numeric limits enforce against 30-day average values; the limit-set geometric-mean comment does not replace AVG as the comparison statistic.",
+    "scope": "4 permit_limit rows with PARAMETER_CODE=70295, MONITORING_LOCATION_CODE=2, and non-empty LIMIT_VALUE_NMBR",
+    "epistemic_basis": "SOURCE_ESTABLISHED",
+    "exact_grounding": [
+      "documents/farmington/final_permit.txt TDS Net Increase (*8) 497 mg/L under 30-DAY AVG",
+      "documents/farmington/statement_of_basis.txt 30-day average TDS net incremental increase limit",
+      "sources/permit_limits.csv LIMIT_VALUE_ID=3610673300 STATISTICAL_BASE_TYPE_CODE=AVG"
+    ],
+    "semantic_delta": "Skip aggregated_reporting_requirement unresolved emission when PARAMETER_CODE='70295', MONITORING_LOCATION_CODE='2', and LIMIT_VALUE_NMBR is present.",
+    "admit": true,
+    "remaining_uncertainty": "Relationship between weekly geometric-mean discharge reporting and monthly net-increase comparison inputs is not textually linked in workspace sources."
+  },
+  {
+    "id": "aggregate_before_compare_uniform",
+    "interpretation": "All rows with the geometric-mean comment require computing a weekly geometric mean before any limit comparison.",
+    "scope": "all 40 triggered rows",
+    "epistemic_basis": "MODEL_GENERALIZATION",
+    "exact_grounding": [],
+    "semantic_delta": "Would block all numeric_comparison_candidate rows with geometric-mean comments.",
+    "admit": false,
+    "remaining_uncertainty": "Contradicted by non-TDS carryover, TDS net-increase 30-day average enforcement text, and structured AVG/MAX/MIN fields on all rows."
+  },
+  {
+    "id": "reporting_only_global",
+    "interpretation": "Geometric-mean language always governs reporting form only while structured statistical bases always govern enforcement comparison.",
+    "scope": "all 40 triggered rows",
+    "epistemic_basis": "MODEL_GENERALIZATION",
+    "exact_grounding": [
+      "documents/farmington/statement_of_basis.txt 30-day average TDS net increase discussion (partial support for TDS net-increase subset only)"
+    ],
+    "semantic_delta": "Would resolve all geometric-mean comments as reporting-only without partition checks.",
+    "admit": false,
+    "remaining_uncertainty": "Overgeneralizes from TDS net-increase evidence to non-TDS rows and TDS discharge report-only rows where footnote *6 is the operative requirement."
+  },
+  {
+    "id": "tds_residual_unresolved",
+    "interpretation": "Remaining TDS rows at MONITORING_LOCATION_CODE 0 or report-only MONITORING_LOCATION_CODE 2 lack established aggregation semantics for monthly DMR comparison fields.",
+    "scope": "8 residual TDS permit_limit rows",
+    "epistemic_basis": "UNRESOLVED",
+    "exact_grounding": [
+      "sources/permit_limits.csv LIMIT_VALUE_ID in {3610673273, 3610673274, 3610673275, 3610673276, 3610673297, 3610673299, 3610838802, 3610838804}",
+      "documents/farmington/final_permit.txt footnote *7 without structured location mapping"
+    ],
+    "semantic_delta": "Retain aggregated_reporting_requirement unresolved for residual partition.",
+    "admit": false,
+    "remaining_uncertainty": "Whether MONITORING_LOCATION_CODE=0 maps to intake footnote *7 reporting is not established from structured fields."
+  }
+]

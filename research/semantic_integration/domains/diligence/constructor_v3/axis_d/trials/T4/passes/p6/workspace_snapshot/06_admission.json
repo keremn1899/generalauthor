@@ -1,0 +1,90 @@
+{
+  "limitations": [
+    "02_mechanical_world/world.sqlite was not present at pass start; mechanical BASE state was taken from the existing partial 06_world/world.sqlite artifact (30 fact tuples, semantic frontier candidates) before admitting 78 semantic tuples from 05_dispositions.json."
+  ],
+  "admitted_semantic_counts": {
+    "identity_judgment": 31,
+    "clause_kind_presence": 40,
+    "invoice_governing_contract": 7
+  },
+  "relations": [
+    {
+      "name": "invoice_fact",
+      "admission": "WORLD",
+      "reason": "C1 mechanical compilation: A billed revenue record as represented in billing sources with amount, currency, period, and payment status. Grounding contract: One tuple per invoice row in sources/billing/invoices.json; each field copied verbatim from source.",
+      "purpose_independence_test": "Truth depends only on source-document content and deterministic parsing; removing any analytical purpose leaves meaning unchanged."
+    },
+    {
+      "name": "crm_account_fact",
+      "admission": "WORLD",
+      "reason": "C1 mechanical compilation: A CRM account record with its operating name as given in the CRM export. Grounding contract: One tuple per data row in sources/crm.csv keyed by crm_account_id.",
+      "purpose_independence_test": "Truth depends only on source-document content and deterministic parsing; removing any analytical purpose leaves meaning unchanged."
+    },
+    {
+      "name": "registry_entity_fact",
+      "admission": "WORLD",
+      "reason": "C1 mechanical compilation: A company registry row with registry number and registered legal name as recorded in the registry export. Grounding contract: One tuple per data row in sources/company_registry.csv keyed by company_number.",
+      "purpose_independence_test": "Truth depends only on source-document content and deterministic parsing; removing any analytical purpose leaves meaning unchanged."
+    },
+    {
+      "name": "contract_header_fact",
+      "admission": "WORLD",
+      "reason": "C1 mechanical compilation: A contract or statement-of-work document with its source filename identifier and counterparty name as stated in the document header. Grounding contract: One tuple per sources/contracts/*.md file; contract_id is filename stem; counterparty_text from header line.",
+      "purpose_independence_test": "Truth depends only on source-document content and deterministic parsing; removing any analytical purpose leaves meaning unchanged."
+    },
+    {
+      "name": "contract_temporal_fact",
+      "admission": "WORLD",
+      "reason": "C1 mechanical compilation: Whether a contract document is currently in force according to explicit effective, term, and expiry dates in the source document. Grounding contract: active derived deterministically from document dates and explicit expiry statements; grounded to the temporal clauses in each contract file.",
+      "purpose_independence_test": "Truth depends only on source-document content and deterministic parsing; removing any analytical purpose leaves meaning unchanged."
+    },
+    {
+      "name": "record_identifier",
+      "admission": "WORLD",
+      "reason": "C4 derivation over world facts: Canonical purpose-B identifier string for a source record referent in one of the prescribed system forms. Construction rule: C4: Derive from invoice_fact (billing:<billed_name>), crm_account_fact (crm:<id>), registry_entity_fact (registry:<company_number>), contract_header_fact (contract:<contract_id>). Register as DERIVED relation over fact tables.",
+      "purpose_independence_test": "Derived deterministically from other world relations without purpose thresholds or policy; truth conditions are independent of any current analytical question."
+    },
+    {
+      "name": "open_invoice_set",
+      "admission": "WORLD",
+      "reason": "C4 derivation over world facts: Invoices whose billing status is open as recorded in source billing data. Construction rule: C4: SELECT from invoice_fact WHERE status = 'open'.",
+      "purpose_independence_test": "Derived deterministically from other world relations without purpose thresholds or policy; truth conditions are independent of any current analytical question."
+    },
+    {
+      "name": "identity_judgment",
+      "admission": "WORLD",
+      "reason": "C2/C3 semantic frontier resolved in 05_dispositions.json: Two referents denote the same legal counterparty, are distinct, or remain unresolved. Grounding contract: Bounded packet. SAME_ENTITY and DISTINCT require establishing evidence, not compatibility.",
+      "purpose_independence_test": "Judgment is source-grounded and pairwise; disposition states an epistemic fact about records, not a purpose-specific decision outcome."
+    },
+    {
+      "name": "clause_kind_presence",
+      "admission": "WORLD",
+      "reason": "C2/C3 semantic frontier resolved in 05_dispositions.json: Whether a named contractual clause kind is present, explicitly absent, or cannot be determined from the contract text. Grounding contract: PRESENT and ABSENT require quoted or paraphrased contract text spans; ABSENT only when the document explicitly states silence, negation, or unrestricted terms.",
+      "purpose_independence_test": "Judgment is source-grounded and pairwise; disposition states an epistemic fact about records, not a purpose-specific decision outcome."
+    },
+    {
+      "name": "invoice_governing_contract",
+      "admission": "WORLD",
+      "reason": "C2/C3 semantic frontier resolved in 05_dispositions.json: Which governing contract applies to a billed invoice's commercial relationship, or whether that linkage cannot be established confidently. Grounding contract: ASSERTED requires evidence tying the invoice to the contract (structured correspondence, identity chain, or explicit commercial notes); UNRESOLVED when required linkage evidence is missing or ambiguous.",
+      "purpose_independence_test": "Judgment is source-grounded and pairwise; disposition states an epistemic fact about records, not a purpose-specific decision outcome."
+    },
+    {
+      "name": "purpose_a_invoice_association",
+      "admission": "PURPOSE",
+      "reason": "Purpose-local derived view: Purpose A qualifying invoice row with contract linkage and association disposition under acquisition-exposure policy. Construction rule: C4: Join invoice_fact, invoice_governing_contract, contract_header_fact, contract_temporal_fact, clause_kind_presence, and identity_judgment; filter to active contracts with acquisition-relevant clause_kind PRESENT or rows blocked solely by unresolved identity or governing-contract linkage; map disposition to asserted|unresolved.",
+      "purpose_independence_test": "Interpretation depends on the current purpose policy, thresholds, or requested decision shape; removing the purpose would change what the proposition means or whether it is asserted."
+    },
+    {
+      "name": "purpose_b_identity_link",
+      "admission": "PURPOSE",
+      "reason": "Purpose-local derived view: Purpose B output link rendering identity_judgment tuples in prescribed identifier form with epistemic disposition. Construction rule: C4: SELECT left, right, disposition FROM identity_judgment restricted to candidate pairs required for CRM–billing–contract–registry connectivity; order by left then right.",
+      "purpose_independence_test": "Interpretation depends on the current purpose policy, thresholds, or requested decision shape; removing the purpose would change what the proposition means or whether it is asserted."
+    },
+    {
+      "name": "purpose_c_dependency_row",
+      "admission": "PURPOSE",
+      "reason": "Purpose-local derived view: Purpose C dependency row per contract–counterparty combination under the two-part commercial-dependency test or unresolved when linkage is blocked. Construction rule: C4: Join contract_header_fact, contract_temporal_fact, clause_kind_presence (obligation kinds), open_invoice_set, invoice_governing_contract, identity_judgment, and record_identifier; apply purpose C two-part test; emit dependent or unresolved status; aggregate open_invoice_ids and sorted obligation_kinds at output render.",
+      "purpose_independence_test": "Interpretation depends on the current purpose policy, thresholds, or requested decision shape; removing the purpose would change what the proposition means or whether it is asserted."
+    }
+  ]
+}

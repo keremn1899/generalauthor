@@ -1,0 +1,75 @@
+{
+  "domain": "makerspace_checkout",
+  "arm": "E0",
+  "trial": "R1",
+  "status": "ANSWERED",
+  "reported_model": "Composer 2.5",
+  "task_surface": {
+    "n_reads": 8,
+    "n_shells": 3,
+    "n_writes": 0,
+    "header_rereads": 1,
+    "schema_description_calls": 0,
+    "select_count": 3,
+    "join_count": 0,
+    "query_semantic_count": 3,
+    "grounding_inspections": 0,
+    "failure_inspections": 1,
+    "raw_source_reads": []
+  },
+  "task_exploration": {
+    "reads": [
+      "/tmp/world-experiment/autonomous-world-exploration-v1/c6fd95161ec90cdd70b0ae254c3813f4/HEADER.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/c6fd95161ec90cdd70b0ae254c3813f4/ACCESS.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/c6fd95161ec90cdd70b0ae254c3813f4/TASKS.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/c6fd95161ec90cdd70b0ae254c3813f4/research/semantic_integration/runtime_v0/world.py",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/c6fd95161ec90cdd70b0ae254c3813f4/AGENT.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/c6fd95161ec90cdd70b0ae254c3813f4/taskview/agent_surface.py",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/c6fd95161ec90cdd70b0ae254c3813f4/world/world.purpose.json",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/c6fd95161ec90cdd70b0ae254c3813f4/taskview/migration_example.py"
+    ],
+    "writes": [],
+    "shells": [
+      "cd /tmp/world-experiment/autonomous-world-exploration-v1/c6fd95161ec90cdd70b0ae254c3813f4 && PYTHONPATH=. python3 << 'PY'\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\nimport json\n\nworld = ConstructionWorld.open(\"world/world.sqlite\")\n\n# List all relations\ntables = world.query_semantic(\"SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE '_tv_%' ORDER BY name\")\nprint(\"=== TABLES ===\")\nfor t in tables:\n    print(t['name'])\n\nrelations = ['checkout_auth",
+      "cd /tmp/world-experiment/autonomous-world-exploration-v1/c6fd95161ec90cdd70b0ae254c3813f4 && PYTHONPATH=. python3 << 'PY'\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\nimport json\n\nworld = ConstructionWorld.open(\"world/world.sqlite\")\n\nrelations = ['checkout_authorization', 'checkout_fee', 'checkout_record', 'member_record', 'purpose_requirement_failure', 'tool_identity_remap', 'tool_record']\nfor rel in relations:\n    print(f\"\\n=== {rel} ===\")\n    try:\n        rows ",
+      "cd /tmp/world-experiment/autonomous-world-exploration-v1/c6fd95161ec90cdd70b0ae254c3813f4 && PYTHONPATH=. python3 << 'PY'\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\n\nworld = ConstructionWorld.open(\"world/world.sqlite\")\n\n# T1\nt1 = world.query_semantic(\"SELECT total_fee FROM checkout_fee WHERE checkout_id = 'checkout:C6'\")\nprint(\"T1:\", t1)\n\n# T2\nt2 = world.query_semantic(\"SELECT total_fee FROM checkout_fee WHERE checkout_id = 'checkout:C1'\")\nprint(\"T2:\", t2)\n\n# T3"
+    ],
+    "n_reads": 8,
+    "n_writes": 0,
+    "n_shells": 3
+  },
+  "task_tools": {
+    "tool_calls_started": 15,
+    "shell_calls": 3,
+    "read_calls": 8,
+    "write_calls": 0,
+    "python_executions_guess": 3,
+    "mentioned_paths": [
+      "/tmp/world-experiment/autonomous-world-exploration-v1/c6fd95161ec90cdd70b0ae254c3813f4/HEADER.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/c6fd95161ec90cdd70b0ae254c3813f4/ACCESS.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/c6fd95161ec90cdd70b0ae254c3813f4/TASKS.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/c6fd95161ec90cdd70b0ae254c3813f4",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/c6fd95161ec90cdd70b0ae254c3813f4/research/semantic_integration/runtime_v0/world.py",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/c6fd95161ec90cdd70b0ae254c3813f4/AGENT.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/c6fd95161ec90cdd70b0ae254c3813f4/taskview/agent_surface.py",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/c6fd95161ec90cdd70b0ae254c3813f4",
+      "ConstructionWorld.open(\"world/world.sqlite\")",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/c6fd95161ec90cdd70b0ae254c3813f4",
+      "ConstructionWorld.open(\"world/world.sqlite\")",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/c6fd95161ec90cdd70b0ae254c3813f4/world/world.purpose.json",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/c6fd95161ec90cdd70b0ae254c3813f4/taskview/migration_example.py",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/c6fd95161ec90cdd70b0ae254c3813f4",
+      "ConstructionWorld.open(\"world/world.sqlite\")",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/c6fd95161ec90cdd70b0ae254c3813f4/answers.json"
+    ]
+  },
+  "initial_context": {
+    "header_bytes": 1974,
+    "access_bytes": 350,
+    "purpose_bytes": 197,
+    "tasks_bytes": 620,
+    "agent_bytes": 504,
+    "initial_context_bytes": 3448
+  },
+  "finished_at": "2026-09-06T11:44:10.013705+00:00"
+}

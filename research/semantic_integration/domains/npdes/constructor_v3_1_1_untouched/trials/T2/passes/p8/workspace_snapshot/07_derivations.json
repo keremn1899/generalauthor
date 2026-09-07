@@ -1,0 +1,272 @@
+{
+  "pass": "P7",
+  "view_id": "diligence-world",
+  "limitations": [
+    "Purpose semantic judgments (applicable_limit_judgment, monitoring_obligation_judgment, missing_evidence_judgment) are not persisted in World; purpose_ir outputs are compiled by derive_purposes.py from World relations only.",
+    "DMR LIMIT_VALUE_ID association is not a World relation column; single-candidate selection cannot use explicit DMR limit linkage.",
+    "Schedule-only monitoring expectation slots without DMR rows are not in monitoring_expectation_without_numeric_result.",
+    "Purpose B cannot resolve condition-dependent requirements without FY2025 operational/discharge facts absent from World.",
+    "Purpose C NODI-code semantics without documented_no_discharge_notation remain unresolved even when NODI is present."
+  ],
+  "derivations": [
+    {
+      "output_relation": "fy2025_in_scope_measurement",
+      "required_input_relations": [
+        "facility_identified",
+        "reported_measurement_stated"
+      ],
+      "optional_enrichment_relations": [],
+      "epistemic_behavior": "Mechanical temporal and facility-scope filter; does not infer missing measurements or establish purpose applicability.",
+      "completeness_assumptions": "Universe is all reported_measurement_stated rows for in-scope facilities with monitoring period end in Federal FY2025 (2024-10-01 through 2025-09-30 inclusive).",
+      "deterministic_computation": true,
+      "required_premise": "reported_measurement_stated tuple exists with period_end within FY2025 window and facility in {NM0020583, NM0028762, NM0000116}.",
+      "optional_enrichment": "None.",
+      "blocking_unresolved_state": [],
+      "non_blocking_unresolved_state": []
+    },
+    {
+      "output_relation": "measurement_has_ordinary_numeric_value",
+      "required_input_relations": [
+        "reported_measurement_stated"
+      ],
+      "optional_enrichment_relations": [],
+      "epistemic_behavior": "Classifies whether a DMR row carries an ordinary numeric result suitable for Purpose A comparison; NODI-only or blank numeric fields yield false without compliance meaning.",
+      "completeness_assumptions": "One output tuple per reported_measurement_stated row.",
+      "deterministic_computation": true,
+      "required_premise": "reported_measurement_stated with nodi_code empty and value_number or standard_value present (not sentinel -999999999.0).",
+      "optional_enrichment": "None.",
+      "blocking_unresolved_state": [],
+      "non_blocking_unresolved_state": []
+    },
+    {
+      "output_relation": "candidate_limit_for_measurement",
+      "required_input_relations": [
+        "fy2025_in_scope_measurement",
+        "reported_measurement_stated",
+        "permit_limit_value_stated",
+        "limit_source_classification"
+      ],
+      "optional_enrichment_relations": [],
+      "epistemic_behavior": "Mechanical join of in-scope measurements to temporally overlapping enforceable-numeric ACCEPT limits sharing facility, discharge point, and parameter; emits all candidates without selecting a single applicable limit.",
+      "completeness_assumptions": "Universe is fy2025_in_scope_measurement; candidate set is all enforceable-numeric ACCEPT permit_limit_value_stated rows overlapping the measurement period on locational keys.",
+      "deterministic_computation": true,
+      "required_premise": "fy2025_in_scope_measurement plus matching permit_limit_value_stated with period_end within limit begin/end dates and limit_source_classification classification=enforceable-numeric disposition=ACCEPT.",
+      "optional_enrichment": "None.",
+      "blocking_unresolved_state": [
+        "limit_source_classification UNRESOLVED for a limit row prevents that limit from entering the candidate set (non-blocking for derivation execution; may reduce candidates)."
+      ],
+      "non_blocking_unresolved_state": []
+    },
+    {
+      "output_relation": "numeric_comparison_eligible",
+      "required_input_relations": [
+        "candidate_limit_for_measurement",
+        "reported_measurement_stated",
+        "permit_limit_value_stated"
+      ],
+      "optional_enrichment_relations": [],
+      "epistemic_behavior": "Mechanical unit, statistical-base, and numeric-presence gate; ineligible pairs carry ineligibility_reason without purpose-level substitution.",
+      "completeness_assumptions": "One tuple per candidate_limit_for_measurement row.",
+      "deterministic_computation": true,
+      "required_premise": "candidate_limit_for_measurement with measurement and limit rows joinable; eligible when unit_code and statistical_base match and both standard_value and limit_value_number are non-sentinel.",
+      "optional_enrichment": "None.",
+      "blocking_unresolved_state": [],
+      "non_blocking_unresolved_state": [
+        "unit_mismatch",
+        "statistical_base_mismatch",
+        "measurement_missing_numeric",
+        "limit_missing_numeric"
+      ]
+    },
+    {
+      "output_relation": "numeric_exceedance_result",
+      "required_input_relations": [
+        "candidate_limit_for_measurement",
+        "numeric_comparison_eligible",
+        "reported_measurement_stated",
+        "permit_limit_value_stated"
+      ],
+      "optional_enrichment_relations": [],
+      "epistemic_behavior": "Mechanical arithmetic comparison when numeric_comparison_eligible is true, respecting limit qualifier direction (<=, >=, =); does not emit rows where eligibility is false.",
+      "completeness_assumptions": "Subset of candidate_limit_for_measurement where numeric_comparison_eligible.eligible = true.",
+      "deterministic_computation": true,
+      "required_premise": "numeric_comparison_eligible.eligible = true for the measurement/limit pair.",
+      "optional_enrichment": "None.",
+      "blocking_unresolved_state": [],
+      "non_blocking_unresolved_state": []
+    },
+    {
+      "output_relation": "fy2025_candidate_monitoring_requirement",
+      "required_input_relations": [
+        "facility_identified",
+        "monitoring_requirement_stated"
+      ],
+      "optional_enrichment_relations": [],
+      "epistemic_behavior": "Enumerates monitoring requirements whose stated schedule window overlaps Federal FY2025 for in-scope facilities; does not resolve whether monitoring was actually required.",
+      "completeness_assumptions": "Universe is monitoring_requirement_stated rows overlapping FY2025 for selected facilities.",
+      "deterministic_computation": true,
+      "required_premise": "monitoring_requirement_stated with begin/end dates overlapping 2024-10-01..2025-09-30 and facility in scope.",
+      "optional_enrichment": "None.",
+      "blocking_unresolved_state": [],
+      "non_blocking_unresolved_state": []
+    },
+    {
+      "output_relation": "monitoring_expectation_without_numeric_result",
+      "required_input_relations": [
+        "fy2025_in_scope_measurement",
+        "measurement_has_ordinary_numeric_value",
+        "reported_measurement_stated"
+      ],
+      "optional_enrichment_relations": [
+        "monitoring_requirement_stated"
+      ],
+      "epistemic_behavior": "Identifies FY2025 DMR rows lacking ordinary numeric results for Purpose C; does not enumerate schedule-only expectation slots without DMR rows.",
+      "completeness_assumptions": "Universe is fy2025_in_scope_measurement where measurement_has_ordinary_numeric_value is false.",
+      "deterministic_computation": true,
+      "required_premise": "fy2025_in_scope_measurement with measurement_has_ordinary_numeric_value.has_numeric_value = false.",
+      "optional_enrichment": "monitoring_requirement_stated may enrich expectation identity but is not required for DMR-sourced expectations.",
+      "blocking_unresolved_state": [],
+      "non_blocking_unresolved_state": []
+    },
+    {
+      "output_relation": "applicable_limit_judgment",
+      "required_input_relations": [
+        "fy2025_in_scope_measurement",
+        "measurement_has_ordinary_numeric_value",
+        "candidate_limit_for_measurement",
+        "numeric_comparison_eligible",
+        "numeric_exceedance_result",
+        "reported_measurement_stated",
+        "permit_limit_value_stated",
+        "limit_source_classification"
+      ],
+      "optional_enrichment_relations": [],
+      "epistemic_behavior": "Purpose A applicability selection among enforceable-numeric candidates; ACCEPT when exactly one eligible limit; REJECT when comparison is not applicable (report-only/non-enforceable for measurement statistical base); UNRESOLVED when multiple eligible limits or indeterminate join.",
+      "completeness_assumptions": "One judgment per fy2025_in_scope_measurement with measurement_has_ordinary_numeric_value true.",
+      "deterministic_computation": true,
+      "required_premise": "fy2025_in_scope_measurement and measurement_has_ordinary_numeric_value true.",
+      "optional_enrichment": "None in World; DMR LIMIT_VALUE_ID linkage is absent from World IR.",
+      "blocking_unresolved_state": [
+        "multiple_eligible_enforceable_limits",
+        "numeric_comparison_ineligible",
+        "no_stated_limit_for_measurement_context",
+        "no_enforceable_numeric_limit_candidate",
+        "applicability_indeterminate"
+      ],
+      "non_blocking_unresolved_state": []
+    },
+    {
+      "output_relation": "purpose_ir_a_output",
+      "required_input_relations": [
+        "fy2025_in_scope_measurement",
+        "measurement_has_ordinary_numeric_value",
+        "candidate_limit_for_measurement",
+        "numeric_comparison_eligible",
+        "numeric_exceedance_result",
+        "reported_measurement_stated",
+        "permit_limit_value_stated",
+        "limit_source_classification"
+      ],
+      "optional_enrichment_relations": [],
+      "epistemic_behavior": "Compiles applicable_limit_judgment into purpose_ir/a/output.json rows (resolved ACCEPT/REJECT) and unresolved arrays; preserves uncertainty without closed-world negation.",
+      "completeness_assumptions": "Receipt against all in-scope FY2025 measurements with ordinary numeric values.",
+      "deterministic_computation": true,
+      "required_premise": "Same as applicable_limit_judgment.",
+      "optional_enrichment": "None.",
+      "blocking_unresolved_state": [
+        "multiple_eligible_enforceable_limits",
+        "numeric_comparison_ineligible",
+        "no_stated_limit_for_measurement_context",
+        "no_enforceable_numeric_limit_candidate",
+        "applicability_indeterminate"
+      ],
+      "non_blocking_unresolved_state": []
+    },
+    {
+      "output_relation": "monitoring_obligation_judgment",
+      "required_input_relations": [
+        "fy2025_candidate_monitoring_requirement",
+        "monitoring_requirement_stated"
+      ],
+      "optional_enrichment_relations": [
+        "permit_condition_language_stated"
+      ],
+      "epistemic_behavior": "Purpose B three-way classification (required, not_required, unresolved); does not infer not-required from absent monitoring reports; condition-sensitive requirements blocked without FY2025 condition facts.",
+      "completeness_assumptions": "One judgment per fy2025_candidate_monitoring_requirement tuple.",
+      "deterministic_computation": true,
+      "required_premise": "fy2025_candidate_monitoring_requirement tuple exists.",
+      "optional_enrichment": "permit_condition_language_stated informs unresolved reason text but does not alone establish required or not_required without operational facts.",
+      "blocking_unresolved_state": [
+        "insufficient_fy2025_applicability_evidence",
+        "condition_precedent_not_established"
+      ],
+      "non_blocking_unresolved_state": []
+    },
+    {
+      "output_relation": "purpose_ir_b_output",
+      "required_input_relations": [
+        "fy2025_candidate_monitoring_requirement",
+        "monitoring_requirement_stated"
+      ],
+      "optional_enrichment_relations": [
+        "permit_condition_language_stated"
+      ],
+      "epistemic_behavior": "Compiles monitoring_obligation_judgment into purpose_ir/b/output.json; current World evidence yields unresolved for all candidates.",
+      "completeness_assumptions": "Receipt against fy2025_candidate_monitoring_requirement universe.",
+      "deterministic_computation": true,
+      "required_premise": "fy2025_candidate_monitoring_requirement tuple exists.",
+      "optional_enrichment": "permit_condition_language_stated.",
+      "blocking_unresolved_state": [
+        "insufficient_fy2025_applicability_evidence",
+        "condition_precedent_not_established"
+      ],
+      "non_blocking_unresolved_state": []
+    },
+    {
+      "output_relation": "missing_evidence_judgment",
+      "required_input_relations": [
+        "monitoring_expectation_without_numeric_result",
+        "reported_measurement_stated"
+      ],
+      "optional_enrichment_relations": [
+        "documented_no_discharge_notation",
+        "monitoring_obligation_judgment"
+      ],
+      "epistemic_behavior": "Purpose C taxonomy assignment; documented_no_discharge when World notation exists; NODI without established semantics stays unresolved; does not infer compliance or violation from absence alone.",
+      "completeness_assumptions": "One judgment per monitoring_expectation_without_numeric_result tuple.",
+      "deterministic_computation": true,
+      "required_premise": "monitoring_expectation_without_numeric_result tuple exists.",
+      "optional_enrichment": "documented_no_discharge_notation establishes documented_no_discharge; monitoring_obligation_judgment would gate required_monitoring_inadequate_evidence but is not resolved in current World.",
+      "blocking_unresolved_state": [
+        "nodi_semantics_not_established",
+        "missing_evidence_state_not_established",
+        "expectation_context_not_found"
+      ],
+      "non_blocking_unresolved_state": [
+        "documented_no_discharge (resolved to rows when documented_no_discharge_notation matches)"
+      ]
+    },
+    {
+      "output_relation": "purpose_ir_c_output",
+      "required_input_relations": [
+        "monitoring_expectation_without_numeric_result",
+        "reported_measurement_stated"
+      ],
+      "optional_enrichment_relations": [
+        "documented_no_discharge_notation"
+      ],
+      "epistemic_behavior": "Compiles missing_evidence_judgment into purpose_ir/c/output.json rows and unresolved arrays.",
+      "completeness_assumptions": "Receipt against monitoring_expectation_without_numeric_result universe (DMR-sourced non-numeric FY2025 rows only).",
+      "deterministic_computation": true,
+      "required_premise": "monitoring_expectation_without_numeric_result tuple exists.",
+      "optional_enrichment": "documented_no_discharge_notation.",
+      "blocking_unresolved_state": [
+        "nodi_semantics_not_established",
+        "missing_evidence_state_not_established"
+      ],
+      "non_blocking_unresolved_state": [
+        "documented_no_discharge"
+      ]
+    }
+  ]
+}

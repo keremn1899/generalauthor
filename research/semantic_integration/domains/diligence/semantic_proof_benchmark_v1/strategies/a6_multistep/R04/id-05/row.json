@@ -1,0 +1,86 @@
+{
+  "strategy": "a6_multistep",
+  "trial": "R04",
+  "obligation_id": "id-05",
+  "candidate": {
+    "left": "billing:Northbridge Analytics Inc.",
+    "right": "contract:MSA-NBA-2021"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "The packet preserves multiple live registry candidates and explicitly states that legal has not determined which registry entity is the contracting party, so identity between billing:Northbridge Analytics Inc. and contract:MSA-NBA-2021 cannot be established or ruled out.",
+  "proof_size": 7,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "steps": [
+    {
+      "fact": "The left referent billing:Northbridge Analytics Inc. is grounded by invoices.json to the billed name \"Northbridge Analytics Inc.\"",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Northbridge Analytics Inc."
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "The right referent contract:MSA-NBA-2021 is a master services agreement whose counterparty is named \"Northbridge Analytics, Inc.\"",
+      "grounding": {
+        "source_path": "sources/contracts/MSA-NBA-2021.md",
+        "location": "header"
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "Commercial notes state that billing and the MSA use the name \"Northbridge Analytics Inc.\" while sales uses the short name \"Northbridge Analytics\".",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "A 2024 credit check returned a Wyoming LLC named \"Northbridge Analytics LLC\" as an additional registry candidate.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Legal has not determined which registry entity is the contracting party, and the packet instructs to treat that registry link as unresolved.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "No observation supplies a shared legal identifier or other identity-establishing evidence linking the billing referent to the MSA counterparty; name compatibility alone does not satisfy the SAME_ENTITY burden.",
+      "grounding": null,
+      "mechanical": false
+    },
+    {
+      "fact": "No observation establishes that the billing referent and the MSA counterparty are distinct legal entities; absence of identity proof is insufficient for DISTINCT.",
+      "grounding": null,
+      "mechanical": false
+    }
+  ],
+  "admit": {
+    "rule": "unresolved"
+  },
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

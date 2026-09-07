@@ -1,0 +1,132 @@
+{
+  "strategy": "a3_entailment",
+  "trial": "R04",
+  "obligation_id": "id-18",
+  "candidate": {
+    "left": "billing:Northbridge Analytics Inc.",
+    "right": "registry:2019-0008841"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "The packet explicitly states that legal has not determined which registry entity is the contracting party and instructs treating the registry link as unresolved, while no evidence establishes identity or distinctness between the billing name and registry 2019-0008841.",
+  "proof_size": 8,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "claims": [
+    {
+      "claim": "Billing invoices use the billed name \"Northbridge Analytics Inc.\"",
+      "status": "ESTABLISHED",
+      "burden": "other",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Northbridge Analytics Inc."
+        }
+      ]
+    },
+    {
+      "claim": "Registry number 2019-0008841 corresponds to \"NORTHBRIDGE ANALYTICS LLC\" in Wyoming with active status",
+      "status": "ESTABLISHED",
+      "burden": "other",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/company_registry.csv",
+          "location": "row 2019-0008841"
+        }
+      ]
+    },
+    {
+      "claim": "Sales uses the short name \"Northbridge Analytics\" while billing and the MSA use \"Northbridge Analytics Inc.\"",
+      "status": "ESTABLISHED",
+      "burden": "other",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    },
+    {
+      "claim": "A 2024 credit check returned a Wyoming LLC named \"Northbridge Analytics LLC\"",
+      "status": "ESTABLISHED",
+      "burden": "other",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    },
+    {
+      "claim": "billing:Northbridge Analytics Inc. and registry:2019-0008841 denote the same legal counterparty",
+      "status": "NOT_ESTABLISHED",
+      "burden": "identity",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        },
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Northbridge Analytics Inc."
+        },
+        {
+          "source_path": "sources/company_registry.csv",
+          "location": "row 2019-0008841"
+        }
+      ]
+    },
+    {
+      "claim": "billing:Northbridge Analytics Inc. and registry:2019-0008841 are distinct legal counterparties",
+      "status": "NOT_ESTABLISHED",
+      "burden": "distinctness",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    },
+    {
+      "claim": "Legal has not determined which registry entity is the contracting party for this billing referent",
+      "status": "ESTABLISHED",
+      "burden": "unresolved_preservation",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    },
+    {
+      "claim": "The registry link between billing:Northbridge Analytics Inc. and registry:2019-0008841 must be treated as unresolved",
+      "status": "ESTABLISHED",
+      "burden": "unresolved_preservation",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    }
+  ],
+  "admit": {
+    "rule": "unresolved_preservation_established"
+  },
+  "oracle": "UNRESOLVED",
+  "in_oracle": true,
+  "exact": true,
+  "unsupported_closure": false,
+  "under_closure": false,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": false
+}

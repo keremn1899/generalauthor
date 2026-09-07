@@ -1,0 +1,91 @@
+{
+  "strategy": "a6_multistep",
+  "trial": "R04",
+  "obligation_id": "id-04",
+  "candidate": {
+    "left": "crm:NBA-102",
+    "right": "billing:Northbridge Analytics Inc."
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row NBA-102"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Northbridge Analytics Inc."
+    }
+  ],
+  "support_claim": "The packet links NBA-102 to Northbridge Analytics and billing to Northbridge Analytics Inc. via compatible naming, but explicitly records unresolved registry identity and provides no establishing identity or distinctness evidence for this pair.",
+  "proof_size": 7,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "steps": [
+    {
+      "fact": "The candidate pair is crm:NBA-102 (left) and billing:Northbridge Analytics Inc. (right) under relation identity_judgment.",
+      "grounding": null,
+      "mechanical": true
+    },
+    {
+      "fact": "CRM row NBA-102 lists the customer name as Northbridge Analytics.",
+      "grounding": {
+        "source_path": "sources/crm.csv",
+        "location": "row NBA-102"
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "Billing invoices use billed_name Northbridge Analytics Inc.",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Northbridge Analytics Inc."
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "Commercial notes state sales uses the short name Northbridge Analytics while billing and the MSA use Northbridge Analytics Inc.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Commercial notes report a 2024 credit check returned a Wyoming LLC named Northbridge Analytics LLC and state that Legal has not determined which registry entity is the contracting party; the registry link must be treated as unresolved.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "No packet excerpt supplies a shared legal identifier or other establishing identity evidence linking NBA-102 to the billing billed_name Northbridge Analytics Inc.; name similarity and naming compatibility alone do not meet the SAME_ENTITY burden.",
+      "grounding": null,
+      "mechanical": false
+    },
+    {
+      "fact": "No packet excerpt establishes that crm:NBA-102 and billing:Northbridge Analytics Inc. are distinct entities; unresolved registry identity and absence of identity proof do not satisfy the DISTINCT burden.",
+      "grounding": null,
+      "mechanical": false
+    }
+  ],
+  "admit": {
+    "rule": "unresolved"
+  },
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

@@ -1,0 +1,39 @@
+{
+  "obligation_id": "obl:000291",
+  "selected_observations": [
+    {
+      "source_path": "sources/structured/dmr_measurements.csv",
+      "location": "row 375, DMR_VALUE_ID=3839823763",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0020583; PERM_FEATURE_NMBR=TX1; PARAMETER_CODE=TQM6C; PARAMETER_DESC=Coef Of Var Static Renewal 48Hr Acute Pimephales promelas; MONITORING_PERIOD_END_DATE=02/28/2025; DMR_VALUE_ID=3839823763; DMR_VALUE_NMBR=0; DMR_UNIT_CODE=23; DMR_VALUE_QUALIFIER_CODE==; LIMIT_VALUE_ID=3610839687; LIMIT_TYPE_CODE=ENF; OPTIONAL_MONITORING_FLAG=N"
+    },
+    {
+      "source_path": "sources/structured/permit_limits.csv",
+      "location": "row 106, LIMIT_VALUE_ID=3610839687",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0020583; PERM_FEATURE_NMBR=TX1; PARAMETER_CODE=TQM6C; PARAMETER_DESC=Coef Of Var Static Renewal 48Hr Acute Pimephales promelas; LIMIT_VALUE_ID=3610839687; LIMIT_UNIT_CODE=23; STATISTICAL_BASE_CODE=VA; LIMIT_TYPE_CODE=ENF; OPTIONAL_MONITORING_FLAG=N; LIMIT_FREQ_OF_ANALYSIS_CODE=01/90; LIMIT_BEGIN_DATE=12/01/2021; LIMIT_END_DATE=11/30/2026; DMR_COMMENT_TEXT=(PASS = 0  FAIL = 1) REPORT PASS AS '0' OR REPORT FAIL AS '1' IN CONCENTRATION MAX. ABOVE.  IF ALL TESTS PASS FOR THE FIRST YEAR OF THE PERMIT, THE FREQUENCY WILL BE REDUCED FOR YEARS 2-5 TO:  1/6 MONTHS FOR DAPHNIA PULEX & 1/YR FOR PIMEPHALES PROMELAS (SEE FOOTNOTE 9, PAGE 3 OF PART I OF PERMIT)."
+    },
+    {
+      "source_path": "world.sqlite/dmr_reported_value_kind",
+      "location": "measurement_id=measurement:3839823763",
+      "excerpt": "value_kind=numeric; dmr_value_nmbr=0.0; dmr_unit_code=23"
+    },
+    {
+      "source_path": "world.sqlite/limit_value_attributes",
+      "location": "limit_row_id=limit_row:3610839687",
+      "excerpt": "has_numeric_value=0; limit_value_nmbr=0.0; limit_unit_code=23; statistical_base_code=VA"
+    },
+    {
+      "source_path": "world.sqlite/limit_source_flags",
+      "location": "limit_row_id=limit_row:3610839687",
+      "excerpt": "limit_type_code=ENF; optional_monitoring_flag=N; limit_freq_of_analysis_code=01/90"
+    },
+    {
+      "source_path": "world.sqlite/limit_effective_during_period",
+      "location": "limit_row_id=limit_row:3610839687, period_id=period:NM0020583:2025-02-28",
+      "excerpt": "overlaps=1"
+    }
+  ],
+  "selection_rationale": "Selected paired DMR and permit-limit source rows plus compiled world attributes needed to decide enforceability and numeric applicability. Blocking factors: limit_has_no_numeric_value.",
+  "known_missing_information": [
+    "Limit row lacks a parseable numeric LIMIT_VALUE_NMBR in structured extract."
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "obligation_id": "obl:invoice_contract_association:88cfe6f0cba5",
+  "selected_observations": [
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "invoice_id=INV-1001",
+      "excerpt": "{\n  \"invoice_id\": \"INV-1001\",\n  \"billed_name\": \"Helion Robotics Limited\",\n  \"vat_or_tax_id\": \"GB884210193\",\n  \"amount\": 180000,\n  \"currency\": \"GBP\",\n  \"period\": \"2024-Q4\",\n  \"status\": \"paid\"\n}"
+    },
+    {
+      "source_path": "sources/contracts/MSA-HELION-2019.md",
+      "location": "header",
+      "excerpt": "# Master services agreement\nCounterparty: Helion Robotics Ltd.\nEffective: 12 March 2019\nTerm: 36 months, then successive 12-month periods unless either party gives 60 days' written notice."
+    }
+  ],
+  "selection_rationale": "Invoice INV-1001 billed_name compared to contract counterparty header and any commercial_notes linking retainer or operating-name variants.",
+  "known_missing_information": [
+    "Billed name string does not exactly match contract counterparty line; identity linkage required before asserted association.",
+    "P2 emitted semantic candidate tuples with empty disposition; no adjudication performed.",
+    "open_invoices_by_contract derivation is registered but never run; depends on resolved identity and association judgments."
+  ]
+}

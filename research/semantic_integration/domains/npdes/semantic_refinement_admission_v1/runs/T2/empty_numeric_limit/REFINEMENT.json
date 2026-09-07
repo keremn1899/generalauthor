@@ -1,0 +1,73 @@
+{
+  "parent_id": "empty_numeric_limit",
+  "parent_status": "REFINED",
+  "children": [
+    {
+      "child_id": "blank_comment_report_only",
+      "exact_semantic_question": "When LIMIT_VALUE_NMBR is empty and DMR_COMMENT_TEXT is blank, does the row denote report-only monitoring without a numeric effluent limit for that statistical-base cell?",
+      "occurrence_partition_rule": "LIMIT_VALUE_NMBR is empty (after trim) AND DMR_COMMENT_TEXT is blank (after trim)",
+      "affected_count": 18,
+      "semantic_contract": "Such rows are not numeric effluent limits for Purpose A comparison; they are monitoring/reporting obligations for the named statistical base.",
+      "evidence_grounding": [
+        "sources/permit_limits.csv: 18 rows, permits NM0000116 (12) and NM0020583 (6)",
+        "documents/gcc/final_permit.txt lines 68-74: Report cells for TSS AVG, dissolved copper/cadmium, hardness without numeric limits",
+        "documents/farmington/final_permit.txt lines 87-92: Report cells for cadmium, dioxin, pentachlorophenol, and related pollutants"
+      ],
+      "disposition": "SUPPORTED_NEGATIVE",
+      "admission_status": "ADMIT_DISPOSABLE",
+      "epistemic_basis": "SOURCE_ESTABLISHED",
+      "scope": "permit_limit_row where partition rule matches"
+    },
+    {
+      "child_id": "when_discharging_non_applicable",
+      "exact_semantic_question": "When LIMIT_VALUE_NMBR is empty and DMR_COMMENT_TEXT contains 'WHEN DISCHARGING', is the row a non-applicable limit-table column rather than a missing numeric effluent limit?",
+      "occurrence_partition_rule": "LIMIT_VALUE_NMBR is empty (after trim) AND upper(DMR_COMMENT_TEXT) contains 'WHEN DISCHARGING'",
+      "affected_count": 12,
+      "semantic_contract": "Such rows mark mass-load or conditional statistical-base columns that are N/A unless discharging; they are not ordinary numeric concentration limits for comparison.",
+      "evidence_grounding": [
+        "sources/permit_limits.csv: 12 rows on permit NM0028762 with lb/d, MGD, or mg/L units",
+        "documents/aztec/final_permit.txt line 79: N/A mass-load columns with mg/L concentration limits in sibling columns",
+        "documents/aztec/final_permit.txt footnote *1 line 93: When discharging."
+      ],
+      "disposition": "SUPPORTED_NEGATIVE",
+      "admission_status": "ADMIT_DISPOSABLE",
+      "epistemic_basis": "SOURCE_ESTABLISHED",
+      "scope": "permit_limit_row where partition rule matches"
+    },
+    {
+      "child_id": "pass_fail_wet_encoding",
+      "exact_semantic_question": "When LIMIT_VALUE_NMBR is empty and DMR_COMMENT_TEXT specifies PASS=0/FAIL=1 reporting, is the row a pass/fail WET reporting obligation rather than an ordinary numeric concentration limit?",
+      "occurrence_partition_rule": "LIMIT_VALUE_NMBR is empty (after trim) AND upper(DMR_COMMENT_TEXT) contains 'PASS = 0' AND 'FAIL = 1'",
+      "affected_count": 12,
+      "semantic_contract": "Such rows encode pass/fail WET results in the concentration-max reporting field; they are not ordinary numeric effluent concentration limits for Purpose A comparison.",
+      "evidence_grounding": [
+        "sources/permit_limits.csv: 12 rows on NM0020583, LIMIT_UNIT_DESC pass=0;fail=1 or %",
+        "sources/permit_limits.csv LIMIT_VALUE_ID=3610839676: explicit DMR comment instructing pass=0 fail=1 reporting"
+      ],
+      "disposition": "SUPPORTED_NEGATIVE",
+      "admission_status": "ADMIT_DISPOSABLE",
+      "epistemic_basis": "SOURCE_ESTABLISHED",
+      "scope": "permit_limit_row where partition rule matches"
+    },
+    {
+      "child_id": "geometric_mean_aggregated_reporting",
+      "exact_semantic_question": "When LIMIT_VALUE_NMBR is empty and DMR_COMMENT_TEXT references geometric mean reporting, is the row an aggregated reporting requirement without a per-period numeric effluent limit?",
+      "occurrence_partition_rule": "LIMIT_VALUE_NMBR is empty (after trim) AND upper(DMR_COMMENT_TEXT) contains 'GEOMETRIC MEAN'",
+      "affected_count": 15,
+      "semantic_contract": "Such rows require geometric-mean aggregated reporting over weekly values; the empty cell is not a per-period numeric effluent limit for Purpose A comparison.",
+      "evidence_grounding": [
+        "sources/permit_limits.csv: 15 rows on NM0020583 with uniform geometric-mean comment for TDS and flow",
+        "documents/farmington/final_permit.txt lines 97-98: Report cells alongside numeric mg/L in other columns",
+        "documents/farmington/final_permit.txt footnote *6 line 121: Report the geometric mean value of weekly values."
+      ],
+      "disposition": "SUPPORTED_NEGATIVE",
+      "admission_status": "ADMIT_DISPOSABLE",
+      "epistemic_basis": "SOURCE_ESTABLISHED",
+      "scope": "permit_limit_row where partition rule matches"
+    }
+  ],
+  "partition_complete": true,
+  "partition_overlap": false,
+  "residual_occurrences": 0,
+  "mechanically_computable": true
+}

@@ -1,0 +1,160 @@
+{
+  "pass": "P6",
+  "source_mechanical_world": "02_mechanical_world/world.sqlite",
+  "admitted_dispositions_source": "05_dispositions.json",
+  "relations": [
+    {
+      "name": "source_invoice",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Mechanical compilation of billing/invoices.json; records billed revenue as authored in sources.",
+      "purpose_independence_test": "Yes \u2014 invoice fields are authoritative billing facts; meaning does not depend on diligence purpose."
+    },
+    {
+      "name": "source_crm_account",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Mechanical compilation of crm.csv account rows.",
+      "purpose_independence_test": "Yes \u2014 CRM account id and name are source records independent of identity-linking purpose."
+    },
+    {
+      "name": "source_registry_entity",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Mechanical compilation of company_registry.csv rows.",
+      "purpose_independence_test": "Yes \u2014 registry company number and legal name are public-record facts."
+    },
+    {
+      "name": "source_contract",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Mechanical compilation of contract document headers.",
+      "purpose_independence_test": "Yes \u2014 contract id and counterparty string are verbatim document header facts."
+    },
+    {
+      "name": "source_contract_clause",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Mechanical compilation of verbatim contract section excerpts.",
+      "purpose_independence_test": "Yes \u2014 clause text is a literal excerpt from contract sources."
+    },
+    {
+      "name": "source_contract_schedule",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Mechanical compilation of contract effective/term/expiry metadata.",
+      "purpose_independence_test": "Yes \u2014 effective/term/expiry dates are stated document metadata."
+    },
+    {
+      "name": "identity_judgment",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "reason": "Semantic frontier judgment on cross-source identity; vocabulary marks PURPOSE and scope PURPOSE.",
+      "purpose_independence_test": "No \u2014 whether two identifiers denote the same legal counterparty is an analytical identity judgment demanded by purposes B/C (and supporting A joins); not a source-record fact.",
+      "admitted_assertions": 66,
+      "rejected_assertions": 0,
+      "allowed_dispositions": [
+        "SAME_ENTITY",
+        "DISTINCT",
+        "UNRESOLVED"
+      ]
+    },
+    {
+      "name": "acquisition_clause_judgment",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "reason": "Purpose A acquisition-relevant clause classification over contract text.",
+      "purpose_independence_test": "No \u2014 acquisition-relevant clause kinds and ACCEPT/REJECT thresholds are purpose A analytical policies, not contractual terms of art in sources.",
+      "admitted_assertions": 35,
+      "rejected_assertions": 0,
+      "allowed_dispositions": [
+        "ACCEPT",
+        "REJECT",
+        "UNRESOLVED"
+      ]
+    },
+    {
+      "name": "contract_liveness_judgment",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "reason": "Purpose A/C active-contract threshold judgment; not promoted to world truth.",
+      "purpose_independence_test": "No \u2014 ACTIVE/INACTIVE applies purpose-specific liveness rules (e.g., expired SOW exclusion) beyond raw schedule fields.",
+      "admitted_assertions": 0,
+      "rejected_assertions": 5,
+      "allowed_dispositions": [
+        "ACTIVE",
+        "INACTIVE",
+        "UNRESOLVED"
+      ]
+    },
+    {
+      "name": "invoice_contract_association",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "reason": "Purpose A invoice-to-contract join epistemics; asserted only with confidence.",
+      "purpose_independence_test": "No \u2014 asserted vs unresolved association is purpose A epistemic disposition on joins, not a billing or contract source field.",
+      "admitted_assertions": 6,
+      "rejected_assertions": 2,
+      "allowed_dispositions": [
+        "asserted",
+        "unresolved"
+      ]
+    },
+    {
+      "name": "obligation_kind_judgment",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "reason": "Purpose C obligation-kind classification on active contracts.",
+      "purpose_independence_test": "No \u2014 exclusivity/auto_renewal/rolling_term classification is purpose C taxonomy over contract language.",
+      "admitted_assertions": 15,
+      "rejected_assertions": 0,
+      "allowed_dispositions": [
+        "ACCEPT",
+        "REJECT",
+        "UNRESOLVED"
+      ]
+    },
+    {
+      "name": "commercial_dependency_judgment",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "reason": "Purpose C commercial dependency two-prong judgment.",
+      "purpose_independence_test": "No \u2014 dependent status applies purpose C two-prong dependency test, not a recorded commercial fact.",
+      "admitted_assertions": 0,
+      "rejected_assertions": 4,
+      "allowed_dispositions": [
+        "dependent",
+        "unresolved"
+      ]
+    },
+    {
+      "name": "identity_link_candidates",
+      "admission": "PURPOSE",
+      "construction_class": "DERIVED",
+      "reason": "Derived enumeration of identity pairs required for purpose B review.",
+      "purpose_independence_test": "No \u2014 enumerates pairs purpose B requires judged; candidate set is purpose-scoped, not source truth.",
+      "admitted_assertions": 0,
+      "rejected_assertions": 0
+    },
+    {
+      "name": "open_invoices_by_contract",
+      "admission": "PURPOSE",
+      "construction_class": "DERIVED",
+      "reason": "Derived purpose C aggregation over resolved joins; derivation not run in P6.",
+      "purpose_independence_test": "No \u2014 aggregates open invoices through purpose-scoped identity and association judgments for purpose C.",
+      "admitted_assertions": 0,
+      "rejected_assertions": 0
+    }
+  ],
+  "limitations": [
+    "contract_liveness_judgment dispositions ACTIVE/INACTIVE/UNRESOLVED are mapped to consumer boolean active in purpose computations.",
+    "commercial_dependency_judgment has no closed-world negative disposition; not-dependent rows are omitted rather than asserted.",
+    "invoice_contract_association and commercial_dependency_judgment lack negative dispositions per purpose epistemic contracts; absence of asserted is not DISTINCT.",
+    "P6 persisted 122 admitted semantic dispositions from 05_dispositions.json; 11 candidates remain unresolved (invalid_disposition).",
+    "contract_liveness_judgment: all 5 candidate dispositions rejected at adjudication; tuples retain empty disposition.",
+    "commercial_dependency_judgment: all 4 dependent claims rejected; tuples retain empty status.",
+    "invoice_contract_association: 2 of 8 association candidates rejected; 6 asserted dispositions admitted.",
+    "Purpose-scoped relations are stored in 06_world/world.sqlite for downstream derivation but admission remains PURPOSE; not promoted to WORLD.",
+    "open_invoices_by_contract derivation not registered/run in prior passes; remains empty."
+  ]
+}

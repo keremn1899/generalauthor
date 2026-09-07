@@ -1,0 +1,35 @@
+{
+  "proposition": "For permit limit rows whose DMR_COMMENT_TEXT contains '(PASS = 0  FAIL = 1)', the coded values 0 and 1 are binary whole-effluent-toxicity (WET) pass/fail indicators entered in the DMR concentration (MAX) field—not measured pollutant concentrations to be compared against a numeric effluent limit.",
+  "would_establish": [
+    "DMR_COMMENT_TEXT explicitly defining PASS=0 and FAIL=1 as reporting codes and instructing permittees to enter 0 or 1 in the concentration MAX field",
+    "Permit Part II reporting table mapping 0/1 to WET survival outcome relative to critical dilution (pass when NOEC is not below critical dilution; fail when it is)",
+    "Structured limit rows for pass/fail parameters (e.g., TEM3D, retest STORET codes) with no numeric LIMIT_VALUE_NMBR and unit descriptor 'pass=0;fail=1'",
+    "Permit Part I WET schedule showing 'Report' (not a numeric effluent limit) for toxicity testing",
+    "Permit definition of acute test failure based on statistical survival effects at/below critical dilution rather than exceedance of a concentration limit",
+    "DMR measurement rows where pass/fail parameters report DMR_VALUE_NMBR of 0 with matching pass/fail unit codes and empty limit numeric fields"
+  ],
+  "would_refute": [
+    "Numeric LIMIT_VALUE_NMBR present on pass/fail-coded parameters enabling ordinary <= or >= concentration comparison",
+    "Permit text treating 0 and 1 as pollutant concentration magnitudes with concentration units (mg/L, %, etc.)",
+    "Evidence that DMR_VALUE_NMBR 0/1 should be compared to LIMIT_VALUE_NMBR as enforceable numeric limits for the pass/fail parameters"
+  ],
+  "likely_authoritative_source_types": [
+    "sources/permit_limits.csv DMR_COMMENT_TEXT and limit-value fields for WET limit-set schedule rows",
+    "documents/farmington/final_permit.txt Part I WET monitoring schedule and footnote 9",
+    "documents/farmington/final_permit.txt Part II WET toxicity definitions and DMR reporting requirement table",
+    "sources/dmr_measurements.csv reported values for pass/fail STORET parameters in FY2025"
+  ],
+  "insufficient_alone": [
+    "LIMIT_VALUE_QUALIFIER_CODE = MAX without accompanying comment or permit reporting instructions",
+    "STATISTICAL_BASE_TYPE_CODE = VA on its own",
+    "Parameter descriptions containing 'Pass/Fail' without DMR_COMMENT_TEXT or permit narrative",
+    "Empty DMR_VALUE_NMBR on optional retest parameters without permit context",
+    "Co-occurrence of 0/1 values in DMR_VALUE_NMBR without unit code pass=0;fail=1"
+  ],
+  "unknowable_from_structured_data_alone": [
+    "The numeric value of critical dilution used to judge pass vs fail",
+    "Full toxicological test-acceptability criteria and retest triggering logic",
+    "Whether a specific FY2025 measurement period's WET test passed or failed when no numeric result was reported on optional retest rows",
+    "Distinction between pass/fail binary parameters and separate NOEC-percent reporting parameters (TOM3D/TOM6C) within the same limit set without permit Part II reporting table"
+  ]
+}

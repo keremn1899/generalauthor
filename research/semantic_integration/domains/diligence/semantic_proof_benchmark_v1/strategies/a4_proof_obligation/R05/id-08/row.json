@@ -1,0 +1,75 @@
+{
+  "strategy": "a4_proof_obligation",
+  "trial": "R05",
+  "obligation_id": "id-08",
+  "candidate": {
+    "left": "billing:Oakfield Logistik GmbH",
+    "right": "registry:HRB 88421"
+  },
+  "proposed_disposition": "SAME_ENTITY",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row HRB 88421"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "The registry row for HRB 88421 explicitly names Oakfield Logistik GmbH, and commercial notes state that HRB 88421 remained unchanged when the entity rebranded to that name, establishing identity between the billing and registry referents.",
+  "proof_size": 3,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "proof_obligations": [
+    {
+      "obligation": "Registry record must explicitly associate HRB 88421 with the legal entity name Oakfield Logistik GmbH",
+      "required_for": "SAME_ENTITY",
+      "satisfied": true,
+      "evidence": [
+        {
+          "source_path": "sources/company_registry.csv",
+          "location": "row HRB 88421"
+        }
+      ]
+    },
+    {
+      "obligation": "Evidence must establish that the billing counterparty Oakfield Logistik GmbH is the same legal entity as the one registered under HRB 88421",
+      "required_for": "SAME_ENTITY",
+      "satisfied": true,
+      "evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        },
+        {
+          "source_path": "sources/company_registry.csv",
+          "location": "row HRB 88421"
+        }
+      ]
+    },
+    {
+      "obligation": "Evidence must establish that billing:Oakfield Logistik GmbH and registry:HRB 88421 refer to different legal counterparties",
+      "required_for": "DISTINCT",
+      "satisfied": false,
+      "evidence": []
+    }
+  ],
+  "admit": {
+    "rule": "unsatisfied_obligations_present"
+  },
+  "unsatisfied": [
+    "Evidence must establish that billing:Oakfield Logistik GmbH and registry:HRB 88421 refer to different legal counterparties"
+  ],
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": true,
+  "correct_same_never_proposed": false
+}

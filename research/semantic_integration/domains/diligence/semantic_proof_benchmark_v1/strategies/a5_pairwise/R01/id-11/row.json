@@ -1,0 +1,84 @@
+{
+  "strategy": "a5_pairwise",
+  "trial": "R01",
+  "obligation_id": "id-11",
+  "candidate": {
+    "left": "billing:Vellum Print Co Ltd",
+    "right": "registry:09338441"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 09338441"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Vellum Print Co Ltd"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Vellum Print Co Ltd"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 09338441"
+    }
+  ],
+  "support_claim": "Billing records lack a registry identifier linking billing:Vellum Print Co Ltd to registry:09338441, so identity cannot be established despite case-insensitive name correspondence.",
+  "proof_size": 4,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "propositions": [
+    {
+      "proposition": "Company registry row 09338441 lists the registered name as VELLUM PRINT CO LTD, jurisdiction England and Wales, status dissolved.",
+      "source_grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 09338441"
+      },
+      "establishes": "other",
+      "relevance": "Characterizes the legal entity denoted by registry:09338441."
+    },
+    {
+      "proposition": "Billing records identify the counterparty billed_name as Vellum Print Co Ltd.",
+      "source_grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      },
+      "establishes": "other",
+      "relevance": "Characterizes the counterparty denoted by billing:Vellum Print Co Ltd."
+    },
+    {
+      "proposition": "The billing excerpt contains only the name Vellum Print Co Ltd and does not include company number 09338441 or other registry identifier.",
+      "source_grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      },
+      "establishes": "unresolved_preservation",
+      "relevance": "No observation links the billing referent to the specific registry company number; identity cannot be established from the packet alone."
+    },
+    {
+      "proposition": "The registered name VELLUM PRINT CO LTD and the billed name Vellum Print Co Ltd match when compared case-insensitively.",
+      "source_grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 09338441"
+      },
+      "establishes": "other",
+      "relevance": "Name correspondence is present but, per the relation contract, name similarity alone does not establish that billing:Vellum Print Co Ltd and registry:09338441 denote the same legal counterparty."
+    }
+  ],
+  "admit": {
+    "rule": "evidence_preserves_unresolved"
+  },
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

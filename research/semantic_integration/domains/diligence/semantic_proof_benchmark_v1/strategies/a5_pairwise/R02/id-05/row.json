@@ -1,0 +1,123 @@
+{
+  "strategy": "a5_pairwise",
+  "trial": "R02",
+  "obligation_id": "id-05",
+  "candidate": {
+    "left": "billing:Northbridge Analytics Inc.",
+    "right": "contract:MSA-NBA-2021"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Northbridge Analytics Inc."
+    },
+    {
+      "source_path": "sources/contracts/MSA-NBA-2021.md",
+      "location": "header"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "Unresolved-preservation propositions document a possible separate registry entity and explicit legal uncertainty, so identity between billing:Northbridge Analytics Inc. and contract:MSA-NBA-2021 cannot be closed as same or distinct.",
+  "proof_size": 7,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "propositions": [
+    {
+      "proposition": "Billing records use the billed name \"Northbridge Analytics Inc.\"",
+      "source_grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Northbridge Analytics Inc."
+      },
+      "establishes": "other",
+      "relevance": "Grounds the left referent billing:Northbridge Analytics Inc. to the name appearing on invoices."
+    },
+    {
+      "proposition": "The MSA-NBA-2021 contract lists the counterparty as \"Northbridge Analytics, Inc.\"",
+      "source_grounding": {
+        "source_path": "sources/contracts/MSA-NBA-2021.md",
+        "location": "header"
+      },
+      "establishes": "other",
+      "relevance": "Grounds the right referent contract:MSA-NBA-2021 to the named counterparty on that agreement."
+    },
+    {
+      "proposition": "Commercial notes state that billing and the MSA both use the name \"Northbridge Analytics Inc.\"",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "other",
+      "relevance": "Documents name alignment between the billing referent and the MSA counterparty, but does not establish they are the same legal registry entity."
+    },
+    {
+      "proposition": "Commercial notes state that sales uses the short name \"Northbridge Analytics\"",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "other",
+      "relevance": "Indicates an additional informal name variant in use for the counterparty, adding naming ambiguity."
+    },
+    {
+      "proposition": "A 2024 credit check returned a Wyoming LLC named \"Northbridge Analytics LLC\"",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "unresolved_preservation",
+      "relevance": "Introduces a separate registry entity that could be the contracting party, preventing closure of identity between billing and the MSA."
+    },
+    {
+      "proposition": "Legal has not determined which registry entity is the contracting party",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "unresolved_preservation",
+      "relevance": "Explicitly preserves that identity between the billing referent and the MSA counterparty cannot be established from available records."
+    },
+    {
+      "proposition": "The registry link between name variants and a specific legal entity is to be treated as unresolved",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "unresolved_preservation",
+      "relevance": "Directly instructs that the identity relation between billing:Northbridge Analytics Inc. and contract:MSA-NBA-2021 must remain open."
+    }
+  ],
+  "admit": {
+    "rule": "evidence_preserves_unresolved"
+  },
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

@@ -1,0 +1,78 @@
+{
+  "obligation_id": "empty_numeric_limit",
+  "exact_semantic_question": "When LIMIT_VALUE_NMBR is empty, is the row a numeric limit, report-only monitoring, or something else?",
+  "retained_snippets": [
+    {
+      "source_id": "sources/permit_limits.csv",
+      "location": "aggregate over 57 rows with empty LIMIT_VALUE_NMBR",
+      "text": "57/105 permit_limits rows have empty LIMIT_VALUE_NMBR; all have LIMIT_TYPE_CODE=ENF; all have empty LIMIT_VALUE_QUALIFIER_CODE; zero rows have nonempty LIMIT_VALUE_STANDARD_UNITS when LIMIT_VALUE_NMBR is empty. Partition by DMR_COMMENT_TEXT: blank 18, WHEN DISCHARGING. 12, PASS=0/FAIL=1 12, geometric mean 15.",
+      "why_retained": "Establishes heterogeneity and absence of standard-units comparison values across all empty-limit rows."
+    },
+    {
+      "source_id": "sources/permit_limits.csv",
+      "location": "row LIMIT_VALUE_ID=3610129901|LIMIT_SET_SCHEDULE_ID=3600833510 alongside sibling 3610129867|3600833510",
+      "text": "3610129867,C3,50,19,mg/L,19,mg/L,50,DD,MAX,<=,,ENF ... 3610129901,C2,,19,mg/L,19,mg/L,,3C,AVG,,,ENF (Solids, total suspended; AVG row empty LIMIT_VALUE_NMBR; MAX sibling has 50 and <=)",
+      "why_retained": "Representative blank-comment partition: AVG cell empty while MAX sibling carries numeric limit."
+    },
+    {
+      "source_id": "documents/gcc/final_permit.txt",
+      "location": "Part I effluent limit table, lines 68-74",
+      "text": "Total Suspended          N/A               N/A               Report            50                 1/Week               Grab\nSolids\nTotal Copper             N/A               N/A               0.011             0.011              1/Week               Grab\nDissolved Copper         N/A               N/A               Report            Report             1/Week               Grab\nDissolved Cadmium        N/A               N/A               Report            Report             1/Week               Grab\nTotal Hardness           N/A               N/A               N/A               Report             1/Week               Grab",
+      "why_retained": "Permit text maps blank-comment structured AVG/Report cells to Report (monitoring-only) while adjacent cells carry numeric limits."
+    },
+    {
+      "source_id": "sources/permit_limits.csv",
+      "location": "row LIMIT_VALUE_ID=3610840340|LIMIT_SET_SCHEDULE_ID=3600904607 with siblings on LIMIT_ID=3606351871",
+      "text": "3610840340,Q1,,26,lb/d,01,kg/d,,MK,AVG,,,ENF ... DMR_COMMENT_TEXT=WHEN DISCHARGING. ... sibling 3610840342,C2,20,19,mg/L,19,mg/L,20,3C,AVG,<=,,ENF ... sibling 3610840343,C3,30,19,mg/L,19,mg/L,30,DD,MAX,<=,,ENF",
+      "why_retained": "WHEN DISCHARGING partition: empty mass-load row while numeric concentration limits exist on siblings."
+    },
+    {
+      "source_id": "documents/aztec/final_permit.txt",
+      "location": "Part I table lines 79 and footnote lines 92-93",
+      "text": "Total Suspended Solids                 N/A              N/A          20                30       1/Week (*1)         Grab\n...\n*1 When discharging.",
+      "why_retained": "Permit table N/A mass-load columns with numeric mg/L limits; footnote conditions applicability when discharging."
+    },
+    {
+      "source_id": "sources/permit_limits.csv",
+      "location": "row LIMIT_VALUE_ID=3610839676|LIMIT_SET_SCHEDULE_ID=3600904539",
+      "text": "PARAMETER_DESC=Whole effluent toxicity - retest #1 ... LIMIT_VALUE_NMBR= ... LIMIT_UNIT_DESC=pass=0;fail=1 ... DMR_COMMENT_TEXT=(PASS = 0  FAIL = 1) REPORT PASS AS '0' OR REPORT FAIL AS '1' IN CONCENTRATION MAX. ABOVE.",
+      "why_retained": "PASS/FAIL partition: empty LIMIT_VALUE_NMBR with explicit pass/fail unit encoding—not a missing numeric concentration limit."
+    },
+    {
+      "source_id": "documents/farmington/final_permit.txt",
+      "location": "Part I table lines 87-92",
+      "text": "Cadmium                        N/A             N/A            N/A            N/A          N/A         Report       1/Quarter            Grab\n2,3,7,8-TCDD Dioxin            N/A             N/A            N/A            N/A          N/A         Report       1/Quarter            Grab\nPentachlorophenol              N/A             N/A            N/A            N/A          N/A         Report       1/Quarter            Grab",
+      "why_retained": "Blank-comment farmington pollutants correspond to permit cells labeled Report with no numeric effluent limit."
+    },
+    {
+      "source_id": "documents/farmington/final_permit.txt",
+      "location": "Part I TDS table lines 97-98 and footnote line 121",
+      "text": "Total Dissolved Solids, Net     27,664 lbs/day      Report           N/A          497 mg/L          Report         N/A        1/Week    12-Hour\n...\n*6      Total dissolved solids measured at Outfall 001. Report the geometric mean value of weekly values.",
+      "why_retained": "Geometric-mean partition: Report cells without per-period numeric limits; footnote defines aggregated reporting."
+    },
+    {
+      "source_id": "construction.py",
+      "location": "numeric_comparison_candidate derive, lines 379-383",
+      "text": "numeric_comparison_rows = [row for row in measurement_limit_rows if row['has_reported_value'] and row['has_limit_value_nmbr']]",
+      "why_retained": "T5 silently excludes all empty-limit rows from numeric_comparison_candidate without a named classification hole."
+    }
+  ],
+  "candidate_interpretations": [
+    {
+      "label": "numeric_limit",
+      "statement": "Empty LIMIT_VALUE_NMBR still denotes an enforceable numeric effluent limit row suitable for numeric comparison once the value is recovered from elsewhere."
+    },
+    {
+      "label": "report_only_monitoring",
+      "statement": "Empty LIMIT_VALUE_NMBR denotes a monitoring/reporting requirement without a numeric effluent limit for that statistical-base cell (permit table Report or equivalent)."
+    },
+    {
+      "label": "non_applicable_limit_column",
+      "statement": "Empty LIMIT_VALUE_NMBR marks a non-applicable limit-table column (for example N/A mass-load base) while a sibling row carries the numeric limit for comparison."
+    },
+    {
+      "label": "special_non_numeric_reporting",
+      "statement": "Empty LIMIT_VALUE_NMBR marks a non-standard reporting obligation (pass/fail WET encoding or geometric-mean aggregated reporting) that is not an ordinary numeric concentration limit."
+    }
+  ]
+}

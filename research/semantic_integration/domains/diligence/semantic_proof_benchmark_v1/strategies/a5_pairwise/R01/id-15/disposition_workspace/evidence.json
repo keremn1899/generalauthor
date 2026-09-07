@@ -1,0 +1,49 @@
+{
+  "propositions": [
+    {
+      "proposition": "CRM record HEL-441 names the counterparty as Helion Robotics Ltd.",
+      "source_grounding": {
+        "source_path": "sources/crm.csv",
+        "location": "row HEL-441"
+      },
+      "establishes": "other",
+      "relevance": "Grounds the left referent crm:HEL-441 to the name Helion Robotics Ltd."
+    },
+    {
+      "proposition": "Company registry record 11847299 names the entity as HELION INDUSTRIAL SYSTEMS LTD.",
+      "source_grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847299"
+      },
+      "establishes": "other",
+      "relevance": "Grounds the right referent registry:11847299 to the name HELION INDUSTRIAL SYSTEMS LTD."
+    },
+    {
+      "proposition": "Helion Robotics Ltd is the operating name used in CRM, and Helion Robotics Limited (used on invoices and Companies House) is the same legal entity.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "identity",
+      "relevance": "Clarifies the legal entity denoted by the CRM-side Helion Robotics name; does not link that entity to registry:11847299."
+    },
+    {
+      "proposition": "Helion Industrial Systems Ltd is a different company from Helion Robotics.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "distinctness",
+      "relevance": "Directly bears on whether crm:HEL-441 (Helion Robotics Ltd) and registry:11847299 (HELION INDUSTRIAL SYSTEMS LTD) denote the same or distinct legal counterparties."
+    },
+    {
+      "proposition": "Helion Industrial Systems Ltd sold sensors in 2018 and has no current MSA.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "other",
+      "relevance": "Provides contextual separation of Helion Industrial Systems Ltd as a distinct historical vendor relationship, supporting interpretation of the distinctness claim in the notes."
+    }
+  ]
+}

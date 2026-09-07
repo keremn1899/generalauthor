@@ -1,0 +1,44 @@
+{
+  "strategy": "a2_critic",
+  "trial": "R02",
+  "obligation_id": "id-06",
+  "candidate": {
+    "left": "crm:OAK-77",
+    "right": "billing:Oakfield Logistik GmbH"
+  },
+  "proposed_disposition": "SAME_ENTITY",
+  "final_disposition": "SAME_ENTITY",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row OAK-77"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row HRB 88421"
+    }
+  ],
+  "support_claim": "Oakfield Logistics GmbH and Oakfield Logistik GmbH are the same legal entity (unchanged HRB 88421 after a 2023 rebrand), CRM record OAK-77 still displays the pre-rebrand English-facing name Oakfield Logistics, and the registry lists Oakfield Logistik GmbH at HRB 88421.",
+  "proof_size": 2,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "critic": {
+    "decision": "CONFIRM",
+    "reason": "The cited notes document a 2023 rebrand from Oakfield Logistics GmbH to Oakfield Logistik GmbH with unchanged HRB 88421, the CRM row for OAK-77 matches the noted pre-rebrand English-facing name, and the registry row confirms Oakfield Logistik GmbH at HRB 88421, establishing that both referents denote the same legal counterparty."
+  },
+  "critic_reason": "confirmed",
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": true,
+  "unsupported_closure": false,
+  "under_closure": false,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": false
+}

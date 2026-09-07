@@ -1,0 +1,31 @@
+{
+  "propositions": [
+    {
+      "proposition": "Company registry row 4721193 records legal name MERIDIAN ENERGY PARTNERS LLC, jurisdiction Delaware, status active.",
+      "source_grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 4721193"
+      },
+      "establishes": "other",
+      "relevance": "Grounds the right referent registry:4721193 to a named legal entity recorded in the company registry."
+    },
+    {
+      "proposition": "Billing records identify the billed party as Meridian Energy Partners LLC.",
+      "source_grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Meridian Energy Partners LLC"
+      },
+      "establishes": "other",
+      "relevance": "Grounds the left referent billing:Meridian Energy Partners LLC to the name used on billing invoices."
+    },
+    {
+      "proposition": "The registry legal name MERIDIAN ENERGY PARTNERS LLC and the billing billed name Meridian Energy Partners LLC are the same name string differing only in letter case.",
+      "source_grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 4721193"
+      },
+      "establishes": "unresolved_preservation",
+      "relevance": "The packet's only cross-referent correspondence is name similarity between the two grounded names; under the relation contract, name similarity is insufficient to establish identity or distinctness."
+    }
+  ]
+}

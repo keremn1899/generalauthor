@@ -1,0 +1,157 @@
+{
+  "structurally_valid": true,
+  "errors": [],
+  "relation_row_counts": {
+    "measurement": 824,
+    "limit_row": 105,
+    "document_row": 12,
+    "candidate_limit": 0,
+    "nodi_measurement": 824
+  },
+  "referent_counts": {
+    "Measurement": 824,
+    "Limit": 105,
+    "Document": 12
+  },
+  "n_trigger_instances": 960,
+  "n_trigger_groups": 5,
+  "trigger_groups": [
+    {
+      "group_id": "g000",
+      "requirement_id": null,
+      "failure_kind": "NO_MATERIALIZABLE_PATH",
+      "relation": "candidate_limit",
+      "n_instances": 1,
+      "purpose": [],
+      "sample_subjects": [
+        {
+          "inputs": [
+            "measurement",
+            "limit_row"
+          ]
+        }
+      ]
+    },
+    {
+      "group_id": "g001",
+      "requirement_id": "missing_evidence",
+      "failure_kind": "UNINTERPRETED_REQUIRED_CODE",
+      "relation": "nodi_measurement",
+      "n_instances": 824,
+      "purpose": [
+        "C"
+      ],
+      "sample_subjects": [
+        {
+          "measurement": "Measurement:NM0020583|TX1|22415|11/30/2024|3610839676"
+        },
+        {
+          "measurement": "Measurement:NM0020583|TX1|22415|02/28/2025|3610839676"
+        },
+        {
+          "measurement": "Measurement:NM0020583|TX1|22415|05/31/2025|3610839676"
+        },
+        {
+          "measurement": "Measurement:NM0020583|TX1|22415|08/31/2025|3610839676"
+        },
+        {
+          "measurement": "Measurement:NM0020583|TX1|22416|11/30/2024|3610839677"
+        },
+        {
+          "measurement": "Measurement:NM0020583|TX1|22416|02/28/2025|3610839677"
+        }
+      ]
+    },
+    {
+      "group_id": "g002",
+      "requirement_id": "monitoring_obligation",
+      "failure_kind": "CARDINALITY_OVERSATISFIED",
+      "relation": "limit_row",
+      "n_instances": 15,
+      "purpose": [
+        "B"
+      ],
+      "sample_subjects": [
+        {
+          "limit": "Limit:3610129864"
+        },
+        {
+          "limit": "Limit:3610129865"
+        },
+        {
+          "limit": "Limit:3610129867"
+        },
+        {
+          "limit": "Limit:3610129901"
+        },
+        {
+          "limit": "Limit:3610129870"
+        },
+        {
+          "limit": "Limit:3610129902"
+        }
+      ]
+    },
+    {
+      "group_id": "g003",
+      "requirement_id": "monitoring_obligation",
+      "failure_kind": "MULTIPLE_CANDIDATES",
+      "relation": "limit_row",
+      "n_instances": 15,
+      "purpose": [
+        "B"
+      ],
+      "sample_subjects": [
+        {
+          "limit": "Limit:3610129864"
+        },
+        {
+          "limit": "Limit:3610129865"
+        },
+        {
+          "limit": "Limit:3610129867"
+        },
+        {
+          "limit": "Limit:3610129901"
+        },
+        {
+          "limit": "Limit:3610129870"
+        },
+        {
+          "limit": "Limit:3610129902"
+        }
+      ]
+    },
+    {
+      "group_id": "g004",
+      "requirement_id": "monitoring_obligation",
+      "failure_kind": "UNINTERPRETED_REQUIRED_CODE",
+      "relation": "limit_row",
+      "n_instances": 105,
+      "purpose": [
+        "B"
+      ],
+      "sample_subjects": [
+        {
+          "limit": "Limit:3610673284"
+        },
+        {
+          "limit": "Limit:3610673282"
+        },
+        {
+          "limit": "Limit:3610673283"
+        },
+        {
+          "limit": "Limit:3610673281"
+        },
+        {
+          "limit": "Limit:3610129864"
+        },
+        {
+          "limit": "Limit:3610129864"
+        }
+      ]
+    }
+  ],
+  "note": "Triggers are compiler diagnostics from your requirements. They are not gold labels. Revise program.json only if structurally_valid is false."
+}

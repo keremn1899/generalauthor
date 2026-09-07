@@ -1,0 +1,256 @@
+{
+  "trial": "T1",
+  "obligation_id": "nodi_9",
+  "n_occurrences": 36,
+  "reported_model_retrieve": "Composer 2.5",
+  "reported_model_adjudicate": "Composer 2.5",
+  "retrieval": {
+    "n_tool_paths": 43,
+    "structured_paths": [
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/4dc0fefafc123bf050c7fefdde7bf7a3/sources/permit_limits.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/4dc0fefafc123bf050c7fefdde7bf7a3/sources/permit_limits.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/4dc0fefafc123bf050c7fefdde7bf7a3/sources/dmr_measurements.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/4dc0fefafc123bf050c7fefdde7bf7a3/sources/permit_limits.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/4dc0fefafc123bf050c7fefdde7bf7a3/sources/dmr_measurements.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/4dc0fefafc123bf050c7fefdde7bf7a3/sources/dmr_measurements.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/4dc0fefafc123bf050c7fefdde7bf7a3/sources/permit_limits.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/4dc0fefafc123bf050c7fefdde7bf7a3/sources/dmr_measurements.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/4dc0fefafc123bf050c7fefdde7bf7a3/sources/dmr_measurements.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/4dc0fefafc123bf050c7fefdde7bf7a3/sources/dmr_measurements.csv"
+    ],
+    "document_paths": [
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/4dc0fefafc123bf050c7fefdde7bf7a3/documents/INDEX.md",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/4dc0fefafc123bf050c7fefdde7bf7a3/documents/aztec/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/4dc0fefafc123bf050c7fefdde7bf7a3/documents/farmington",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/4dc0fefafc123bf050c7fefdde7bf7a3/documents/farmington/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/4dc0fefafc123bf050c7fefdde7bf7a3/documents/farmington",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/4dc0fefafc123bf050c7fefdde7bf7a3/documents/farmington/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/4dc0fefafc123bf050c7fefdde7bf7a3/documents/farmington/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/4dc0fefafc123bf050c7fefdde7bf7a3/documents/farmington/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/4dc0fefafc123bf050c7fefdde7bf7a3/documents/gcc",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/4dc0fefafc123bf050c7fefdde7bf7a3/documents/farmington/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/4dc0fefafc123bf050c7fefdde7bf7a3/documents/farmington/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/4dc0fefafc123bf050c7fefdde7bf7a3/documents/farmington/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/4dc0fefafc123bf050c7fefdde7bf7a3/documents/farmington/final_permit.txt"
+    ],
+    "n_documents_touched": 5,
+    "queries": [
+      "NODI|nodi",
+      "\\b9\\b|code 9|No Data|no data",
+      "NODI|No Data Indicator|no data indicator",
+      "NODI|no data|not required|not applicable|no discharge|skipped|bypass",
+      "NODI|no discharge|NO DISCHARGE",
+      "NO DISCHARGE|no discharge|NODI|Discharge Monitoring Report|DMR",
+      "NO DISCHARGE|no discharge box|not required|optional|WET|whole effluent|chlorine",
+      "footnote 9|FOOTNOTE 9|retest|PASS = 0",
+      "NODI|no data indicator|No Data Indicator|code C|code 9",
+      "NO DISCHARGE|no discharge box",
+      "no discharge|not required|optional|bypass|no data|missing",
+      "NODI|nodi|no_numeric|missing.evidence",
+      "50060|22415|chlorine|TRC",
+      "TX1.*50060|50060.*TX1",
+      ",9$",
+      "50060",
+      ",9,",
+      "indicator|NODI|no data code|reason code",
+      "3920662047",
+      "22415",
+      ",C$",
+      ",50050,.*,C$",
+      "3896611092"
+    ],
+    "n_queries": 23
+  },
+  "plan": {
+    "proposition": "NODI code '9' has a determinate regulatory or reporting meaning when a FY2025 DMR measurement row has no numeric result (empty DMR_VALUE_NMBR), sufficient to interpret no_numeric_result_case.nodi_code for Purpose C.",
+    "would_establish": [
+      "Explicit definition or legend for NODI code 9 in a workspace permit-package document (DMR instructions, monitoring/reporting section, or appendix codebook)",
+      "A structured NODI code lookup table in workspace sources mapping code 9 to a stated meaning",
+      "Permit text that names NODI code 9 and ties it to a documented no-data or not-required monitoring state for the affected parameters"
+    ],
+    "would_refute": [
+      "Authoritative workspace text defining NODI code 9 with a meaning incompatible with a candidate interpretation",
+      "Workspace evidence that NODI code 9 is unused/invalid and nonempty NODI values must remain UNINTERPRETED"
+    ],
+    "likely_authoritative_source_types": [
+      "Final permit monitoring and DMR reporting instructions for NM0020583 (sole permit with NODI_CODE='9' rows)",
+      "Permit limit DMR_COMMENT_TEXT for parameters appearing with NODI 9",
+      "Structured DMR and permit-limit CSV fields documenting occurrence context (not semantics)"
+    ],
+    "insufficient_alone": [
+      "Co-occurrence of NODI_CODE='9' with OPTIONAL_MONITORING_FLAG, parameter families (WET retest STORET codes, chlorine), or empty DMR_VALUE_NMBR",
+      "Permit narrative describing conditional TRC monitoring or '(If required)' WET retests without naming NODI code 9",
+      "Disjoint occurrence of NODI_CODE='C' on a different permit (NM0000116) \u2014 relation contract forbids inheriting C semantics for 9"
+    ],
+    "unknowable_from_structured_data_alone": [
+      "The semantic label or regulatory meaning of NODI code 9; structured CSVs expose the code value and co-occurring fields but contain no codebook or legend for NODI codes"
+    ]
+  },
+  "packet": {
+    "obligation_id": "nodi_9",
+    "exact_semantic_question": "What does NODI code 9 mean for a FY2025 DMR row with no numeric result?",
+    "purpose": "C",
+    "relation_contract": "no_numeric_result_case.nodi_code must be interpreted; C and 9 must not inherit each other",
+    "candidate_interpretations": [
+      {
+        "id": "standard_nodi_legend",
+        "statement": "NODI code 9 is a standardized DMR no-data indicator with a fixed EPA/NetDMR label (e.g., a specific documented absence-of-data reason).",
+        "status": "not_established",
+        "reason": "No NODI code legend or glossary appears anywhere in workspace sources or permit-package documents."
+      },
+      {
+        "id": "optional_or_conditional_monitoring",
+        "statement": "NODI code 9 means monitoring or reporting was not required for the period (optional WET retest lines marked '(If required)', or TRC only when chlorine is used per footnote *5).",
+        "status": "not_established",
+        "reason": "Farmington permit text describes conditional monitoring contexts but never references NODI, code 9, or a DMR no-data indicator field tying those conditions to this code."
+      },
+      {
+        "id": "inherits_nodi_c",
+        "statement": "NODI code 9 carries the same meaning as NODI code C seen on NM0000116 rows.",
+        "status": "excluded",
+        "reason": "Relation contract forbids inheriting C semantics for 9; codes appear on disjoint permits (NM0000116 vs NM0020583) with no cross-definition in workspace."
+      },
+      {
+        "id": "no_discharge",
+        "statement": "NODI code 9 documents a no-discharge period.",
+        "status": "not_established",
+        "reason": "Farmington final permit contains no NO DISCHARGE DMR box instruction; workspace documents contain zero mentions of NODI or code 9."
+      }
+    ],
+    "retained_snippets": [
+      {
+        "source_id": "sources/dmr_measurements.csv",
+        "location": "line 1 (header)",
+        "text": "ACTIVITY_ID,EXTERNAL_PERMIT_NMBR,...,DMR_VALUE_NMBR,...,NODI_CODE",
+        "why_retained": "Confirms NODI_CODE is a structured field with no accompanying code legend in the CSV."
+      },
+      {
+        "source_id": "sources/dmr_measurements.csv",
+        "location": "line 2, DMR_FORM_VALUE_ID=3920662047",
+        "text": "3602878711,NM0020583,0,3600584105,TX1,EXO,...,22415,Whole effluent toxicity - retest #1,...,3920662047,C3,3832994492,,,,,,12/16/2024,9",
+        "why_retained": "Representative obligation example: FY2025-period row (MONITORING_PERIOD_END_DATE 11/30/2024), empty DMR_VALUE_NMBR, NODI_CODE=9."
+      },
+      {
+        "source_id": "sources/dmr_measurements.csv",
+        "location": "line 246, DMR_FORM_VALUE_ID=3896611092",
+        "text": "3602720951,NM0000116,0,3600545262,001,EXO,...,50050,\"Flow, in conduit or thru treatment plant\",...,3896611092,Q2,3835977355,,,,,,01/28/2025,C",
+        "why_retained": "NODI C example on NM0000116 (not NM0020583); shows C and 9 are disjoint in structured data, supporting relation-contract exclusion of inheriting C for 9."
+      },
+      {
+        "source_id": "sources/permit_limits.csv",
+        "location": "line PARAMETER_CODE=22415, EXTERNAL_PERMIT_NMBR=NM0020583",
+        "text": "(PASS = 0  FAIL = 1) REPORT PASS AS '0' OR REPORT FAIL AS '1' IN CONCENTRATION MAX. ABOVE.  IF ALL TESTS PASS FOR THE FIRST YEAR OF THE PERMIT, THE FREQUENCY WILL BE REDUCED FOR YEARS 2-5 TO:  1/6 MONTHS FOR DAPHNIA PULEX & 1/YR FOR PIMEPHALES PROMELAS (SEE FOOTNOTE 9, PAGE 3 OF PART I OF PERMIT).",
+        "why_retained": "DMR_COMMENT_TEXT for a parameter (22415) that co-occurs with NODI 9; describes WET pass/fail reporting but does not define NODI code 9."
+      },
+      {
+        "source_id": "documents/farmington/final_permit.txt",
+        "location": "Part I footnote *5, lines 117\u2013120",
+        "text": "*5      This facility uses Ultraviolet disinfection. Total Residual Chlorine (TRC) shall be monitored any time chlorine is used within the treatment plant for disinfection, equipment cleaning, maintenance, or any other purpose. The effluent limitation for TRC is the instantaneous maximum grab sample taken during periods of chlorine use and cannot be averaged for reporting purposes.",
+        "why_retained": "Context for 12 NODI-9 chlorine (50060) rows with conditional monitoring; permit never links this condition to NODI code 9."
+      },
+      {
+        "source_id": "documents/farmington/final_permit.txt",
+        "location": "Part II \u00a73.c reporting table, lines 518\u2013520",
+        "text": "(If required) Retest 1 \u2013 Enter a \u201c1\u201d if the NOEC for         22418                 22415\n        survival is less than the critical dilution,\n        otherwise enter \u201c0\u201d.",
+        "why_retained": "Shows WET retest STORET codes (including 22415) are reported only when required; does not name or define NODI code 9."
+      },
+      {
+        "source_id": "documents/farmington/final_permit.txt",
+        "location": "Part I \u00a7C.2, lines 198\u2013201",
+        "text": "All DMRs shall be electronically reported per 40 CFR 127.16. To submit electronically, access the NetDMR website at www.epa.gov/netdmr ... you must report on the Discharge Monitoring Report (DMR) Form EPA. No. 3320-1 in accordance with the \"General Instructions\" provided on the form.",
+        "why_retained": "DMR form general instructions are referenced but not included in workspace; no NODI legend is present in the permit extract."
+      }
+    ],
+    "contradictory_evidence": [],
+    "known_limitations": [
+      "Workspace search found zero occurrences of 'NODI', 'No Data Indicator', or 'code 9' in any documents/ permit-package text.",
+      "Structured sources contain no NODI codebook; only observed values are '' (empty), 'C' (150 FY2025 no-numeric rows on NM0000116), and '9' (36 FY2025 no-numeric rows on NM0020583).",
+      "All 36 NODI-9 rows are on permit NM0020583 spanning WET retest parameters (22415, 22416, 22418, 22419, 51443, 51444) and chlorine 50060; contextual permit conditions differ across parameter families but no workspace text maps NODI 9 to any of them.",
+      "Structural co-occurrence (optional monitoring flags, parameter types, empty numeric fields) cannot establish code semantics per PASS_TASK and PRINCIPLES.",
+      "EPA DMR Form 3320-1 general instructions (referenced by permit) are not in the workspace and cannot be cited."
+    ],
+    "allowed_dispositions": [
+      "SUPPORTED_RESOLUTION",
+      "SUPPORTED_NEGATIVE",
+      "UNRESOLVED"
+    ]
+  },
+  "judgment": {
+    "disposition": "UNRESOLVED",
+    "grounding": [
+      {
+        "source_id": "sources/dmr_measurements.csv",
+        "location": "line 1 (header)",
+        "establishes": "NODI_CODE is a structured DMR field; the CSV provides no code legend or semantic definitions."
+      },
+      {
+        "source_id": "sources/dmr_measurements.csv",
+        "location": "line 2, DMR_FORM_VALUE_ID=3920662047",
+        "establishes": "A FY2025-period row on permit NM0020583 with empty DMR_VALUE_NMBR and NODI_CODE=9 exists; does not define what code 9 means."
+      },
+      {
+        "source_id": "sources/dmr_measurements.csv",
+        "location": "line 246, DMR_FORM_VALUE_ID=3896611092",
+        "establishes": "NODI code C appears on permit NM0000116, disjoint from NODI 9 on NM0020583; supports contract exclusion of inheriting C semantics for 9, but does not supply a positive label for code 9."
+      },
+      {
+        "source_id": "sources/permit_limits.csv",
+        "location": "PARAMETER_CODE=22415, EXTERNAL_PERMIT_NMBR=NM0020583",
+        "establishes": "WET pass/fail reporting instructions for a parameter that co-occurs with NODI-9 rows; does not mention NODI or define code 9."
+      },
+      {
+        "source_id": "documents/farmington/final_permit.txt",
+        "location": "Part I footnote *5, lines 117-120",
+        "establishes": "Conditional TRC monitoring when chlorine is used; no linkage to NODI code 9."
+      },
+      {
+        "source_id": "documents/farmington/final_permit.txt",
+        "location": "Part II \u00a73.c reporting table, lines 518-520",
+        "establishes": "WET retest reporting is entered only when required; does not name or define NODI code 9."
+      },
+      {
+        "source_id": "documents/farmington/final_permit.txt",
+        "location": "Part I \u00a7C.2, lines 198-201",
+        "establishes": "DMR Form EPA 3320-1 general instructions are referenced but not included in the workspace; no NODI legend is present in the retained permit extract."
+      }
+    ],
+    "interpretation": "The semantic meaning of NODI code 9 for FY2025 no-numeric-result DMR rows is not established from admissible workspace evidence. Structural observation (empty DMR_VALUE_NMBR with NODI_CODE=9 on NM0020583, co-occurrence with WET retest and chlorine parameters) does not constitute a definition. NODI code 9 must not inherit NODI code C semantics per the relation contract, but that exclusion does not identify what code 9 positively denotes.",
+    "epistemic_basis": "UNRESOLVED",
+    "scope": "ONE_RELATION_OR_VOCABULARY",
+    "remaining_uncertainty": "No workspace source defines NODI code 9. The packet reports zero mentions of 'NODI', 'No Data Indicator', or 'code 9' in permit-package documents. EPA DMR Form 3320-1 general instructions (referenced by the permit) are absent from the workspace. All four candidate positive interpretations in the packet remain not_established; the only excluded candidate is C-inheritance.",
+    "failure_mode_if_unresolved": "EVIDENCE_INSUFFICIENT"
+  },
+  "proposal": {
+    "interpretation": null,
+    "scope": "ONE_RELATION_OR_VOCABULARY",
+    "epistemic_basis": "UNRESOLVED",
+    "exact_grounding": [
+      {
+        "source_id": "sources/dmr_measurements.csv",
+        "location": "line 1 (header)",
+        "text": "NODI_CODE column present without legend"
+      },
+      {
+        "source_id": "sources/dmr_measurements.csv",
+        "location": "line 2, DMR_FORM_VALUE_ID=3920662047",
+        "text": "Representative FY2025 NODI_CODE=9 row with empty DMR_VALUE_NMBR"
+      },
+      {
+        "source_id": "documents/farmington/final_permit.txt",
+        "location": "Part I \u00a7C.2, lines 198-201",
+        "text": "References EPA Form 3320-1 general instructions not present in workspace"
+      }
+    ],
+    "semantic_delta": null,
+    "affected_obligations": [
+      "nodi_code_semantics"
+    ],
+    "affected_occurrence_count": 36,
+    "remaining_uncertainty": "Any reusable mapping of NODI code 9 to a semantic label would require SOURCE_ESTABLISHED grounding (e.g., an EPA/NetDMR NODI codebook or permit text explicitly defining code 9). None appears in the frozen packet. Structural co-occurrence with optional WET retest lines, TRC footnote *5 conditions, or pass/fail reporting comments cannot be admitted as a vocabulary mapping without per-row model judgment.",
+    "admit": "UNRESOLVED"
+  },
+  "refinement": null,
+  "mutated_before_evidence": false,
+  "dry_run": null,
+  "finished_at": "2026-09-05T13:47:57.608990+00:00"
+}

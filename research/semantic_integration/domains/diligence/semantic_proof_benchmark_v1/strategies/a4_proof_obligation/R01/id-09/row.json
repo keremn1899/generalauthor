@@ -1,0 +1,60 @@
+{
+  "strategy": "a4_proof_obligation",
+  "trial": "R01",
+  "obligation_id": "id-09",
+  "candidate": {
+    "left": "crm:VEL-19",
+    "right": "billing:Vellum Print Co Ltd"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row VEL-19"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Vellum Print Co Ltd"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "The packet shows CRM record VEL-19 names 'Vellum Print Co' and billing names 'Vellum Print Co Ltd', but provides no explicit cross-system identity link or evidence of distinct legal entities.",
+  "proof_size": 2,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "proof_obligations": [
+    {
+      "obligation": "Establish that crm:VEL-19 and billing:Vellum Print Co Ltd denote the same legal counterparty",
+      "required_for": "SAME_ENTITY",
+      "satisfied": false,
+      "evidence": []
+    },
+    {
+      "obligation": "Establish that crm:VEL-19 and billing:Vellum Print Co Ltd denote distinct legal counterparties",
+      "required_for": "DISTINCT",
+      "satisfied": false,
+      "evidence": []
+    }
+  ],
+  "admit": {
+    "rule": "unresolved"
+  },
+  "unsatisfied": [
+    "Establish that crm:VEL-19 and billing:Vellum Print Co Ltd denote the same legal counterparty",
+    "Establish that crm:VEL-19 and billing:Vellum Print Co Ltd denote distinct legal counterparties"
+  ],
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

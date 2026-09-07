@@ -1,0 +1,36 @@
+{
+  "strategy": "a1_single",
+  "trial": "R04",
+  "obligation_id": "id-11",
+  "candidate": {
+    "left": "billing:Vellum Print Co Ltd",
+    "right": "registry:09338441"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 09338441"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Vellum Print Co Ltd"
+    }
+  ],
+  "support_claim": "The registry row associates company number 09338441 with the registered name VELLUM PRINT CO LTD, and billing records use the name Vellum Print Co Ltd, but no observation directly links the billing referent to that company number.",
+  "proof_size": 1,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "justification": "Under the relation contract, SAME_ENTITY requires establishing evidence of identity, not name compatibility alone; the packet provides only separate mentions of a registry number with its registered name and a billing name that resemble each other, which does not meet the burden for SAME_ENTITY or for DISTINCT.",
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

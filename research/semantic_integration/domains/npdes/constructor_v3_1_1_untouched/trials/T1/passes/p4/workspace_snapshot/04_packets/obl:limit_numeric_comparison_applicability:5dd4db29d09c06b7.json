@@ -1,0 +1,26 @@
+{
+  "obligation_id": "obl:limit_numeric_comparison_applicability:5dd4db29d09c06b7",
+  "selected_observations": [
+    {
+      "source_path": "sources/structured/dmr_measurements.csv",
+      "location": "line 576; DMR_EVENT_ID=3619518339; DMR_VALUE_ID=3850068789",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0000116; PERM_FEATURE_NMBR=001; PARAMETER_CODE=01105; PARAMETER_DESC=Aluminum, total [as Al]; MONITORING_PERIOD_END_DATE=04/30/2025; DMR_EVENT_ID=3619518339; DMR_VALUE_ID=3850068789; DMR_VALUE_NMBR=(absent); DMR_UNIT_CODE=(absent); DMR_VALUE_QUALIFIER_CODE=(absent); STATISTICAL_BASE_CODE=3C; NODI_CODE=C"
+    },
+    {
+      "source_path": "sources/structured/permit_limits.csv",
+      "location": "line 41; limit:3605908063:3610129905",
+      "excerpt": "LIMIT_ID=3605908063; LIMIT_VALUE_ID=3610129905; LIMIT_VALUE_NMBR=.78; LIMIT_UNIT_CODE=26; STATISTICAL_BASE_CODE=DD; LIMIT_VALUE_TYPE_CODE=Q2; LIMIT_TYPE_CODE=ENF; OPTIONAL_MONITORING_FLAG=N; LIMIT_FREQ_OF_ANALYSIS_CODE=01/07"
+    },
+    {
+      "source_path": "sources/structured/permit_limits.csv",
+      "location": "line 43; limit:3605908063:3610129906",
+      "excerpt": "LIMIT_ID=3605908063; LIMIT_VALUE_ID=3610129906; LIMIT_VALUE_NMBR=.75; LIMIT_UNIT_CODE=28; STATISTICAL_BASE_CODE=3C; LIMIT_VALUE_TYPE_CODE=C2; LIMIT_TYPE_CODE=ENF; OPTIONAL_MONITORING_FLAG=N; LIMIT_FREQ_OF_ANALYSIS_CODE=01/07"
+    }
+  ],
+  "selection_rationale": "Classification depends on a selected applicable limit; blocked until applicable_limit_selection resolves. Includes LIMIT_TYPE_CODE and OPTIONAL_MONITORING_FLAG from joined limit schedule rows for enforceable-vs-report-only classification.",
+  "known_missing_information": [
+    "02_mechanical_world/world.sqlite not present in workspace; evidence selected directly from structured CSV sources using P2 join rules.",
+    "Permit PDF sources listed in sources/source_manifest.json were not ingested; permit_stated_condition packets use structured DMR_COMMENT_TEXT only.",
+    "No unique applicable limit selected yet; LIMIT_TYPE_CODE and OPTIONAL_MONITORING_FLAG interpretation is candidate-relative."
+  ]
+}

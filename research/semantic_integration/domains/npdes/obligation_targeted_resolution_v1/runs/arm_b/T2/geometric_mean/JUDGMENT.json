@@ -1,0 +1,15 @@
+{
+  "disposition": "UNRESOLVED",
+  "grounding": [
+    "documents/farmington/final_permit.txt footnote *6: 'Report the geometric mean value of weekly values' for Total Dissolved Solids at Outfall 001",
+    "documents/farmington/final_permit.txt Part I reporting requirements items 3–4: reported aggregate statistics (including weekly average) exceeding effluent limitations constitute evidence of violation",
+    "documents/farmington/final_permit.txt footnote *8: net total dissolved solids calculated from aggregated discharge and influent values",
+    "sources/permit_limits.csv: 40 rows share identical TDS geometric-mean DMR_COMMENT_TEXT across 10 PARAMETER_CODE values including BOD (00310) and TDS (70295)",
+    "sources/dmr_measurements.csv: single monitoring-period value paired with limit row carrying geometric-mean comment (LIMIT_VALUE_ID=3610673284, PARAMETER_CODE=00310)"
+  ],
+  "interpretation": "For TDS at Outfall 001 (permit footnote *6, PARAMETER_CODE 70295), workspace sources establish that weekly values must be aggregated as a geometric mean for reporting and that permit compliance is framed around reported aggregate statistics rather than raw single-sample comparison; however, the parent geometric_mean obligation cannot be resolved uniformly because the same DMR comment text is structurally attached to non-TDS parameters whose permit footnotes (*1–*5) carry no geometric-mean requirement. Candidate aggregate_before_compare is source-established only for the TDS footnote *6 occurrence; applies_to_all_comment_rows and ordinary_single_period are contradicted for misattached non-TDS rows; reporting_only is contradicted for TDS by Part I items 3–4.",
+  "epistemic_basis": "UNRESOLVED",
+  "scope": "WORLD",
+  "remaining_uncertainty": "Whether any geometric-mean comment row outside PARAMETER_CODE 70295 inherits TDS footnote *6 comparison semantics; whether stored DMR_VALUE_NMBR values are already geometric means of weekly samples or raw monitoring-period quantities; whether geometric mean (footnote *6) or weekly average (Part I items 3–4 wording) is the exact comparison statistic; permit narrative was not cross-checked against every parameter in the 40 structured rows.",
+  "failure_mode_if_unresolved": "OBLIGATION_TOO_BROAD"
+}

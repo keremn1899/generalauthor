@@ -1,0 +1,64 @@
+{
+  "steps": [
+    {
+      "fact": "The left referent is crm:VEL-19 and the right referent is billing:Vellum Print Co Ltd.",
+      "grounding": null,
+      "mechanical": true
+    },
+    {
+      "fact": "CRM row VEL-19 lists the account name as Vellum Print Co.",
+      "grounding": {
+        "source_path": "sources/crm.csv",
+        "location": "row VEL-19"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Billing records use the billed name Vellum Print Co Ltd.",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Commercial notes refer to Vellum Print Co as dissolved, with last paid invoice in 2024-Q3.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "The packet does not supply a shared legal identifier, an explicit identity mapping between VEL-19 and the billing billed name, or any statement that name uniqueness or identifier stability licenses equating these referents.",
+      "grounding": null,
+      "mechanical": true
+    },
+    {
+      "fact": "Name similarity and partial overlap (Vellum Print Co vs Vellum Print Co Ltd) do not meet the burden for SAME_ENTITY under the relation contract.",
+      "grounding": null,
+      "mechanical": true
+    },
+    {
+      "fact": "No evidence in the packet establishes that crm:VEL-19 and billing:Vellum Print Co Ltd are distinct entities; absence of identity proof is insufficient for DISTINCT.",
+      "grounding": null,
+      "mechanical": true
+    }
+  ],
+  "disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row VEL-19"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Vellum Print Co Ltd"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "The packet links VEL-19 to Vellum Print Co and billing to Vellum Print Co Ltd by name only, without a shared legal identifier or explicit identity mapping, so neither same-entity nor distinctness is established."
+}

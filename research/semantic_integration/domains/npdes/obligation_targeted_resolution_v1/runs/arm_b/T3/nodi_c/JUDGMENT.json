@@ -1,0 +1,35 @@
+{
+  "disposition": "UNRESOLVED",
+  "grounding": [
+    {
+      "source_id": "OBLIGATION.md",
+      "location": "lines 4-18",
+      "proposition": "The obligation for nodi_c is explicitly UNRESOLVED; structured sources contain no NODI codebook."
+    },
+    {
+      "source_id": "construction.py",
+      "location": "lines 584-590",
+      "proposition": "Purpose C pre-interprets only empty nodi_code (known=['']); value C remains UNINTERPRETED."
+    },
+    {
+      "source_id": "sources/dmr_measurements.csv",
+      "location": "structured profile of FY2025 no-result rows",
+      "proposition": "150 FY2025 rows with empty DMR_VALUE_NMBR carry NODI_CODE='C', all on permit NM0000116 with OPTIONAL_MONITORING_FLAG='N'; correlation does not define code semantics."
+    },
+    {
+      "source_id": "documents/gcc/final_permit.txt",
+      "location": "lines 103-122",
+      "proposition": "NM0000116 permit reporting section contains no NODI legend and no NO DISCHARGE box instruction."
+    },
+    {
+      "source_id": "documents/aztec/final_permit.txt",
+      "location": "lines 150-153",
+      "proposition": "NO DISCHARGE box instructions exist only for a different permit (NM0028762), not for NM0000116 where all C rows occur."
+    }
+  ],
+  "interpretation": "Workspace sources record NODI code C on FY2025 no-numeric-result DMR rows but do not establish what C means for Purpose C missing-evidence classification. No permit-package text for the affected permit (NM0000116) defines NODI C, and no structured codebook is present. Structural correlation (C with empty DMR_VALUE_NMBR, single permit, mandatory monitoring flag) is insufficient to assign semantics.",
+  "epistemic_basis": "SOURCE_ESTABLISHED",
+  "scope": "ONE_RELATION_OR_VOCABULARY",
+  "remaining_uncertainty": "The authoritative EPA or NetDMR meaning of NODI code C is not in workspace sources. Whether C denotes no discharge, a form-defined no-data indicator, or another reporting state cannot be determined from the frozen packet. External dictionaries and training-data definitions were explicitly excluded.",
+  "failure_mode_if_unresolved": "EVIDENCE_INSUFFICIENT"
+}

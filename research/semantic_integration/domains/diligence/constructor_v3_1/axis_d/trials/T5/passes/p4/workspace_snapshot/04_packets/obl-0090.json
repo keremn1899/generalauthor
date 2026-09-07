@@ -1,0 +1,30 @@
+{
+  "obligation_id": "obl-0090",
+  "selected_observations": [
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "invoice_id=INV-4001",
+      "excerpt": "{\n  \"invoice_id\": \"INV-4001\",\n  \"billed_name\": \"Vellum Print Co Ltd\",\n  \"vat_or_tax_id\": \"GB771002334\",\n  \"amount\": 8000,\n  \"currency\": \"GBP\",\n  \"period\": \"2024-Q3\",\n  \"status\": \"paid\"\n}"
+    },
+    {
+      "source_path": "sources/contracts/SOW-VEL-2022.md",
+      "location": "header",
+      "excerpt": "# Statement of work\n\nCounterparty: Vellum Print Co Ltd\nEffective: 18 January 2022\nExpiry: 31 December 2023 (not renewed).\n\nNo change-of-control clause. Assignment is unrestricted. The SOW has expired."
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "vellum paragraph",
+      "excerpt": "Vellum Print Co dissolved. Last paid invoice is 2024-Q3. The SOW expired at the end of 2023."
+    },
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row VEL-19",
+      "excerpt": "crm_account_id=VEL-19,account_name=Vellum Print Co,domain=vellumprint.co.uk,country=GB,owner=R. Shaw,status=churned"
+    }
+  ],
+  "selection_rationale": "Invoice billing record, contract counterparty header, and commercial_notes/CRM context for linking invoice:INV-4001 to contract:SOW-VEL-2022.",
+  "known_missing_information": [
+    "Governing link depends on resolving identity between billed_name and contract counterparty text.",
+    "SOW expired end of 2023 per contract and commercial_notes; governance link may not imply active contract."
+  ]
+}

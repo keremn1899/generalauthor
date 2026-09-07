@@ -1,0 +1,35 @@
+{
+  "proposition": "Inventoried permit-package documents can be classified by their own text into enforceable authorization content versus draft/supporting material, and cross-document conflicts are resolvable only where the documents themselves state issuance status, incorporation by reference, or proposed-versus-final relationships.",
+  "would_establish": [
+    "Issued authorization pages that state 'AUTHORIZATION TO DISCHARGE' and enumerate Parts I–III/IV as binding conditions establish enforceable permit obligations.",
+    "Documents headed 'FOR THE DRAFT NPDES PERMIT' or 'STATEMENT OF BASIS' that describe 'proposed' or 'draft' permit conditions establish permitting rationale and proposed conditions used to develop the permit, not standalone enforceable authorization.",
+    "Text stating that information 'was used to develop the proposed permit' establishes an administrative-record/supporting role.",
+    "Text incorporating 'Appendix A of Part II' or 'Part IV hereof' into the issued authorization establishes that those appended parts are part of the enforceable permit package.",
+    "Supersession language ('This permit supersedes and replaces...') establishes replacement of a prior issued permit."
+  ],
+  "would_refute": [
+    "A workspace-wide rule that document_kind labels alone (final_permit, fact_sheet, etc.) establish a governing hierarchy without reading document text.",
+    "Treating fact sheets or statements of basis as enforceable authorization when their headers and body text identify them as draft/proposed documents.",
+    "A single universal conflict clause applying equally to all 12 inventoried files when no such general clause appears in the workspace texts.",
+    "Inferring governing authority for minor_modification.pdf from filename when the extracted text contains only Part I tables and no issuance or precedence language."
+  ],
+  "likely_authoritative_source_types": [
+    "sources/document_inventory.json for what files exist per permit",
+    "Issued authorization text in final_permit extracts (cover page and Part I–IV scope statements)",
+    "Draft/supporting explanatory text in fact_sheet and statement_of_basis extracts",
+    "Incorporation-by-reference passages linking appendices to issued permit parts",
+    "Calculation worksheet extracts (reasonable_potential) only where referenced as supporting analysis in explanatory documents"
+  ],
+  "insufficient_alone": [
+    "document_inventory.json fields document_kind, filename, bytes, and sha256",
+    "Structural correlation between inventory kinds and permit CSV rows",
+    "Presence of numeric limits in a file without accompanying issuance or incorporation language",
+    "Training-data or EPA generic definitions of NPDES document types"
+  ],
+  "unknowable_from_structured_data_alone": [
+    "Which inventoried text is enforceable authorization versus supporting material",
+    "Which document governs when draft/proposed text disagrees with issued authorization text",
+    "Whether minor_modification text independently modifies or merely duplicates issued Part I",
+    "Internal precedence among all permit parts beyond explicit cross-references in opened texts"
+  ]
+}

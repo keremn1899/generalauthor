@@ -1,0 +1,36 @@
+{
+  "strategy": "a1_single",
+  "trial": "R01",
+  "obligation_id": "id-14",
+  "candidate": {
+    "left": "billing:Meridian Energy Partners LLC",
+    "right": "registry:4721193"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 4721193"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Meridian Energy Partners LLC"
+    }
+  ],
+  "support_claim": "The registry row associates ID 4721193 with MERIDIAN ENERGY PARTNERS LLC and billing records list Meridian Energy Partners LLC, but no observation links the billing referent to that registry identifier.",
+  "proof_size": 1,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "justification": "Under the identity_judgment contract, SAME_ENTITY requires evidence establishing that both referents denote the same legal counterparty; name correspondence across separate sources is insufficient. DISTINCT requires evidence of distinctness, which the packet does not provide. With neither burden met, UNRESOLVED is the licensed disposition.",
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

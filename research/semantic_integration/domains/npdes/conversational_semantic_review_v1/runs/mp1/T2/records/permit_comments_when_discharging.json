@@ -1,0 +1,43 @@
+{
+  "current_interpretation": "Nonempty DMR_COMMENT_TEXT on permit_limit rows is preserved structurally but not converted into World-true monitoring rules. The permit_limit_comment_text requirement lists only the empty string as known, so all 69 nonempty comments are uninterpreted. Separately, construction.py scans comment text and emits named EXPLICIT_UNRESOLVED items: 17 rows containing 'WHEN DISCHARGING' as conditional_discharge_dependent_monitoring, 40 rows containing 'GEOMETRIC MEAN' as aggregated_reporting_requirement, and 12 rows containing both 'PASS = 0' and 'FAIL = 1' as pass_fail_reporting_semantics. The draft does not decide whether discharge occurred, how geometric-mean aggregation applies to individual periods, or how pass/fail reporting maps to numeric comparison.",
+  "status": "UNINTERPRETED + EXPLICIT_UNRESOLVED",
+  "why_it_matters": "Purpose B requires determining whether monitoring was required, not required, or unresolved for FY2025 obligations. Purpose A and C are also affected when comments condition comparison or missing-evidence handling. Comments such as 'WHEN DISCHARGING.' may mean monitoring applies only if discharge occurred, but structured sources in this workspace do not establish discharge occurrence for evaluated periods.",
+  "supporting_evidence_used": [
+    "ISSUES.md issue permit_comments_when_discharging",
+    "purposes/visible_b.md",
+    "purposes/visible_a.md (when comments condition comparison)",
+    "construction.py permit_limit mapping, monitoring_requirement_fy2025 derivation, permit_limit_comment_text requirement, and comment-scan unresolved declarations",
+    "ISSUES.md structured evidence: permit_limits.csv DMR_COMMENT_TEXT",
+    "sources/permit_limits.csv sample rows with WHEN DISCHARGING and GEOMETRIC MEAN comments"
+  ],
+  "evidence_snippets_used": [
+    "WHEN DISCHARGING.",
+    "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+    "(PASS = 0  FAIL = 1) REPORT PASS AS '0' OR REPORT FAIL AS '1' IN CONCENTRATION ...",
+    "69 nonempty comments: 17 WHEN DISCHARGING, 40 geometric-mean TDS, 12 pass/fail"
+  ],
+  "contracts_involved": [
+    "permit_limit_comment_text (INTERPRETED, relation=permit_limit, field=dmr_comment_text, known=[\"\"], purpose=[B,C])",
+    "conditional_discharge_dependent_monitoring (EXPLICIT_UNRESOLVED, 17 rows)",
+    "aggregated_reporting_requirement (EXPLICIT_UNRESOLVED, 40 rows)",
+    "pass_fail_reporting_semantics (EXPLICIT_UNRESOLVED, 12 rows)",
+    "monitoring_requirements_materializable",
+    "monitoring_frequency_code",
+    "limit_sample_type_code"
+  ],
+  "alternatives_considered": [
+    "Treat 'WHEN DISCHARGING' as meaning monitoring required only if discharge occurred (cannot be decided from structured sources alone in current draft)",
+    "Treat 'WHEN DISCHARGING' as a reporting instruction only, not affecting whether monitoring is required",
+    "Parse geometric-mean comments into an aggregation rule that supersedes per-period numeric comparison",
+    "Parse pass/fail comments into a non-numeric compliance channel separate from concentration comparison",
+    "Collapse the three comment families into one generic 'comment requires interpretation' unresolved (draft instead names three families)"
+  ],
+  "affected_computations": [
+    "monitoring_requirement_fy2025 (105 rows overlapping FY2025)",
+    "measurement_limit_pair (dmr_comment_text carried from permit limit)",
+    "numeric_comparison_candidate (may be inapplicable where pass/fail semantics govern)",
+    "Purpose B applicability rows for limits with nonempty comments",
+    "Purpose C missing-evidence cases tied to conditional monitoring"
+  ],
+  "remaining_uncertainty": "Whether WHEN DISCHARGING means monitoring is required only if discharge occurred, something else, or cannot be decided from structured sources; whether the three comment families are genuinely different questions."
+}

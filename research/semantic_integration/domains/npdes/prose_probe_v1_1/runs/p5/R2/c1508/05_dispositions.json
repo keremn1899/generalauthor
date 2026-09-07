@@ -1,0 +1,33 @@
+[
+  {
+    "obligation_id": "R2/c1508",
+    "relation": "probe_obligation",
+    "values": [
+      "Discharge-limitations table column headers and units (lbs/day and mg/l; 30-Day Avg and Daily Max)",
+      "Monitoring-requirements columns in the same Flow row (1/Day frequency; Estimate sample type)",
+      "Contrasting pollutant rows on the same page that pair numeric limits with monitoring requirements"
+    ],
+    "disposition": "REJECT",
+    "grounding": [
+      {
+        "packet": "04_packets/R2_c1508.json",
+        "location": "selected_observations[0].location",
+        "value": "Page: 3, Section: part_i",
+        "excerpt": "Flow                     Report MGD        Report MGD        ***               ***                1/Day        Estimate"
+      },
+      {
+        "packet": "04_packets/R2_c1508.json",
+        "location": "selected_observations[1].location",
+        "value": "adjacent pages around 3",
+        "excerpt": "Total Aluminum           0.78              0.78              0.75              0.75               1/Week               Grab"
+      },
+      {
+        "packet": "04_packets/R2_c1508.json",
+        "location": "selected_observations[1].location",
+        "value": "adjacent pages around 3",
+        "excerpt": "Dissolved Copper         N/A               N/A               Report            Report             1/Week               Grab"
+      }
+    ],
+    "rationale": "The obligation asks whether the Flow row 'Report MGD' entries in the discharge-limitation columns establish an enforceable numeric discharge limit for compliance comparison. The packet shows Flow's limitation cells contain the non-numeric token 'Report MGD' (lbs/day 30-Day Avg and Daily Max) and '***' (mg/l 30-Day Avg and Daily Max), not numeric maximum or minimum values. On the same page, pollutant rows that carry enforceable numeric limits use explicit numbers (e.g., Total Aluminum 0.78/0.75; Total Copper 0.011), while rows limited to reporting use 'Report' without a numeric cap (e.g., Dissolved Copper Report/Report). Flow follows the report-only pattern, not the numeric-limit pattern. Monitoring frequency (1/Day) and sample type (Estimate) specify how flow is measured but do not supply a numeric compliance threshold. Therefore the hypothesis that 'Report MGD' establishes an enforceable numeric discharge limit is rejected; the row establishes a reporting obligation in MGD units with no applicable numeric limit in the limitation columns for compliance comparison."
+  }
+]

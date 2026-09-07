@@ -1,0 +1,29 @@
+{
+  "obligation_id": "obl:c:missing_evidence:dmr:3855797850",
+  "selected_observations": [
+    {
+      "source_path": "sources/structured/dmr_measurements.csv",
+      "location": "row 810, DMR_VALUE_ID=3855797850",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0020583; PERM_FEATURE_NMBR=001; PARAMETER_CODE=00720; PARAMETER_DESC=Cyanide, total [as CN]; MONITORING_PERIOD_END_DATE=09/30/2025; DMR_VALUE_ID=3855797850; DMR_VALUE_NMBR=0; DMR_UNIT_CODE=26; DMR_VALUE_QUALIFIER_CODE==; LIMIT_TYPE_CODE=ENF; LIMIT_VALUE_ID=3610838791; STATISTICAL_BASE_CODE=3C; VALUE_RECEIVED_DATE=10/14/2025"
+    },
+    {
+      "source_path": "02_mechanical_world/world.sqlite",
+      "location": "compiled_dmr_measurement/dmr:3855797850",
+      "excerpt": "measurement_id=dmr:3855797850; permit=NM0020583; feature=001; parameter_code=00720; period_end=2025-09-30; dmr_value_id=3855797850; reported_value_number=0.0; reported_unit_code=26; value_qualifier==; nodi_code=; linked_limit_value_id=3610838791"
+    },
+    {
+      "source_path": "02_mechanical_world/world.sqlite",
+      "location": "monitoring_requirement_schedule/req:393fead6f746b166",
+      "excerpt": "frequency_code=02/30; optional_monitoring_flag=N; condition_anchor_text=TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES."
+    }
+  ],
+  "selection_rationale": "Packet grounds missing_evidence_resolution for case:missing_evidence:dmr:3855797850: non-ordinary DMR form (qualifier:=) for period period:NM0020583:2025-09-30 at facility:NM0020583/feature:3600584104/param:00720.",
+  "known_missing_information": [
+    "Defer when linked monitoring_obligation_resolution remains unresolved.",
+    "P2 compiled BASE relations only; DERIVED universes (period_in_fy2025, dmr_in_fy2025_scope, measurement_limit_candidate_pair, monitoring_requirement_in_fy2025, missing_evidence_case_universe) computed inline per 01_vocabulary.json C4 rules, not persisted in world.sqlite.",
+    "Purpose C absent-submission cases are not enumerable: frequency-code interpretation rules are not compiled as world facts.",
+    "Blank LIMIT_VALUE_NMBR and DMR_VALUE_NMBR stored as 0.0 (TaskView REAL NOT NULL); ordinary-numeric detection treats bare 0.0 as non-ordinary.",
+    "Per-month seasonal activation not modeled; only all_months_active boolean available for limit schedule disambiguation.",
+    "Permit PDF text extraction deferred; condition_anchor_text limited to DMR_COMMENT_TEXT from permit_limits.csv."
+  ]
+}

@@ -1,0 +1,170 @@
+{
+  "pass": "P7",
+  "view_id": "diligence-world",
+  "source_world": "06_world/world.sqlite",
+  "limitations": [
+    {
+      "relation": "contract_lifecycle_judgment",
+      "issue": "All five admitted lifecycle dispositions are UNRESOLVED and none were promoted to world.sqlite because the active role is BOOLEAN. Derivation applies mechanical inactive detection only for contracts with explicit expiry_date in contract_term; other lifecycle uncertainty is non-blocking for inclusion."
+    },
+    {
+      "relation": "clause_kind_judgment",
+      "issue": "Purpose-scoped clause_kind_judgment tuples are not persisted in world.sqlite. Derivation reads ACCEPT/REJECT/UNRESOLVED dispositions from 05_dispositions.json."
+    }
+  ],
+  "derivations": [
+    {
+      "output_relation": "open_invoice",
+      "purpose": null,
+      "required_input_relations": ["invoice_record"],
+      "optional_enrichment_relations": [],
+      "epistemic_behavior": "Mechanical filter on recorded billing status; no epistemic dispositions.",
+      "completeness_assumptions": "Universe is invoice_record; COMPLETE when every invoice with status='open' is emitted.",
+      "deterministic_computation": "SELECT invoice_id FROM invoice_record WHERE status = 'open'",
+      "required_premise": "invoice_record.status is authoritative for open/closed billing state.",
+      "optional_enrichment": [],
+      "blocking_unresolved_state": [],
+      "non_blocking_unresolved_state": []
+    },
+    {
+      "output_relation": "reconciliation_link",
+      "purpose": "B",
+      "required_input_relations": [
+        "account_record",
+        "invoice_record",
+        "contract_record",
+        "entity_record"
+      ],
+      "optional_enrichment_relations": [],
+      "epistemic_behavior": "Emits directed left/right identifier pairs only; does not assert identity disposition.",
+      "completeness_assumptions": "Universe is the commercial-cluster reconciliation graph: each CRM account, its invoice billed-name identifier, governing contract identifier, and registry rows that are candidate legal entities for that relationship.",
+      "deterministic_computation": "Materialize required directed edges from account_record, invoice_record, contract_record, and entity_record without asserting disposition.",
+      "required_premise": "Cluster membership is fixed by mechanical compilation (shared primary name token and CRM account-id prefix mapping).",
+      "optional_enrichment": [],
+      "blocking_unresolved_state": [],
+      "non_blocking_unresolved_state": []
+    },
+    {
+      "output_relation": "purpose_b_links",
+      "purpose": "B",
+      "required_input_relations": ["reconciliation_link", "identity_judgment"],
+      "optional_enrichment_relations": [],
+      "epistemic_behavior": "Join reconciliation_link to identity_judgment on (left, right); map disposition to epistemic field (SAME_ENTITY, DISTINCT, UNRESOLVED). Missing judgment is not treated as DISTINCT.",
+      "completeness_assumptions": "Every reconciliation_link row must have a matching identity_judgment tuple.",
+      "deterministic_computation": "SELECT rl.left, rl.right, ij.disposition FROM reconciliation_link rl JOIN identity_judgment ij ON rl.left = ij.left AND rl.right = ij.right ORDER BY rl.left, rl.right",
+      "required_premise": "identity_judgment provides epistemic disposition for each required reconciliation edge.",
+      "optional_enrichment": [],
+      "blocking_unresolved_state": [],
+      "non_blocking_unresolved_state": [
+        {
+          "relation": "identity_judgment",
+          "disposition": "UNRESOLVED",
+          "effect": "Emit link with epistemic UNRESOLVED; does not suppress the edge."
+        }
+      ]
+    },
+    {
+      "output_relation": "contractual_exposure_invoice",
+      "purpose": "A",
+      "required_input_relations": [
+        "invoice_record",
+        "identity_judgment",
+        "contract_term"
+      ],
+      "optional_enrichment_relations": [
+        "contract_record",
+        "contract_lifecycle_judgment",
+        "clause_kind_judgment"
+      ],
+      "epistemic_behavior": "Include invoice when its candidate contract is not known inactive and has at least one acquisition-relevant clause_kind_judgment ACCEPT. Map billing-to-contract identity SAME_ENTITY to association asserted and UNRESOLVED to association unresolved. DISTINCT or absent billing-to-contract judgment suppresses the row.",
+      "completeness_assumptions": "Row universe is invoices whose billed_name links to a contract with acquisition-relevant ACCEPT clause and is not mechanically inactive. Qualifying invoices are not suppressed solely because identity linkage is uncertain.",
+      "deterministic_computation": "For each invoice_record, resolve billing:{billed_name} to contract via identity_judgment; require ACCEPT acquisition clause_kind from 05_dispositions; exclude contracts with explicit expiry_date in contract_term (expired SoW); emit invoice attributes with association disposition.",
+      "required_premise": [
+        "At least one clause_kind_judgment ACCEPT for an allowed acquisition kind on the candidate contract.",
+        "Candidate contract is not mechanically inactive (explicit expiry_date in contract_term).",
+        "billing-to-contract identity_judgment is not DISTINCT."
+      ],
+      "optional_enrichment": [
+        "contract_lifecycle_judgment with active=true would strengthen active-contract premise but is not required when lifecycle is UNRESOLVED and contract is not mechanically inactive."
+      ],
+      "blocking_unresolved_state": [
+        {
+          "relation": "identity_judgment",
+          "pair": "billing-to-contract",
+          "disposition": "DISTINCT",
+          "effect": "Suppress row; billed name and contract counterparty are confidently not the same party."
+        },
+        {
+          "source": "contract_term",
+          "condition": "non-empty expiry_date",
+          "effect": "Treat contract as inactive; suppress invoice rows for that contract (expired statement of work)."
+        }
+      ],
+      "non_blocking_unresolved_state": [
+        {
+          "relation": "identity_judgment",
+          "pair": "billing-to-contract",
+          "disposition": "UNRESOLVED",
+          "effect": "Emit invoice with association unresolved when other inclusion premises hold."
+        },
+        {
+          "relation": "contract_lifecycle_judgment",
+          "disposition": "UNRESOLVED",
+          "effect": "Does not block inclusion when contract is not mechanically inactive; missing active judgment is not treated as inactive."
+        }
+      ]
+    },
+    {
+      "output_relation": "commercial_dependency_assessment",
+      "purpose": "C",
+      "required_input_relations": [
+        "contract_record",
+        "invoice_record",
+        "open_invoice",
+        "identity_judgment"
+      ],
+      "optional_enrichment_relations": [
+        "contract_term",
+        "contract_lifecycle_judgment",
+        "clause_kind_judgment"
+      ],
+      "epistemic_behavior": "Per contract, status dependent only when current-relationship evidence and qualifying obligation_kinds are both confidently satisfied and required identity joins are SAME_ENTITY. Any required UNRESOLVED identity or missing obligation evidence yields status unresolved; never emit false non-dependency from uncertain joins.",
+      "completeness_assumptions": "Emit a row for each contract that has open-invoice current-relationship evidence or a qualifying obligation ACCEPT, when dependency must be reported as dependent or left unresolved.",
+      "deterministic_computation": "For each contract with open_invoice-linked billed_name or ACCEPT obligation kind (exclusivity, auto_renewal, rolling_term), evaluate current-relationship (open invoice with SAME_ENTITY billing-to-contract join, or active contract with rolling/auto-renew term when lifecycle known active) and obligation_kinds from clause_kind_judgment ACCEPT; aggregate open_invoice_ids; set status dependent or unresolved.",
+      "required_premise": [
+        "Contract is a candidate via open_invoice-linked billing identity path or ACCEPT obligation kind.",
+        "For status dependent: billing-to-contract identity_judgment is SAME_ENTITY, at least one obligation_kind ACCEPT, and current-relationship evidence (open invoice on SAME_ENTITY join)."
+      ],
+      "optional_enrichment": [
+        "contract_lifecycle_judgment active=true for current-relationship via auto-renewal or rolling term without open invoice.",
+        "contract_term stated_term text for mechanical rolling/auto-renew detection when lifecycle is UNRESOLVED."
+      ],
+      "blocking_unresolved_state": [
+        {
+          "relation": "identity_judgment",
+          "pair": "billing-to-contract",
+          "disposition": "UNRESOLVED",
+          "effect": "Force status unresolved when open invoice or obligation evidence otherwise suggests dependency."
+        },
+        {
+          "relation": "identity_judgment",
+          "pair": "billing-to-contract",
+          "disposition": "DISTINCT",
+          "effect": "Cannot assert dependent; omit or leave unresolved if other evidence exists."
+        }
+      ],
+      "non_blocking_unresolved_state": [
+        {
+          "relation": "contract_lifecycle_judgment",
+          "disposition": "UNRESOLVED",
+          "effect": "Does not block dependent status when open_invoice provides current-relationship evidence."
+        },
+        {
+          "relation": "clause_kind_judgment",
+          "disposition": "UNRESOLVED",
+          "effect": "Treat as no qualifying obligation; does not assert dependent without ACCEPT."
+        }
+      ]
+    }
+  ]
+}

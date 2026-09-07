@@ -1,0 +1,92 @@
+{
+  "part": "A",
+  "arm": "A0",
+  "trial": "C3",
+  "status": "ANSWERED",
+  "reported_model": "Composer 2.5",
+  "tools": {
+    "tool_calls_started": 15,
+    "shell_calls": 3,
+    "read_calls": 8,
+    "write_calls": 0,
+    "python_executions_guess": 3,
+    "mentioned_paths": [
+      "/tmp/world-experiment/world-read-programming-v1/e781962b37ffefd8ed24c69be06c21bc/CONSUMER.md",
+      "/tmp/world-experiment/world-read-programming-v1/e781962b37ffefd8ed24c69be06c21bc/PURPOSE.md",
+      "/tmp/world-experiment/world-read-programming-v1/e781962b37ffefd8ed24c69be06c21bc/QUESTIONS.md",
+      "/tmp/world-experiment/world-read-programming-v1/e781962b37ffefd8ed24c69be06c21bc/inspect_worlds.py",
+      "/tmp/world-experiment/world-read-programming-v1/e781962b37ffefd8ed24c69be06c21bc",
+      "inspect_worlds.py",
+      "/tmp/world-experiment/world-read-programming-v1/e781962b37ffefd8ed24c69be06c21bc/research/semantic_integration/runtime_v0/world.py",
+      "/tmp/world-experiment/world-read-programming-v1/e781962b37ffefd8ed24c69be06c21bc",
+      "/",
+      "'worlds/harbor_towing/world.sqlite'",
+      "/",
+      "'worlds/seed_grants/world.sqlite'",
+      "/",
+      "'worlds/makerspace_checkout/world.sqlite'",
+      "/tmp/world-experiment/world-read-programming-v1/e781962b37ffefd8ed24c69be06c21bc",
+      "/tmp/world-experiment/world-read-programming-v1/e781962b37ffefd8ed24c69be06c21bc",
+      "/",
+      "'worlds/harbor_towing/world.sqlite')",
+      "/",
+      "'worlds/makerspace_checkout/world.sqlite')",
+      "/",
+      "'worlds/harbor_towing/world.sqlite'",
+      "/",
+      "'worlds/seed_grants/world.sqlite'",
+      "/tmp/world-experiment/world-read-programming-v1/e781962b37ffefd8ed24c69be06c21bc/worlds/harbor_towing/world.purpose.json",
+      "/tmp/world-experiment/world-read-programming-v1/e781962b37ffefd8ed24c69be06c21bc/worlds/seed_grants/world.purpose.json",
+      "/tmp/world-experiment/world-read-programming-v1/e781962b37ffefd8ed24c69be06c21bc/worlds/makerspace_checkout/world.purpose.json",
+      "/tmp/world-experiment/world-read-programming-v1/e781962b37ffefd8ed24c69be06c21bc/worlds",
+      "/tmp/world-experiment/world-read-programming-v1/e781962b37ffefd8ed24c69be06c21bc/answers.json"
+    ]
+  },
+  "exploration": {
+    "reads": [
+      "/tmp/world-experiment/world-read-programming-v1/e781962b37ffefd8ed24c69be06c21bc/CONSUMER.md",
+      "/tmp/world-experiment/world-read-programming-v1/e781962b37ffefd8ed24c69be06c21bc/PURPOSE.md",
+      "/tmp/world-experiment/world-read-programming-v1/e781962b37ffefd8ed24c69be06c21bc/QUESTIONS.md",
+      "/tmp/world-experiment/world-read-programming-v1/e781962b37ffefd8ed24c69be06c21bc/inspect_worlds.py",
+      "/tmp/world-experiment/world-read-programming-v1/e781962b37ffefd8ed24c69be06c21bc/research/semantic_integration/runtime_v0/world.py",
+      "/tmp/world-experiment/world-read-programming-v1/e781962b37ffefd8ed24c69be06c21bc/worlds/harbor_towing/world.purpose.json",
+      "/tmp/world-experiment/world-read-programming-v1/e781962b37ffefd8ed24c69be06c21bc/worlds/seed_grants/world.purpose.json",
+      "/tmp/world-experiment/world-read-programming-v1/e781962b37ffefd8ed24c69be06c21bc/worlds/makerspace_checkout/world.purpose.json"
+    ],
+    "writes": [],
+    "shells": [
+      "cd /tmp/world-experiment/world-read-programming-v1/e781962b37ffefd8ed24c69be06c21bc && python3 inspect_worlds.py",
+      "cd /tmp/world-experiment/world-read-programming-v1/e781962b37ffefd8ed24c69be06c21bc && python3 << 'PY'\nfrom pathlib import Path\nimport sys\nROOT = Path('.').resolve()\nsys.path.insert(0, str(ROOT))\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\n\ndef q(db, sql):\n    w = ConstructionWorld.open(db)\n    try:\n        return w.query_semantic(sql)\n    finally:\n        w.close()\n\n# HARBOR TOWING\ndb = ROOT / 'worlds/harbor_towing/world.sqlite'\nprint(\"=== HARBOR TOWING ===\")\npr",
+      "cd /tmp/world-experiment/world-read-programming-v1/e781962b37ffefd8ed24c69be06c21bc && python3 << 'PY'\nfrom pathlib import Path\nimport sys\nROOT = Path('.').resolve()\nsys.path.insert(0, str(ROOT))\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\n\ndef all_tables(db):\n    w = ConstructionWorld.open(db)\n    try:\n        tables = w.query_semantic(\"SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE '_tv_%' AND name NOT LIKE 'sqlite_%'\")\n        for t in tab"
+    ],
+    "n_reads": 8,
+    "n_writes": 0,
+    "n_shells": 3
+  },
+  "surface": {
+    "n_reads": 8,
+    "n_shells": 3,
+    "n_writes": 0,
+    "catalog_calls": 1,
+    "schema_inspections": 1,
+    "select_count": 1,
+    "join_count": 0,
+    "cte_count": 0,
+    "query_semantic_count": 2,
+    "inspect_world_calls": 1,
+    "raw_source_reads": [],
+    "n_sql_hint": 3
+  },
+  "initial_context": {
+    "initial_context_bytes": 2622,
+    "contract_bytes": 0,
+    "questions_bytes": 1126,
+    "purpose_bytes": 708
+  },
+  "world_hashes": {
+    "harbor_towing": "e653bd02b174a30015f2c58685cc86627cb117c36065f0069717bbc926b9d129",
+    "seed_grants": "2ebec5507f8a5ca51e06dd33843035e7ab50a072f86abf51ad53be613be64473",
+    "makerspace_checkout": "79c8b5ad902d6e8015ef53e850a625de7428d103a3ce447cf219f846cb0019a5"
+  },
+  "finished_at": "2026-09-06T09:46:43.969161+00:00"
+}

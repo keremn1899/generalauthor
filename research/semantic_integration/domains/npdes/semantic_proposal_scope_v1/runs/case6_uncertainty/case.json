@@ -1,0 +1,256 @@
+{
+  "id": "case6_uncertainty",
+  "n": 6,
+  "issue_id": "nodi_semantics",
+  "utterance": "I don't know what 9 means. Don't infer it from the pattern in the data.",
+  "stage": "baseline",
+  "previous_case": null,
+  "reported_model_propose": "Composer 2.5",
+  "reported_model_decide": "Composer 2.5",
+  "reported_model_commit": "Composer 2.5",
+  "mutated_after_propose": false,
+  "mutated_after_decide": false,
+  "proposal": {
+    "utterance_understood": "I don't know what 9 means. Don't infer it from the pattern in the data.",
+    "candidate_scope": "ONE_SOURCE_VALUE",
+    "semantic_delta": "For NODI_CODE='9' on FY2025 no-numeric-result rows (36 cases), do not assign any missing-evidence semantics. The expert does not know what code 9 means, and forbids inferring its meaning from co-occurrence or distributional patterns in dmr_measurements.csv (e.g. alongside code C or other field combinations). The existing nodi_code_semantics requirement with known=[\"\"] already leaves code 9 UNINTERPRETED; no construction edit is required.",
+    "epistemic_basis": "USER_UNCERTAINTY",
+    "remaining_ambiguity": "What NODI code 9 establishes for missing-evidence classification remains unknown per the expert. The expert did not address NODI code C (150 cases) or whether C and 9 are interchangeable.",
+    "primary_dry_run_id": null
+  },
+  "decision": {
+    "disposition": "READY_FOR_ACCEPTANCE",
+    "reason": "The expert's statement is an epistemic constraint on NODI code 9: they do not know its meaning and forbid inferring it from data patterns. The draft construction already treats all non-empty NODI codes as UNINTERPRETED under nodi_code_semantics (known only for empty string), so no construction change is required and no plausible reading of the utterance would produce materially different hole counts or classifications for code 9.",
+    "consequence_divergence": false,
+    "chosen_dry_run_id": null
+  },
+  "disposition": "READY_FOR_ACCEPTANCE",
+  "n_dry_runs": 0,
+  "dry_run_ids": [],
+  "clarify": false,
+  "acceptance": true,
+  "committed": false,
+  "commit_delta": {
+    "relation_count_changes": {},
+    "requirements_added": [],
+    "requirements_removed": [],
+    "requirements_changed": [],
+    "relation_mode_changes": {},
+    "n_hole_groups": {
+      "baseline": 8,
+      "proposed": 8
+    },
+    "n_hole_instances": {
+      "baseline": 535,
+      "proposed": 535
+    },
+    "hole_requirements_added": [],
+    "hole_requirements_removed": [],
+    "WORLD_semantics_changed": false,
+    "PURPOSE_semantics_changed": false,
+    "ok": {
+      "baseline": true,
+      "proposed": true
+    }
+  },
+  "revert": {
+    "construction_restored": true,
+    "sources_unchanged": true,
+    "source_fingerprints_after": {
+      "dmr_measurements.csv": "0dc40759d901174b94840985f5a7eda475727e643144fb8fd01890614b481488",
+      "permit_limits.csv": "59e98606b2d978956efc27992a060fd6703ae792106a3eee85b4c6b1da019b68",
+      "document_inventory.json": "e041eb1f78fd3c58feeb5a944dd03e7656e3d1d53ea5e549adcb6dc19e0e0cf6"
+    },
+    "rerun_matches_baseline": true,
+    "revert_delta": {
+      "relation_count_changes": {},
+      "requirements_added": [],
+      "requirements_removed": [],
+      "requirements_changed": [],
+      "relation_mode_changes": {},
+      "n_hole_groups": {
+        "baseline": 8,
+        "proposed": 8
+      },
+      "n_hole_instances": {
+        "baseline": 535,
+        "proposed": 535
+      },
+      "hole_requirements_added": [],
+      "hole_requirements_removed": [],
+      "WORLD_semantics_changed": false,
+      "PURPOSE_semantics_changed": false,
+      "ok": {
+        "baseline": true,
+        "proposed": true
+      }
+    }
+  },
+  "baseline": {
+    "ok": true,
+    "errors": [],
+    "n_hole_groups": 8,
+    "n_hole_instances": 535,
+    "relation_row_counts": {
+      "dmr_measurement": 824,
+      "permit_limit": 105,
+      "permit_document": 12,
+      "fy2025_measurement": 824,
+      "measurement_limit_pair": 824,
+      "numeric_comparison_candidate": 342,
+      "no_numeric_result_case": 186,
+      "monitoring_requirement_fy2025": 105
+    },
+    "requirement_names": [
+      "fy2025_measurements_materializable",
+      "measurement_limit_pairs_materializable",
+      "unique_applicable_limit_per_measurement",
+      "numeric_comparison_candidates_materializable",
+      "limit_value_for_comparison",
+      "reported_value_for_comparison",
+      "limit_comparison_operator",
+      "reported_value_qualifier",
+      "optional_monitoring_flag_for_limit_applicability",
+      "limit_type_code_for_enforceability",
+      "statistical_base_for_limit_comparison",
+      "monitoring_requirements_materializable",
+      "monitoring_frequency_code",
+      "limit_sample_type_code",
+      "optional_monitoring_flag_for_obligation",
+      "permit_limit_comment_text",
+      "limit_set_designator_for_schedule",
+      "no_numeric_result_cases_materializable",
+      "nodi_code_semantics",
+      "optional_monitoring_flag_for_missing_evidence",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "conditional_discharge_dependent_monitoring",
+      "conditional_discharge_dependent_monitoring",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "conditional_discharge_dependent_monitoring",
+      "conditional_discharge_dependent_monitoring",
+      "conditional_discharge_dependent_monitoring",
+      "conditional_discharge_dependent_monitoring",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "pass_fail_reporting_semantics",
+      "pass_fail_reporting_semantics",
+      "pass_fail_reporting_semantics",
+      "pass_fail_reporting_semantics",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "conditional_discharge_dependent_monitoring",
+      "conditional_discharge_dependent_monitoring",
+      "aggregated_reporting_requirement",
+      "conditional_discharge_dependent_monitoring",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "pass_fail_reporting_semantics",
+      "pass_fail_reporting_semantics",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "conditional_discharge_dependent_monitoring",
+      "conditional_discharge_dependent_monitoring",
+      "conditional_discharge_dependent_monitoring",
+      "conditional_discharge_dependent_monitoring",
+      "conditional_discharge_dependent_monitoring",
+      "conditional_discharge_dependent_monitoring",
+      "conditional_discharge_dependent_monitoring",
+      "conditional_discharge_dependent_monitoring",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "pass_fail_reporting_semantics",
+      "pass_fail_reporting_semantics",
+      "pass_fail_reporting_semantics",
+      "pass_fail_reporting_semantics",
+      "pass_fail_reporting_semantics",
+      "pass_fail_reporting_semantics",
+      "permit_document_text_not_available"
+    ],
+    "hole_groups": [
+      {
+        "group_id": "g000",
+        "requirement": "aggregated_reporting_requirement",
+        "failure_kind": "EXPLICIT_UNRESOLVED",
+        "relation": "monitoring_requirement_fy2025",
+        "n_instances": 40
+      },
+      {
+        "group_id": "g001",
+        "requirement": "conditional_discharge_dependent_monitoring",
+        "failure_kind": "EXPLICIT_UNRESOLVED",
+        "relation": "monitoring_requirement_fy2025",
+        "n_instances": 17
+      },
+      {
+        "group_id": "g002",
+        "requirement": "limit_sample_type_code",
+        "failure_kind": "UNINTERPRETED",
+        "relation": "monitoring_requirement_fy2025",
+        "n_instances": 105
+      },
+      {
+        "group_id": "g003",
+        "requirement": "monitoring_frequency_code",
+        "failure_kind": "UNINTERPRETED",
+        "relation": "monitoring_requirement_fy2025",
+        "n_instances": 105
+      },
+      {
+        "group_id": "g004",
+        "requirement": "nodi_code_semantics",
+        "failure_kind": "UNINTERPRETED",
+        "relation": "no_numeric_result_case",
+        "n_instances": 186
+      },
+      {
+        "group_id": "g005",
+        "requirement": "pass_fail_reporting_semantics",
+        "failure_kind": "EXPLICIT_UNRESOLVED",
+        "relation": "measurement_limit_pair",
+        "n_instances": 12
+      },
+      {
+        "group_id": "g006",
+        "requirement": "permit_document_text_not_available",
+        "failure_kind": "EXPLICIT_UNRESOLVED",
+        "relation": "permit_document",
+        "n_instances": 1
+      },
+      {
+        "group_id": "g007",
+        "requirement": "permit_limit_comment_text",
+        "failure_kind": "UNINTERPRETED",
+        "relation": "permit_limit",
+        "n_instances": 69
+      }
+    ]
+  },
+  "finished_at": "2026-09-05T11:02:47.860874+00:00"
+}

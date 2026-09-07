@@ -1,0 +1,16 @@
+{
+  "interpretation": "NODI code C cannot be assigned a permit-authorized missing-evidence meaning from workspace sources; the obligation remains blocked at UNINTERPRETED.",
+  "scope": "ONE_RELATION_OR_VOCABULARY",
+  "epistemic_basis": "UNRESOLVED",
+  "exact_grounding": [
+    "sources/dmr_measurements.csv: 150 FY2025 rows with empty DMR_VALUE_NMBR and NODI_CODE=C, all NM0000116, all OPTIONAL_MONITORING_FLAG=N",
+    "construction.py: known nodi_code values for Purpose C are [\"\"]; C is not in known list",
+    "documents/gcc/final_permit.txt: no NODI code definition or NO DISCHARGE reporting instruction for NM0000116",
+    "documents/gcc/fact_sheet.txt: discharge infrequency narrative without NODI C mapping"
+  ],
+  "semantic_delta": null,
+  "affected_obligations": ["nodi_c", "nodi_code_semantics"],
+  "affected_occurrence_count": 150,
+  "remaining_uncertainty": "Authoritative NODI C semantics would require establishing text not present in the frozen packet (e.g., a NODI codebook, NetDMR field legend tied to NM0000116, or permit language explicitly mapping C to a reporting state).",
+  "admit": "UNRESOLVED"
+}

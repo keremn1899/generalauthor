@@ -1,0 +1,86 @@
+{
+  "experiment_id": "world-read-programming-v1",
+  "evaluator_only": true,
+  "part_a": {
+    "harbor_towing.Q3": {"establishable": true, "allowed": [1, "1"]},
+    "harbor_towing.Q6": {"establishable": false, "allowed": null},
+    "harbor_towing.Q1": {"establishable": true, "allowed": [240, 240.0, "240"]},
+    "harbor_towing.Q5": {"establishable": false, "allowed": null},
+    "seed_grants.Q4": {"establishable": true, "allowed": [10000, 10000.0, "10000"]},
+    "seed_grants.Q1": {"establishable": true, "allowed": [15000, 15000.0, "15000"]},
+    "seed_grants.Q5": {"establishable": false, "allowed": null},
+    "seed_grants.Q2": {"establishable": true, "allowed": [0, 0.0, "0"]},
+    "makerspace_checkout.Q1": {"establishable": true, "allowed": [12, 12.0, "12"]},
+    "makerspace_checkout.Q4": {"establishable": true, "allowed": [24, 24.0, "24"]},
+    "makerspace_checkout.Q5": {"establishable": false, "allowed": null},
+    "makerspace_checkout.Q6": {"establishable": false, "allowed": null}
+  },
+  "part_b": {
+    "harbor_towing": {
+      "P1": {
+        "kind": "relational",
+        "charges_by_vessel": {"V-NORTH": 1200, "V-BAY": 2280, "V-REEF": 720},
+        "included_jobs": ["J1", "J2", "J3", "J4"],
+        "excluded_jobs": ["J5", "J6", "J7"],
+        "notes": "J1 960 + J3 240 = 1200; J2 2280; J4 720. Insufficient-evidence jobs contribute no established charge."
+      },
+      "P2": {
+        "kind": "graph",
+        "jobs": ["J2", "J5"],
+        "berths": ["B4", "B12"]
+      },
+      "P3": {
+        "kind": "mixed",
+        "jobs": ["J5", "J7"],
+        "established_job_ids": [],
+        "established_charge_total": 0,
+        "unresolved_or_insufficient_jobs": ["J5", "J7"],
+        "must_not_assert": ["J7 is not an emergency", "J7 was not authorized", "false"]
+      }
+    },
+    "seed_grants": {
+      "P1": {
+        "kind": "relational",
+        "remaining_by_org": {
+          "ORG-MEADOW": 15000,
+          "ORG-RIDGE": 10000,
+          "ORG-HARBOR": 20000
+        }
+      },
+      "P2": {
+        "kind": "graph",
+        "organization": "ORG-MEADOW",
+        "awards": ["A-101", "A-103"],
+        "disbursement_amounts": [20000, 15000, 15000],
+        "disbursement_total": 50000
+      },
+      "P3": {
+        "kind": "mixed",
+        "active_awards": ["A-101", "A-102"],
+        "active_remaining_total": 15000,
+        "uninterpreted_siblings": ["A-105"],
+        "notes": "A-101 remaining 15000 + A-102 remaining 0. A-102 org ORG-RIDGE sibling A-105 status H uninterpreted. A-104 is uninterpreted but not a sibling of an Active award. A-103 is Closed (established), not uninterpreted."
+      }
+    },
+    "makerspace_checkout": {
+      "P1": {
+        "kind": "relational",
+        "fees_by_tool": {"LASER-A": 54, "CNC-1": 108, "SAW-1": 4},
+        "notes": "Authorized only. LASER-A: C1 24 + C6 12 + C7 18 = 54 (C4 unauthorized excluded). CNC-1: C2 54 + C5 54 = 108. SAW-1: C3 4."
+      },
+      "P2": {
+        "kind": "graph",
+        "checkouts": ["C1", "C3", "C6", "C7"],
+        "tools": ["LASER-A", "SAW-1"]
+      },
+      "P3": {
+        "kind": "mixed",
+        "checkouts": ["C2", "C5"],
+        "members": ["M-18"],
+        "authorized_fee_total": 108,
+        "unresolved_note_checkouts": ["C5"],
+        "notes": "C5 fee is established; PENDING note is unresolved. Do not drop the 54 fee because the note is unresolved."
+      }
+    }
+  }
+}

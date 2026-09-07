@@ -1,0 +1,31 @@
+{
+  "proposition": "Each distinct LIMIT_FREQ_OF_ANALYSIS_CODE value in permit_limits.csv denotes a specific monitoring frequency obligation (e.g., daily, weekly, five-times-weekly) that can be interpreted without external legend.",
+  "would_establish": [
+    "An explicit codebook or field definition in workspace sources mapping each LIMIT_FREQ_OF_ANALYSIS_CODE token to a stated monitoring frequency",
+    "Permit-package narrative that uses the same opaque code tokens (05/WK, 01/07, 01/01, etc.) and defines their meaning",
+    "Authoritative permit-table rows for the same permit number and parameter showing a human-readable MEASUREMENT FREQUENCY that unambiguously corresponds to each code when joined to structured limit rows"
+  ],
+  "would_refute": [
+    "Workspace sources showing LIMIT_FREQ_OF_ANALYSIS_CODE values are arbitrary identifiers with no stable frequency semantics",
+    "Demonstrated one-to-many mapping where the same code corresponds to materially different monitoring schedules in authoritative permit text",
+    "Absence of any permit narrative frequency for parameters bearing a given code across all facilities in the workspace"
+  ],
+  "likely_authoritative_source_types": [
+    "documents/*/final_permit.txt effluent limit tables with MEASUREMENT FREQUENCY columns and footnotes",
+    "documents/*/statement_of_basis.txt monitoring-frequency discussion sections",
+    "sources/permit_limits.csv LIMIT_FREQ_OF_ANALYSIS_CODE field joined on EXTERNAL_PERMIT_NMBR and PARAMETER_DESC",
+    "sources/dmr_measurements.csv paired LIMIT_FREQ_OF_ANALYSIS_CODE and DMR_FREQ_OF_ANALYSIS_CODE values"
+  ],
+  "insufficient_alone": [
+    "Unique value listing or co-occurrence patterns in permit_limits.csv without matching permit narrative text",
+    "DMR_FREQ_OF_ANALYSIS_CODE pairings that diverge from LIMIT_FREQ_OF_ANALYSIS_CODE on some rows",
+    "Statement-of-basis prose describing frequencies in plain language without using the structured code tokens",
+    "construction.py require_interpreted scaffolding showing codes are currently UNINTERPRETED"
+  ],
+  "unknowable_from_structured_data_alone": [
+    "The decoding rule for the NN/XX or NN/WK token format",
+    "Whether 09/99 denotes a calendar schedule versus event-triggered retest reporting",
+    "Whether 01/90 always means once per quarter versus other long-interval schedules (e.g., once per permit term) for codes not present in structured limits",
+    "Footnote-conditioned sampling constraints (e.g., 'sampling on at least five different days', 'when discharging') that modify how a nominal frequency applies"
+  ]
+}

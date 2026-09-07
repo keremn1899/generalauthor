@@ -1,0 +1,466 @@
+                                                                                                                                                1
+
+
+                                                                               CALCULATIONS OF NEW MEXICO WATER QUALITY-BASED EFFLUENT LIMITATIONS
+NMAC 20.6.4.                                                                   (EPA approved site-specific criteria for aluminum, cadmium, and zinc on April 30, 2012)
+Calculations Specifications:                                                   Excel           Revised as of July 10, 2012
+
+Prepared By:                                                                   Nichole Young
+
+
+STEP 1:             REFERENCE IMPLEMENTATION PROCEDURES
+                    INPUT FACILITY AND RECEIVING STREAM DATA
+                    LIST SOURCE OF DATA INPUT
+
+
+IMPLEMENTATION PROCEDURES
+
+
+The State of New Mexico Standards for Interstate and Intrastate Surface Waters are implemented in this spread sheet
+by using procedures established in the current "Procedures for Implementing NPDES Permits in New Mexico"
+
+
+FACILTY                                                                                                     DATA INPUT
+
+
+Permittee                                                                                                   GCC Rio Grande
+NPDES Permit No.                                                                                            NM0000116
+Outfall No.(s)                                                                                                    1
+Plant Effluent Flow (MGD)                                                                                      0.012                   For industrial and federal facility, use the highest monthly average flow
+Plant Effluent Flow (cfs)                                                                                      0.0186                 for the past 24 months. For POTWs, use the design flow.
+
+
+RECEIVING STREAM                                                                                            DATA INPUT
+
+
+Receiving Stream Name                                                                                       Corral Canyon
+Basin Name                                                                                                  Rio Grande Basin
+Waterbody Segment Code No.                                                                                  20.6.4.98
+Is a publicly owned lake or reservoir (enter "1" if it's a lake, "0" if not)                                      0
+Are acute aquatic life criteria considered (1= yes, 0= no)        (MUST enter "1" for 2005 Standards)             1
+Are chronic aquatic life criteria considered (1= yes, 0=no)                                                       1
+Are domestic water supply criteria considered (1= yes, 0=no)                                                      0
+Are irrigation water supply criteria considered (1= yes, 0=no)                                                    0
+Livestock watering and wildlife habitat criteria applied to all streams
+
+
+USGS Flow Station                                                                                              USGS
+WQ Monitoring Station No.                                                                                       SJR
+Receiving Stream TSS (mg/l)                                                                                      30                   For intermittent stream, enter effluent TSS use 30
+Receiving Stream Hardness (mg/l as CaCOs)                                      RANGE: 0 - 400                   187                   For intermittent stream, enter effluent Hardness (If no data, 20 mg/l is used)
+Receiving Stream Critical Low Flow (4Q3) (cfs)                                                                    0                   Enter "0" for intermittent stream and lake.
+Receiving Stream Harmonic Mean Flow (cfs)                                                                      0.001                  Enter harmonic mean or modified harmonic mean flow data or 0.001 if no data is available
+Avg. Receiving Water Temperature (C)
+pH (Avg), Receiving Stream
+Fraction of stream allowed for mixing (F)                                                                         1                   Enter 1, if stream morphology data is not available or for intermittent streams.
+Fraction of Critical Low Flow                                                                                     0
+                                                                                                                                            2
+
+
+STEP 2:           INPUT AMBIENT AND EFFLUENT DATA
+                  CALCULATE IN-STREAM WASTE CONCENTRATIONS
+DATA INPUT                                       Input pollutant geometric mean concentration as micro-gram per liter (ug/l or ppb)
+                                                 unless other unit is specified for the parameter.
+                                                 Effluent value reported as "< detection level" (DL) but the DL is greater than MQL, input "1/2 DL" for calculation.
+                                                 Effluent value reported as "< detection level" (DL) and the DL is smaller than MQL, no data is inputted.
+                                                 If a less than MQL vakue is reported, input either the reported value or "0" for calculation.
+
+
+                                                 The following formular is used to calculate the Instream Waste Concentration (Cd)
+                                                 See the current "Procedures for Implementing NPDES Permits in New Mexico"
+                                                 Cd = [(F*Qa*Ca) + (Qe*2.13*Ce)] / (F*Qa + Qe)
+                                                 Where:
+                                                 Cd = Instream Waste Concentration
+                                                 F    = Fraction of stream allowed for mixing (see "Procedures for Implementing NPDES Permits in New Mexico")
+                                                 Ce = Reported concentration in effluent
+                                                 Ca = Ambient stream concentration upstream of discharge
+                                                 Qe = Plant effluent flow
+                                                 Qa = Critical low flow of stream at discharge point expressed as the 4Q3 or harmonic mean flow for human health criteria
+
+
+The following formular convert metals reported in total form to dissolved form if criteria are in dissolved form
+See the current "Procedures for Implementing NPDES Permits in New Mexico"
+Kp = Kpo * (TSS**a)                                                       Kp = Linear partition coefficient; Kpo and a can be found in table below
+C/Ct = 1/ (1 + Kp*TSS* 10^-6)                                             TSS = Total suspended solids concentration found in receiving stream (or in effluent for intermittent stream)
+Total Metal Criteria (Ct) = Cr / (C/Ct)                                   C/Ct = Fraction of metal dissolved; and Cr = Dissolved criteria value
+
+
+                                                 Stream Linear Partition Coefficient                                                              Lake Linear Partition Coefficient
+Total Metals       Total Value                        Kpo     alpha (a)        Kp             C/Ct      Dissolved Value in Stream                       Kpo        alpha (a)          Kp            C/Ct      Dissolved Value in Lake
+
+
+Arsenic                                              480000     -0.73      40081.3851     0.45404156         0                                        480000         -0.73       40081.3851     0.45404156          0
+Chromium III                                      3360000       -0.93       142107.34     0.18999775         0                                        2170000        -0.27       866237.529     0.03705471          0
+Copper                  5.3                       1040000       -0.74      83938.9652     0.28423877     1.5064655                                    2850000         -0.9       133486.004     0.19981696     1.0590299
+Lead                                              2800000        -0.8      184272.712     0.15318202         0                                        2040000        -0.53       336322.484     0.09017397          0
+Nickel                  10                           490000     -0.57      70507.7677     0.32100327     3.2100327                                    2210000        -0.76       166640.331     0.16668862     1.6668862
+Silver                   5                        2390000       -1.03      71938.7701     0.31663976     1.5831988                                    2390000        -1.03       71938.7701     0.31663976     1.5831988
+Zinc                                              1250000        -0.7      115591.296     0.22382687         0                                        3340000        -0.68       330600.886     0.09159164          0
+
+
+The following formular is used to calculate hardness dependent criteria                                                                              Dissolved
+(Please refer to State Water Quality Standards for details)                                                                                          WQC (ug/l)
+
+
+Aluminum (T)                                     Acute                                   e(1.3695[ln(hardness)]+1.8308)                              8061.08346                 If Stream pH < 6.5, enter 750 in cell O113
+                                                 Chronic                                 e(1.3695[ln(hardness)]+0.9161)                              3229.56667                 If Stream pH < 6.5, enter 87 in cell P113
+Cadmium (D)                                      Acute                                   e(0.8968[ln(hardness)]-3.5699)*CF1                       2.81678584                    CF1 = 1.136672 - 0.041838*ln(hardness)
+                                                 Chronic                                 e(0.7647[ln(hardness)]-4.2180)*CF2                       0.71005471                    CF2 = 1.101672 - 0.041838*ln(hardness)
+                                                                                                                                3
+
+
+                                                                                                                                      Dissolved
+                                                                                                                                      WQC (ug/l)
+
+
+Chromium III (D)                            Acute                             0.316 e(0.819[ln(hardness)]+3.7256)                     951.333697
+                                            Chronic                           0.860 e(0.819[ln(hardness)]+0.6848)                     123.748969
+Copper (D)                                  Acute                             0.960 e(0.9422[ln(hardness)]-1.700)                     24.2381671
+                                            Chronic                           0.960 e(0.8545[ln(hardness)]-1.702)                     15.2894083
+Lead (D)                                    Acute                             e(1.273[ln(hardness)]-1.46)*CF3                         126.752073                CF3 = 1.46203 - 0.145712*ln(hardness)
+                                            Chronic                           e(1.273[ln(hardness)]-4.705)*CF4                        4.93934632                CF4 = 1.46203 - 0.145712*ln(hardness)
+Manganese (D)                               Acute                             e(0.3331[ln(hardness)]+6.4676)                          3677.84507
+                                            Chronic                           e(0.3331[ln(hardness)]+5.8743)                          2032.01315
+Nickel (D)                                  Acute                             0.998 e(0.846[ln(hardness)]+2.255)                      795.138161
+                                            Chronic                           0.997 e(0.846[ln(hardness)]+0.0584)                     88.3153014
+Silver (D)                                  Acute                             0.85 e(1.72[ln(hardness)]-6.59)                         9.44030125
+Zinc (D)                                    Acute                             0.978 e(0.9094[ln(hardness)]+0.9095)                    282.710828
+                                            Chronic                           0.986 e(0.90947[ln(hardness)]+0.6235)                   214.205842
+
+
+
+
+                                                                                   Instream Waste Concentration                                                  Livestock&      Acute      Chronic     Human      Need
+POLLUTANTS                                            Ambient     Effluent       Acute       Domestic      Chronic      Human          Domestic    Irrigation     Wildlife      Aquatic      Aquatic    Health     TMDL
+                                                       Conc.       Conc.         Aquatic       Supply       Aquatic      Health         Criteria   Criteria        Criteria     Criteria     Criteria   Criteria
+                                CAS No.        MQL    Ca (ug/l)   Ce (ug/l)     2.13*Ce    Cd,dom (ug/l) Cd (ug/l)     Cd,hh (ug/l)      ug/l        ug/l           ug/l          ug/l         ug/l      ug/l
+Radioactivity, Nutrients, and Chlorine
+Aluminum, total                 7429-90-5      2.5                 2870          6113.1        6113.1       6113.1     5801.2071       1E+100        5000         1E+100      8061.08346   3229.5667    1E+100     N/A
+Barium, dissolved               7440-39-3      100                   83          176.79        176.79       176.79      167.7701         2000      1E+100         1E+100        1E+100       1E+100     1E+100     N/A
+Boron, dissolved                7440-42-8      100                                  0            0               0          0          1E+100        750            5000        1E+100       1E+100     1E+100     N/A
+Cobalt, dissolved               7440-48-4      50                                   0            0               0          0          1E+100         50            1000        1E+100       1E+100     1E+100     N/A
+Uranium, dissolved              7440-61-1      0.1                                  0            0               0          0             30       1E+100         1E+100        1E+100       1E+100     1E+100     N/A
+Vanadium, dissolved             7440-62-2      50                                   0            0               0          0          1E+100        100            100         1E+100       1E+100     1E+100     N/A
+Ra-226 and Ra-228 (pCi/l)                                                           0            0               0          0              5       1E+100            30         1E+100       1E+100     1E+100     N/A
+Strontium (pCi/l)                                                                   0            0               0          0              8       1E+100         1E+100        1E+100       1E+100     1E+100     N/A
+Tritium (pCi/l)                                                                     0            0               0          0           20000      1E+100          20000        1E+100       1E+100     1E+100     N/A
+Gross Alpha (pCi/l)                                                                 0            0               0          0             15       1E+100            15         1E+100       1E+100     1E+100     N/A
+Asbestos (fibers/l)                                                                 0            0               0          0          7000000     1E+100         1E+100        1E+100       1E+100     1E+100     N/A
+Total Residual Chlorine         7782-50-5      33                                   0            0               0          0          1E+100      1E+100            11           19           11       1E+100     N/A
+Nitrate as N (mg/l)                                                                 0            0               0          0             10       1E+100         1E+100        1E+100       1E+100     1E+100     N/A
+Nitrite + Nitrate (mg/l)                                                            0            0               0          0          1E+100      1E+100           132         1E+100       1E+100     1E+100     N/A
+METALS AND CYANIDE
+Antimony, dissolved (P)         7440-36-0      60                                   0            0               0          0              6       1E+100         1E+100        1E+100       1E+100      640       N/A
+Arsenic, dissolved (P)          7440-38-2      0.5                                  0            0               0          0             10         100            200           340          150         9       N/A
+Beryllium, dissolved            7440-41-7      0.5                                  0            0               0          0              4       1E+100         1E+100        1E+100       1E+100     1E+100     N/A
+Cadmium, dissolved              7440-43-9       1                    2            4.26          4.26            4.26   4.0426531           5          10             50       2.81678584   0.7100547    1E+100     N/A
+Chromium (III), dissolved      16065-83-1      10                                   0            0               0          0          1E+100      1E+100         1E+100      951.333697   123.74897    1E+100     N/A
+Chromium (VI), dissolved       18540-29-9      10                                   0            0               0          0          1E+100      1E+100         1E+100          16           11       1E+100     N/A
+Chromium, dissolved             7440-47-3                                           0            0               0          0            100         100            1000        1E+100       1E+100     1E+100     N/A
+Copper, dissolved               7440-50-8      0.5                   6           12.78         12.78        12.78      12.127959         1300        200            500       24.2381671   15.289408    1E+100     N/A
+Lead, dissolved                 7439-92-1      0.5                                  0            0               0          0             15         5000           100       126.752073   4.9393463    1E+100     N/A
+Manganese, dissolved            7439-96-5                            14          29.82         29.82        29.82      28.298571       1E+100      1E+100         1E+100      3677.84507   2032.0132    1E+100     N/A
+                                                                                                                               4
+
+
+
+                                                                                   Instream Waste Concentration                      Livestock&    Acute       Chronic     Human         Need
+                                                      Ambient      Effluent      Acute        Domestic     Chronic      Human        Domestic     Irrigation   Wildlife    Aquatic      Aquatic    Health     TMDL
+POLLUTANTS                                             Conc         Conc.       Aquatic        Supply      Aquatic      Health        Criteria    Criteria     Criteria     Criteria    Criteria   Criteria
+                                CAS No.       MQL     Ca (ug/l)    Ce (ug/l)    2.13*Ce     Cd,dom (ug/l) Cd (ug/l)   Cd,hh (ug/l)      ug/l        ug/l         ug/l        ug/l         ug/l      ug/l
+Mercury, dissolved              7439-97-6    0.005                                 0             0            0            0          1E+100      1E+100       1E+100         1.4        0.77      1E+100     N/A
+Mercury, total                  7439-97-6    0.005                   0.2         0.426         0.426        0.426     0.4042653          2        1E+100        0.77       1E+100       1E+100     1E+100     N/A
+Molybdenum, dissolved           7439-98-7                                          0             0            0            0          1E+100        1000       1E+100      1E+100       1E+100     1E+100     N/A
+Molybdenum, total recoverable   7439-98-7                             15         31.95         31.95        31.95     30.319898       1E+100      1E+100       1E+100        7920        1895      1E+100     N/A
+Nickel, dissolved (P)           7440-02-0     0.5                                  0             0            0            0            700       1E+100       1E+100     795.138161   88.315301    4600      N/A
+Selenium, dissolved (P)         7782-49-2     5                                    0             0            0            0            50          130          50        1E+100       1E+100      4200      N/A
+Selenium, dis (SO4 >500 mg/l)                 5                                    0             0            0            0            50          250          50        1E+100       1E+100      4200      N/A
+Selenium, total recoverable     7782-49-2     5                                    0             0            0            0          1E+100      1E+100          5           20           5       1E+100     N/A
+Silver, dissolved               7440-22-4     0.5                 1.58319879   3.37221342    3.3722134   3.3722134    3.2001617       1E+100      1E+100       1E+100     9.44030125    1E+100     1E+100     N/A
+Thalllium, dissolved (P)        7440-28-0     0.5                                  0             0            0            0             2        1E+100       1E+100      1E+100       1E+100      0.47      N/A
+Zinc, dissolved                 7440-66-6     20                      0            0             0            0            0           10500        2000       25000      282.710828   214.20584   26000      N/A
+Cyanide, total recoverable       57-12-5      10                                   0             0            0            0            200       1E+100         5.2          22          5.2       140       N/A
+Dioxin                          1764-01-6   0.00001                                0             0            0            0         3.00E-05     1E+100       1E+100      1E+100       1E+100     5.1E-08    N/A
+VOLATILE COMPOUNDS
+Acrolein                        107-02-8      50                                   0             0            0            0            18        1E+100       1E+100      1E+100       1E+100        9       N/A
+Acrylonitrile                   107-13-0      20                                   0             0            0            0           0.65       1E+100       1E+100      1E+100       1E+100       2.5      N/A
+Benzene                          71-43-2      10                                   0             0            0            0             5        1E+100       1E+100      1E+100       1E+100      510       N/A
+Bromoform                        75-25-2      10                                   0             0            0            0            44        1E+100       1E+100      1E+100       1E+100      1400      N/A
+Carbon Tetrachloride             56-23-5      2                                    0             0            0            0             5        1E+100       1E+100      1E+100       1E+100       16       N/A
+Chlorobenzene                   108-90-7      10                                   0             0            0            0            100       1E+100       1E+100      1E+100       1E+100      1600      N/A
+Clorodibromomethane             124-48-1      10                                   0             0            0            0            4.2       1E+100       1E+100      1E+100       1E+100      130       N/A
+Chloroform                       67-66-3      50                                   0             0            0            0            57        1E+100       1E+100      1E+100       1E+100      4700      N/A
+Dichlorobromomethane             75-27-4      10                                   0             0            0            0            5.6       1E+100       1E+100      1E+100       1E+100      170       N/A
+1,2-Dichloroethane              107-06-2      10                                   0             0            0            0             5        1E+100       1E+100      1E+100       1E+100      370       N/A
+1,1-Dichloroethylene             75-35-4      10                                   0             0            0            0             7        1E+100       1E+100      1E+100       1E+100      7100      N/A
+1,2-Dichloropropane              78-87-5      10                                   0             0            0            0             5        1E+100       1E+100      1E+100       1E+100      150       N/A
+1,3-Dichloropropylene           542-75-6      10                                   0             0            0            0            3.5       1E+100       1E+100      1E+100       1E+100      210       N/A
+Ethylbenzene                    100-41-4      10                                   0             0            0            0            700       1E+100       1E+100      1E+100       1E+100      2100      N/A
+Methyl Bromide                   74-83-9      50                                   0             0            0            0            49        1E+100       1E+100      1E+100       1E+100      1500      N/A
+Methylene Chloride               75-09-2      20                                   0             0            0            0             5        1E+100       1E+100      1E+100       1E+100      5900      N/A
+1,1,2,2-Tetrachloroethane        79-34-5      10                                   0             0            0            0            1.8       1E+100       1E+100      1E+100       1E+100       40       N/A
+Tetrachloroethylene             127-18-4      10                                   0             0            0            0             5        1E+100       1E+100      1E+100       1E+100       33       N/A
+Tolune                          108-88-3      10                                   0             0            0            0           1000       1E+100       1E+100      1E+100       1E+100     15000      N/A
+1,2-trans-Dichloroethylene       156-60-5     10                                   0             0            0            0            100       1E+100       1E+100      1E+100       1E+100     10000      N/A
+1,1,1-Trichloroethane            71-55-6                                           0             0            0            0            200       1E+100       1E+100      1E+100       1E+100     1E+100     N/A
+1,1,2-Trichloroethane            79-00-5      10                                   0             0            0            0             5        1E+100       1E+100      1E+100       1E+100      160       N/A
+Trichloroethylene                79-01-6      10                                   0             0            0            0             5        1E+100       1E+100      1E+100       1E+100      300       N/A
+Vinyl Chloride                   75-01-4      10                                   0             0            0            0             2        1E+100       1E+100      1E+100       1E+100       24       N/A
+ACID COMPOUNDS
+2-Chlorophenol                   95-57-8      10                                   0             0            0            0            175       1E+100       1E+100      1E+100       1E+100      150       N/A
+2,4-Dichlorophenol              120-83-2      10                                   0             0            0            0            105       1E+100       1E+100      1E+100       1E+100      290       N/A
+2,4-Dimethylphenol              105-67-9      10                                   0             0            0            0            700       1E+100       1E+100      1E+100       1E+100      850       N/A
+4,6-Dinitro-o-Cresol            534-52-1      50                                   0             0            0            0            14        1E+100       1E+100      1E+100       1E+100      280       N/A
+                                                                                                                      5
+
+
+                                                                           Instream Waste Concentration                                             Livestock&   Acute      Chronic    Human      Need
+                                                 Ambient     Effluent    Acute       Domestic     Chronic      Human        Domestic   Irrigation    Wildlife    Aquatic    Aquatic     Health    TMDL
+POLLUTANTS                                        Conc        Conc.      Aquatic      Supply      Aquatic      Health       Criteria   Criteria      Criteria    Criteria   Criteria   Criteria
+                               CAS No.     MQL   Ca (ug/l)   Ce (ug/l)   2.13*Ce   Cd,dom (ug/l) Cd (ug/l)   Cd,hh (ug/l)     ug/l       ug/l          ug/l       ug/l        ug/l       ug/l
+2,4-Dinitrophenol               51-28-5    50                              0            0            0            0           70       1E+100        1E+100      1E+100     1E+100      5300      N/A
+Pentachlorophenol               87-86-5    50                              0            0            0            0            1       1E+100        1E+100        19         15         30       N/A
+Phenol                         108-95-2    10                              0            0            0            0          10500     1E+100        1E+100      1E+100     1E+100     860000     N/A
+2,4,6-Trichlorophenol           88-06-2    10                              0            0            0            0           32       1E+100        1E+100      1E+100     1E+100       24       N/A
+BASE/NEUTRAL
+Acenaphthene                    83-32-9    10                              0            0            0            0          2100      1E+100        1E+100      1E+100     1E+100       990      N/A
+Anthracene                     120-12-7    10                              0            0            0            0          10500     1E+100        1E+100      1E+100     1E+100      40000     N/A
+Benzidine                       92-87-5    50                              0            0            0            0         0.0015     1E+100        1E+100      1E+100     1E+100      0.002     N/A
+Benzo(a)anthracene              56-55-3    5                               0            0            0            0          0.048     1E+100        1E+100      1E+100     1E+100      0.18      N/A
+Benzo(a)pyrene                  50-32-8    5                               0            0            0            0           0.2      1E+100        1E+100      1E+100     1E+100      0.18      N/A
+3,4-Benzofluoranthene          205-99-2    10                              0            0            0            0          0.048     1E+100        1E+100      1E+100     1E+100      0.18      N/A
+Benzo(k)fluoranthene           207-08-9    5                               0            0            0            0          0.048     1E+100        1E+100      1E+100     1E+100      0.18      N/A
+Bis(2-chloroethyl)Ether        111-44-4    10                              0            0            0            0           0.3      1E+100        1E+100      1E+100     1E+100       5.3      N/A
+Bis(2-chloroisopropyl)Ether    108-60-1    10                              0            0            0            0          1400      1E+100        1E+100      1E+100     1E+100      65000     N/A
+Bis(2-ethylhexyl)Phthalate     117-81-7    10                              0            0            0            0            6       1E+100        1E+100      1E+100     1E+100       22       N/A
+Butyl Benzyl Phthalate          85-68-7    10                              0            0            0            0          7000      1E+100        1E+100      1E+100     1E+100      1900      N/A
+2-Chloronapthalene              91-58-7    10                              0            0            0            0          2800      1E+100        1E+100      1E+100     1E+100      1600      N/A
+Chrysene                       218-01-9    5                               0            0            0            0          0.048     1E+100        1E+100      1E+100     1E+100      0.18      N/A
+Dibenzo(a,h)anthracene          53-70-3    5                               0            0            0            0          0.048     1E+100        1E+100      1E+100     1E+100      0.18      N/A
+1,2-Dichlorobenzene             95-50-1    10                              0            0            0            0           600      1E+100        1E+100      1E+100     1E+100      1300      N/A
+1,3-Dichlorobenzene            541-73-1    10                              0            0            0            0           469      1E+100        1E+100      1E+100     1E+100       960      N/A
+1,4-Dichlorobenzene            106-46-7    10                              0            0            0            0           75       1E+100        1E+100      1E+100     1E+100       190      N/A
+3,3'-Dichlorobenzidine          91-94-1    5                               0            0            0            0           0.78     1E+100        1E+100      1E+100     1E+100      0.28      N/A
+Diethyl Phthalate               84-66-2    10                              0            0            0            0          28000     1E+100        1E+100      1E+100     1E+100      44000     N/A
+Dimethyl Phthalate             131-11-3    10                              0            0            0            0         350000     1E+100        1E+100      1E+100     1E+100     1100000    N/A
+Di-n-Butyl Phthalate            84-74-2    10                              0            0            0            0          3500      1E+100        1E+100      1E+100     1E+100      4500      N/A
+2,4-Dinitrotoluene             121-14-2    10                              0            0            0            0           1.1      1E+100        1E+100      1E+100     1E+100       34       N/A
+1,2-Diphenylhydrazine          122-66-7    20                              0            0            0            0           0.44     1E+100        1E+100      1E+100     1E+100        2       N/A
+Fluoranthene                   206-44-0    10                              0            0            0            0          1400      1E+100        1E+100      1E+100     1E+100       140      N/A
+Fluorene                        86-73-7    10                              0            0            0            0          1400      1E+100        1E+100      1E+100     1E+100      5300      N/A
+Hexachlorobenzene              118-74-1    5                               0            0            0            0            1       1E+100        1E+100      1E+100     1E+100     0.0029     N/A
+Hexachlorobutadiene             87-68-3    10                              0            0            0            0           4.5      1E+100        1E+100      1E+100     1E+100       180      N/A
+Hexachlorocyclopentadiene       77-47-4    10                              0            0            0            0           50       1E+100        1E+100      1E+100     1E+100      1100      N/A
+Hexachloroethane                67-72-1    20                              0            0            0            0           25       1E+100        1E+100      1E+100     1E+100       33       N/A
+Indeno(1,2,3-cd)Pyrene         193-39-5    5                               0            0            0            0          0.048     1E+100        1E+100      1E+100     1E+100      0.18      N/A
+Isophorone                      78-59-1    10                              0            0            0            0           368      1E+100        1E+100      1E+100     1E+100      9600      N/A
+Nitrobenzene                    98-95-3    10                              0            0            0            0           18       1E+100        1E+100      1E+100     1E+100       690      N/A
+n-Nitrosodimethylamine          62-75-9    50                              0            0            0            0         0.0069     1E+100        1E+100      1E+100     1E+100       30       N/A
+n-Nitrosodi-n-Propylamine      621-64-7    20                              0            0            0            0           0.05     1E+100        1E+100      1E+100     1E+100       5.1      N/A
+n-Nitrosodiphenylamine          86-30-6    20                              0            0            0            0           71       1E+100        1E+100      1E+100     1E+100       60       N/A
+Nonylphenol                   84852-15-3                                   0            0            0            0         1E+100     1E+100        1E+100        28         6.6      1E+100     N/A
+Pyrene                         129-00-0    10                              0            0            0            0          1050      1E+100        1E+100      1E+100     1E+100      4000      N/A
+1,2,4-Trichlorobenzene         120-82-1    10                              0            0            0            0           70       1E+100        1E+100      1E+100     1E+100       70       N/A
+                                                                                                                                             6
+
+
+                                                                                                Instream Waste Concentration                                               Livestock&      Acute       Chronic    Human      Need
+                                                               Ambient      Effluent           Acute       Domestic     Chronic     Human        Domestic     Irrigation    Wildlife      Aquatic      Aquatic    Health     TMDL
+POLLUTANTS                                                       Conc         Conc.         Aquatic        Supply       Aquatic        Health    Criteria      Criteria      Criteria     Criteria     Criteria   Criteria
+                                     CAS No.           MQL     Ca (ug/l)    Ce (ug/l)       2.13*Ce     Cd,dom (ug/l) Cd (ug/l)   Cd,hh (ug/l)     ug/l         ug/l          ug/l          ug/l         ug/l      ug/l
+PESTICIDES AND PCBS
+Aldrin                              309-00-2          0.01                                       0            0              0           0        0.021       1E+100        1E+100           3         1E+100     0.0005     N/A
+Alpha-BHC                           319-84-6          0.05                                       0            0              0           0        0.056       1E+100        1E+100        1E+100       1E+100      0.049     N/A
+Beta-BHC                            319-85-7          0.05                                       0            0              0           0        0.091       1E+100        1E+100        1E+100       1E+100      0.17      N/A
+Gamma-BHC                             58-89-9         0.05                                       0            0              0           0         0.2        1E+100        1E+100          0.95       1E+100       1.8      N/A
+Chlordane                             57-74-9         0.2                                        0            0              0           0          2         1E+100        1E+100          2.4        0.0043     0.0081     N/A
+4,4'-DDT and derivatives              50-29-3         0.02                                       0            0              0           0          1         1E+100         0.001          1.1         0.001     0.0022     N/A
+Dieldrin                              60-57-1         0.02                                       0            0              0           0        0.022       1E+100        1E+100          0.24        0.056     0.00054    N/A
+Diazinon                            333-41-5                                                     0            0              0           0       1E+100       1E+100        1E+100          0.17         0.17     1E+100     N/A
+Alpha-Endosulfan                    959-98-8          0.01                                       0            0              0           0         62         1E+100        1E+100          0.22        0.056       89       N/A
+Beta-Endosulfan                    33213-65-9         0.02                                       0            0              0           0         62         1E+100        1E+100          0.22        0.056       89       N/A
+Endosulfan sulfate                  1031-7-8          0.1                                        0            0              0           0         62         1E+100        1E+100        1E+100       1E+100       89       N/A
+Endrin                                72-20-8         0.02                                       0            0              0           0          2         1E+100        1E+100         0.086        0.036      0.06      N/A
+Endrin Aldehyde                     7421-93-4         0.1                                        0            0              0           0         10.5       1E+100        1E+100        1E+100       1E+100       0.3      N/A
+Heptachlor                            76-44-8         0.01                                       0            0              0           0         0.4        1E+100        1E+100          0.52       0.0038     0.00079    N/A
+Heptachlor Epoixde                  1024-57-3         0.01                                       0            0              0           0         0.2        1E+100        1E+100          0.52       0.0038     0.00039    N/A
+PCBs                                1336-36-3         0.2                                        0            0              0           0         0.5        1E+100         0.014           2          0.014     0.00064    N/A
+Toxaphene                           8001-35-2         0.3                                        0            0              0           0          3         1E+100        1E+100          0.73       0.0002     0.0028     N/A
+
+
+
+
+STEP 3:            SCAN POTENTIAL INSTREAM WASTE CONCENTRATIONS AGAINST WATER QUALITY CRITERIA
+                   AND ESTABLISH EFFLUENT LIMITATIONS FOR ALL APPLICABLE PARAMETERS
+
+
+No limits are established if the receiving stream is not designated for the particular uses.
+No limits are established if the potential instream waste concentrations are less than the chronic water quality criteria.
+The most applicable stringent criteria are used to establish effluent limitations for a given parameter.
+Water quality criteria apply at the end-of-pipe for acute aquatic life criteria and discharges to public lakes.
+If background concentration exceeds the water quality criteria, water quality criteria apply. And "Need TMDL" shown to the next column of Avg. Mass
+Monthly avg concentration = daily max. / 1.5.
+
+
+
+
+APPLICABLE WATER QUALITY-BASED LIMITS
+
+
+                   The following formular is used to calculate the allowable daily maximum effluent cincentration                 See the current "Procedures for Implementing NPDES Permits in New Mexico"
+                   Daily Max. Conc. = Cs + (Cs - Ca)(F*Qa/Qe)                            Monthly Avg. Conc. = Daily Max. Conc. / 1.5
+Where:             Cs = Applicable water quality standard
+                   Ca = Ambient stream concentration
+                   F   = Fraction of stream allowed for mixing (1.0 is assigned to domestic water supply and human health uses)
+                   Qe = Plant effluent flow
+                   Qa = Criteria Low flow (4Q3) or Harmonic Mean flow for Human Health Criteria
+                                                                                                                       7
+
+
+                                                                                  Livestock       Acute      Chronic       Human      Daily       Monthly     Daily Max    Mon. Avg      Daily       Monthly
+POLLUTANTS                         CAS No.     STORET     Domestic   Irrigation   or Wildlife    Aquatic     Aquatic       Health   Max Conc     Avg Conc       Total        Total     Max Load     Avg Load
+                                                           Limits     Limits        Limits        Limits      Limits       Limits      ug/l         ug/l         ug/l         ug/l      Ib/day        lb/day
+Radioactivity, Nutrients, and Chlorine, as Total
+Aluminum, Total                   7429-90-5     01105       N/A        N/A           N/A           N/A      3229.5667       N/A     3229.56667   3229.56667   3229.56667   3229.5667   0.323215    0.323215033
+Barium, Total                     7440-39-3     01007       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Boron, Total                      7440-42-8     01022       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Cobalt, Total                     7440-48-4     01037       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Uranium, Total                    7440-61-1     22706       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Vanadium, Total                   7440-62-2     01087       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Ra-226 and Ra-228 (pCi/l)                       11503       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Strontium (pCi/l)                               13501       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Tritium (pCi/l)                                 04124       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Gross Alpha (pCi/l)                             80029       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Asbestos (fibers/l)                                         N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Total Residual Chlorine           7782-50-5     50060       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Nitrate as N (mg/l)                             00620       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Nitrite + Nitrate (mg/l)                        00630       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+METALS AND CYANIDE, as Total
+Antimony, Total (P)               7440-36-0     01097       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Arsenic, Total (P)                7440-38-2        1002     N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Beryllium, Total                  7440-41-7     01012       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Cadmium, Total                    7440-43-9     01027       N/A        N/A           N/A        2.8167858   0.7100547       N/A     0.71005471   0.71005471   0.71005471   0.7100547   7.106E-05   7.10623E-05
+Chromium (III), dissolved         16065-83-1    01033       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Chromium (VI), dissolved          18540-29-9    01034       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Chromium, Total                   7440-47-3     01034       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Copper, Total                     7440-50-8     01042       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Lead, Total                       7439-92-1     01051       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Manganese, dissovled              7439-96-5     01056       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Mercury, Total                    7439-97-6     71900       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Mercury, Total                    7439-97-6     71900       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Molybdenum, dissolved             7439-98-7        1060     N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Molybdenum, total recoverable     7439-98-7     01062       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Nickel, Total (P)                 7440-02-0     01067       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Selenium, Total (P)               7782-49-2     01147       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Selenium, Total (SO4 >500 mg/l)                 01147       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Selenium, Total recoverable       7782-49-2     01147       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Silver, Total                     7440-22-4     01077       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Thalllium, Total (P)              7440-28-0     01059       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Zinc, Total                       7440-66-6        1092     N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Cyanide, total recoverable         57-12-5      00720       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+DIOXIN                                                                                                                                                                                                  0
+2,3,7,8-TCDD                      1764-01-6     34675       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+VOLATILE COMPOUNDS
+Acrolein                           107-02-8     34210       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Acrylonitrile                      107-13-0     34215       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Benzene                             71-43-2     34030       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+Bromoform                           75-25-2     32104       N/A        N/A           N/A           N/A         N/A          N/A        N/A          N/A          N/A          N/A        N/A           N/A
+                                                                                                           8
+
+
+Carbon Tetrachloride           56-23-5    32102     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+                                                                          Livestock     Acute     Chronic      Human     Daily     Monthly    Daily Max   Mon. Avg    Daily     Monthly
+POLLUTANTS                    CAS No.    STORET   Domestic   Irrigation   or Wildlife   Aquatic   Aquatic      Health   Max Conc   Avg Conc     Total      Total     Max Load   Avg Load
+                                                   Limits     Limits        Limits      Limits    Limits       Limits     ug/l       ug/l       ug/l        ug/l      Ib/day     lb/day
+Chlorobenzene                 108-90-7    34301     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Clorodibromomethane           124-48-1    32105     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Chloroform                     67-66-3    32106     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Dichlorobromomethane           75-27-4    32101     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+1,2-Dichloroethane            107-06-2    34531     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+1,1-Dichloroethylene           75-35-4    34501     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+1,2-Dichloropropane            78-87-5    34541     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+1,3-Dichloropropylene         542-75-6    34561     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Ethylbenzene                  100-41-4    34371     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Methyl Bromide                 74-83-9    34413     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Methylene Chloride             75-09-2    34423     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+1,1,2,2-Tetrachloroethane      79-34-5    34516     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Tetrachloroethylene           127-18-4    34475     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Tolune                        108-88-3    34010     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+1,2-trans-Dichloroethylene    156-60-5    34546     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+1,1,1-Trichloroethane         71-55-6               N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+1,1,2-Trichloroethane          79-00-5    34511     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Trichloroethylene              79-01-6    39180     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Vinyl Chloride                 75-01-4    39175     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+ACID COMPOUNDS
+2-Chlorophenol                 95-57-8    34586     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+2,4-Dichlorophenol            120-83-2    34601     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+2,4-Dimethylphenol            105-67-9    34606     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+4,6-Dinitro-o-Cresol          534-52-1    34657     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+2,4-Dinitrophenol              51-28-5    34616     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Pentachlorophenol              87-86-5    39032     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Phenol                        108-95-2    34694     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+2,4,6-Trichlorophenol          88-06-2    34621     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+BASE/NEUTRAL
+Acenaphthene                   83-32-9    34205     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Anthracene                    120-12-7    34220     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Benzidine                      92-87-5    39120     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Benzo(a)anthracene             56-55-3    34526     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Benzo(a)pyrene                 50-32-8    34247     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+3,4-Benzofluoranthene         205-99-2    34230     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Benzo(k)fluoranthene          207-08-9    34242     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Bis(2-chloroethyl)Ether       111-44-4    34273     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Bis(2-chloroisopropyl)Ether   108-60-1    34283     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Bis(2-ethylhexyl)Phthalate    117-81-7    39100     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Butyl Benzyl Phthalate         85-68-7    34292     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+2-Chloronapthalene             91-58-7    34581     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Chrysene                      218-01-9    34320     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Dibenzo(a,h)anthracene         53-70-3    34556     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+1,2-Dichlorobenzene            95-50-1    34536     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+                                                                                                           9
+
+
+                                                                          Livestock     Acute     Chronic      Human     Daily     Monthly    Daily Max   Mon. Avg    Daily      Daily
+POLLUTANTS                   CAS No.     STORET   Domestic   Irrigation   or Wildlife   Aquatic   Aquatic      Health   Max Conc   Avg Conc     Total      Total     Max Load   Avg Load
+                                                   Limits     Limits        Limits      Limits    Limits       Limits     ug/l       ug/l       ug/l        ug/l      Ib/day     Ib/day
+1,3-Dichlorobenzene          541-73-1     34566     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+1,4-Dichlorobenzene          106-46-7     34571     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+3,3'-Dichlorobenzidine        91-94-1     34631     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Diethyl Phthalate             84-66-2     34336     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Dimethyl Phthalate           131-11-3     34341     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Di-n-Butyl Phthalate          84-74-2     39110     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+2,4-Dinitrotoluene           121-14-2     34611     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+1,2-Diphenylhydrazine        122-66-7     34346     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Fluoranthene                 206-44-0     34376     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Fluorene                      86-73-7     34381     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Hexachlorobenzene            118-74-1     39700     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Hexachlorobutadiene           87-68-3     34391     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Hexachlorocyclopentadiene     77-47-4     34386     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Hexachloroethane              67-72-1     34396     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Indeno(1,2,3-cd)Pyrene       193-39-5     34403     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Isophorone                    78-59-1     34408     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Nitrobenzene                  98-95-3     34447     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+n-Nitrosodimethylamine        62-75-9     34438     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+n-Nitrosodi-n-Propylamine    621-64-7     34428     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+n-Nitrosodiphenylamine        86-30-6     34433     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Nonylphenol                 84852-15-3              N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Pyrene                       129-00-0     34469     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+1,2,4-Trichlorobenzene       120-82-1     34551     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+PESTICIDES AND PCBS
+Aldrin                       309-00-2     39330     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Alpha-BHC                    319-84-6     39337     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Beta-BHC                     319-85-7     39338     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Gamma-BHC                     58-89-9     39340     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Chlordane                     57-74-9     39350     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+4,4'-DDT and derivatives      50-29-3     39300     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Dieldrin                      60-57-1     39380     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Diazinon                     333-41-5     39570     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Alpha-Endosulfan             959-98-8     34361     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Beta-Endosulfan             33213-65-9    34356     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Endosulfan sulfate           1031-7-8     34351     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Endrin                        72-20-8     39390     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Endrin Aldehyde             7421-93-4     34366     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Heptachlor                    76-44-8     39410     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Heptachlor Epoixde          1024-57-3     39420     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+PCBs                        1336-36-3     39516     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+Toxaphene                   8001-35-2     39400     N/A        N/A           N/A         N/A       N/A          N/A       N/A        N/A        N/A         N/A        N/A        N/A
+

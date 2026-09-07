@@ -1,0 +1,86 @@
+{
+  "strategy": "a6_multistep",
+  "trial": "R03",
+  "obligation_id": "id-04",
+  "candidate": {
+    "left": "crm:NBA-102",
+    "right": "billing:Northbridge Analytics Inc."
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row NBA-102"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Northbridge Analytics Inc."
+    }
+  ],
+  "support_claim": "Compatible short-name versus Inc. billing labels do not satisfy the identity burden, and the packet explicitly preserves unresolved registry ambiguity including a separate Wyoming LLC, so neither SAME_ENTITY nor DISTINCT is established.",
+  "proof_size": 6,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "steps": [
+    {
+      "fact": "CRM account NBA-102 is recorded under the name \"Northbridge Analytics\".",
+      "grounding": {
+        "source_path": "sources/crm.csv",
+        "location": "row NBA-102"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Billing invoices list the billed name as \"Northbridge Analytics Inc.\"",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Northbridge Analytics Inc."
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Commercial notes state that sales uses the short name \"Northbridge Analytics\" while billing and the MSA use \"Northbridge Analytics Inc.\"",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Commercial notes report a 2024 credit check returned a Wyoming LLC \"Northbridge Analytics LLC\" and legal has not determined which registry entity is the contracting party; the registry link is to be treated as unresolved.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "The packet provides no shared legal identifier (e.g., EIN, registration number) linking crm:NBA-102 to billing:Northbridge Analytics Inc., and does not license identifier uniqueness for any field.",
+      "grounding": null,
+      "mechanical": true
+    },
+    {
+      "fact": "Name overlap and naming conventions are compatible but do not establish identity; absence of identity evidence does not establish distinctness.",
+      "grounding": null,
+      "mechanical": true
+    }
+  ],
+  "admit": {
+    "rule": "unresolved"
+  },
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

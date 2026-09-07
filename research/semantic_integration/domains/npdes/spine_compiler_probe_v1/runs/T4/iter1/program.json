@@ -1,0 +1,379 @@
+{
+  "referents": [
+    {
+      "name": "Measurement",
+      "key": [
+        "permit_id",
+        "outfall",
+        "parameter_code",
+        "period_end",
+        "limit_value_id"
+      ]
+    },
+    {
+      "name": "Limit",
+      "key": [
+        "limit_value_id"
+      ]
+    },
+    {
+      "name": "Document",
+      "key": [
+        "sha256"
+      ]
+    }
+  ],
+  "maps": [
+    {
+      "id": "map_dmr",
+      "source": "dmr_measurements.csv",
+      "referent": "Measurement",
+      "fields": {
+        "permit_id": "EXTERNAL_PERMIT_NMBR",
+        "outfall": "PERM_FEATURE_NMBR",
+        "parameter_code": "PARAMETER_CODE",
+        "period_end": "MONITORING_PERIOD_END_DATE",
+        "limit_value_id": "LIMIT_VALUE_ID"
+      }
+    },
+    {
+      "id": "map_limits",
+      "source": "permit_limits.csv",
+      "referent": "Limit",
+      "fields": {
+        "limit_value_id": "LIMIT_VALUE_ID"
+      }
+    },
+    {
+      "id": "map_documents",
+      "source": "document_inventory.json",
+      "referent": "Document",
+      "fields": {
+        "sha256": "sha256"
+      }
+    }
+  ],
+  "relations": [
+    {
+      "name": "measurement",
+      "kind": "base",
+      "map": "map_dmr",
+      "roles": [
+        {
+          "name": "measurement",
+          "type": "REFERENT",
+          "field": "_referent",
+          "of": "Measurement"
+        },
+        {
+          "name": "permit_id",
+          "type": "TEXT",
+          "field": "permit_id"
+        },
+        {
+          "name": "outfall",
+          "type": "TEXT",
+          "field": "outfall"
+        },
+        {
+          "name": "parameter_code",
+          "type": "TEXT",
+          "field": "parameter_code"
+        },
+        {
+          "name": "period_end",
+          "type": "TEXT",
+          "field": "period_end"
+        },
+        {
+          "name": "limit_value_id",
+          "type": "TEXT",
+          "field": "limit_value_id"
+        },
+        {
+          "name": "reported_value",
+          "type": "REAL",
+          "field": "DMR_VALUE_NMBR"
+        },
+        {
+          "name": "nodi_code",
+          "type": "TEXT",
+          "field": "NODI_CODE"
+        },
+        {
+          "name": "limit_value_type_code",
+          "type": "TEXT",
+          "field": "LIMIT_VALUE_TYPE_CODE"
+        },
+        {
+          "name": "statistical_base_code",
+          "type": "TEXT",
+          "field": "STATISTICAL_BASE_CODE"
+        }
+      ]
+    },
+    {
+      "name": "limit_row",
+      "kind": "base",
+      "map": "map_limits",
+      "roles": [
+        {
+          "name": "limit",
+          "type": "REFERENT",
+          "field": "_referent",
+          "of": "Limit"
+        },
+        {
+          "name": "permit_id",
+          "type": "TEXT",
+          "field": "EXTERNAL_PERMIT_NMBR"
+        },
+        {
+          "name": "outfall",
+          "type": "TEXT",
+          "field": "PERM_FEATURE_NMBR"
+        },
+        {
+          "name": "parameter_code",
+          "type": "TEXT",
+          "field": "PARAMETER_CODE"
+        },
+        {
+          "name": "begin_date",
+          "type": "TEXT",
+          "field": "LIMIT_BEGIN_DATE"
+        },
+        {
+          "name": "end_date",
+          "type": "TEXT",
+          "field": "LIMIT_END_DATE"
+        },
+        {
+          "name": "limit_value",
+          "type": "REAL",
+          "field": "LIMIT_VALUE_NMBR"
+        },
+        {
+          "name": "limit_value_qualifier",
+          "type": "TEXT",
+          "field": "LIMIT_VALUE_QUALIFIER_CODE"
+        },
+        {
+          "name": "limit_value_type_code",
+          "type": "TEXT",
+          "field": "LIMIT_VALUE_TYPE_CODE"
+        },
+        {
+          "name": "optional_monitoring_flag",
+          "type": "TEXT",
+          "field": "OPTIONAL_MONITORING_FLAG"
+        },
+        {
+          "name": "statistical_base_code",
+          "type": "TEXT",
+          "field": "STATISTICAL_BASE_CODE"
+        },
+        {
+          "name": "limit_type_code",
+          "type": "TEXT",
+          "field": "LIMIT_TYPE_CODE"
+        },
+        {
+          "name": "limit_value_id",
+          "type": "TEXT",
+          "field": "LIMIT_VALUE_ID"
+        }
+      ]
+    },
+    {
+      "name": "document_row",
+      "kind": "base",
+      "map": "map_documents",
+      "roles": [
+        {
+          "name": "document",
+          "type": "REFERENT",
+          "field": "_referent",
+          "of": "Document"
+        },
+        {
+          "name": "path",
+          "type": "TEXT",
+          "field": "path"
+        },
+        {
+          "name": "filename",
+          "type": "TEXT",
+          "field": "filename"
+        },
+        {
+          "name": "document_kind",
+          "type": "TEXT",
+          "field": "document_kind"
+        },
+        {
+          "name": "permit",
+          "type": "TEXT",
+          "field": "permit"
+        },
+        {
+          "name": "bytes",
+          "type": "INTEGER",
+          "field": "bytes"
+        },
+        {
+          "name": "sha256",
+          "type": "TEXT",
+          "field": "sha256"
+        }
+      ]
+    },
+    {
+      "name": "candidate_limit",
+      "kind": "derived",
+      "from": [
+        "measurement",
+        "limit_row"
+      ],
+      "roles": [
+        {
+          "name": "measurement",
+          "type": "REFERENT",
+          "from_role": "measurement.measurement"
+        },
+        {
+          "name": "limit",
+          "type": "REFERENT",
+          "from_role": "limit_row.limit"
+        }
+      ],
+      "match": [
+        {
+          "left": "measurement.permit_id",
+          "right": "limit_row.permit_id"
+        },
+        {
+          "left": "measurement.limit_value_id",
+          "right": "limit_row.limit_value_id"
+        }
+      ],
+      "where": [
+        {
+          "op": "interval_contains",
+          "point": "measurement.period_end",
+          "begin": "limit_row.begin_date",
+          "end": "limit_row.end_date"
+        },
+        {
+          "op": "eq",
+          "left": "measurement.outfall",
+          "right": "limit_row.outfall"
+        },
+        {
+          "op": "eq",
+          "left": "measurement.parameter_code",
+          "right": "limit_row.parameter_code"
+        }
+      ]
+    },
+    {
+      "name": "nodi_measurement",
+      "kind": "derived",
+      "from": [
+        "measurement"
+      ],
+      "roles": [
+        {
+          "name": "measurement",
+          "type": "REFERENT",
+          "from_role": "measurement.measurement"
+        },
+        {
+          "name": "nodi_code",
+          "type": "TEXT",
+          "from_role": "measurement.nodi_code"
+        },
+        {
+          "name": "reported_value",
+          "type": "REAL",
+          "from_role": "measurement.reported_value"
+        }
+      ],
+      "where": [
+        {
+          "op": "not_empty",
+          "field": "measurement.nodi_code"
+        }
+      ]
+    }
+  ],
+  "requirements": [
+    {
+      "id": "applicable_limit",
+      "purpose": [
+        "A"
+      ],
+      "over": "candidate_limit",
+      "group_by": [
+        "measurement"
+      ],
+      "cardinality": "ONE",
+      "require_numeric": [
+        "limit_value"
+      ],
+      "require_interpreted_code": {
+        "field": "nodi_code",
+        "known": [
+          ""
+        ]
+      }
+    },
+    {
+      "id": "monitoring_obligation",
+      "purpose": [
+        "B"
+      ],
+      "over": "limit_row",
+      "group_by": [
+        "limit"
+      ],
+      "cardinality": "ONE",
+      "require_interpreted_code": {
+        "field": "optional_monitoring_flag",
+        "known": [
+          "N",
+          "Y"
+        ]
+      }
+    },
+    {
+      "id": "permit_documentation",
+      "purpose": [
+        "B"
+      ],
+      "over": "document_row",
+      "group_by": [
+        "permit"
+      ],
+      "cardinality": "AT_LEAST_ONE"
+    },
+    {
+      "id": "missing_evidence",
+      "purpose": [
+        "C"
+      ],
+      "over": "nodi_measurement",
+      "group_by": [
+        "measurement"
+      ],
+      "cardinality": "ONE",
+      "require_interpreted_code": {
+        "field": "nodi_code",
+        "known": [
+          "C",
+          "9"
+        ]
+      }
+    }
+  ]
+}

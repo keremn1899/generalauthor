@@ -1,0 +1,73 @@
+{
+  "strategy": "a4_proof_obligation",
+  "trial": "R01",
+  "obligation_id": "id-13",
+  "candidate": {
+    "left": "billing:Meridian Energy Partners LLC",
+    "right": "contract:MSA-MER-2024"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/contracts/MSA-MER-2024.md",
+      "location": "header"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Meridian Energy Partners LLC"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "The packet links Meridian Energy Partners LLC to billing records and names it as the counterparty on MSA-MER-2024, but does not explicitly establish referent-level identity between billing:Meridian Energy Partners LLC and contract:MSA-MER-2024, nor evidence of distinct counterparties.",
+  "proof_size": 2,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "proof_obligations": [
+    {
+      "obligation": "Establish that the left referent (billing:Meridian Energy Partners LLC) and the right referent (contract:MSA-MER-2024) denote the same legal counterparty.",
+      "required_for": "SAME_ENTITY",
+      "satisfied": false,
+      "evidence": [
+        {
+          "source_path": "sources/contracts/MSA-MER-2024.md",
+          "location": "header"
+        },
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Meridian Energy Partners LLC"
+        },
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    },
+    {
+      "obligation": "Establish that the left referent (billing:Meridian Energy Partners LLC) and the right referent (contract:MSA-MER-2024) denote distinct legal counterparties.",
+      "required_for": "DISTINCT",
+      "satisfied": false,
+      "evidence": []
+    }
+  ],
+  "admit": {
+    "rule": "unresolved"
+  },
+  "unsatisfied": [
+    "Establish that the left referent (billing:Meridian Energy Partners LLC) and the right referent (contract:MSA-MER-2024) denote the same legal counterparty.",
+    "Establish that the left referent (billing:Meridian Energy Partners LLC) and the right referent (contract:MSA-MER-2024) denote distinct legal counterparties."
+  ],
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

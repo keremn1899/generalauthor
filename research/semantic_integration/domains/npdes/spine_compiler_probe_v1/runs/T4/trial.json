@@ -1,0 +1,332 @@
+{
+  "trial": "T4",
+  "model": "composer-2.5",
+  "n_iterations": 3,
+  "accepted": true,
+  "iterations": [
+    {
+      "iteration": 1,
+      "structurally_valid": false,
+      "errors": [
+        "derived nodi_measurement: from needs >=2 relations"
+      ],
+      "n_trigger_groups": 0,
+      "n_trigger_instances": 0,
+      "timed_out": false,
+      "reported_model": "Composer 2.5",
+      "usage": {
+        "input_tokens": 52012,
+        "output_tokens": 13782,
+        "total_tokens": 65794,
+        "is_error": false,
+        "model": "Composer 2.5"
+      }
+    },
+    {
+      "iteration": 2,
+      "structurally_valid": false,
+      "errors": [
+        "requirement applicable_limit: require_numeric limit_value not a role"
+      ],
+      "n_trigger_groups": 0,
+      "n_trigger_instances": 0,
+      "timed_out": false,
+      "reported_model": "Composer 2.5",
+      "usage": {
+        "input_tokens": 24887,
+        "output_tokens": 5579,
+        "total_tokens": 30466,
+        "is_error": false,
+        "model": "Composer 2.5"
+      }
+    },
+    {
+      "iteration": 3,
+      "structurally_valid": true,
+      "errors": [],
+      "n_trigger_groups": 5,
+      "n_trigger_instances": 960,
+      "timed_out": false,
+      "reported_model": "Composer 2.5",
+      "usage": {
+        "input_tokens": 18362,
+        "output_tokens": 2467,
+        "total_tokens": 20829,
+        "is_error": false,
+        "model": "Composer 2.5"
+      }
+    }
+  ],
+  "final": {
+    "structurally_valid": true,
+    "errors": [],
+    "spine": {
+      "referents": {
+        "Measurement": 824,
+        "Limit": 105,
+        "Document": 12
+      },
+      "relations": {
+        "measurement": {
+          "kind": "base",
+          "rows": 824,
+          "unbound": 0
+        },
+        "limit_row": {
+          "kind": "base",
+          "rows": 105,
+          "unbound": 0
+        },
+        "document_row": {
+          "kind": "base",
+          "rows": 12,
+          "unbound": 0
+        },
+        "candidate_limit": {
+          "kind": "derived",
+          "rows": 0,
+          "inputs": [
+            "measurement",
+            "limit_row"
+          ],
+          "unbound": 0
+        },
+        "nodi_measurement": {
+          "kind": "base",
+          "rows": 824,
+          "unbound": 0
+        }
+      }
+    },
+    "n_trigger_groups": 5,
+    "n_trigger_instances": 960,
+    "trigger_groups": [
+      {
+        "group_id": "g000",
+        "requirement_id": null,
+        "failure_kind": "NO_MATERIALIZABLE_PATH",
+        "relation": "candidate_limit",
+        "n_instances": 1,
+        "purpose": [],
+        "sample_subjects": [
+          {
+            "inputs": [
+              "measurement",
+              "limit_row"
+            ]
+          }
+        ],
+        "expected": "join produces rows when both inputs are nonempty"
+      },
+      {
+        "group_id": "g001",
+        "requirement_id": "missing_evidence",
+        "failure_kind": "UNINTERPRETED_REQUIRED_CODE",
+        "relation": "nodi_measurement",
+        "n_instances": 824,
+        "purpose": [
+          "C"
+        ],
+        "sample_subjects": [
+          {
+            "measurement": "Measurement:NM0020583|TX1|22415|11/30/2024|3610839676"
+          },
+          {
+            "measurement": "Measurement:NM0020583|TX1|22415|02/28/2025|3610839676"
+          },
+          {
+            "measurement": "Measurement:NM0020583|TX1|22415|05/31/2025|3610839676"
+          },
+          {
+            "measurement": "Measurement:NM0020583|TX1|22415|08/31/2025|3610839676"
+          },
+          {
+            "measurement": "Measurement:NM0020583|TX1|22416|11/30/2024|3610839677"
+          },
+          {
+            "measurement": "Measurement:NM0020583|TX1|22416|02/28/2025|3610839677"
+          },
+          {
+            "measurement": "Measurement:NM0020583|TX1|22416|05/31/2025|3610839677"
+          },
+          {
+            "measurement": "Measurement:NM0020583|TX1|22416|08/31/2025|3610839677"
+          },
+          {
+            "measurement": "Measurement:NM0020583|TX1|22418|11/30/2024|3610839678"
+          },
+          {
+            "measurement": "Measurement:NM0020583|TX1|22418|02/28/2025|3610839678"
+          },
+          {
+            "measurement": "Measurement:NM0020583|TX1|22418|05/31/2025|3610839678"
+          },
+          {
+            "measurement": "Measurement:NM0020583|TX1|22418|08/31/2025|3610839678"
+          }
+        ],
+        "expected": "nodi_code in known ['9', 'C']"
+      },
+      {
+        "group_id": "g002",
+        "requirement_id": "monitoring_obligation",
+        "failure_kind": "CARDINALITY_OVERSATISFIED",
+        "relation": "limit_row",
+        "n_instances": 15,
+        "purpose": [
+          "B"
+        ],
+        "sample_subjects": [
+          {
+            "limit": "Limit:3610129864"
+          },
+          {
+            "limit": "Limit:3610129865"
+          },
+          {
+            "limit": "Limit:3610129867"
+          },
+          {
+            "limit": "Limit:3610129901"
+          },
+          {
+            "limit": "Limit:3610129870"
+          },
+          {
+            "limit": "Limit:3610129902"
+          },
+          {
+            "limit": "Limit:3610129871"
+          },
+          {
+            "limit": "Limit:3610129866"
+          },
+          {
+            "limit": "Limit:3610129903"
+          },
+          {
+            "limit": "Limit:3610129905"
+          },
+          {
+            "limit": "Limit:3610129906"
+          },
+          {
+            "limit": "Limit:3610129904"
+          }
+        ],
+        "expected": "cardinality ONE"
+      },
+      {
+        "group_id": "g003",
+        "requirement_id": "monitoring_obligation",
+        "failure_kind": "MULTIPLE_CANDIDATES",
+        "relation": "limit_row",
+        "n_instances": 15,
+        "purpose": [
+          "B"
+        ],
+        "sample_subjects": [
+          {
+            "limit": "Limit:3610129864"
+          },
+          {
+            "limit": "Limit:3610129865"
+          },
+          {
+            "limit": "Limit:3610129867"
+          },
+          {
+            "limit": "Limit:3610129901"
+          },
+          {
+            "limit": "Limit:3610129870"
+          },
+          {
+            "limit": "Limit:3610129902"
+          },
+          {
+            "limit": "Limit:3610129871"
+          },
+          {
+            "limit": "Limit:3610129866"
+          },
+          {
+            "limit": "Limit:3610129903"
+          },
+          {
+            "limit": "Limit:3610129905"
+          },
+          {
+            "limit": "Limit:3610129906"
+          },
+          {
+            "limit": "Limit:3610129904"
+          }
+        ],
+        "expected": "unique applicable candidate"
+      },
+      {
+        "group_id": "g004",
+        "requirement_id": "monitoring_obligation",
+        "failure_kind": "UNINTERPRETED_REQUIRED_CODE",
+        "relation": "limit_row",
+        "n_instances": 105,
+        "purpose": [
+          "B"
+        ],
+        "sample_subjects": [
+          {
+            "limit": "Limit:3610673284"
+          },
+          {
+            "limit": "Limit:3610673282"
+          },
+          {
+            "limit": "Limit:3610673283"
+          },
+          {
+            "limit": "Limit:3610673281"
+          },
+          {
+            "limit": "Limit:3610129864"
+          },
+          {
+            "limit": "Limit:3610129864"
+          },
+          {
+            "limit": "Limit:3610129865"
+          },
+          {
+            "limit": "Limit:3610129865"
+          },
+          {
+            "limit": "Limit:3610673290"
+          },
+          {
+            "limit": "Limit:3610673289"
+          },
+          {
+            "limit": "Limit:3610840344"
+          },
+          {
+            "limit": "Limit:3610840345"
+          }
+        ],
+        "expected": "optional_monitoring_flag in known ['N', 'Y']"
+      }
+    ],
+    "relation_row_counts": {
+      "measurement": 824,
+      "limit_row": 105,
+      "document_row": 12,
+      "candidate_limit": 0,
+      "nodi_measurement": 824
+    },
+    "referent_counts": {
+      "Measurement": 824,
+      "Limit": 105,
+      "Document": 12
+    }
+  },
+  "finished_at": "2026-09-04T16:50:58.598746+00:00"
+}

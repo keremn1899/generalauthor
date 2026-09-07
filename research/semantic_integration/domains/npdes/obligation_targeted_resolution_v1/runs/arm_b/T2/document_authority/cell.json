@@ -1,0 +1,888 @@
+{
+  "trial": "T2",
+  "obligation_id": "document_authority",
+  "n_occurrences": 1,
+  "reported_model_retrieve": "Composer 2.5",
+  "reported_model_adjudicate": "Composer 2.5",
+  "retrieval": {
+    "n_tool_paths": 47,
+    "structured_paths": [
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/cb79fc7909ee2f51f4844376fcbb358b/sources/document_inventory.json"
+    ],
+    "document_paths": [
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/cb79fc7909ee2f51f4844376fcbb358b/documents/INDEX.md",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/cb79fc7909ee2f51f4844376fcbb358b/documents/gcc/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/cb79fc7909ee2f51f4844376fcbb358b/documents/gcc/minor_modification.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/cb79fc7909ee2f51f4844376fcbb358b/documents/farmington/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/cb79fc7909ee2f51f4844376fcbb358b/documents/gcc/fact_sheet.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/cb79fc7909ee2f51f4844376fcbb358b/documents/farmington/part_iv.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/cb79fc7909ee2f51f4844376fcbb358b/documents/aztec/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/cb79fc7909ee2f51f4844376fcbb358b/documents/aztec/statement_of_basis.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/cb79fc7909ee2f51f4844376fcbb358b/documents/gcc/part_ii_appendix.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/cb79fc7909ee2f51f4844376fcbb358b/documents/aztec/reasonable_potential.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/cb79fc7909ee2f51f4844376fcbb358b/documents/gcc/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/cb79fc7909ee2f51f4844376fcbb358b/documents/gcc/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/cb79fc7909ee2f51f4844376fcbb358b/documents/farmington/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/cb79fc7909ee2f51f4844376fcbb358b/documents/farmington/statement_of_basis.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/cb79fc7909ee2f51f4844376fcbb358b/documents/gcc/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/cb79fc7909ee2f51f4844376fcbb358b/documents/aztec/statement_of_basis.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/cb79fc7909ee2f51f4844376fcbb358b/documents/gcc/fact_sheet.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/cb79fc7909ee2f51f4844376fcbb358b/documents/farmington/statement_of_basis.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/cb79fc7909ee2f51f4844376fcbb358b/documents/gcc/minor_modification.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/cb79fc7909ee2f51f4844376fcbb358b/documents/aztec/statement_of_basis.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/cb79fc7909ee2f51f4844376fcbb358b/documents/farmington/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/cb79fc7909ee2f51f4844376fcbb358b/documents/farmington/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/cb79fc7909ee2f51f4844376fcbb358b/documents/farmington/part_iv.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/cb79fc7909ee2f51f4844376fcbb358b/documents/gcc/final_permit.txt"
+    ],
+    "n_documents_touched": 11,
+    "queries": [
+      "document_inventory",
+      "govern|authorit|supersed|preceden|control|in the event of|conflict|disagree|hierarch",
+      "supersed|inconsistent|conflict|more stringent|shall govern|shall control|order of precedence|if.*disagree|not.*binding|does not establish",
+      "statement of basis|fact sheet|reasonable potential|minor modification|part ii|part iv|enforceable|not enforceable|incorporated|binding|governing|shall prevail|in case of|where.*inconsistent",
+      "minor modification|modification|amended|revised",
+      "fact sheet|statement of basis|reasonable potential|not.*enforce|explanatory|informational|does not.*require|does not.*establish|shall not|only.*enforce|binding|govern",
+      "draft|proposed|supporting|basis for|public notice|not part of|does not contain|enforceable|authorization",
+      "hereof|set forth in|incorporated|Part I|Part II|Part III|Part IV",
+      "Part III|standard condition|more stringent",
+      "conflict|inconsistent|more stringent|shall govern|shall prevail|supersed|less stringent|contradict",
+      "122\\.41|122\\.44|standard conditions|Part III\\.|less stringent|more stringent than those",
+      "more stringent controls|122\\.41|122\\.43|conflict|inconsistent with|shall control|governing document|fact sheet|statement of basis",
+      "minor modification|modification|effective date|issued on|supersed",
+      "PART IV|Part IV",
+      "PART IV|SEWAGE SLUDGE"
+    ],
+    "n_queries": 15
+  },
+  "plan": {
+    "proposition": "Inventoried permit-package documents can be assigned authoritative roles and a precedence rule for disagreement using only their narrative text (not inventory filename or document_kind labels).",
+    "would_establish": [
+      "Final-permit cover-page language identifying an issued AUTHORIZATION TO DISCHARGE and binding conditions set forth in named permit parts 'hereof'",
+      "Fact-sheet or statement-of-basis text framed as FOR THE DRAFT NPDES PERMIT, describing proposed/draft permit conditions and rationale rather than issued authorization",
+      "Cross-references within issued permit text that incorporate appendices or other parts by permit-part citation (e.g., Appendix A of Part II of this permit; Part IV of the permit)",
+      "Explicit supersession language in issued permit text replacing a prior permit issuance",
+      "Supporting documents that defer enforceable limits to the draft/final permit text (e.g., 'See the draft permit for limitations')"
+    ],
+    "would_refute": [
+      "Text stating that fact sheets, statements of basis, or reasonable-potential worksheets are independently enforceable authorization documents co-equal with the issued permit",
+      "A workspace-local codebook or inventory legend that ranks document_kind values as a governing hierarchy",
+      "Only document_inventory.json metadata (path, sha256, bytes, document_kind) with no narrative extracts"
+    ],
+    "likely_authoritative_source_types": [
+      "documents/*/final_permit.txt cover pages and permit-part integration language",
+      "documents/*/fact_sheet.txt and documents/*/statement_of_basis.txt draft-framing and proposed-condition sections",
+      "documents/*/part_ii_appendix.txt and documents/*/part_iv.txt where cited from issued permit text",
+      "sources/document_inventory.json for inventory membership only (not hierarchy)"
+    ],
+    "insufficient_alone": [
+      "document_inventory.json document_kind labels (final_permit, fact_sheet, statement_of_basis, reasonable_potential, minor_modification, part_ii_appendix, part_iv)",
+      "documents/INDEX.md byte counts and facility groupings",
+      "Filename stems or PDF path strings under sources/"
+    ],
+    "unknowable_from_structured_data_alone": [
+      "Which inventoried document governs when narrative texts disagree",
+      "Whether fact_sheet or statement_of_basis conditions are binding obligations versus explanatory draft rationale",
+      "Whether part_iv or part_ii_appendix extracts are incorporated permit components versus independent authorities",
+      "Whether minor_modification text modifies or supersedes issued final-permit Part I limits"
+    ]
+  },
+  "packet": {
+    "obligation_id": "document_authority",
+    "exact_semantic_question": "Without ranking from filenames, what do inventoried permit documents establish, and which document governs if they disagree?",
+    "purpose": [
+      "B",
+      "C"
+    ],
+    "relation_contract": "narrative conditions require document text; filename kind is not hierarchy",
+    "candidate_interpretations": [
+      {
+        "id": "inventory_kind_hierarchy",
+        "statement": "document_inventory.json document_kind values (final_permit, fact_sheet, etc.) define a fixed governing hierarchy among package documents.",
+        "status": "refuted"
+      },
+      {
+        "id": "issued_permit_authorization_governs",
+        "statement": "Narrative text of the issued final permit (AUTHORIZATION TO DISCHARGE and conditions set forth in named permit parts of that document) establishes enforceable permit obligations; draft supporting documents establish proposed-condition rationale and background, and defer enforceable limits to the permit text.",
+        "status": "supported"
+      },
+      {
+        "id": "all_package_documents_equally_binding",
+        "statement": "Every inventoried package document is an independently enforceable authorization source with no precedence rule.",
+        "status": "refuted"
+      },
+      {
+        "id": "structured_inventory_only",
+        "statement": "Only filename/hash inventory metadata is available; narrative authority cannot be established.",
+        "status": "refuted"
+      }
+    ],
+    "retained_snippets": [
+      {
+        "source_id": "documents/gcc/final_permit.txt",
+        "location": "lines 4-21",
+        "text": "AUTHORIZATION TO DISCHARGE UNDER THE\nNATIONAL POLLUTANT DISCHARGE ELIMINATION SYSTEM\n...\nis authorized to discharge ... in accordance with this cover page and effluent limitations, monitoring requirements, and other\nconditions set forth in Parts I [Requirements for NPDES Permits], II [Other Conditions], and\nIII [Standard Conditions for NPDES Permits] hereof.",
+        "why_retained": "Issued-permit cover page binds authorization to effluent limitations and other conditions set forth in named permit parts of this document, not to supporting package filenames."
+      },
+      {
+        "source_id": "documents/gcc/final_permit.txt",
+        "location": "lines 23-24",
+        "text": "This permit supersedes and replaces NPDES Permit No. NM0000116 issued November 23,\n2010.",
+        "why_retained": "Explicit supersession rule in issued permit text for prior permit issuance; not derived from document_kind label."
+      },
+      {
+        "source_id": "documents/gcc/final_permit.txt",
+        "location": "lines 149-150",
+        "text": "Current EPA Region 6 minimum quantification levels (MQLs) for reporting and compliance are\nprovided in Appendix A of Part II of this permit.",
+        "why_retained": "Shows part_ii_appendix content is incorporated by permit-part citation within the issued permit rather than ranked by separate filename."
+      },
+      {
+        "source_id": "documents/gcc/fact_sheet.txt",
+        "location": "lines 1-4",
+        "text": "NPDES PERMIT NO. NM0000116\n                                  FACT SHEET\nFOR THE DRAFT NATIONAL POLLUTANT DISCHARGE ELIMINATION SYSTEM\n(NPDES) PERMIT TO DISCHARGE TO WATERS OF THE UNITED STATES",
+        "why_retained": "Fact sheet text frames itself as a draft NPDES permit document, not an issued authorization."
+      },
+      {
+        "source_id": "documents/gcc/fact_sheet.txt",
+        "location": "lines 34-35",
+        "text": "Proposed revocation and reissuance of the current permit issued with an effective date of June 1,\n2016, and an expiration date of May 31, 2021.",
+        "why_retained": "Permit action is proposed reissuance; fact sheet establishes draft/permit-development context rather than final enforceable authorization."
+      },
+      {
+        "source_id": "documents/aztec/statement_of_basis.txt",
+        "location": "lines 1-4",
+        "text": "NPDES PERMIT NO. NM0028762\n                     STATEMENT OF BASIS\nFOR THE DRAFT NATIONAL POLLUTANT DISCHARGE ELIMINATION SYSTEM\n(NPDES) PERMIT TO DISCHARGE TO WATERS OF THE UNITED STATES",
+        "why_retained": "Statement-of-basis text uses the same draft-permit framing as fact sheets; inventory kind alone does not determine authority."
+      },
+      {
+        "source_id": "documents/aztec/statement_of_basis.txt",
+        "location": "lines 556-558",
+        "text": "F.       FINAL EFFLUENT LIMITATIONS\n\nSee the draft permit for limitations.",
+        "why_retained": "Supporting document explicitly defers enforceable effluent limitations to permit text rather than establishing independent limits."
+      },
+      {
+        "source_id": "documents/farmington/final_permit.txt",
+        "location": "lines 24-25",
+        "text": "in accordance with this cover page and the effluent limitations, monitoring requirements, and other\nconditions set forth in Part I, Part II, Part III, and Part IV hereof.",
+        "why_retained": "Second facility confirms issued-permit integration of Parts I\u2013IV by cross-reference within the authorization document."
+      }
+    ],
+    "contradictory_evidence": [
+      {
+        "source_id": "documents/farmington/statement_of_basis.txt",
+        "note": "Not opened within budget; grep shows page headers labeled FACT SHEET while inventory document_kind is statement_of_basis, demonstrating filename/kind labels are not reliable authority signals.",
+        "impact": "Reinforces that hierarchy must come from narrative role text, not inventory naming."
+      },
+      {
+        "source_id": "documents/gcc/minor_modification.txt",
+        "note": "Not opened within budget; inventory kind minor_modification but available extract (from index sizing) appears to be Part I effluent-limit text without modification-framing language in the portion visible to targeted search.",
+        "impact": "No retained snippet establishes whether this document modifies or supersedes issued final-permit limits."
+      }
+    ],
+    "known_limitations": [
+      "Only 5 of 12 inventoried narrative documents were opened under budget; reasonable_potential worksheets and gcc/minor_modification.txt were not directly inspected.",
+      "No workspace text states an explicit general rule such as 'if the fact sheet disagrees with the issued permit, the issued permit governs'; precedence is inferred from issued-authorization versus draft-supporting document roles.",
+      "Farmington Part IV content lives in a separate inventory file (documents/farmington/part_iv.txt) while the final permit cover references Part IV 'hereof'; the package does not contain an explicit conflict-resolution clause among separately filed part extracts.",
+      "documents/gcc/final_permit.txt Part III extract in workspace appears truncated/corrupted (non-standard content after the Part III header), limiting verification of standard-condition integration for that facility.",
+      "Structured CSVs and document_inventory.json alone cannot establish narrative authority; resolution depends on permit-package text extracts under documents/."
+    ],
+    "allowed_dispositions": [
+      "SUPPORTED_RESOLUTION",
+      "SUPPORTED_NEGATIVE",
+      "UNRESOLVED"
+    ]
+  },
+  "judgment": {
+    "disposition": "SUPPORTED_RESOLUTION",
+    "grounding": [
+      "documents/gcc/final_permit.txt lines 4-21: AUTHORIZATION TO DISCHARGE binds effluent limitations and conditions to Parts I-III of the issued permit document.",
+      "documents/gcc/final_permit.txt lines 23-24: issued permit supersedes prior permit NM0000116.",
+      "documents/gcc/final_permit.txt lines 149-150: Part II appendix content incorporated by permit-part citation within the issued permit.",
+      "documents/gcc/fact_sheet.txt lines 1-4 and 34-35: fact sheet frames itself as a draft NPDES permit and describes proposed reissuance, not final authorization.",
+      "documents/aztec/statement_of_basis.txt lines 1-4: statement of basis uses draft-permit framing.",
+      "documents/aztec/statement_of_basis.txt lines 556-558: supporting document defers final effluent limitations to permit text.",
+      "documents/farmington/final_permit.txt lines 24-25: second facility confirms issued-permit integration of Parts I-IV by cross-reference within the authorization document."
+    ],
+    "interpretation": "issued_permit_authorization_governs",
+    "epistemic_basis": "SOURCE_ESTABLISHED",
+    "scope": "ONE_RELATION_OR_VOCABULARY",
+    "remaining_uncertainty": "No workspace snippet states a universal explicit clause for all inter-document conflicts (e.g., 'if the fact sheet disagrees with the issued permit, the issued permit governs'). Seven of twelve inventoried narrative documents were not opened; gcc/minor_modification.txt authority relative to the issued final permit is not established. Farmington Part IV is filed separately while the cover page references Part IV 'hereof'. gcc Part III extract appears truncated, limiting verification of standard-condition integration for that facility.",
+    "failure_mode_if_unresolved": null
+  },
+  "proposal": {
+    "interpretation": "Narrative text of the issued final permit (AUTHORIZATION TO DISCHARGE and conditions set forth in named permit parts of that document) establishes enforceable permit obligations; draft supporting documents establish proposed-condition rationale and background, and defer enforceable limits to the permit text.",
+    "scope": "ONE_RELATION_OR_VOCABULARY",
+    "epistemic_basis": "SOURCE_ESTABLISHED",
+    "exact_grounding": [
+      {
+        "source_id": "documents/gcc/final_permit.txt",
+        "location": "lines 4-21",
+        "proposition": "Issued-permit cover page binds authorization to effluent limitations and conditions in named permit parts of this document."
+      },
+      {
+        "source_id": "documents/gcc/final_permit.txt",
+        "location": "lines 23-24",
+        "proposition": "Issued permit supersedes prior permit issuance."
+      },
+      {
+        "source_id": "documents/gcc/final_permit.txt",
+        "location": "lines 149-150",
+        "proposition": "Appendix content incorporated by permit-part citation within the issued permit."
+      },
+      {
+        "source_id": "documents/gcc/fact_sheet.txt",
+        "location": "lines 1-4",
+        "proposition": "Fact sheet frames itself as a draft NPDES permit document."
+      },
+      {
+        "source_id": "documents/gcc/fact_sheet.txt",
+        "location": "lines 34-35",
+        "proposition": "Fact sheet describes proposed permit action, not final authorization."
+      },
+      {
+        "source_id": "documents/aztec/statement_of_basis.txt",
+        "location": "lines 1-4",
+        "proposition": "Statement of basis uses draft-permit framing."
+      },
+      {
+        "source_id": "documents/aztec/statement_of_basis.txt",
+        "location": "lines 556-558",
+        "proposition": "Supporting document defers enforceable effluent limitations to permit text."
+      },
+      {
+        "source_id": "documents/farmington/final_permit.txt",
+        "location": "lines 24-25",
+        "proposition": "Issued permit integrates Parts I-IV by cross-reference within the authorization document."
+      }
+    ],
+    "semantic_delta": "Replace the blanket permit_document_text_not_available unresolved with document authority roles on permit_document: issued_authorization documents govern enforceable obligations; draft_supporting documents provide rationale and defer limits; inventory document_kind is used only as a fixed lookup keyed to narrative-established roles (not as a filename hierarchy). Documents whose authority role is not established from the packet remain unresolved.",
+    "affected_obligations": [
+      "document_authority",
+      "permit_document_text_not_available"
+    ],
+    "affected_occurrence_count": 12,
+    "remaining_uncertainty": "minor_modification and reasonable_potential document kinds lack narrative authority role in the packet. No explicit universal disagreement clause. Part-file split and truncated extracts limit full permit-part integration checks.",
+    "admit": "ADMIT_DISPOSABLE"
+  },
+  "refinement": null,
+  "mutated_before_evidence": false,
+  "dry_run": {
+    "public": {
+      "ok": true,
+      "errors": [],
+      "n_hole_groups": 8,
+      "n_hole_instances": 540,
+      "relation_row_counts": {
+        "dmr_measurement": 824,
+        "permit_limit": 105,
+        "permit_document": 12,
+        "fy2025_measurement": 824,
+        "measurement_limit_pair": 824,
+        "numeric_comparison_candidate": 342,
+        "no_numeric_result_case": 186,
+        "monitoring_requirement_fy2025": 105
+      },
+      "requirement_names": [
+        "fy2025_measurements_materializable",
+        "measurement_limit_pairs_materializable",
+        "unique_applicable_limit_per_measurement",
+        "numeric_comparison_candidates_materializable",
+        "limit_value_for_comparison",
+        "reported_value_for_comparison",
+        "limit_comparison_operator",
+        "reported_value_qualifier",
+        "optional_monitoring_flag_for_limit_applicability",
+        "limit_type_code_for_enforceability",
+        "statistical_base_for_limit_comparison",
+        "monitoring_requirements_materializable",
+        "monitoring_frequency_code",
+        "limit_sample_type_code",
+        "optional_monitoring_flag_for_obligation",
+        "permit_limit_comment_text",
+        "limit_set_designator_for_schedule",
+        "no_numeric_result_cases_materializable",
+        "nodi_code_semantics",
+        "optional_monitoring_flag_for_missing_evidence",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "document_authority_role_unresolved",
+        "document_authority_role_unresolved",
+        "document_authority_role_unresolved",
+        "document_authority_role_unresolved",
+        "document_authority_role_unresolved",
+        "document_authority_role_unresolved"
+      ],
+      "hole_groups": [
+        {
+          "group_id": "g000",
+          "requirement": "aggregated_reporting_requirement",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 40,
+          "purpose": [
+            "B",
+            "C"
+          ],
+          "sample_subjects": [
+            {
+              "limit_value_id": "3610673284",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610673282",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610673283",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610673281",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610673290",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610673289",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610673278",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610673277",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610673280",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610673279",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610838794",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610838793",
+              "limit_set_schedule_id": "3600891019"
+            }
+          ],
+          "expected": "purpose-computable interpretation"
+        },
+        {
+          "group_id": "g001",
+          "requirement": "conditional_discharge_dependent_monitoring",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 17,
+          "purpose": [
+            "B",
+            "C"
+          ],
+          "sample_subjects": [
+            {
+              "limit_value_id": "3610840344",
+              "limit_set_schedule_id": "3600904607"
+            },
+            {
+              "limit_value_id": "3610840345",
+              "limit_set_schedule_id": "3600904607"
+            },
+            {
+              "limit_value_id": "3610840341",
+              "limit_set_schedule_id": "3600904607"
+            },
+            {
+              "limit_value_id": "3610840343",
+              "limit_set_schedule_id": "3600904607"
+            },
+            {
+              "limit_value_id": "3610840342",
+              "limit_set_schedule_id": "3600904607"
+            },
+            {
+              "limit_value_id": "3610840340",
+              "limit_set_schedule_id": "3600904607"
+            },
+            {
+              "limit_value_id": "3610840349",
+              "limit_set_schedule_id": "3600904607"
+            },
+            {
+              "limit_value_id": "3610840350",
+              "limit_set_schedule_id": "3600904607"
+            },
+            {
+              "limit_value_id": "3610840348",
+              "limit_set_schedule_id": "3600904607"
+            },
+            {
+              "limit_value_id": "3610840339",
+              "limit_set_schedule_id": "3600904606"
+            },
+            {
+              "limit_value_id": "3610840337",
+              "limit_set_schedule_id": "3600904606"
+            },
+            {
+              "limit_value_id": "3610840338",
+              "limit_set_schedule_id": "3600904606"
+            }
+          ],
+          "expected": "purpose-computable interpretation"
+        },
+        {
+          "group_id": "g002",
+          "requirement": "document_authority_role_unresolved",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "permit_document",
+          "n_instances": 6,
+          "purpose": [
+            "B",
+            "C"
+          ],
+          "sample_subjects": [
+            {
+              "sha256": "48b3a1a5d9c893ff5c3639ee24a1b653eae1d69d507694a9ef2846900bb8e016",
+              "path": "sources/farmington/part_ii_appendix.pdf"
+            },
+            {
+              "sha256": "721264985a55d23d07c83a690957c1aa88ad2258e8507c28d63c2d7a44cff8fb",
+              "path": "sources/farmington/part_iv.pdf"
+            },
+            {
+              "sha256": "febb6f311f00b4d6f4773104a2a2b29463f333949663e02aa178be2e8a19a9c4",
+              "path": "sources/aztec/reasonable_potential.pdf"
+            },
+            {
+              "sha256": "c18491655fd85f917218244fca712eca923ed1468c8eb2d174815fb91b095aea",
+              "path": "sources/gcc/minor_modification.pdf"
+            },
+            {
+              "sha256": "a1dd603444e3453136f55eeda5f0d09ac9cdef03884ae3b26f45da75be785b72",
+              "path": "sources/gcc/part_ii_appendix.pdf"
+            },
+            {
+              "sha256": "07313325eb072ed702ce2958e3eccbd5fe75d0ae4a0d3be6db4a9152dbf2589b",
+              "path": "sources/gcc/reasonable_potential.pdf"
+            }
+          ],
+          "expected": "purpose-computable interpretation"
+        },
+        {
+          "group_id": "g003",
+          "requirement": "limit_sample_type_code",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 105,
+          "purpose": [
+            "B"
+          ],
+          "sample_subjects": [
+            {
+              "limit_sample_type_code": "12",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673284"
+            },
+            {
+              "limit_sample_type_code": "12",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673282"
+            },
+            {
+              "limit_sample_type_code": "12",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673283"
+            },
+            {
+              "limit_sample_type_code": "12",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673281"
+            },
+            {
+              "limit_sample_type_code": "GR",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129864"
+            },
+            {
+              "limit_sample_type_code": "GR",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833505|limit_value_id=3610129864"
+            },
+            {
+              "limit_sample_type_code": "GR",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833505|limit_value_id=3610129865"
+            },
+            {
+              "limit_sample_type_code": "GR",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129865"
+            },
+            {
+              "limit_sample_type_code": "GR",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673290"
+            },
+            {
+              "limit_sample_type_code": "GR",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673289"
+            },
+            {
+              "limit_sample_type_code": "GR",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840344"
+            },
+            {
+              "limit_sample_type_code": "GR",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840345"
+            }
+          ],
+          "expected": "limit_sample_type_code in known ['']"
+        },
+        {
+          "group_id": "g004",
+          "requirement": "monitoring_frequency_code",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 105,
+          "purpose": [
+            "B"
+          ],
+          "sample_subjects": [
+            {
+              "limit_freq_of_analysis_code": "05/WK",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673284"
+            },
+            {
+              "limit_freq_of_analysis_code": "05/WK",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673282"
+            },
+            {
+              "limit_freq_of_analysis_code": "05/WK",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673283"
+            },
+            {
+              "limit_freq_of_analysis_code": "05/WK",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673281"
+            },
+            {
+              "limit_freq_of_analysis_code": "01/01",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129864"
+            },
+            {
+              "limit_freq_of_analysis_code": "01/01",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833505|limit_value_id=3610129864"
+            },
+            {
+              "limit_freq_of_analysis_code": "01/01",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833505|limit_value_id=3610129865"
+            },
+            {
+              "limit_freq_of_analysis_code": "01/01",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129865"
+            },
+            {
+              "limit_freq_of_analysis_code": "05/WK",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673290"
+            },
+            {
+              "limit_freq_of_analysis_code": "05/WK",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673289"
+            },
+            {
+              "limit_freq_of_analysis_code": "01/07",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840344"
+            },
+            {
+              "limit_freq_of_analysis_code": "01/07",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840345"
+            }
+          ],
+          "expected": "limit_freq_of_analysis_code in known ['']"
+        },
+        {
+          "group_id": "g005",
+          "requirement": "nodi_code_semantics",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "no_numeric_result_case",
+          "n_instances": 186,
+          "purpose": [
+            "C"
+          ],
+          "sample_subjects": [
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662047"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662059"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662071"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662083"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662048"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662060"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662072"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662084"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662049"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662061"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662073"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662085"
+            }
+          ],
+          "expected": "nodi_code in known ['']"
+        },
+        {
+          "group_id": "g006",
+          "requirement": "pass_fail_reporting_semantics",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "measurement_limit_pair",
+          "n_instances": 12,
+          "purpose": [
+            "A",
+            "B",
+            "C"
+          ],
+          "sample_subjects": [
+            {
+              "limit_value_id": "3610839676",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839677",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839678",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839679",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839680",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839681",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839682",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839683",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839684",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839685",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839686",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839687",
+              "limit_set_schedule_id": "3600904539"
+            }
+          ],
+          "expected": "purpose-computable interpretation"
+        },
+        {
+          "group_id": "g007",
+          "requirement": "permit_limit_comment_text",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "permit_limit",
+          "n_instances": 69,
+          "purpose": [
+            "B",
+            "C"
+          ],
+          "sample_subjects": [
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673284"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673282"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673283"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673281"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673290"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673289"
+            },
+            {
+              "dmr_comment_text": "WHEN DISCHARGING.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840344"
+            },
+            {
+              "dmr_comment_text": "WHEN DISCHARGING.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840345"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673278"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673277"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673280"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673279"
+            }
+          ],
+          "expected": "dmr_comment_text in known ['']"
+        }
+      ]
+    },
+    "delta": {
+      "relation_count_changes": {},
+      "requirements_added": [
+        "document_authority_role_unresolved"
+      ],
+      "requirements_removed": [
+        "permit_document_text_not_available"
+      ],
+      "requirements_changed": [],
+      "relation_mode_changes": {},
+      "n_hole_groups": {
+        "baseline": 8,
+        "proposed": 8
+      },
+      "n_hole_instances": {
+        "baseline": 535,
+        "proposed": 540
+      },
+      "hole_requirements_added": [
+        "document_authority_role_unresolved"
+      ],
+      "hole_requirements_removed": [
+        "permit_document_text_not_available"
+      ],
+      "WORLD_semantics_changed": true,
+      "PURPOSE_semantics_changed": true,
+      "ok": {
+        "baseline": true,
+        "proposed": true
+      }
+    }
+  },
+  "finished_at": "2026-09-05T14:21:13.137469+00:00"
+}

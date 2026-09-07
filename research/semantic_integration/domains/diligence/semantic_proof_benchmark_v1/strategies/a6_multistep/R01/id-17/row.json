@@ -1,0 +1,99 @@
+{
+  "strategy": "a6_multistep",
+  "trial": "R01",
+  "obligation_id": "id-17",
+  "candidate": {
+    "left": "billing:Northbridge Analytics Inc.",
+    "right": "registry:3840192"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 3840192"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Northbridge Analytics Inc."
+    }
+  ],
+  "support_claim": "The packet explicitly leaves the registry link unresolved, names an alternate Wyoming LLC candidate, and provides only name-level overlap without a legal-identifier or mapping that establishes identity or distinctness between billing:Northbridge Analytics Inc. and registry:3840192.",
+  "proof_size": 8,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "steps": [
+    {
+      "fact": "Commercial notes state that legal has not determined which registry entity is the contracting party and instruct to treat the registry link as unresolved.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "A 2024 credit check returned a Wyoming LLC named \"Northbridge Analytics LLC\", preserving multiple live registry candidates beyond registry:3840192.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Registry row 3840192 lists the entity name as \"NORTHBRIDGE ANALYTICS INC\" (Delaware, active).",
+      "grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 3840192"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Billing invoices bill the name \"Northbridge Analytics Inc.\"",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Northbridge Analytics Inc."
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "The candidate left referent is billing:Northbridge Analytics Inc. and the right referent is registry:3840192.",
+      "grounding": null,
+      "mechanical": true
+    },
+    {
+      "fact": "Name similarity between the billing name and the registry row name is insufficient under the relation contract to establish SAME_ENTITY identity.",
+      "grounding": {
+        "source_path": "relation_contract.json",
+        "location": "grounding_contract"
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "No packet excerpt links billing:Northbridge Analytics Inc. to registry identifier 3840192 via a shared legal identifier or an explicit identity mapping.",
+      "grounding": null,
+      "mechanical": false
+    },
+    {
+      "fact": "No packet excerpt establishes that billing:Northbridge Analytics Inc. and registry:3840192 are distinct entities.",
+      "grounding": null,
+      "mechanical": false
+    }
+  ],
+  "admit": {
+    "rule": "unresolved"
+  },
+  "oracle": "UNRESOLVED",
+  "in_oracle": true,
+  "exact": true,
+  "unsupported_closure": false,
+  "under_closure": false,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": false
+}

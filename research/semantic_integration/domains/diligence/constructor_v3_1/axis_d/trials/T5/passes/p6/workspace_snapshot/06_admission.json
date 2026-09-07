@@ -1,0 +1,92 @@
+{
+  "relations": [
+    {
+      "relation": "invoice_record",
+      "admission": "WORLD",
+      "reason": "An invoice as recorded in billing sources with source-native identifiers and amounts.",
+      "purpose_independence_test": "invoice_record records source-native facts (parse/join results) whose truth does not depend on which diligence purpose is active."
+    },
+    {
+      "relation": "crm_account",
+      "admission": "WORLD",
+      "reason": "A CRM account record with its displayed account name.",
+      "purpose_independence_test": "crm_account records source-native facts (parse/join results) whose truth does not depend on which diligence purpose is active."
+    },
+    {
+      "relation": "registry_company",
+      "admission": "WORLD",
+      "reason": "A company registry row with registered legal name and company number.",
+      "purpose_independence_test": "registry_company records source-native facts (parse/join results) whose truth does not depend on which diligence purpose is active."
+    },
+    {
+      "relation": "contract_document",
+      "admission": "WORLD",
+      "reason": "A contract or statement-of-work file with source-native contract identifier and counterparty naming text from its header.",
+      "purpose_independence_test": "contract_document records source-native facts (parse/join results) whose truth does not depend on which diligence purpose is active."
+    },
+    {
+      "relation": "contract_term",
+      "admission": "WORLD",
+      "reason": "Parsed effective date, explicit expiry, and term language from a contract header.",
+      "purpose_independence_test": "contract_term records source-native facts (parse/join results) whose truth does not depend on which diligence purpose is active."
+    },
+    {
+      "relation": "contract_lifecycle",
+      "admission": "WORLD",
+      "reason": "Whether an agreement is currently in force given explicit expiry, renewal mechanics, and term text in sources.",
+      "purpose_independence_test": "Whether an agreement is in force depends on contract dates, renewal mechanics, and explicit status language\u2014not on purpose A/B/C criteria.",
+      "construction_class": "SEMANTIC"
+    },
+    {
+      "relation": "clause_occurrence",
+      "admission": "WORLD",
+      "reason": "A contract source text contains a clause of the given kind.",
+      "purpose_independence_test": "Clause presence in contract text is a document fact independent of which acquisition or dependency policy is applied.",
+      "construction_class": "SEMANTIC"
+    },
+    {
+      "relation": "identity_judgment",
+      "admission": "WORLD",
+      "reason": "Two scoped identifiers denote the same legal counterparty, are distinct, or remain unresolved.",
+      "purpose_independence_test": "Pairwise counterparty identity is a reusable legal-entity judgment not defined by a single purpose threshold.",
+      "construction_class": "SEMANTIC"
+    },
+    {
+      "relation": "invoice_governing_contract",
+      "admission": "WORLD",
+      "reason": "A billed invoice is governed by the identified contract for its commercial relationship.",
+      "purpose_independence_test": "Invoice-to-contract governance links commercial billing to governing agreements without reference to purpose-specific filters.",
+      "construction_class": "SEMANTIC"
+    },
+    {
+      "relation": "open_invoice",
+      "admission": "WORLD",
+      "reason": "Invoices whose billing status is open as recorded in sources.",
+      "purpose_independence_test": "Open billing status is recorded in sources and remains meaningful without any purpose projection."
+    },
+    {
+      "relation": "purpose_a_qualifying_invoice",
+      "admission": "PURPOSE",
+      "reason": "Combines purpose A acquisition-relevant clause policy with active contract and invoice linkage; not purpose-independent.",
+      "purpose_independence_test": "If analytical purposes A/B/C disappeared, purpose_a_qualifying_invoice would lose meaning because it encodes purpose-specific qualification or projection policy."
+    },
+    {
+      "relation": "purpose_c_dependency_row",
+      "admission": "PURPOSE",
+      "reason": "Contract-centric dependency status applies purpose C criteria (current relationship + obligation kinds); purpose-bound projection.",
+      "purpose_independence_test": "If analytical purposes A/B/C disappeared, purpose_c_dependency_row would lose meaning because it encodes purpose-specific qualification or projection policy."
+    }
+  ],
+  "limitations": [
+    "clause_occurrence ABSENT (REJECT) and UNRESOLVED dispositions are not persisted as World tuples; negatives remain in obligation packets only.",
+    "invoice_governing_contract UNRESOLVED associations are not persisted; purpose A may emit unresolved rows at projection time.",
+    "open_invoice derivation not registered: TaskView cannot declare REFERENT invoice and TEXT invoice_id on the same physical column (duplicate role or physical column in 'open_invoice').",
+    "Purpose B output is projected from identity_judgment tuples; no separate purpose-B relation is admitted because link enumeration is completeness over world identity judgments.",
+    "invoice_governing_contract may remain unresolved for some invoices; purpose A permits contract_id omission on unresolved association rows at projection time.",
+    "Negative clause absence (ABSENT) is modeled via obligations when the kernel cannot persist closed-world negation as stable tuples."
+  ],
+  "purpose_relations_excluded_from_world": [
+    "purpose_a_qualifying_invoice",
+    "purpose_c_dependency_row"
+  ]
+}

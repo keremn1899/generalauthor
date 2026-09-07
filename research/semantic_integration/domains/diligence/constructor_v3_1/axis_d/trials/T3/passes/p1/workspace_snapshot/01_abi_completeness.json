@@ -1,0 +1,157 @@
+{
+  "required_semantic_fields": [
+    "active",
+    "amount",
+    "billed_name",
+    "clause_kind",
+    "contract_id",
+    "counterparty_text",
+    "currency",
+    "disposition",
+    "invoice_id",
+    "left",
+    "period",
+    "right",
+    "status"
+  ],
+  "fields": {
+    "active": {
+      "status": "SATISFIED",
+      "locations": [
+        "contract_lifecycle_judgment.active"
+      ]
+    },
+    "amount": {
+      "status": "SATISFIED",
+      "locations": [
+        "invoice_record.amount"
+      ]
+    },
+    "billed_name": {
+      "status": "SATISFIED",
+      "locations": [
+        "invoice_record.billed_name"
+      ]
+    },
+    "clause_kind": {
+      "status": "SATISFIED",
+      "locations": [
+        "clause_kind_judgment.clause_kind"
+      ]
+    },
+    "contract_id": {
+      "status": "SATISFIED",
+      "locations": [
+        "contract_record.contract_id"
+      ]
+    },
+    "counterparty_text": {
+      "status": "SATISFIED",
+      "locations": [
+        "contract_record.counterparty_text"
+      ]
+    },
+    "currency": {
+      "status": "SATISFIED",
+      "locations": [
+        "invoice_record.currency"
+      ]
+    },
+    "disposition": {
+      "status": "SATISFIED",
+      "locations": [
+        "identity_judgment.disposition",
+        "clause_kind_judgment.disposition",
+        "contractual_exposure_invoice.disposition"
+      ]
+    },
+    "invoice_id": {
+      "status": "SATISFIED",
+      "locations": [
+        "invoice_record.invoice_id"
+      ]
+    },
+    "left": {
+      "status": "SATISFIED",
+      "locations": [
+        "identity_judgment.left",
+        "reconciliation_link.left"
+      ]
+    },
+    "period": {
+      "status": "SATISFIED",
+      "locations": [
+        "invoice_record.period"
+      ]
+    },
+    "right": {
+      "status": "SATISFIED",
+      "locations": [
+        "identity_judgment.right",
+        "reconciliation_link.right"
+      ]
+    },
+    "status": {
+      "status": "SATISFIED",
+      "locations": [
+        "invoice_record.status",
+        "commercial_dependency_assessment.status"
+      ]
+    }
+  },
+  "satisfied": [
+    "active",
+    "amount",
+    "billed_name",
+    "clause_kind",
+    "contract_id",
+    "counterparty_text",
+    "currency",
+    "disposition",
+    "invoice_id",
+    "left",
+    "period",
+    "right",
+    "status"
+  ],
+  "unsatisfied": [],
+  "ambiguous": [],
+  "duplicate_bindings": [
+    {
+      "field": "disposition",
+      "locations": [
+        "identity_judgment.disposition",
+        "clause_kind_judgment.disposition",
+        "contractual_exposure_invoice.disposition"
+      ]
+    },
+    {
+      "field": "left",
+      "locations": [
+        "identity_judgment.left",
+        "reconciliation_link.left"
+      ]
+    },
+    {
+      "field": "right",
+      "locations": [
+        "identity_judgment.right",
+        "reconciliation_link.right"
+      ]
+    },
+    {
+      "field": "status",
+      "locations": [
+        "invoice_record.status",
+        "commercial_dependency_assessment.status"
+      ]
+    }
+  ],
+  "false_bindings": [],
+  "unrecognized_identities": [
+    "contract",
+    "entity",
+    "invoice"
+  ],
+  "ok": true
+}

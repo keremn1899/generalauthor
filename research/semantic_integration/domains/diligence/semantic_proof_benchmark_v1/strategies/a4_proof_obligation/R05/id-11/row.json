@@ -1,0 +1,63 @@
+{
+  "strategy": "a4_proof_obligation",
+  "trial": "R05",
+  "obligation_id": "id-11",
+  "candidate": {
+    "left": "billing:Vellum Print Co Ltd",
+    "right": "registry:09338441"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 09338441"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Vellum Print Co Ltd"
+    }
+  ],
+  "support_claim": "The packet shows registry 09338441 is VELLUM PRINT CO LTD and billing uses Vellum Print Co Ltd, but no explicit identity linkage is provided and name similarity alone does not satisfy the SAME_ENTITY burden.",
+  "proof_size": 3,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "proof_obligations": [
+    {
+      "obligation": "Establish that billing:Vellum Print Co Ltd and registry:09338441 refer to the same legal counterparty via explicit identity evidence (e.g., shared unique identifier or direct linkage), not name similarity alone",
+      "required_for": "SAME_ENTITY",
+      "satisfied": false,
+      "evidence": []
+    },
+    {
+      "obligation": "Establish that registry:09338441 is the company registered under the name associated with billing:Vellum Print Co Ltd through an explicit cross-reference in the packet",
+      "required_for": "SAME_ENTITY",
+      "satisfied": false,
+      "evidence": []
+    },
+    {
+      "obligation": "Establish that billing:Vellum Print Co Ltd and registry:09338441 refer to different legal counterparties",
+      "required_for": "DISTINCT",
+      "satisfied": false,
+      "evidence": []
+    }
+  ],
+  "admit": {
+    "rule": "unresolved"
+  },
+  "unsatisfied": [
+    "Establish that billing:Vellum Print Co Ltd and registry:09338441 refer to the same legal counterparty via explicit identity evidence (e.g., shared unique identifier or direct linkage), not name similarity alone",
+    "Establish that registry:09338441 is the company registered under the name associated with billing:Vellum Print Co Ltd through an explicit cross-reference in the packet",
+    "Establish that billing:Vellum Print Co Ltd and registry:09338441 refer to different legal counterparties"
+  ],
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

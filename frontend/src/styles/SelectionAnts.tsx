@@ -115,9 +115,21 @@ function trace(
   // would be right: its ants are its border.
   const standoff = target.shape === "rect" ? 0 : (target.clearance ?? clearance);
   const gap = standoff * zoom;
+  /**
+   * A mark's position, or nothing — and nothing includes `[null, null, 0]`.
+   *
+   * That is what G6 answers for a body still nucleating, and it is an array,
+   * so a plain truthiness check lets it through. Projected, it becomes `NaN`,
+   * and the ring is painted as `d="M NaN NaN A 45 45 …"` — an SVG error per
+   * frame for as long as the marching loop runs. Refusing to trace is right:
+   * the loop already retries, and a body that has no position yet has no
+   * boundary for ants to march along.
+   */
+  const placed = (point: ArrayLike<number> | null | undefined): boolean =>
+    Boolean(point) && Number.isFinite(point![0]) && Number.isFinite(point![1]);
   const at = (id: string) => {
     const point = graph.getElementPosition(id);
-    if (!point) return null;
+    if (!placed(point)) return null;
     const view = graph.getViewportByCanvas(point);
     return { x: view[0], y: view[1] };
   };
@@ -153,7 +165,7 @@ function trace(
       | { style?: { size?: number | [number, number] } }
       | undefined;
     const size = datum?.style?.size;
-    if (!centre || size === undefined) return null;
+    if (!placed(centre) || size === undefined) return null;
     const [w, h] = typeof size === "number" ? [size, size] : size;
     const a = graph.getViewportByCanvas([centre[0] - w / 2, centre[1] - h / 2]);
     const b = graph.getViewportByCanvas([centre[0] + w / 2, centre[1] + h / 2]);

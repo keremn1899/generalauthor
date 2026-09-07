@@ -1,0 +1,164 @@
+{
+  "pass": "P6",
+  "artifact": "06_admission.json",
+  "source_artifacts": [
+    "01_vocabulary.json",
+    "05_dispositions.json",
+    "02_mechanical_world/world.sqlite"
+  ],
+  "world_artifact": "06_world/world.sqlite",
+  "view_id": "diligence-world",
+  "limitations": [
+    "Consumer field ids are not enumerated as a dedicated block in 00_intention_contract.json; bindings follow evaluation_unit and row_expectations language.",
+    "Permit PDF semantic extraction vocabulary is declared but C0\u2013C1 PDF compilation is not yet available from prior passes; permit_stated_condition tuples may be absent until a later pass ingests sources/permit_files.",
+    "Closed-world negation for affirmative not-required outcomes is not representable as persistent World negation; Purpose B not-required and Purpose C classifications rely on positive evidence or UNRESOLVED.",
+    "documented_no_discharge_assertion: 186 candidates adjudicated but none ACCEPT; no World tuples persisted (REJECT/UNRESOLVED only)."
+  ],
+  "admissions": [
+    {
+      "relation": "in_scope_facility",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Mechanically compiled from structured sources without compliance interpretation. A selected NPDES facility permit number within the Federal FY2025 diligence universe.",
+      "purpose_independence_test": "Truth and meaning do not depend on Purpose A/B/C analytical questions, thresholds, or requested decisions; proposition remains independently meaningful.",
+      "persistence_location": "06_world/world.sqlite",
+      "persisted_count": 3
+    },
+    {
+      "relation": "reported_dmr_measurement",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Mechanically compiled from structured sources without compliance interpretation. A DMR-reported measurement row as recorded in structured source data, including value, unit, qualifier, statistical basis, monitoring period end, and optional NODI code.",
+      "purpose_independence_test": "Truth and meaning do not depend on Purpose A/B/C analytical questions, thresholds, or requested decisions; proposition remains independently meaningful.",
+      "persistence_location": "06_world/world.sqlite",
+      "persisted_count": 824
+    },
+    {
+      "relation": "permit_limit_schedule_row",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Mechanically compiled from structured sources without compliance interpretation. A permit limit schedule value row with numeric limit metadata, type codes, effective dates, frequency, and optional monitoring flag as compiled from structured permit limit tables.",
+      "purpose_independence_test": "Truth and meaning do not depend on Purpose A/B/C analytical questions, thresholds, or requested decisions; proposition remains independently meaningful.",
+      "persistence_location": "06_world/world.sqlite",
+      "persisted_count": 90
+    },
+    {
+      "relation": "permit_limit_active_month",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Mechanically compiled from structured sources without compliance interpretation. Whether a permit limit schedule row is active in a given calendar month according to compiled month flags from structured limit data.",
+      "purpose_independence_test": "Truth and meaning do not depend on Purpose A/B/C analytical questions, thresholds, or requested decisions; proposition remains independently meaningful.",
+      "persistence_location": "06_world/world.sqlite",
+      "persisted_count": 1080
+    },
+    {
+      "relation": "fy2025_in_scope_measurement",
+      "admission": "WORLD",
+      "construction_class": "DERIVED",
+      "reason": "Deterministic derivation over compiled mechanical relations. A reported DMR measurement whose monitoring period end falls within Federal FY2025 for an in-scope facility.",
+      "purpose_independence_test": "Truth and meaning do not depend on Purpose A/B/C analytical questions, thresholds, or requested decisions; proposition remains independently meaningful.",
+      "persistence_location": "06_world/world.sqlite",
+      "persisted_count": 824
+    },
+    {
+      "relation": "measurement_limit_candidate_join",
+      "admission": "WORLD",
+      "construction_class": "DERIVED",
+      "reason": "Deterministic derivation over compiled mechanical relations. A mechanical correspondence linking a reported measurement to a permit limit schedule row by shared permit, discharge feature, parameter, and overlapping effective/period dates.",
+      "purpose_independence_test": "Truth and meaning do not depend on Purpose A/B/C analytical questions, thresholds, or requested decisions; proposition remains independently meaningful.",
+      "persistence_location": "06_world/world.sqlite",
+      "persisted_count": 3632
+    },
+    {
+      "relation": "monitoring_requirement_candidate",
+      "admission": "WORLD",
+      "construction_class": "DERIVED",
+      "reason": "Deterministic derivation over compiled mechanical relations. A monitoring obligation candidate derived from compiled permit schedule metadata (frequency, parameter, location, optional flag) without deciding FY2025 applicability.",
+      "purpose_independence_test": "Truth and meaning do not depend on Purpose A/B/C analytical questions, thresholds, or requested decisions; proposition remains independently meaningful.",
+      "persistence_location": "06_world/world.sqlite",
+      "persisted_count": 90
+    },
+    {
+      "relation": "no_ordinary_numeric_result_measurement",
+      "admission": "WORLD",
+      "construction_class": "DERIVED",
+      "reason": "Deterministic derivation over compiled mechanical relations. An in-scope FY2025 monitoring expectation lacking an ordinary numeric reported result, including empty DMR values and NODI-coded rows.",
+      "purpose_independence_test": "Truth and meaning do not depend on Purpose A/B/C analytical questions, thresholds, or requested decisions; proposition remains independently meaningful.",
+      "persistence_location": "06_world/world.sqlite",
+      "persisted_count": 186
+    },
+    {
+      "relation": "permit_stated_condition",
+      "admission": "WORLD",
+      "construction_class": "SEMANTIC",
+      "reason": "Purpose-independent semantic judgment admitted to World with source grounding. Permit-source language stating a conditional monitoring or discharge trigger (e.g., when discharging, seasonal, event) independent of whether the condition held in FY2025. Persisted 6 ACCEPT tuple(s) of 28 adjudicated candidate(s).",
+      "purpose_independence_test": "Truth and meaning do not depend on Purpose A/B/C analytical questions, thresholds, or requested decisions; proposition remains independently meaningful. Semantic judgment is grounded in source evidence, not purpose policy.",
+      "persistence_location": "06_world/world.sqlite",
+      "persisted_count": 6
+    },
+    {
+      "relation": "documented_no_discharge_assertion",
+      "admission": "WORLD",
+      "construction_class": "SEMANTIC",
+      "reason": "Purpose-independent semantic judgment admitted to World with source grounding. Source-documented claim that no discharge occurred for a facility feature within a stated period, as grounded in DMR NODI/permit/operator statements. Persisted 0 ACCEPT tuple(s) of 186 adjudicated candidate(s).",
+      "purpose_independence_test": "Truth and meaning do not depend on Purpose A/B/C analytical questions, thresholds, or requested decisions; proposition remains independently meaningful. Semantic judgment is grounded in source evidence, not purpose policy.",
+      "persistence_location": "06_world/world.sqlite",
+      "persisted_count": 0
+    },
+    {
+      "relation": "applicable_limit_selection",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "reason": "Purpose-layer semantic judgment; not promoted to World. Purpose A selection of at most one enforceable numeric limit candidate applicable to a measurement for compliance comparison, or an explicit unresolved disposition. Persisted in 05_dispositions.json: 824 disposition(s) ({'UNRESOLVED': 692, 'ACCEPT': 132}).",
+      "purpose_independence_test": "Interpretation depends on purpose-specific policies, thresholds, or requested decisions (e.g., applicability selection, comparison class, exceedance, obligation applicability, or missing-evidence classification).",
+      "persistence_location": "05_dispositions.json",
+      "persisted_count": 824
+    },
+    {
+      "relation": "limit_numeric_comparison_applicability",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "reason": "Purpose-layer semantic judgment; not promoted to World. Purpose A classification of whether a numeric compliance comparison is applicable, distinguishing enforceable numeric limits from report-only or non-comparable monitoring. Persisted in 05_dispositions.json: 824 disposition(s) ({'UNRESOLVED': 692, 'ACCEPT': 132}).",
+      "purpose_independence_test": "Interpretation depends on purpose-specific policies, thresholds, or requested decisions (e.g., applicability selection, comparison class, exceedance, obligation applicability, or missing-evidence classification).",
+      "persistence_location": "05_dispositions.json",
+      "persisted_count": 824
+    },
+    {
+      "relation": "exceedance_determination",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "reason": "Purpose-layer semantic judgment; not promoted to World. Purpose A determination whether a reported measurement exceeds the selected applicable limit after unit and statistical-base comparability checks. Persisted in 05_dispositions.json: 638 disposition(s) ({'UNRESOLVED': 602, 'ACCEPT': 36}).",
+      "purpose_independence_test": "Interpretation depends on purpose-specific policies, thresholds, or requested decisions (e.g., applicability selection, comparison class, exceedance, obligation applicability, or missing-evidence classification).",
+      "persistence_location": "05_dispositions.json",
+      "persisted_count": 638
+    },
+    {
+      "relation": "monitoring_obligation_applicability",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "reason": "Purpose-layer semantic judgment; not promoted to World. Purpose B judgment whether a monitoring requirement was required, not required, or unresolved for FY2025 given schedule, season, and conditional trigger evidence. Persisted in 05_dispositions.json: 90 disposition(s) ({'ACCEPT': 67, 'UNRESOLVED': 23}).",
+      "purpose_independence_test": "Interpretation depends on purpose-specific policies, thresholds, or requested decisions (e.g., applicability selection, comparison class, exceedance, obligation applicability, or missing-evidence classification).",
+      "persistence_location": "05_dispositions.json",
+      "persisted_count": 90
+    },
+    {
+      "relation": "missing_evidence_classification",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "reason": "Purpose-layer semantic judgment; not promoted to World. Purpose C classification of what evidence establishes for a no-ordinary-numeric-result monitoring expectation, without inferring compliance or violation from absence alone. Persisted in 05_dispositions.json: 186 disposition(s) ({'UNRESOLVED': 186}).",
+      "purpose_independence_test": "Interpretation depends on purpose-specific policies, thresholds, or requested decisions (e.g., applicability selection, comparison class, exceedance, obligation applicability, or missing-evidence classification).",
+      "persistence_location": "05_dispositions.json",
+      "persisted_count": 186
+    }
+  ],
+  "semantic_persistence_summary": {
+    "documented_no_discharge_assertion": {
+      "adjudicated": 186,
+      "accept_persisted": 0
+    },
+    "permit_stated_condition": {
+      "adjudicated": 28,
+      "accept_persisted": 6
+    }
+  }
+}

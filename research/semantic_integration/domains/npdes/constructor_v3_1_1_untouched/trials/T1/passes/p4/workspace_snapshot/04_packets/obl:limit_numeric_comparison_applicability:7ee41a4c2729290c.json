@@ -1,0 +1,26 @@
+{
+  "obligation_id": "obl:limit_numeric_comparison_applicability:7ee41a4c2729290c",
+  "selected_observations": [
+    {
+      "source_path": "sources/structured/dmr_measurements.csv",
+      "location": "line 490; DMR_EVENT_ID=3621391565; DMR_VALUE_ID=3831416460",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0020583; PERM_FEATURE_NMBR=001; PARAMETER_CODE=00400; PARAMETER_DESC=pH; MONITORING_PERIOD_END_DATE=10/31/2024; DMR_EVENT_ID=3621391565; DMR_VALUE_ID=3831416460; DMR_VALUE_NMBR=7; DMR_UNIT_CODE=12; DMR_VALUE_QUALIFIER_CODE==; STATISTICAL_BASE_CODE=ME; NODI_CODE=(absent)"
+    },
+    {
+      "source_path": "sources/structured/permit_limits.csv",
+      "location": "line 10; limit:3606239981:3610673290",
+      "excerpt": "LIMIT_ID=3606239981; LIMIT_VALUE_ID=3610673290; LIMIT_VALUE_NMBR=6.6; LIMIT_UNIT_CODE=12; STATISTICAL_BASE_CODE=ME; LIMIT_VALUE_TYPE_CODE=C1; LIMIT_TYPE_CODE=ENF; OPTIONAL_MONITORING_FLAG=N; LIMIT_FREQ_OF_ANALYSIS_CODE=05/WK"
+    },
+    {
+      "source_path": "sources/structured/permit_limits.csv",
+      "location": "line 11; limit:3606239981:3610673289",
+      "excerpt": "LIMIT_ID=3606239981; LIMIT_VALUE_ID=3610673289; LIMIT_VALUE_NMBR=9; LIMIT_UNIT_CODE=12; STATISTICAL_BASE_CODE=MB; LIMIT_VALUE_TYPE_CODE=C3; LIMIT_TYPE_CODE=ENF; OPTIONAL_MONITORING_FLAG=N; LIMIT_FREQ_OF_ANALYSIS_CODE=05/WK"
+    }
+  ],
+  "selection_rationale": "Classification depends on a selected applicable limit; blocked until applicable_limit_selection resolves. Includes LIMIT_TYPE_CODE and OPTIONAL_MONITORING_FLAG from joined limit schedule rows for enforceable-vs-report-only classification.",
+  "known_missing_information": [
+    "02_mechanical_world/world.sqlite not present in workspace; evidence selected directly from structured CSV sources using P2 join rules.",
+    "Permit PDF sources listed in sources/source_manifest.json were not ingested; permit_stated_condition packets use structured DMR_COMMENT_TEXT only.",
+    "No unique applicable limit selected yet; LIMIT_TYPE_CODE and OPTIONAL_MONITORING_FLAG interpretation is candidate-relative."
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "proposition": "NODI_CODE='9' on a FY2025 DMR measurement row with an empty DMR_VALUE_NMBR has a determinate regulatory meaning (e.g., documented no-discharge, monitoring not required, not applicable, or missing required evidence) that can be assigned without importing NODI code 'C' semantics.",
+  "would_establish": [
+    "Workspace text that defines NODI code 9 or maps it to a specific no-result reporting state for DMR rows",
+    "Permit or DMR reporting instructions for permit NM0020583 that explicitly name code 9 or an equivalent no-data indicator tied to the parameters and periods where NODI=9 appears",
+    "A structured codebook or legend in sources/ linking NODI_CODE values to meanings"
+  ],
+  "would_refute": [
+    "Absence of any NODI code definition or legend anywhere in workspace sources or documents",
+    "Evidence that NODI=9 rows fall into materially different monitoring contexts requiring different interpretations, so a single inherited meaning (including from NODI=C) is unwarranted",
+    "Permit text that explains when values may be omitted but never names or equates those situations to NODI code 9"
+  ],
+  "likely_authoritative_source_types": [
+    "sources/dmr_measurements.csv and sources/permit_limits.csv for occurrence patterns, parameters, optional-monitoring flags, and frequencies",
+    "documents/farmington/final_permit.txt for NM0020583 WET retest reporting rules and conditional TRC monitoring footnote *5",
+    "DMR form general instructions referenced by permits but not present in the workspace"
+  ],
+  "insufficient_alone": [
+    "Co-occurrence of NODI=9 with OPTIONAL_MONITORING_FLAG=Y or LIMIT_FREQ_OF_ANALYSIS_CODE=09/99 on WET retest parameters",
+    "Co-occurrence of NODI=9 with footnote *5 conditional chlorine monitoring on parameter 50060",
+    "Aztec permit NO DISCHARGE box instructions (different permit; bears on NODI=C at NM0000116, not NODI=9 at NM0020583)",
+    "Structural correlation between empty DMR_VALUE_NMBR and nonempty NODI_CODE without a code legend"
+  ],
+  "unknowable_from_structured_data_alone": [
+    "The regulatory label or narrative meaning of ICIS/NPDES NODI code 9",
+    "Whether a given NODI=9 row documents optional monitoring not performed, conditional monitoring not triggered, or missing required evidence",
+    "Whether LIMIT_FREQ_OF_ANALYSIS_CODE value 09/99 itself encodes optional/not-applicable scheduling (no workspace legend for frequency codes)"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "strategy": "a1_single",
+  "trial": "R01",
+  "obligation_id": "id-10",
+  "candidate": {
+    "left": "billing:Vellum Print Co Ltd",
+    "right": "contract:SOW-VEL-2022"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Vellum Print Co Ltd"
+    },
+    {
+      "source_path": "sources/contracts/SOW-VEL-2022.md",
+      "location": "header"
+    }
+  ],
+  "support_claim": "The billing record names Vellum Print Co Ltd and SOW-VEL-2022 lists Vellum Print Co Ltd as counterparty, but neither observation establishes identity between the billing referent and the contract referent.",
+  "proof_size": 1,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "justification": "Under the identity_judgment contract, SAME_ENTITY requires evidence that establishes identity and DISTINCT requires evidence that establishes distinctness; the packet only shows the same name appearing in billing and in the SOW header, which is name compatibility rather than identity-establishing evidence, and no observation demonstrates that billing:Vellum Print Co Ltd and contract:SOW-VEL-2022 are distinct legal counterparties.",
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

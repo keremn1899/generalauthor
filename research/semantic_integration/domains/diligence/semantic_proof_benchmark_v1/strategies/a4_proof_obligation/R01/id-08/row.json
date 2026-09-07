@@ -1,0 +1,77 @@
+{
+  "strategy": "a4_proof_obligation",
+  "trial": "R01",
+  "obligation_id": "id-08",
+  "candidate": {
+    "left": "billing:Oakfield Logistik GmbH",
+    "right": "registry:HRB 88421"
+  },
+  "proposed_disposition": "SAME_ENTITY",
+  "final_disposition": "SAME_ENTITY",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row HRB 88421"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Oakfield Logistik GmbH"
+    }
+  ],
+  "support_claim": "Commercial notes state HRB 88421 did not change when the company rebranded to Oakfield Logistik GmbH, the registry row lists Oakfield Logistik GmbH for HRB 88421, and billing invoices use that same legal name.",
+  "proof_size": 3,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "proof_obligations": [
+    {
+      "obligation": "Establish that registry:HRB 88421 is the Handelsregister record for a legal entity named Oakfield Logistik GmbH",
+      "required_for": "SAME_ENTITY",
+      "satisfied": true,
+      "evidence": [
+        {
+          "source_path": "sources/company_registry.csv",
+          "location": "row HRB 88421"
+        }
+      ]
+    },
+    {
+      "obligation": "Establish that Oakfield Logistik GmbH (billing referent) is the same legal entity as the one registered under HRB 88421",
+      "required_for": "SAME_ENTITY",
+      "satisfied": true,
+      "evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        },
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Oakfield Logistik GmbH"
+        }
+      ]
+    },
+    {
+      "obligation": "Establish that billing:Oakfield Logistik GmbH and registry:HRB 88421 denote distinct legal counterparties",
+      "required_for": "DISTINCT",
+      "satisfied": false,
+      "evidence": []
+    }
+  ],
+  "admit": {
+    "rule": "all_required_obligations_satisfied"
+  },
+  "unsatisfied": [],
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": true,
+  "unsupported_closure": false,
+  "under_closure": false,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": false
+}

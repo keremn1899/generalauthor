@@ -1,0 +1,22 @@
+{
+  "propositions": [
+    {
+      "proposition": "Registry record 4721193 lists the legal entity name MERIDIAN ENERGY PARTNERS LLC, incorporated in Delaware with active status.",
+      "source_grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 4721193"
+      },
+      "establishes": "other",
+      "relevance": "Associates the right referent (registry:4721193) with a specific registered legal entity name and jurisdiction; bears on whether it could match the billing referent but does not link the two referents directly."
+    },
+    {
+      "proposition": "Billing records identify the counterparty billed_name as Meridian Energy Partners LLC.",
+      "source_grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Meridian Energy Partners LLC"
+      },
+      "establishes": "other",
+      "relevance": "Associates the left referent (billing:Meridian Energy Partners LLC) with the name used on invoices; bears on whether it could match the registry entity but does not tie billing to registry ID 4721193."
+    }
+  ]
+}

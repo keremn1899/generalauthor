@@ -1,0 +1,58 @@
+{
+  "strategy": "a5_pairwise",
+  "trial": "R03",
+  "obligation_id": "id-14",
+  "candidate": {
+    "left": "billing:Meridian Energy Partners LLC",
+    "right": "registry:4721193"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 4721193"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Meridian Energy Partners LLC"
+    }
+  ],
+  "support_claim": "Each referent is associated with the name Meridian Energy Partners LLC, but no proposition directly establishes that the billing counterparty is registry record 4721193.",
+  "proof_size": 2,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "propositions": [
+    {
+      "proposition": "Registry record 4721193 lists the legal entity name MERIDIAN ENERGY PARTNERS LLC, incorporated in Delaware with active status.",
+      "source_grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 4721193"
+      },
+      "establishes": "other",
+      "relevance": "Associates the right referent (registry:4721193) with a specific registered legal entity name and jurisdiction; bears on whether it could match the billing referent but does not link the two referents directly."
+    },
+    {
+      "proposition": "Billing records identify the counterparty billed_name as Meridian Energy Partners LLC.",
+      "source_grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Meridian Energy Partners LLC"
+      },
+      "establishes": "other",
+      "relevance": "Associates the left referent (billing:Meridian Energy Partners LLC) with the name used on invoices; bears on whether it could match the registry entity but does not tie billing to registry ID 4721193."
+    }
+  ],
+  "admit": {
+    "rule": "proposed_unresolved"
+  },
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

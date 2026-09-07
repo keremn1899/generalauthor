@@ -1,0 +1,40 @@
+{
+  "strategy": "a1_single",
+  "trial": "R01",
+  "obligation_id": "id-03",
+  "candidate": {
+    "left": "billing:Helion Robotics Limited",
+    "right": "contract:MSA-HELION-2019"
+  },
+  "proposed_disposition": "SAME_ENTITY",
+  "final_disposition": "SAME_ENTITY",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/contracts/MSA-HELION-2019.md",
+      "location": "header"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Helion Robotics Limited"
+    }
+  ],
+  "support_claim": "MSA-HELION-2019 names Helion Robotics Ltd as counterparty, commercial notes state Helion Robotics Ltd and Helion Robotics Limited are the same legal entity, and billing records bill Helion Robotics Limited.",
+  "proof_size": 1,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "justification": "Under the identity contract, SAME_ENTITY is licensed because the packet provides establishing evidence\u2014not mere compatibility\u2014that links the two referents to one legal counterparty: the contract header identifies the MSA counterparty as Helion Robotics Ltd., the notes explicitly assert that Helion Robotics Ltd and Helion Robotics Limited are the same legal entity, and invoices confirm the billing referent name; no observation preserves multiple live candidates or states that identity cannot be established, and there is no evidence establishing distinctness.",
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": true,
+  "unsupported_closure": false,
+  "under_closure": false,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": false
+}

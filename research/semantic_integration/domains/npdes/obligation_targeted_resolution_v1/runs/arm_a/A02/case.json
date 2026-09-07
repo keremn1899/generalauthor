@@ -1,0 +1,135 @@
+{
+  "case_id": "A02",
+  "obligation_id": "nodi_c",
+  "occurrence_id": "measurement:dmr_form_value_id=3896611091",
+  "question": "What does NODI code C mean for a FY2025 DMR row with no numeric result?",
+  "purpose": [
+    "C"
+  ],
+  "requirement_schema": "nodi_code_semantics",
+  "source_field_value": "NODI_CODE='C'",
+  "local_structured_context": {
+    "table": "dmr_measurements.csv",
+    "row": {
+      "EXTERNAL_PERMIT_NMBR": "NM0000116",
+      "PARAMETER_CODE": "50050",
+      "PARAMETER_DESC": "Flow, in conduit or thru treatment plant",
+      "MONITORING_PERIOD_END_DATE": "10/31/2024",
+      "DMR_FORM_VALUE_ID": "3896611091",
+      "DMR_VALUE_NMBR": "",
+      "NODI_CODE": "C",
+      "LIMIT_VALUE_ID": "3610129869",
+      "LIMIT_SET_SCHEDULE_ID": "3600833510",
+      "LIMIT_VALUE_NMBR": "",
+      "LIMIT_FREQ_OF_ANALYSIS_CODE": "01/01",
+      "LIMIT_SAMPLE_TYPE_CODE": "ES",
+      "LIMIT_UNIT_DESC": "MGD"
+    }
+  },
+  "reported_model": "Composer 2.5",
+  "retrieval": {
+    "n_tool_paths": 36,
+    "structured_paths": [
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/af5814af10137fabcb4fdf1f52f68038/sources/document_inventory.json",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/af5814af10137fabcb4fdf1f52f68038/sources/permit_limits.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/af5814af10137fabcb4fdf1f52f68038/sources/dmr_measurements.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/af5814af10137fabcb4fdf1f52f68038/sources/permit_limits.csv"
+    ],
+    "document_paths": [
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/af5814af10137fabcb4fdf1f52f68038/documents/INDEX.md",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/af5814af10137fabcb4fdf1f52f68038/documents/farmington",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/af5814af10137fabcb4fdf1f52f68038/documents/gcc",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/af5814af10137fabcb4fdf1f52f68038/documents/gcc/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/af5814af10137fabcb4fdf1f52f68038/documents/gcc/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/af5814af10137fabcb4fdf1f52f68038/documents/gcc/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/af5814af10137fabcb4fdf1f52f68038/documents/gcc/fact_sheet.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/af5814af10137fabcb4fdf1f52f68038/documents/gcc",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/af5814af10137fabcb4fdf1f52f68038/documents/gcc/fact_sheet.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/af5814af10137fabcb4fdf1f52f68038/documents/gcc",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/af5814af10137fabcb4fdf1f52f68038/documents/gcc/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/af5814af10137fabcb4fdf1f52f68038/documents/gcc/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/af5814af10137fabcb4fdf1f52f68038/documents/gcc/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/af5814af10137fabcb4fdf1f52f68038/documents/gcc/fact_sheet.txt"
+    ],
+    "n_documents_touched": 5,
+    "queries": [
+      "3896611091|NM0000116",
+      "NODI|no discharge|no data|NODI_CODE|code C|\\bC\\b.*no",
+      "NODI|no discharge|no data|not required|conditional|storm runoff|flow|50050|no discharge occurred",
+      "3610129869",
+      "NODI|nodi",
+      "zero flow|no discharge|not required|monitoring|DMR|report|discharge occurred|overflow",
+      "No Data|NODI|data indicator|not collected|not available|bypass|skipped|no effluent",
+      "JUDGMENT\\.json|semantic_question_used|SUPPORTED_RESOLUTION",
+      "3610129869|DMR_COMMENT",
+      "\\bC\\b|code|indicator|no discharge|zero flow|infrequent",
+      "PART III|DMR|monitoring report|no data|not required|bypass|discharge occurred",
+      "NODI|No Data Indicator|no discharge indicator|bypass indicator",
+      "discharge is very infrequent|overflow|no discharge|storm runoff",
+      "JUDGMENT|nodi_code_semantics|semantic_question"
+    ],
+    "n_queries": 14
+  },
+  "judgment": {
+    "occurrence_id": "measurement:dmr_form_value_id=3896611091",
+    "semantic_question_used": "For this FY2025 no-numeric-result flow measurement (parameter 50050, monitoring period ending 2024-10-31, NODI code C), what does NODI code 'C' establish about the missing-evidence state\u2014documented no-discharge, conditional monitoring not required, other documented no-data, or required monitoring lacking adequate evidence?",
+    "disposition": "UNRESOLVED",
+    "interpretation": "The occurrence is a Federal FY2025 DMR flow measurement (parameter 50050, Outfall 001, permit NM0000116) with an empty numeric result and NODI_CODE 'C'. Purpose C requires interpreting nodi_code semantics, but no workspace source defines what NODI code 'C' means or maps it to any missing-evidence category. Permit-package text for NM0000116 describes that authorized discharges are restricted to retention-pond overflows during catastrophic or chronic precipitation and that discharge is very infrequent, but it does not define DMR NODI codes or state that code 'C' documents no discharge or any other no-data condition for this measurement. The structured limit row for LIMIT_VALUE_ID 3610129869 has no DMR_COMMENT_TEXT and OPTIONAL_MONITORING_FLAG 'N', so structured sources alone do not link this NODI value to a specific missing-evidence semantics.",
+    "grounding": {
+      "requirement": "nodi_code_semantics",
+      "purpose": "C",
+      "permit": "NM0000116",
+      "parameter_code": "50050",
+      "monitoring_period_end": "2024-10-31",
+      "nodi_code": "C",
+      "dmr_form_value_id": "3896611091",
+      "limit_value_id": "3610129869",
+      "has_reported_value": false,
+      "optional_monitoring_flag": "N",
+      "dmr_comment_text": "",
+      "documents_searched_for_nodi_definition": true,
+      "nodi_definition_found_in_workspace": false
+    },
+    "documents_opened": [
+      "documents/INDEX.md",
+      "documents/gcc/final_permit.txt",
+      "documents/gcc/fact_sheet.txt",
+      "documents/gcc/minor_modification.txt",
+      "documents/gcc/part_ii_appendix.txt",
+      "documents/gcc/reasonable_potential.txt",
+      "sources/dmr_measurements.csv",
+      "sources/permit_limits.csv",
+      "sources/document_inventory.json",
+      "construction.py",
+      "purposes/visible_c.md"
+    ],
+    "snippets": [
+      {
+        "source_id": "sources/dmr_measurements.csv",
+        "text": "EXTERNAL_PERMIT_NMBR=NM0000116, PARAMETER_CODE=50050, PARAMETER_DESC=Flow, in conduit or thru treatment plant, MONITORING_PERIOD_END_DATE=10/31/2024, DMR_FORM_VALUE_ID=3896611091, DMR_VALUE_NMBR= (empty), NODI_CODE=C, LIMIT_VALUE_ID=3610129869, LIMIT_FREQ_OF_ANALYSIS_CODE=01/01, LIMIT_SAMPLE_TYPE_CODE=ES, LIMIT_UNIT_DESC=MGD"
+      },
+      {
+        "source_id": "construction.py",
+        "text": "purpose.require_interpreted(\"nodi_code_semantics\", relation=\"no_numeric_result_case\", field=\"nodi_code\", known=[\"\"], purpose=\"C\", per=\"measurement\")"
+      },
+      {
+        "source_id": "purposes/visible_c.md",
+        "text": "For Federal FY2025 monitoring expectations without an ordinary numeric reported result, determine what the available evidence establishes. Distinguish documented no-discharge periods, periods where conditional monitoring was not required, other documented no-data states, required monitoring that appears to lack adequate evidence, and cases that remain unresolved."
+      },
+      {
+        "source_id": "documents/gcc/final_permit.txt",
+        "text": "2. Discharges are restricted to overflows from the retention pond due to catastrophic or chronic precipitation events."
+      },
+      {
+        "source_id": "documents/gcc/fact_sheet.txt",
+        "text": "In addition, because discharge is very infrequent, with the last discharge occuring more than five years ago, it is impossible to have the permittee submit data satisfying SSM because of the inability to obtain a sample to analyze."
+      },
+      {
+        "source_id": "documents/gcc/final_permit.txt",
+        "text": "Flow Report MGD Report MGD *** *** 1/Day Estimate"
+      }
+    ],
+    "remaining_uncertainty": "The workspace contains no authoritative definition or legend for NODI code 'C', so the missing-evidence semantics of this code cannot be established from available evidence. Permit narrative establishes general discharge-restriction context for Outfall 001 but does not tie NODI code 'C' on the October 2024 flow DMR to a documented no-discharge period or any other Purpose C category for this specific measurement."
+  },
+  "finished_at": "2026-09-05T13:04:42.279417+00:00"
+}

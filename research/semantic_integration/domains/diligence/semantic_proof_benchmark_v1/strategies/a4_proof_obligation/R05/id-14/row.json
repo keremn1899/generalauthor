@@ -1,0 +1,56 @@
+{
+  "strategy": "a4_proof_obligation",
+  "trial": "R05",
+  "obligation_id": "id-14",
+  "candidate": {
+    "left": "billing:Meridian Energy Partners LLC",
+    "right": "registry:4721193"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 4721193"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Meridian Energy Partners LLC"
+    }
+  ],
+  "support_claim": "The packet shows a registry row for 4721193 and a billing name with similar wording, but provides no explicit evidence linking the billing referent to that registry identifier or establishing that they are distinct entities.",
+  "proof_size": 2,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "proof_obligations": [
+    {
+      "obligation": "Establish that billing:Meridian Energy Partners LLC and registry:4721193 denote the same legal counterparty",
+      "required_for": "SAME_ENTITY",
+      "satisfied": false,
+      "evidence": []
+    },
+    {
+      "obligation": "Establish that billing:Meridian Energy Partners LLC and registry:4721193 denote distinct legal counterparties",
+      "required_for": "DISTINCT",
+      "satisfied": false,
+      "evidence": []
+    }
+  ],
+  "admit": {
+    "rule": "unresolved"
+  },
+  "unsatisfied": [
+    "Establish that billing:Meridian Energy Partners LLC and registry:4721193 denote the same legal counterparty",
+    "Establish that billing:Meridian Energy Partners LLC and registry:4721193 denote distinct legal counterparties"
+  ],
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

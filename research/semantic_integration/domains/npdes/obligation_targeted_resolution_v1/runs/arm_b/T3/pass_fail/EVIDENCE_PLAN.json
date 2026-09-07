@@ -1,0 +1,31 @@
+{
+  "proposition": "PASS=0 / FAIL=1 in DMR_COMMENT_TEXT instructs binary whole-effluent-toxicity (WET) pass/fail reporting (0=pass, 1=fail) based on whether NOEC for survival is below the critical dilution; it is not an ordinary numeric pollutant-concentration comparison against an effluent limit.",
+  "would_establish": [
+    "DMR_COMMENT_TEXT on permit_limits rows for NM0020583 WET limit set explicitly stating PASS=0 and FAIL=1 with reporting instructions",
+    "Permit Part II WET reporting table mapping TEM3D/TEM6C and retest STORET codes to enter 1 if NOEC < critical dilution else 0",
+    "Structured unit encoding pass=0;fail=1 on pass/fail parameters (TEM*, retest codes) with empty numeric limit values",
+    "Reported DMR measurements using pass=0;fail=1 units with values 0 or 1, not concentration magnitudes",
+    "Permit text separately requiring numeric NOEC reporting on TOM* parameters in percent"
+  ],
+  "would_refute": [
+    "Permit or structured evidence showing PASS/FAIL values are compared numerically to a concentration limit (mg/L, %, etc.)",
+    "Evidence that 0 and 1 represent measured pollutant concentrations rather than categorical test outcomes",
+    "Codebook or limit row assigning a numeric LIMIT_VALUE_NMBR to pass/fail parameters for concentration comparison"
+  ],
+  "likely_authoritative_source_types": [
+    "sources/permit_limits.csv DMR_COMMENT_TEXT and unit fields for WET parameters",
+    "documents/farmington/final_permit.txt Part II Whole Effluent Toxicity reporting requirements",
+    "sources/dmr_measurements.csv reported values and units for TEM3D/TEM6C"
+  ],
+  "insufficient_alone": [
+    "Presence of PASS=0/FAIL=1 comment text without permit narrative reporting table",
+    "LIMIT_VALUE_TYPE_CODE C3 or STATISTICAL_BASE MAX without WET context",
+    "Co-occurrence of the shared comment on TOM/TQM rows that use percent units",
+    "DMR phrase 'CONCENTRATION MAX' without cross-reading permit reporting instructions"
+  ],
+  "unknowable_from_structured_data_alone": [
+    "That 0 means NOEC at or above critical dilution (pass) and 1 means NOEC below critical dilution (fail)",
+    "That pass/fail applies only to TEM and retest STORET codes, not to separate numeric NOEC (TOM) or COV (TQM) fields in the same limit set",
+    "The biological/statistical criteria defining pass vs fail (critical dilution comparison)"
+  ]
+}

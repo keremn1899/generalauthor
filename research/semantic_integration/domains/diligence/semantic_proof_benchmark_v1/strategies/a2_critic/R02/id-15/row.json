@@ -1,0 +1,44 @@
+{
+  "strategy": "a2_critic",
+  "trial": "R02",
+  "obligation_id": "id-15",
+  "candidate": {
+    "left": "crm:HEL-441",
+    "right": "registry:11847299"
+  },
+  "proposed_disposition": "DISTINCT",
+  "final_disposition": "DISTINCT",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row HEL-441"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 11847299"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "CRM HEL-441 names Helion Robotics Ltd while registry 11847299 names HELION INDUSTRIAL SYSTEMS LTD, and the commercial notes state that Helion Industrial Systems Ltd is a different company from the Helion Robotics entity.",
+  "proof_size": 2,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "critic": {
+    "decision": "CONFIRM",
+    "reason": "The packet ties HEL-441 to Helion Robotics Ltd, registry 11847299 to HELION INDUSTRIAL SYSTEMS LTD, and the commercial notes explicitly state that Helion Industrial Systems Ltd is a different company from the Helion Robotics entity."
+  },
+  "critic_reason": "confirmed",
+  "oracle": "DISTINCT",
+  "in_oracle": true,
+  "exact": true,
+  "unsupported_closure": false,
+  "under_closure": false,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": false
+}

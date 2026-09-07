@@ -1,0 +1,301 @@
+{
+  "purposes": {
+    "A": {
+      "objective": "Using only authoritative data-room sources, determine which represented billed revenue is tied to counterparties whose active contracts contain acquisition-relevant conditions, and report each qualifying invoice with source-native identifiers and invoice attributes.",
+      "universe_scope": {
+        "source_constraint": "Authoritative files in this data room only; no external knowledge.",
+        "entities_in_scope": [
+          "represented billed revenue (invoices)",
+          "contracts governing commercial relationships",
+          "counterparties named on invoices and contracts"
+        ],
+        "exclusions": [
+          "expired statements of work are not active contracts",
+          "invoices without a qualifying active contract and acquisition-relevant clause are out of scope for inclusion"
+        ]
+      },
+      "required_output_shape": {
+        "path": "purpose_ir/a/output.json",
+        "format": "JSON (no prose memo)",
+        "schema": {
+          "purpose": "contractual_revenue_exposure",
+          "invoices": [
+            {
+              "invoice_id": "string",
+              "billed_name": "string",
+              "amount": "number",
+              "currency": "string",
+              "period": "string",
+              "status": "string",
+              "contract_id": "string",
+              "association": "asserted | unresolved"
+            }
+          ]
+        },
+        "ordering": "Sort invoices by invoice_id ascending.",
+        "identifier_rendering": "Report invoice_id and contract_id as they appear in sources (consumer may strip prefixes downstream)."
+      },
+      "required_semantic_distinctions": {
+        "world_eligible": [
+          "invoice exists with billed_name, amount, currency, period, status as represented in billing sources",
+          "contract exists and is identifiable by source-native contract identifier",
+          "contract counterparty text as represented in contract sources",
+          "contractual clause text or structured extraction of clause kinds present in a contract",
+          "contract active vs expired status as a source-grounded temporal/state fact",
+          "invoice-to-contract linkage when confidently established from sources or mechanical joins"
+        ],
+        "purpose_analytical": [
+          "acquisition-relevant condition: clause kind matching change-of-control consent/notice, change-of-control termination right, or assignment consent/notice restriction (including affiliate-only assignment, competitor prohibition)",
+          "qualifying invoice: billed revenue row included because it satisfies purpose inclusion policy (active contract + acquisition-relevant clause)",
+          "association disposition: asserted vs unresolved for invoice billed_name to contract counterparty"
+        ]
+      },
+      "epistemic_requirements": [
+        "Missing or uncertain identity between a billed name and a contract counterparty must not be treated as a negative contractual finding.",
+        "When invoice-to-contract counterparty association cannot be made confidently, emit the invoice with association=unresolved rather than omitting it or asserting a join.",
+        "Positive inclusion (association=asserted) requires confident linkage; absence of confidence is not evidence of non-exposure.",
+        "Ground persistent world assertions; purpose output reflects analytical disposition under stated policies."
+      ],
+      "allowed_unresolved_states": [
+        {
+          "field": "association",
+          "value": "unresolved",
+          "meaning": "Invoice is in scope for reporting but billed_name-to-contract counterparty linkage is not confidently established."
+        }
+      ],
+      "completeness_expectations": {
+        "row_coverage": "Every invoice that qualifies under purpose inclusion policy (represented billed revenue on an active contract with an acquisition-relevant condition) must appear in output.",
+        "field_coverage": "For each included invoice, populate amount, currency, period, status, contract_id from sources; association must be asserted or unresolved.",
+        "sorting": "Complete sorted list by invoice_id; no silent drops for unresolved association.",
+        "receipt_note": "Completeness is relative to purpose-defined qualifying set, not closed-world negation over all invoices."
+      },
+      "purpose_specific_policies": {
+        "acquisition_relevant_conditions": {
+          "policy_type": "purpose_threshold",
+          "includes": [
+            "consent or notice required on change of control",
+            "termination permitted upon change of control",
+            "consent or notice required before assignment, including assignment restricted to affiliates only or prohibited to competitors"
+          ],
+          "world_distinction": "World may record clause text and extracted clause kinds; acquisition-relevance is the analytical filter for purpose A."
+        },
+        "active_contract": {
+          "policy_type": "purpose_threshold",
+          "rule": "An expired statement of work is not an active contract for this purpose.",
+          "world_distinction": "World may record contract type, dates, and status facts; active-for-purpose-A is a policy classification."
+        },
+        "row_inclusion": {
+          "policy_type": "purpose_filter",
+          "rule": "Include invoice rows where the governing contract is active under purpose policy and contains at least one acquisition-relevant condition."
+        },
+        "association_mapping": {
+          "policy_type": "purpose_disposition",
+          "asserted": "Confident invoice billed_name to contract counterparty association established.",
+          "unresolved": "Association not confidently established; still report invoice if otherwise qualifying."
+        },
+        "output_constraints": [
+          "No prose memo.",
+          "Do not omit qualifying invoices solely because association is unresolved."
+        ]
+      }
+    },
+    "B": {
+      "objective": "Using only authoritative data-room sources, reconcile represented customer and commercial identities across CRM, billing, company registry, and contracts; report whether records can be confidently treated as the same legal counterparty or remain unresolved.",
+      "universe_scope": {
+        "source_constraint": "Authoritative files in this data room only.",
+        "systems_in_scope": [
+          "CRM accounts",
+          "billing (invoice billed names)",
+          "company registry",
+          "contracts"
+        ],
+        "entities_in_scope": "Every commercially relevant name or record needed to connect CRM, billing, contract, and registry candidates for a relationship."
+      },
+      "required_output_shape": {
+        "path": "purpose_ir/b/output.json",
+        "format": "JSON (no prose memo)",
+        "schema": {
+          "purpose": "counterparty_reconciliation",
+          "links": [
+            {
+              "left": "string",
+              "right": "string",
+              "epistemic": "SAME_ENTITY | DISTINCT | UNRESOLVED"
+            }
+          ]
+        },
+        "identifier_forms": {
+          "crm": "crm:<crm_account_id>",
+          "billing": "billing:<billed_name>",
+          "registry": "registry:<company_number>",
+          "contract": "contract:<filename without .md>"
+        },
+        "ordering": "Sort links by left ascending, then right ascending."
+      },
+      "required_semantic_distinctions": {
+        "world_eligible": [
+          "CRM account records with account identifiers and names as represented",
+          "invoice billed names as represented in billing",
+          "registry rows with company numbers and legal names",
+          "contract filenames and counterparty text as represented",
+          "identity_judgment between two referents: SAME_ENTITY, DISTINCT, or UNRESOLVED with bounded evidence"
+        ],
+        "purpose_analytical": [
+          "required link set: pairs needed to connect a CRM account, its billed name, the governing contract, and candidate registry legal entities for that relationship",
+          "orientation policy: class-rank ordering of emitted links",
+          "mechanical same-entity allowance for exact legal-form variants of the same registered name"
+        ]
+      },
+      "epistemic_requirements": [
+        "Do not globally merge records merely because two names look similar.",
+        "Exact legal-form variants of the same registered name may be treated as mechanical same-entity judgments.",
+        "Distinct registry entities with similar trade names are not automatically the same party.",
+        "Missing a positive same-entity judgment is not a negative (DISTINCT) judgment.",
+        "Explicit UNRESOLVED is permitted and preferred over speculative SAME_ENTITY or DISTINCT.",
+        "SAME_ENTITY and DISTINCT require establishing evidence, not mere compatibility or string similarity."
+      ],
+      "allowed_unresolved_states": [
+        {
+          "field": "epistemic",
+          "value": "UNRESOLVED",
+          "meaning": "Insufficient evidence to assert SAME_ENTITY or DISTINCT for the left-right pair."
+        }
+      ],
+      "completeness_expectations": {
+        "link_coverage": "Include every link required to connect a CRM account, its billed name, the contract governing that relationship, and any registry row that is a candidate legal entity for that relationship.",
+        "pair_orientation": "Emit directed left/right pairs per schema; cover required connectivity without claiming global entity closure.",
+        "sorting": "Complete sorted list by left then right.",
+        "receipt_note": "Completeness targets required relationship wiring, not an exhaustive all-pairs Cartesian product over the data room."
+      },
+      "purpose_specific_policies": {
+        "merge_policy": {
+          "policy_type": "purpose_threshold",
+          "forbid": "Global merge on fuzzy or similar-looking names alone.",
+          "permit_mechanical": "Exact legal-form variants of the same registered name may be collapsed mechanically."
+        },
+        "negative_judgment_policy": {
+          "policy_type": "epistemic_policy",
+          "rule": "Absence of SAME_ENTITY is not DISTINCT; DISTINCT requires positive establishing evidence."
+        },
+        "required_link_set": {
+          "policy_type": "purpose_coverage",
+          "rule": "Emit links connecting CRM account, billed name, governing contract, and registry candidates for each commercially relevant relationship."
+        },
+        "disposition_vocabulary": {
+          "policy_type": "purpose_output",
+          "allowed": ["SAME_ENTITY", "DISTINCT", "UNRESOLVED"],
+          "world_alignment": "Maps to identity_judgment dispositions; REJECT (if used in resolution) maps to DISTINCT in output per consumer contract."
+        },
+        "output_constraints": [
+          "No prose memo.",
+          "Use prescribed identifier prefix forms only."
+        ]
+      }
+    },
+    "C": {
+      "objective": "Using only authoritative data-room sources, compute a commercial dependency view: identify counterparties that are commercially dependent under a two-part test involving current commercial relationship and specific obligation kinds in active contracts.",
+      "universe_scope": {
+        "source_constraint": "Authoritative files in this data room only.",
+        "entities_in_scope": [
+          "counterparties (using purpose B identifier forms)",
+          "contracts",
+          "open invoices"
+        ],
+        "exclusions": [
+          "expired contracts do not create current dependency",
+          "one-off paid historical invoice without an active contract does not create current dependency"
+        ]
+      },
+      "required_output_shape": {
+        "path": "purpose_ir/c/output.json",
+        "format": "JSON (no prose memo)",
+        "schema": {
+          "purpose": "commercial_dependency",
+          "dependencies": [
+            {
+              "counterparty": "string",
+              "contract_id": "string",
+              "open_invoice_ids": ["string"],
+              "obligation_kinds": ["string"],
+              "status": "dependent | unresolved"
+            }
+          ]
+        },
+        "identifier_forms": "Same as purpose B (crm:, billing:, registry:, contract:).",
+        "obligation_kinds_vocabulary": ["exclusivity", "auto_renewal", "rolling_term"],
+        "ordering": "Sort dependencies by contract_id ascending; obligation_kinds sorted within each row."
+      },
+      "required_semantic_distinctions": {
+        "world_eligible": [
+          "invoice open vs closed/paid status as represented",
+          "contract active vs expired status and term structure as represented",
+          "presence of exclusivity, auto-renewal, or rolling-term clauses in contract text or extractions",
+          "counterparty referents linkable across billing and contracts when identity is established"
+        ],
+        "purpose_analytical": [
+          "current commercial relationship: open invoice OR active contract that auto-renews or continues on a rolling term",
+          "commercial dependency: both current relationship and at least one obligation kind from {exclusivity, auto_renewal, rolling_term}",
+          "status dependent vs unresolved when identity joins required for the dependency view are not confident"
+        ]
+      },
+      "epistemic_requirements": [
+        "If identity needed to join invoice and contract is unresolved, report dependency status=unresolved rather than status=dependent or silently excluding the row.",
+        "Unresolved identity is not evidence of non-dependency.",
+        "Dependency is a purpose classification over world facts, not a bare contract-exists fact.",
+        "Ground world facts about invoice status, contract terms, and clause kinds separately from the dependent/unresolved disposition."
+      ],
+      "allowed_unresolved_states": [
+        {
+          "field": "status",
+          "value": "unresolved",
+          "meaning": "Counterparty-contract-invoice dependency cannot be confidently computed because required identity linkage is unresolved or evidence is insufficient under purpose policies."
+        }
+      ],
+      "completeness_expectations": {
+        "row_coverage": "Emit a dependency row for each counterparty-contract candidate that meets or plausibly meets the dependency test; mark unresolved rather than omit when joins fail.",
+        "field_coverage": "Populate open_invoice_ids (possibly empty when relationship is contract-only), obligation_kinds (sorted subset of vocabulary), and counterparty identifier.",
+        "sorting": "Complete sorted list by contract_id.",
+        "receipt_note": "Completeness does not require asserting non-dependency rows for excluded cases (expired-only, historical one-off); exclusions are purpose policy, not closed-world negation."
+      },
+      "purpose_specific_policies": {
+        "dependency_test": {
+          "policy_type": "purpose_threshold",
+          "requires_both": [
+            {
+              "name": "current_commercial_relationship",
+              "satisfiers": [
+                "open invoice exists for the counterparty relationship",
+                "active contract that auto-renews or continues on a rolling term"
+              ]
+            },
+            {
+              "name": "obligation_kind_present",
+              "satisfiers": ["exclusivity", "auto_renewal", "rolling_term"]
+            }
+          ],
+          "world_distinction": "World records invoice status, contract term facts, and clause kinds; dependent is the conjunction under this policy."
+        },
+        "exclusion_rules": {
+          "policy_type": "purpose_filter",
+          "rules": [
+            "Expired contracts do not create current dependency.",
+            "A one-off paid historical invoice without an active contract does not create current dependency."
+          ]
+        },
+        "identity_dependency": {
+          "policy_type": "epistemic_policy",
+          "rule": "Reuse purpose B identifier forms and identity judgments; unresolved cross-source identity forces status=unresolved for purpose C."
+        },
+        "obligation_kinds": {
+          "policy_type": "purpose_vocabulary",
+          "allowed_values": ["exclusivity", "auto_renewal", "rolling_term"],
+          "output_rule": "Sorted list of kinds present in the active contract for the row."
+        },
+        "output_constraints": [
+          "No prose memo.",
+          "Do not report false non-dependency when identity is unresolved."
+        ]
+      }
+    }
+  }
+}

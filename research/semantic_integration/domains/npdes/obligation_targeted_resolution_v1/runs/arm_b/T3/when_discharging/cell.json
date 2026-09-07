@@ -1,0 +1,770 @@
+{
+  "trial": "T3",
+  "obligation_id": "when_discharging",
+  "n_occurrences": 17,
+  "reported_model_retrieve": "Composer 2.5",
+  "reported_model_adjudicate": "Composer 2.5",
+  "retrieval": {
+    "n_tool_paths": 26,
+    "structured_paths": [
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/7ad66b2c16acc15877a60671cf6a7dbb/sources/document_inventory.json",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/7ad66b2c16acc15877a60671cf6a7dbb/sources/permit_limits.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/7ad66b2c16acc15877a60671cf6a7dbb/sources/dmr_measurements.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/7ad66b2c16acc15877a60671cf6a7dbb/sources/dmr_measurements.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/7ad66b2c16acc15877a60671cf6a7dbb/sources/dmr_measurements.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/7ad66b2c16acc15877a60671cf6a7dbb/sources/permit_limits.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/7ad66b2c16acc15877a60671cf6a7dbb/sources/dmr_measurements.csv"
+    ],
+    "document_paths": [
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/7ad66b2c16acc15877a60671cf6a7dbb/documents/INDEX.md",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/7ad66b2c16acc15877a60671cf6a7dbb/documents/farmington",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/7ad66b2c16acc15877a60671cf6a7dbb/documents/aztec/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/7ad66b2c16acc15877a60671cf6a7dbb/documents/aztec/statement_of_basis.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/7ad66b2c16acc15877a60671cf6a7dbb/documents/aztec",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/7ad66b2c16acc15877a60671cf6a7dbb/documents/aztec/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/7ad66b2c16acc15877a60671cf6a7dbb/documents/aztec/statement_of_basis.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/7ad66b2c16acc15877a60671cf6a7dbb/documents/aztec/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/7ad66b2c16acc15877a60671cf6a7dbb/documents/aztec/statement_of_basis.txt"
+    ],
+    "n_documents_touched": 5,
+    "queries": [
+      "when discharg",
+      "WHEN DISCHARGING",
+      "3610840344|3610840345|3610840341|3610840343|NM0028762",
+      "when discharg|backwash|WHEN DISCHARGING",
+      "when discharg|backwash|intermittent|optional|no discharge|not discharg",
+      "3610840344|3610840345|3610840341|3610840343",
+      "3600657420|3600657419",
+      ",N,.*3600657420|,N,.*3600657419"
+    ],
+    "n_queries": 8
+  },
+  "plan": {
+    "proposition": "The DMR_COMMENT_TEXT value 'WHEN DISCHARGING' (mirroring permit footnote *1) conditions monitoring frequency and sample-collection obligations to periods when the outfall is actually discharging; it does not suspend numeric effluent limits when no discharge occurs, and discharge occurrence in a given monitoring period is a separate factual determination.",
+    "would_establish": [
+      "Permit-package text for NM0028762 defining footnote *1 as 'When discharging.' and attaching it to monitoring-frequency markers (*1) in the effluent limit table",
+      "Permit narrative stating specific parameters 'shall be monitored [daily/weekly/quarterly] when discharging'",
+      "Permit NO DISCHARGE REPORTING instruction for months with no discharge from any outfall",
+      "Structured permit_limits rows showing DMR_COMMENT_TEXT='WHEN DISCHARGING.' on the affected limit sets with OPTIONAL_MONITORING_FLAG=N and ENF limit type"
+    ],
+    "would_refute": [
+      "Permit text stating numeric effluent limits do not apply or are waived whenever discharge does not occur",
+      "Permit text equating 'WHEN DISCHARGING' with OPTIONAL_MONITORING_FLAG=Y or making the limits themselves discharge-conditional rather than monitoring-conditional",
+      "Evidence that DMR_COMMENT_TEXT 'WHEN DISCHARGING' appears on permits other than NM0028762 with materially different footnote semantics"
+    ],
+    "likely_authoritative_source_types": [
+      "final_permit.txt effluent limit table and footnotes for NM0028762",
+      "statement_of_basis.txt monitoring-frequency rationale for NM0028762",
+      "permit_limits.csv DMR_COMMENT_TEXT and monitoring metadata for affected rows",
+      "dmr_measurements.csv reported values and NODI/optional-monitoring fields for the same limit sets"
+    ],
+    "insufficient_alone": [
+      "DMR_COMMENT_TEXT string in permit_limits.csv without permit footnote or narrative text",
+      "Presence of reported DMR values in dmr_measurements.csv (does not establish discharge occurrence or comment semantics)",
+      "OPTIONAL_MONITORING_FLAG=N (indicates limits are not optional-monitoring rows, not the meaning of the comment)",
+      "document_inventory.json filename listing without opening permit text"
+    ],
+    "unknowable_from_structured_data_alone": [
+      "Whether discharge actually occurred in any specific monitoring period",
+      "Automatic mapping from DMR_COMMENT_TEXT to permit footnote *1 without permit document text",
+      "Compliance disposition for a no-discharge month absent DMR no-discharge indicator fields in structured extracts"
+    ]
+  },
+  "packet": {
+    "obligation_id": "when_discharging",
+    "exact_semantic_question": "What does the permit-limit comment 'WHEN DISCHARGING' do to monitoring/limit applicability?",
+    "purpose": [
+      "B",
+      "C"
+    ],
+    "relation_contract": "comment conditions monitoring; discharge occurrence in a period is a separate factual question",
+    "candidate_interpretations": [
+      {
+        "id": "monitoring_conditional",
+        "text": "The comment makes stated monitoring frequencies and sample collection apply only during periods when the outfall is discharging; months with no discharge are handled via NO DISCHARGE DMR reporting instead of performing the (*1)-marked monitoring.",
+        "support": "Permit footnote *1 'When discharging.' annotates monitoring-frequency cells; statement of basis repeats 'when discharging' for flow, TRC, pH, TDS, and cyanide monitoring."
+      },
+      {
+        "id": "limit_waived_no_discharge",
+        "text": "The comment suspends numeric effluent limit applicability whenever discharge does not occur in a period.",
+        "support": "Not found in permit text; Part I.A numeric limits remain specified and excursion/violation language applies to reported DMR values exceeding limits."
+      },
+      {
+        "id": "optional_monitoring_flag",
+        "text": "The comment is equivalent to OPTIONAL_MONITORING_FLAG=Y, making the limit row optional.",
+        "support": "Refuted structurally: all 17 affected rows have OPTIONAL_MONITORING_FLAG=N and LIMIT_TYPE_CODE=ENF."
+      }
+    ],
+    "retained_snippets": [
+      {
+        "source_id": "documents/aztec/final_permit.txt",
+        "location": "lines 72\u201379, 92\u201393",
+        "text": "pH ... 1/Week (*1) ... Flow ... 2/Week (*1) ... Total Suspended Solids ... 1/Week (*1) ... Total Residual Chlorine ... 1/Day (*1) ... Cyanide, Total Recoverable ... 1/Quarter (*1) ... Total Dissolved Solids ... 1/Quarter (*1)\n\nFootnotes:\n*1 When discharging.",
+        "why_retained": "Authoritative permit definition of footnote *1 and its attachment to monitoring-frequency requirements; DMR_COMMENT_TEXT 'WHEN DISCHARGING.' mirrors this footnote."
+      },
+      {
+        "source_id": "documents/aztec/final_permit.txt",
+        "location": "lines 150\u2013153",
+        "text": "5. NO DISCHARGE REPORTING\n\nIf there is no discharge from any outfall during the sampling month, place an \"X\" in the NO DISCHARGE box located in the upper right corner of the Discharge Monitoring Report.",
+        "why_retained": "Establishes the permit's alternate reporting path when monitoring conditioned on discharge does not apply because no discharge occurred in the month."
+      },
+      {
+        "source_id": "documents/aztec/final_permit.txt",
+        "location": "lines 56\u201366",
+        "text": "1. FINAL Effluent Limits \u2013 Outfall 001 \u2013 Intermittent Flow\n\n   During the period beginning the effective date of the permit and lasting to the permit expiration date (unless otherwise noted), the permittee is authorized to discharge backwash water ... Such discharges shall be limited and monitored by the permittee as specified below.",
+        "why_retained": "Context that the outfall is intermittent backwash discharge; limits remain specified while monitoring is discharge-dependent."
+      },
+      {
+        "source_id": "documents/aztec/statement_of_basis.txt",
+        "location": "lines 506\u2013511",
+        "text": "Flow shall be estimated daily when discharging. Estimated flow measurements are not subject to the accuracy provisions established at Part III.C.6 of the permit. The pollutant TRC shall be monitored daily when discharging by instantaneous grab which according to Part 136 is defined as analysis within 15 minutes of collection. pH shall continue to be monitored weekly when discharging. TDS and Cyanide total recoverable shall be monitored once per quarter by grab sample.",
+        "why_retained": "Permit-writer rationale explicitly conditioning monitoring frequency on discharge occurrence for each limited parameter."
+      },
+      {
+        "source_id": "documents/aztec/statement_of_basis.txt",
+        "location": "lines 146\u2013147",
+        "text": "Filter backwash using potable water occurs from once per day to once every three to four days depending on the plant and the time of year.",
+        "why_retained": "Operational basis for intermittent discharge that motivates discharge-conditioned monitoring rather than calendar-fixed sampling every period."
+      },
+      {
+        "source_id": "sources/permit_limits.csv",
+        "location": "row LIMIT_VALUE_ID=3610840344, LIMIT_SET_SCHEDULE_ID=3600904607",
+        "text": "NM0028762,LIMIT_SET_NAME=DISCHARGE BACKWASH WATER,DMR_COMMENT_TEXT=WHEN DISCHARGING.,PARAMETER_CODE=00400 (pH),OPTIONAL_MONITORING_FLAG=N,LIMIT_TYPE_CODE=ENF,LIMIT_FREQ_OF_ANALYSIS_CODE=01/07",
+        "why_retained": "Representative structured row showing the comment on an enforceable, non-optional limit with weekly monitoring frequency code."
+      },
+      {
+        "source_id": "sources/permit_limits.csv",
+        "location": "row LIMIT_VALUE_ID=3610840336, LIMIT_SET_SCHEDULE_ID=3600904606",
+        "text": "NM0028762,LIMIT_SET_NAME=QUARTERLY REPORTING,DMR_COMMENT_TEXT=WHEN DISCHARGING.,PARAMETER_CODE=70295 (Solids total dissolved),OPTIONAL_MONITORING_FLAG=N,LIMIT_TYPE_CODE=ENF,LIMIT_FREQ_OF_ANALYSIS_CODE=01/90",
+        "why_retained": "Shows the same comment on the quarterly limit set (8 of 17 occurrences), confirming comment applies across both monthly and quarterly monitoring schedules."
+      },
+      {
+        "source_id": "documents/aztec/final_permit.txt",
+        "location": "lines 155\u2013163",
+        "text": "6. If any daily maximum or monthly average value exceeds the effluent limitations specified in Part I. A, the permittee shall report the excursion ...\n7. Any daily maximum or monthly average value reported in the required Discharge Monitoring Report which is in excess of the effluent limitation specified in Part I. A shall constitute evidence of violation of such effluent limitation and of this permit.",
+        "why_retained": "Shows numeric limits remain enforceable for reported values; the comment does not waive limit applicability when discharge is absent."
+      }
+    ],
+    "contradictory_evidence": [],
+    "known_limitations": [
+      "All 17 workspace occurrences of DMR_COMMENT_TEXT 'WHEN DISCHARGING' are on permit NM0028762; resolution is grounded in the aztec permit package only.",
+      "Structured CSVs do not encode an explicit link field between DMR_COMMENT_TEXT and permit footnote *1; linkage is established by textual match and co-occurring limit parameters/frequencies.",
+      "Whether discharge occurred in any specific monitoring period cannot be determined from structured CSV fields alone; that remains a separate operational fact.",
+      "Structured DMR extracts in this workspace do not include a NO DISCHARGE indicator field, so no-discharge months cannot be identified programmatically from dmr_measurements.csv."
+    ],
+    "allowed_dispositions": [
+      "SUPPORTED_RESOLUTION",
+      "SUPPORTED_NEGATIVE",
+      "UNRESOLVED"
+    ]
+  },
+  "judgment": {
+    "disposition": "SUPPORTED_RESOLUTION",
+    "grounding": [
+      {
+        "source_id": "documents/aztec/final_permit.txt",
+        "location": "lines 72-79, 92-93",
+        "proposition": "Footnote *1 'When discharging.' annotates monitoring-frequency cells (pH, Flow, TSS, TRC, Cyanide, TDS); DMR_COMMENT_TEXT 'WHEN DISCHARGING.' mirrors this footnote."
+      },
+      {
+        "source_id": "documents/aztec/final_permit.txt",
+        "location": "lines 150-153",
+        "proposition": "When no discharge occurs in a sampling month, the permittee reports via the NO DISCHARGE box on the DMR instead of performing discharge-conditioned monitoring."
+      },
+      {
+        "source_id": "documents/aztec/final_permit.txt",
+        "location": "lines 56-66",
+        "proposition": "Outfall 001 is intermittent backwash discharge; numeric limits remain specified while monitoring is discharge-dependent."
+      },
+      {
+        "source_id": "documents/aztec/statement_of_basis.txt",
+        "location": "lines 506-511",
+        "proposition": "Permit writer explicitly conditions flow, TRC, pH, TDS, and cyanide monitoring frequencies on discharge occurrence ('when discharging')."
+      },
+      {
+        "source_id": "documents/aztec/final_permit.txt",
+        "location": "lines 155-163",
+        "proposition": "Numeric effluent limits remain enforceable for reported DMR values; excursions constitute violations. The comment does not suspend limit applicability when discharge is absent."
+      },
+      {
+        "source_id": "sources/permit_limits.csv",
+        "location": "rows LIMIT_VALUE_ID=3610840344 and 3610840336",
+        "proposition": "Representative structured rows carry DMR_COMMENT_TEXT=WHEN DISCHARGING. with OPTIONAL_MONITORING_FLAG=N and LIMIT_TYPE_CODE=ENF across monthly and quarterly limit sets (17 total occurrences on NM0028762)."
+      }
+    ],
+    "interpretation": "The comment 'WHEN DISCHARGING' (permit footnote *1) makes stated monitoring frequencies and sample collection apply only during periods when the outfall is discharging. Months with no discharge are handled via NO DISCHARGE DMR reporting rather than performing the (*1)-marked monitoring. Numeric effluent limits remain specified and enforceable for any reported values; the comment does not waive limits or make rows optional.",
+    "epistemic_basis": "SOURCE_ESTABLISHED",
+    "scope": "ONE_RELATION_OR_VOCABULARY",
+    "remaining_uncertainty": "Whether discharge actually occurred in any specific monitoring period is a separate operational fact not encoded in structured CSV fields (no NO DISCHARGE indicator in dmr_measurements.csv). Linkage between DMR_COMMENT_TEXT and footnote *1 is established by textual match and co-occurring parameters/frequencies, not an explicit CSV join field. Resolution is grounded in the NM0028762 aztec permit package only; other permits are out of scope.",
+    "failure_mode_if_unresolved": null
+  },
+  "proposal": {
+    "interpretation": "DMR_COMMENT_TEXT 'WHEN DISCHARGING.' encodes discharge-conditioned monitoring: stated monitoring frequencies apply only when the outfall is discharging; no-discharge months use NO DISCHARGE DMR reporting. Numeric limits remain enforceable (LIMIT_TYPE_CODE=ENF, OPTIONAL_MONITORING_FLAG=N).",
+    "scope": "ONE_RELATION_OR_VOCABULARY",
+    "epistemic_basis": "SOURCE_ESTABLISHED",
+    "exact_grounding": [
+      "documents/aztec/final_permit.txt lines 72-79, 92-93: footnote *1 'When discharging.' on monitoring-frequency cells",
+      "documents/aztec/final_permit.txt lines 150-153: NO DISCHARGE reporting path for months without discharge",
+      "documents/aztec/statement_of_basis.txt lines 506-511: permit-writer rationale conditioning each parameter's monitoring on discharge",
+      "documents/aztec/final_permit.txt lines 155-163: limits remain enforceable for reported values",
+      "sources/permit_limits.csv: 17 rows with DMR_COMMENT_TEXT=WHEN DISCHARGING., OPTIONAL_MONITORING_FLAG=N, LIMIT_TYPE_CODE=ENF"
+    ],
+    "semantic_delta": "Map DMR_COMMENT_TEXT 'WHEN DISCHARGING.' to monitoring_condition_code=DISCHARGE_OCCURRENCE on permit_limit and monitoring_requirement_fy2025. Remove EXPLICIT_UNRESOLVED holes for conditional_discharge_dependent_monitoring. Admit 'WHEN DISCHARGING.' as a known permit_limit_comment_text value. Does not encode per-period discharge occurrence or waive numeric limits.",
+    "affected_obligations": [
+      "conditional_discharge_dependent_monitoring",
+      "permit_limit_comment_text",
+      "monitoring_condition_from_comment"
+    ],
+    "affected_occurrence_count": 17,
+    "remaining_uncertainty": "Per-period discharge occurrence remains unknowable from structured DMR extracts; purpose C no_numeric_result_case logic cannot automatically distinguish discharge-conditioned skip from other missing-value causes without a NO DISCHARGE field.",
+    "admit": "ADMIT_DISPOSABLE"
+  },
+  "refinement": null,
+  "mutated_before_evidence": false,
+  "dry_run": {
+    "public": {
+      "ok": true,
+      "errors": [],
+      "n_hole_groups": 7,
+      "n_hole_instances": 501,
+      "relation_row_counts": {
+        "dmr_measurement": 824,
+        "permit_limit": 105,
+        "permit_document": 12,
+        "fy2025_measurement": 824,
+        "measurement_limit_pair": 824,
+        "numeric_comparison_candidate": 342,
+        "no_numeric_result_case": 186,
+        "monitoring_requirement_fy2025": 105
+      },
+      "requirement_names": [
+        "fy2025_measurements_materializable",
+        "measurement_limit_pairs_materializable",
+        "unique_applicable_limit_per_measurement",
+        "numeric_comparison_candidates_materializable",
+        "limit_value_for_comparison",
+        "reported_value_for_comparison",
+        "limit_comparison_operator",
+        "reported_value_qualifier",
+        "optional_monitoring_flag_for_limit_applicability",
+        "limit_type_code_for_enforceability",
+        "statistical_base_for_limit_comparison",
+        "monitoring_requirements_materializable",
+        "monitoring_frequency_code",
+        "limit_sample_type_code",
+        "optional_monitoring_flag_for_obligation",
+        "permit_limit_comment_text",
+        "monitoring_condition_from_comment",
+        "limit_set_designator_for_schedule",
+        "no_numeric_result_cases_materializable",
+        "nodi_code_semantics",
+        "optional_monitoring_flag_for_missing_evidence",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "permit_document_text_not_available"
+      ],
+      "hole_groups": [
+        {
+          "group_id": "g000",
+          "requirement": "aggregated_reporting_requirement",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 40,
+          "purpose": [
+            "B",
+            "C"
+          ],
+          "sample_subjects": [
+            {
+              "limit_value_id": "3610673284",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610673282",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610673283",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610673281",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610673290",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610673289",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610673278",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610673277",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610673280",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610673279",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610838794",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610838793",
+              "limit_set_schedule_id": "3600891019"
+            }
+          ],
+          "expected": "purpose-computable interpretation"
+        },
+        {
+          "group_id": "g001",
+          "requirement": "limit_sample_type_code",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 105,
+          "purpose": [
+            "B"
+          ],
+          "sample_subjects": [
+            {
+              "limit_sample_type_code": "12",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673284"
+            },
+            {
+              "limit_sample_type_code": "12",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673282"
+            },
+            {
+              "limit_sample_type_code": "12",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673283"
+            },
+            {
+              "limit_sample_type_code": "12",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673281"
+            },
+            {
+              "limit_sample_type_code": "GR",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129864"
+            },
+            {
+              "limit_sample_type_code": "GR",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833505|limit_value_id=3610129864"
+            },
+            {
+              "limit_sample_type_code": "GR",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833505|limit_value_id=3610129865"
+            },
+            {
+              "limit_sample_type_code": "GR",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129865"
+            },
+            {
+              "limit_sample_type_code": "GR",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673290"
+            },
+            {
+              "limit_sample_type_code": "GR",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673289"
+            },
+            {
+              "limit_sample_type_code": "GR",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840344"
+            },
+            {
+              "limit_sample_type_code": "GR",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840345"
+            }
+          ],
+          "expected": "limit_sample_type_code in known ['']"
+        },
+        {
+          "group_id": "g002",
+          "requirement": "monitoring_frequency_code",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 105,
+          "purpose": [
+            "B"
+          ],
+          "sample_subjects": [
+            {
+              "limit_freq_of_analysis_code": "05/WK",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673284"
+            },
+            {
+              "limit_freq_of_analysis_code": "05/WK",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673282"
+            },
+            {
+              "limit_freq_of_analysis_code": "05/WK",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673283"
+            },
+            {
+              "limit_freq_of_analysis_code": "05/WK",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673281"
+            },
+            {
+              "limit_freq_of_analysis_code": "01/01",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129864"
+            },
+            {
+              "limit_freq_of_analysis_code": "01/01",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833505|limit_value_id=3610129864"
+            },
+            {
+              "limit_freq_of_analysis_code": "01/01",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833505|limit_value_id=3610129865"
+            },
+            {
+              "limit_freq_of_analysis_code": "01/01",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129865"
+            },
+            {
+              "limit_freq_of_analysis_code": "05/WK",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673290"
+            },
+            {
+              "limit_freq_of_analysis_code": "05/WK",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673289"
+            },
+            {
+              "limit_freq_of_analysis_code": "01/07",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840344"
+            },
+            {
+              "limit_freq_of_analysis_code": "01/07",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840345"
+            }
+          ],
+          "expected": "limit_freq_of_analysis_code in known ['']"
+        },
+        {
+          "group_id": "g003",
+          "requirement": "nodi_code_semantics",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "no_numeric_result_case",
+          "n_instances": 186,
+          "purpose": [
+            "C"
+          ],
+          "sample_subjects": [
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662047"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662059"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662071"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662083"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662048"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662060"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662072"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662084"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662049"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662061"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662073"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662085"
+            }
+          ],
+          "expected": "nodi_code in known ['']"
+        },
+        {
+          "group_id": "g004",
+          "requirement": "pass_fail_reporting_semantics",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "measurement_limit_pair",
+          "n_instances": 12,
+          "purpose": [
+            "A",
+            "B",
+            "C"
+          ],
+          "sample_subjects": [
+            {
+              "limit_value_id": "3610839676",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839677",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839678",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839679",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839680",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839681",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839682",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839683",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839684",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839685",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839686",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839687",
+              "limit_set_schedule_id": "3600904539"
+            }
+          ],
+          "expected": "purpose-computable interpretation"
+        },
+        {
+          "group_id": "g005",
+          "requirement": "permit_document_text_not_available",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "permit_document",
+          "n_instances": 1,
+          "purpose": [
+            "B",
+            "C"
+          ],
+          "sample_subjects": [
+            {
+              "source": "document_inventory.json"
+            }
+          ],
+          "expected": "purpose-computable interpretation"
+        },
+        {
+          "group_id": "g006",
+          "requirement": "permit_limit_comment_text",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "permit_limit",
+          "n_instances": 52,
+          "purpose": [
+            "B",
+            "C"
+          ],
+          "sample_subjects": [
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673284"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673282"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673283"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673281"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673290"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673289"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673278"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673277"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673280"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673279"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610838794"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610838793"
+            }
+          ],
+          "expected": "dmr_comment_text in known ['', 'WHEN DISCHARGING.']"
+        }
+      ]
+    },
+    "delta": {
+      "relation_count_changes": {},
+      "requirements_added": [
+        "monitoring_condition_from_comment"
+      ],
+      "requirements_removed": [
+        "conditional_discharge_dependent_monitoring"
+      ],
+      "requirements_changed": [
+        {
+          "name": "permit_limit_comment_text",
+          "baseline": {
+            "name": "permit_limit_comment_text",
+            "kind": "INTERPRETED",
+            "purpose": [
+              "B",
+              "C"
+            ],
+            "cardinality": null,
+            "relation": "permit_limit",
+            "field": "dmr_comment_text",
+            "known": [
+              ""
+            ]
+          },
+          "proposed": {
+            "name": "permit_limit_comment_text",
+            "kind": "INTERPRETED",
+            "purpose": [
+              "B",
+              "C"
+            ],
+            "cardinality": null,
+            "relation": "permit_limit",
+            "field": "dmr_comment_text",
+            "known": [
+              "",
+              "WHEN DISCHARGING."
+            ]
+          }
+        }
+      ],
+      "relation_mode_changes": {},
+      "n_hole_groups": {
+        "baseline": 8,
+        "proposed": 7
+      },
+      "n_hole_instances": {
+        "baseline": 535,
+        "proposed": 501
+      },
+      "hole_requirements_added": [],
+      "hole_requirements_removed": [
+        "conditional_discharge_dependent_monitoring"
+      ],
+      "WORLD_semantics_changed": true,
+      "PURPOSE_semantics_changed": true,
+      "ok": {
+        "baseline": true,
+        "proposed": true
+      }
+    }
+  },
+  "finished_at": "2026-09-05T14:30:31.998781+00:00"
+}

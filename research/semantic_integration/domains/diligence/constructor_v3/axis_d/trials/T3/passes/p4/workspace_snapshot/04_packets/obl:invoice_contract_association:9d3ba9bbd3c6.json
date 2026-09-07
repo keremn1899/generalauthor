@@ -1,0 +1,21 @@
+{
+  "obligation_id": "obl:invoice_contract_association:9d3ba9bbd3c6",
+  "selected_observations": [
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "invoice_id=INV-2002",
+      "excerpt": "{\n  \"invoice_id\": \"INV-2002\",\n  \"billed_name\": \"Northbridge Analytics Inc.\",\n  \"vat_or_tax_id\": \"\",\n  \"amount\": 96000,\n  \"currency\": \"USD\",\n  \"period\": \"2025-Q1\",\n  \"status\": \"open\"\n}"
+    },
+    {
+      "source_path": "sources/contracts/MSA-NBA-2021.md",
+      "location": "header",
+      "excerpt": "# Master services agreement\nCounterparty: Northbridge Analytics, Inc.\nEffective: 4 June 2021\nTerm: 24 months. The agreement auto-renews for successive 12-month periods unless either party gives 90 days' written notice before the then-current term ends."
+    }
+  ],
+  "selection_rationale": "Invoice INV-2002 billed_name compared to contract counterparty header and any commercial_notes linking retainer or operating-name variants.",
+  "known_missing_information": [
+    "Billed name string does not exactly match contract counterparty line; identity linkage required before asserted association.",
+    "P2 emitted semantic candidate tuples with empty disposition; no adjudication performed.",
+    "open_invoices_by_contract derivation is registered but never run; depends on resolved identity and association judgments."
+  ]
+}

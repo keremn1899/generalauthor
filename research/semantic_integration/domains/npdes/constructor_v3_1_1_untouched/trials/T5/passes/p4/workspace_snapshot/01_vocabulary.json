@@ -1,0 +1,390 @@
+{
+  "relations": [
+    {
+      "name": "facility_registry",
+      "roles": [
+        {"name": "facility", "type": "REFERENT", "semantic_identity": "facility"},
+        {"name": "permit_number", "type": "TEXT"},
+        {"name": "facility_name", "type": "TEXT"}
+      ],
+      "role_types": ["REFERENT", "TEXT", "TEXT"],
+      "meaning": "A permitted facility identified by NPDES permit number and evidenced name.",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "required_by": ["A", "B", "C"],
+      "grounding_contract": "Each tuple cites source_manifest.json facility entry and/or distinct EXTERNAL_PERMIT_NMBR rows in structured CSV extracts.",
+      "construction_rule": "Emit one tuple per selected facility permit number; referent id stable from permit number."
+    },
+    {
+      "name": "discharge_point_registry",
+      "roles": [
+        {"name": "discharge_point", "type": "REFERENT", "semantic_identity": "discharge_point"},
+        {"name": "facility", "type": "REFERENT", "semantic_identity": "facility"},
+        {"name": "feature_number", "type": "TEXT"},
+        {"name": "feature_type_code", "type": "TEXT"}
+      ],
+      "role_types": ["REFERENT", "REFERENT", "TEXT", "TEXT"],
+      "meaning": "A permit discharge feature (outfall or monitoring location) tied to a facility permit.",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "required_by": ["A", "B", "C"],
+      "grounding_contract": "Ground to permit_limits.csv and/or dmr_measurements.csv PERM_FEATURE_ID / PERM_FEATURE_NMBR rows.",
+      "construction_rule": "One referent per distinct (permit_number, perm_feature_id) pair; join facility via permit number."
+    },
+    {
+      "name": "parameter_registry",
+      "roles": [
+        {"name": "parameter", "type": "REFERENT", "semantic_identity": "parameter"},
+        {"name": "parameter_code", "type": "TEXT"},
+        {"name": "parameter_desc", "type": "TEXT"}
+      ],
+      "role_types": ["REFERENT", "TEXT", "TEXT"],
+      "meaning": "A monitored parameter identified by EPA parameter code and description.",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "required_by": ["A", "B", "C"],
+      "grounding_contract": "Ground to PARAMETER_CODE and PARAMETER_DESC fields in structured CSV extracts.",
+      "construction_rule": "One referent per distinct parameter_code across sources."
+    },
+    {
+      "name": "monitoring_period_registry",
+      "roles": [
+        {"name": "monitoring_period", "type": "REFERENT", "semantic_identity": "monitoring_period"},
+        {"name": "facility", "type": "REFERENT", "semantic_identity": "facility"},
+        {"name": "period_end_date", "type": "TEXT"}
+      ],
+      "role_types": ["REFERENT", "REFERENT", "TEXT"],
+      "meaning": "A DMR monitoring period end date for a facility as recorded in discharge monitoring evidence.",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "required_by": ["A", "C"],
+      "grounding_contract": "Ground to MONITORING_PERIOD_END_DATE values in dmr_measurements.csv.",
+      "construction_rule": "One referent per distinct (permit_number, period_end_date) appearing in DMR evidence."
+    },
+    {
+      "name": "limit_set_record",
+      "roles": [
+        {"name": "monitoring_requirement", "type": "REFERENT", "semantic_identity": "monitoring_requirement"},
+        {"name": "facility", "type": "REFERENT", "semantic_identity": "facility"},
+        {"name": "discharge_point", "type": "REFERENT", "semantic_identity": "discharge_point"},
+        {"name": "limit_set_id", "type": "TEXT"},
+        {"name": "designator", "type": "TEXT"},
+        {"name": "limit_set_name", "type": "TEXT"},
+        {"name": "schedule_id", "type": "TEXT"},
+        {"name": "status_flag", "type": "TEXT"},
+        {"name": "conditional_comment", "type": "TEXT", "semantic_identity": "triggering_conditions"}
+      ],
+      "role_types": ["REFERENT", "REFERENT", "REFERENT", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT"],
+      "meaning": "A permit limit-set bundle naming a monitoring schedule and any verbatim conditional comment from the limit record.",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "required_by": ["B", "C"],
+      "grounding_contract": "Ground to LIMIT_SET_ID, LIMIT_SET_DESIGNATOR, LIMIT_SET_NAME, LIMIT_SET_SCHEDULE_ID, LIMIT_SET_STATUS_FLAG, and DMR_COMMENT_TEXT in permit_limits.csv.",
+      "construction_rule": "One referent per distinct limit_set_id; attach facility and discharge_point via shared permit/feature keys."
+    },
+    {
+      "name": "permit_limit_assertion",
+      "roles": [
+        {"name": "limit_value", "type": "REFERENT", "semantic_identity": "limit_value"},
+        {"name": "facility", "type": "REFERENT", "semantic_identity": "facility"},
+        {"name": "discharge_point", "type": "REFERENT", "semantic_identity": "discharge_point"},
+        {"name": "parameter", "type": "REFERENT", "semantic_identity": "parameter"},
+        {"name": "monitoring_requirement", "type": "REFERENT", "semantic_identity": "monitoring_requirement"},
+        {"name": "limit_id", "type": "TEXT"},
+        {"name": "limit_value_id", "type": "TEXT"},
+        {"name": "limit_value_nmbr", "type": "REAL"},
+        {"name": "limit_unit_code", "type": "TEXT"},
+        {"name": "statistical_base_code", "type": "TEXT"},
+        {"name": "limit_value_qualifier", "type": "TEXT"},
+        {"name": "limit_type_code", "type": "TEXT"},
+        {"name": "optional_monitoring_flag", "type": "TEXT"},
+        {"name": "limit_begin_date", "type": "TEXT"},
+        {"name": "limit_end_date", "type": "TEXT"},
+        {"name": "frequency_code", "type": "TEXT"}
+      ],
+      "role_types": ["REFERENT", "REFERENT", "REFERENT", "REFERENT", "REFERENT", "TEXT", "TEXT", "REAL", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT"],
+      "meaning": "A permit-recorded numeric limit value with units, statistical basis, enforceability flags, and effective dates.",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "required_by": ["A", "B"],
+      "grounding_contract": "Ground each tuple to the corresponding row in permit_limits.csv keyed by LIMIT_VALUE_ID.",
+      "construction_rule": "One tuple per permit_limits.csv row; referent id from limit_value_id; parse dates and numeric fields literally."
+    },
+    {
+      "name": "dmr_measurement_assertion",
+      "roles": [
+        {"name": "measurement", "type": "REFERENT", "semantic_identity": "measurement"},
+        {"name": "facility", "type": "REFERENT", "semantic_identity": "facility"},
+        {"name": "discharge_point", "type": "REFERENT", "semantic_identity": "discharge_point"},
+        {"name": "parameter", "type": "REFERENT", "semantic_identity": "parameter"},
+        {"name": "monitoring_period", "type": "REFERENT", "semantic_identity": "monitoring_period"},
+        {"name": "limit_value", "type": "REFERENT", "semantic_identity": "limit_value"},
+        {"name": "dmr_event_id", "type": "TEXT"},
+        {"name": "reported_value_nmbr", "type": "REAL"},
+        {"name": "reported_unit_code", "type": "TEXT"},
+        {"name": "value_qualifier", "type": "TEXT"},
+        {"name": "nodi_code", "type": "TEXT", "semantic_identity": "nodi_code"},
+        {"name": "value_received_date", "type": "TEXT"}
+      ],
+      "role_types": ["REFERENT", "REFERENT", "REFERENT", "REFERENT", "REFERENT", "REFERENT", "TEXT", "REAL", "TEXT", "TEXT", "TEXT", "TEXT"],
+      "meaning": "A reported DMR measurement row including value, units, qualifiers, and NODI code as recorded.",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "required_by": ["A", "C"],
+      "grounding_contract": "Ground to dmr_measurements.csv row keyed by DMR_EVENT_ID and DMR_FORM_VALUE_ID / DMR_VALUE_ID.",
+      "construction_rule": "One referent per DMR measurement row; link structural keys to compiled registries; leave reported_value_nmbr null when absent."
+    },
+    {
+      "name": "limit_period_overlaps_monitoring_period",
+      "roles": [
+        {"name": "limit_value", "type": "REFERENT", "semantic_identity": "limit_value"},
+        {"name": "monitoring_period", "type": "REFERENT", "semantic_identity": "monitoring_period"},
+        {"name": "overlap_start", "type": "TEXT"},
+        {"name": "overlap_end", "type": "TEXT"}
+      ],
+      "role_types": ["REFERENT", "REFERENT", "TEXT", "TEXT"],
+      "meaning": "Mechanical calendar overlap between a limit effective period and a monitoring period end date.",
+      "admission": "WORLD",
+      "construction_class": "DERIVED",
+      "required_by": ["A"],
+      "grounding_contract": "Derivation inputs permit_limit_assertion and monitoring_period_registry; overlap computed deterministically from parsed dates.",
+      "construction_rule": "SQL derivation: monitoring period end date falls within [limit_begin_date, limit_end_date] inclusive.",
+      "candidate_generation_rule": "Cartesian join on shared facility only where date predicate holds."
+    },
+    {
+      "name": "measurement_limit_structural_candidate",
+      "roles": [
+        {"name": "measurement", "type": "REFERENT", "semantic_identity": "measurement"},
+        {"name": "limit_value", "type": "REFERENT", "semantic_identity": "limit_value"}
+      ],
+      "role_types": ["REFERENT", "REFERENT"],
+      "meaning": "Mechanically supportable correspondence between a DMR measurement and a candidate permit limit sharing permit, outfall, parameter, limit linkage, and temporal overlap.",
+      "admission": "WORLD",
+      "construction_class": "DERIVED",
+      "required_by": ["A"],
+      "grounding_contract": "Derivation over dmr_measurement_assertion, permit_limit_assertion, and limit_period_overlaps_monitoring_period.",
+      "construction_rule": "Join on facility, discharge_point, parameter; prefer explicit LIMIT_VALUE_ID linkage when present; require temporal overlap.",
+      "candidate_generation_rule": "Emit all tuples satisfying structural join keys without selecting a single applicable limit."
+    },
+    {
+      "name": "fy2025_in_scope_measurement",
+      "roles": [
+        {"name": "measurement", "type": "REFERENT", "semantic_identity": "measurement"}
+      ],
+      "role_types": ["REFERENT"],
+      "meaning": "DMR measurements whose monitoring period end date falls in Federal FY2025 (2024-10-01 through 2025-09-30 inclusive).",
+      "admission": "WORLD",
+      "construction_class": "DERIVED",
+      "required_by": ["A", "C"],
+      "grounding_contract": "Derivation over monitoring_period_registry joined to dmr_measurement_assertion with explicit FY2025 date window.",
+      "construction_rule": "Filter monitoring_period.period_end_date within intention contract temporal bounds."
+    },
+    {
+      "name": "fy2025_monitoring_requirement",
+      "roles": [
+        {"name": "monitoring_requirement", "type": "REFERENT", "semantic_identity": "monitoring_requirement"}
+      ],
+      "role_types": ["REFERENT"],
+      "meaning": "Limit-set monitoring requirements with permit limit effective dates intersecting Federal FY2025.",
+      "admission": "WORLD",
+      "construction_class": "DERIVED",
+      "required_by": ["B", "C"],
+      "grounding_contract": "Derivation over limit_set_record and permit_limit_assertion effective dates.",
+      "construction_rule": "Include limit sets having at least one permit_limit_assertion overlapping FY2025."
+    },
+    {
+      "name": "measurement_has_numeric_result",
+      "roles": [
+        {"name": "measurement", "type": "REFERENT", "semantic_identity": "measurement"}
+      ],
+      "role_types": ["REFERENT"],
+      "meaning": "Measurements with an ordinary numeric reported value suitable as input to numeric comparison mechanics.",
+      "admission": "WORLD",
+      "construction_class": "DERIVED",
+      "required_by": ["A", "C"],
+      "grounding_contract": "Derivation over dmr_measurement_assertion: reported_value_nmbr is non-null and no blocking NODI-only absence pattern.",
+      "construction_rule": "Mechanical predicate on DMR_VALUE_NMBR presence; does not assert compliance or violation."
+    },
+    {
+      "name": "monitoring_expectation_without_numeric_result",
+      "roles": [
+        {"name": "monitoring_expectation", "type": "REFERENT", "semantic_identity": "monitoring_expectation"},
+        {"name": "facility", "type": "REFERENT", "semantic_identity": "facility"},
+        {"name": "discharge_point", "type": "REFERENT", "semantic_identity": "discharge_point"},
+        {"name": "parameter", "type": "REFERENT", "semantic_identity": "parameter"},
+        {"name": "monitoring_period", "type": "REFERENT", "semantic_identity": "monitoring_period"},
+        {"name": "measurement", "type": "REFERENT", "semantic_identity": "measurement"}
+      ],
+      "role_types": ["REFERENT", "REFERENT", "REFERENT", "REFERENT", "REFERENT", "REFERENT"],
+      "meaning": "FY2025 monitoring slots or DMR rows lacking an ordinary numeric reported result but evidenced by schedule structure or non-numeric DMR reporting.",
+      "admission": "WORLD",
+      "construction_class": "DERIVED",
+      "required_by": ["C"],
+      "grounding_contract": "Derivation combining fy2025_in_scope_measurement anti-join measurement_has_numeric_result plus schedule-implied slots where evidenced.",
+      "construction_rule": "Universe for Purpose C: in-scope FY2025 expectations with absent/non-numeric ordinary results.",
+      "candidate_generation_rule": "Pair each qualifying measurement or schedule slot with a stable monitoring_expectation referent."
+    },
+    {
+      "name": "evidenced_operational_context",
+      "roles": [
+        {"name": "facility", "type": "REFERENT", "semantic_identity": "facility"},
+        {"name": "discharge_point", "type": "REFERENT", "semantic_identity": "discharge_point"},
+        {"name": "context_period_start", "type": "TEXT", "semantic_identity": "applicability_period"},
+        {"name": "context_period_end", "type": "TEXT"},
+        {"name": "context_kind", "type": "TEXT"},
+        {"name": "evidence_summary", "type": "TEXT"}
+      ],
+      "role_types": ["REFERENT", "REFERENT", "TEXT", "TEXT", "TEXT", "TEXT"],
+      "meaning": "Positive operational or discharge-occurrence facts evidenced in DMR NODI codes, permit text, or operational records for a bounded period.",
+      "admission": "WORLD",
+      "construction_class": "SEMANTIC",
+      "required_by": ["B", "C"],
+      "grounding_contract": "Each accepted tuple must cite permit PDF excerpts, DMR rows, or structured operational evidence used to establish the fact.",
+      "construction_rule": "Extract and classify only positively evidenced operational states (e.g., documented no discharge, discharge occurred, special study active); do not infer from missing reports.",
+      "candidate_generation_rule": "Generate candidates from limit_set conditional_comment text, NODI-coded DMR rows, and permit-package PDF passages tied to FY2025 periods.",
+      "unresolved_judgment": "Whether available evidence establishes a specific operational context (discharge occurrence, no-discharge, event activation) for a requirement period.",
+      "allowed_dispositions": ["ACCEPT", "UNRESOLVED"]
+    },
+    {
+      "name": "limit_applicability_judgment",
+      "roles": [
+        {"name": "measurement", "type": "REFERENT", "semantic_identity": "measurement"},
+        {"name": "facility", "type": "REFERENT", "semantic_identity": "facility"},
+        {"name": "discharge_point", "type": "REFERENT", "semantic_identity": "discharge_point"},
+        {"name": "parameter", "type": "REFERENT", "semantic_identity": "parameter"},
+        {"name": "monitoring_period", "type": "REFERENT", "semantic_identity": "monitoring_period"},
+        {"name": "applicable_limit", "type": "REFERENT", "semantic_identity": "applicable_limit"},
+        {"name": "disposition", "type": "TEXT"}
+      ],
+      "role_types": ["REFERENT", "REFERENT", "REFERENT", "REFERENT", "REFERENT", "REFERENT", "TEXT"],
+      "meaning": "Purpose A judgment selecting the enforceable numeric limit applicable to a reported measurement context or recording why applicability cannot be established.",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "required_by": ["A"],
+      "grounding_contract": "Ground to measurement_limit_structural_candidate tuples plus permit/limit evidence; unresolved tuples cite evidential gaps.",
+      "construction_rule": "Evaluate each fy2025_in_scope_measurement against structural candidates; select at most one applicable enforceable numeric limit or route to unresolved.",
+      "candidate_generation_rule": "One candidate set per in-scope measurement drawn from measurement_limit_structural_candidate.",
+      "unresolved_judgment": "Which candidate limit is the applicable enforceable numeric limit for the measurement context.",
+      "allowed_dispositions": [
+        "ACCEPT",
+        "UNRESOLVED:limit_applicability_unknown",
+        "UNRESOLVED:multiple_competing_applicable_limits_without_resolution_rule",
+        "UNRESOLVED:measurement_present_but_no_candidate_limit_identified",
+        "UNRESOLVED:seasonal_conditional_or_event_condition_prevents_limit_selection",
+        "UNRESOLVED:insufficient_permit_or_schedule_evidence_to_bind_limit_to_measurement"
+      ]
+    },
+    {
+      "name": "numeric_comparison_regime_judgment",
+      "roles": [
+        {"name": "measurement", "type": "REFERENT", "semantic_identity": "measurement"},
+        {"name": "comparison_regime", "type": "TEXT", "semantic_identity": "comparison_regime"}
+      ],
+      "role_types": ["REFERENT", "TEXT"],
+      "meaning": "Purpose A classification of whether a measurement/limit pair is subject to enforceable numeric compliance comparison, report-only monitoring, or non-comparable reporting.",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "required_by": ["A"],
+      "grounding_contract": "Ground to permit_limit_assertion enforceability fields, optional_monitoring_flag, and dmr_measurement_assertion value shape.",
+      "construction_rule": "Apply Purpose A policy on enforceable numeric limits versus report-only or qualitatively reported results.",
+      "candidate_generation_rule": "One candidate per fy2025_in_scope_measurement after limit applicability is considered.",
+      "unresolved_judgment": "Whether monitoring is enforceable for numeric compliance comparison versus report-only or not comparable.",
+      "allowed_dispositions": [
+        "ACCEPT:enforceable_numeric_comparison",
+        "ACCEPT:report_only",
+        "ACCEPT:not_numeric_comparable",
+        "UNRESOLVED:limit_established_but_measurement_not_numeric_comparable",
+        "UNRESOLVED:unit_or_statistical_base_mismatch_precluding_comparison"
+      ]
+    },
+    {
+      "name": "exceedance_judgment",
+      "roles": [
+        {"name": "measurement", "type": "REFERENT", "semantic_identity": "measurement"},
+        {"name": "applicable_limit", "type": "REFERENT", "semantic_identity": "applicable_limit"},
+        {"name": "exceedance_outcome", "type": "TEXT", "semantic_identity": "exceedance_outcome"}
+      ],
+      "role_types": ["REFERENT", "REFERENT", "TEXT"],
+      "meaning": "Purpose A determination whether a reported measurement exceeds an established applicable enforceable numeric limit.",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "required_by": ["A"],
+      "grounding_contract": "Ground to accepted limit_applicability_judgment, numeric_comparison_regime_judgment, and source measurement/limit values.",
+      "construction_rule": "Compare only when enforceable numeric comparison is established and units/statistical bases align; otherwise omit exceedance outcome.",
+      "candidate_generation_rule": "Generate for measurements with ACCEPT limit applicability and enforceable_numeric_comparison regime.",
+      "unresolved_judgment": "Whether the reported measurement exceeds the applicable limit when comparison prerequisites are met.",
+      "allowed_dispositions": [
+        "ACCEPT:exceeds",
+        "ACCEPT:does_not_exceed",
+        "UNRESOLVED:unit_or_statistical_base_mismatch_precluding_comparison"
+      ]
+    },
+    {
+      "name": "monitoring_requirement_applicability_judgment",
+      "roles": [
+        {"name": "monitoring_requirement", "type": "REFERENT", "semantic_identity": "monitoring_requirement"},
+        {"name": "facility", "type": "REFERENT", "semantic_identity": "facility"},
+        {"name": "applicability_period", "type": "TEXT", "semantic_identity": "applicability_period"},
+        {"name": "triggering_conditions", "type": "TEXT", "semantic_identity": "triggering_conditions"},
+        {"name": "applicability_outcome", "type": "TEXT", "semantic_identity": "applicability_outcome"}
+      ],
+      "role_types": ["REFERENT", "REFERENT", "TEXT", "TEXT", "TEXT"],
+      "meaning": "Purpose B judgment whether a monitoring requirement was required, not required, or conditionally resolved for Federal FY2025.",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "required_by": ["B"],
+      "grounding_contract": "Ground to limit_set_record, permit_limit_assertion schedules, evidenced_operational_context, and permit PDF excerpts.",
+      "construction_rule": "Three-valued outcome: required, not_required, or unresolved; evaluate conditional triggers from evidence before assigning required/not_required.",
+      "candidate_generation_rule": "One candidate per fy2025_monitoring_requirement crossed with FY2025 applicability periods.",
+      "unresolved_judgment": "Whether evidence establishes that monitoring was required, not required, or cannot be determined for FY2025.",
+      "allowed_dispositions": [
+        "ACCEPT:required",
+        "ACCEPT:not_required",
+        "ACCEPT:conditional_resolved",
+        "UNRESOLVED:conditional_trigger_evidence_insufficient",
+        "UNRESOLVED:season_or_permit_year_boundary_ambiguous",
+        "UNRESOLVED:discharge_occurrence_unknown",
+        "UNRESOLVED:special_study_or_event_condition_not_documented",
+        "UNRESOLVED:conflicting_permit_provisions_without_hierarchy_rule",
+        "UNRESOLVED:schedule_activation_status_unknown",
+        "UNRESOLVED:requirement_identity_ambiguous_across_limit_sets"
+      ]
+    },
+    {
+      "name": "missing_evidence_semantic_judgment",
+      "roles": [
+        {"name": "monitoring_expectation", "type": "REFERENT", "semantic_identity": "monitoring_expectation"},
+        {"name": "facility", "type": "REFERENT", "semantic_identity": "facility"},
+        {"name": "monitoring_period", "type": "REFERENT", "semantic_identity": "monitoring_period"},
+        {"name": "measurement", "type": "REFERENT", "semantic_identity": "measurement"},
+        {"name": "missing_evidence_state", "type": "TEXT", "semantic_identity": "missing_evidence_state"}
+      ],
+      "role_types": ["REFERENT", "REFERENT", "REFERENT", "REFERENT", "TEXT"],
+      "meaning": "Purpose C classification of what evidence establishes for a no-result or non-numeric monitoring episode in FY2025.",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "required_by": ["C"],
+      "grounding_contract": "Ground to monitoring_expectation_without_numeric_result, dmr_measurement_assertion NODI codes, evidenced_operational_context, and permit conditions.",
+      "construction_rule": "Assign exactly one primary taxonomy state when positive evidence supports it; never infer compliance or violation from absence alone.",
+      "candidate_generation_rule": "One candidate per monitoring_expectation_without_numeric_result tuple.",
+      "unresolved_judgment": "Which Purpose C semantic state best describes the missing-evidence episode.",
+      "allowed_dispositions": [
+        "ACCEPT:documented_no_discharge_period",
+        "ACCEPT:conditional_monitoring_not_required",
+        "ACCEPT:other_documented_no_data_state",
+        "ACCEPT:required_monitoring_inadequate_evidence",
+        "UNRESOLVED:nodi_or_no_data_code_uninterpretable",
+        "UNRESOLVED:monitoring_expectation_identity_unclear",
+        "UNRESOLVED:conflicting_documentation_of_no_discharge",
+        "UNRESOLVED:insufficient_evidence_to_distinguish_no_requirement_from_missing_report",
+        "UNRESOLVED:schedule_present_but_obligation_status_unknown",
+        "UNRESOLVED:partial_reporting_ambiguity_across_parameters_or_outfalls"
+      ]
+    }
+  ],
+  "limitations": [
+    "00_intention_contract.json does not declare an explicit consumer_fields block; semantic_identity bindings are derived from row_expectations and universe_scope granularity for purposes A, B, and C.",
+    "Permit PDF prose beyond structured CSV fields is not fully enumerated in sources/; evidenced_operational_context and conditional requirement evaluation may be incomplete until permit extraction passes run.",
+    "Closed-world negatives (e.g., established absence of a limit) are not modeled as World relations per kernel constraints."
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "proposed_disposition": "SAME_ENTITY",
+  "proof_obligations": [
+    {
+      "obligation": "Establish that the legal counterparty billed as Oakfield Logistik GmbH is the entity registered under HRB 88421.",
+      "required_for": "SAME_ENTITY",
+      "satisfied": true,
+      "evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        },
+        {
+          "source_path": "sources/company_registry.csv",
+          "location": "row HRB 88421"
+        },
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Oakfield Logistik GmbH"
+        }
+      ]
+    },
+    {
+      "obligation": "Establish that HRB 88421 and Oakfield Logistik GmbH denote different legal counterparties.",
+      "required_for": "DISTINCT",
+      "satisfied": false,
+      "evidence": []
+    }
+  ],
+  "unsatisfied_obligations": [
+    "Establish that HRB 88421 and Oakfield Logistik GmbH denote different legal counterparties."
+  ],
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row HRB 88421"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Oakfield Logistik GmbH"
+    }
+  ],
+  "support_claim": "The registry row for HRB 88421 names Oakfield Logistik GmbH, billing invoices use that same legal name, and commercial notes state the rebrand to that name left HRB 88421 unchanged, establishing identity between the billing and registry referents."
+}

@@ -1,0 +1,27 @@
+{
+  "parent": "monitoring_frequency",
+  "children": [
+    {
+      "obligation_id": "monitoring_frequency_calendar_codes",
+      "exact_semantic_question": "What calendar-periodic monitoring frequencies do LIMIT_FREQ_OF_ANALYSIS_CODE values 01/01, 01/07, 02/07, 02/30, 05/WK, and 01/90 establish when joined to permit Part I tables?",
+      "codes": ["01/01", "01/07", "02/07", "02/30", "05/WK", "01/90"]
+    },
+    {
+      "obligation_id": "monitoring_frequency_continuous_code",
+      "exact_semantic_question": "What monitoring obligation does LIMIT_FREQ_OF_ANALYSIS_CODE 99/99 establish?",
+      "codes": ["99/99"]
+    },
+    {
+      "obligation_id": "monitoring_frequency_event_triggered_code",
+      "exact_semantic_question": "What monitoring or reporting obligation does LIMIT_FREQ_OF_ANALYSIS_CODE 09/99 establish for WET retest parameters?",
+      "codes": ["09/99"]
+    }
+  ],
+  "why_necessary": "Retrieved evidence shows materially different obligation types under the same field: most codes align with calendar MEASUREMENT FREQUENCY text in permit tables, 99/99 aligns with continuous flow monitoring only, and 09/99 marks conditional WET retest reporting described as '(If required)' rather than a periodic schedule. A single interpretation rule cannot treat all eight codes uniformly.",
+  "occurrence_partition": {
+    "monitoring_frequency_calendar_codes": "permit_limit rows where LIMIT_FREQ_OF_ANALYSIS_CODE in {01/01, 01/07, 02/07, 02/30, 05/WK, 01/90}",
+    "monitoring_frequency_continuous_code": "permit_limit rows where LIMIT_FREQ_OF_ANALYSIS_CODE = 99/99",
+    "monitoring_frequency_event_triggered_code": "permit_limit rows where LIMIT_FREQ_OF_ANALYSIS_CODE = 09/99"
+  },
+  "mechanically_computable": true
+}

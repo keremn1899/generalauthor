@@ -1,0 +1,76 @@
+{
+  "claims": [
+    {
+      "claim": "Invoices bill the counterparty as Helion Robotics Limited.",
+      "status": "ESTABLISHED",
+      "burden": "other",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Helion Robotics Limited"
+        }
+      ]
+    },
+    {
+      "claim": "Registry entry 11847201 lists the registered company name HELION ROBOTICS LIMITED.",
+      "status": "ESTABLISHED",
+      "burden": "other",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/company_registry.csv",
+          "location": "row 11847201"
+        }
+      ]
+    },
+    {
+      "claim": "Helion Robotics Ltd (CRM operating name) and Helion Robotics Limited (used on invoices and at Companies House) denote the same legal entity.",
+      "status": "ESTABLISHED",
+      "burden": "identity",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    },
+    {
+      "claim": "Helion Industrial Systems Ltd is a different company from Helion Robotics Limited.",
+      "status": "ESTABLISHED",
+      "burden": "distinctness",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    },
+    {
+      "claim": "billing:Helion Robotics Limited and registry:11847201 denote the same legal counterparty.",
+      "status": "NOT_ESTABLISHED",
+      "burden": "identity",
+      "supporting_evidence": []
+    },
+    {
+      "claim": "billing:Helion Robotics Limited and registry:11847201 denote distinct legal counterparties.",
+      "status": "NOT_ESTABLISHED",
+      "burden": "distinctness",
+      "supporting_evidence": []
+    }
+  ],
+  "disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Helion Robotics Limited"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 11847201"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "The packet establishes each referent's naming separately and links CRM and invoice/Companies House formal names, but provides no evidence explicitly tying billing:Helion Robotics Limited to registry number 11847201, so the identity burden for the candidate pair is not met."
+}

@@ -1,0 +1,40 @@
+{
+  "strategy": "a2_critic",
+  "trial": "R03",
+  "obligation_id": "id-14",
+  "candidate": {
+    "left": "billing:Meridian Energy Partners LLC",
+    "right": "registry:4721193"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 4721193"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Meridian Energy Partners LLC"
+    }
+  ],
+  "support_claim": "The registry row names MERIDIAN ENERGY PARTNERS LLC and the billing record names Meridian Energy Partners LLC, but the packet provides no establishing evidence linking the billing referent to registry ID 4721193 beyond name similarity.",
+  "proof_size": 2,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "critic": {
+    "decision": "CONFIRM",
+    "reason": "The cited packet shows only case-variant name overlap between registry row 4721193 and the billing record, with no establishing cross-reference linking the billing referent to that registry ID, so UNRESOLVED is warranted under the contract."
+  },
+  "critic_reason": "cannot_upgrade",
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

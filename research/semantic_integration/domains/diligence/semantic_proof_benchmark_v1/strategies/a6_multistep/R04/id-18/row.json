@@ -1,0 +1,99 @@
+{
+  "strategy": "a6_multistep",
+  "trial": "R04",
+  "obligation_id": "id-18",
+  "candidate": {
+    "left": "billing:Northbridge Analytics Inc.",
+    "right": "registry:2019-0008841"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 2019-0008841"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Northbridge Analytics Inc."
+    }
+  ],
+  "support_claim": "The packet preserves multiple registry candidates and explicitly states that legal has not determined which registry entity is the contracting party, so neither identity nor distinctness is established.",
+  "proof_size": 8,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "steps": [
+    {
+      "fact": "The candidate left referent is billing:Northbridge Analytics Inc. and the right referent is registry:2019-0008841.",
+      "grounding": null,
+      "mechanical": true
+    },
+    {
+      "fact": "Billing records bill the name Northbridge Analytics Inc.",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Northbridge Analytics Inc."
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Registry record 2019-0008841 is NORTHBRIDGE ANALYTICS LLC, Wyoming, active.",
+      "grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 2019-0008841"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Commercial notes state that legal has not determined which registry entity is the contracting party and instruct to treat the registry link as unresolved.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Commercial notes also report a separate Wyoming LLC, Northbridge Analytics LLC, from a 2024 credit check, preserving multiple live registry candidates.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "No shared legal identifier links the billing referent to registry 2019-0008841, and the packet does not license identifier uniqueness or equivalence closure (algebra.transitive is false).",
+      "grounding": null,
+      "mechanical": true
+    },
+    {
+      "fact": "Name similarity between Northbridge Analytics Inc. and NORTHBRIDGE ANALYTICS LLC does not establish identity; the differing legal suffixes (Inc. vs LLC) and unresolved status block SAME_ENTITY.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "No evidence establishes that billing:Northbridge Analytics Inc. and registry:2019-0008841 are distinct entities; absence of identity proof is insufficient for DISTINCT.",
+      "grounding": null,
+      "mechanical": true
+    }
+  ],
+  "admit": {
+    "rule": "unresolved"
+  },
+  "oracle": "UNRESOLVED",
+  "in_oracle": true,
+  "exact": true,
+  "unsupported_closure": false,
+  "under_closure": false,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": false
+}

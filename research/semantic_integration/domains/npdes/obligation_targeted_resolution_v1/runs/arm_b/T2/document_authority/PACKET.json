@@ -1,0 +1,98 @@
+{
+  "obligation_id": "document_authority",
+  "exact_semantic_question": "Without ranking from filenames, what do inventoried permit documents establish, and which document governs if they disagree?",
+  "purpose": ["B", "C"],
+  "relation_contract": "narrative conditions require document text; filename kind is not hierarchy",
+  "candidate_interpretations": [
+    {
+      "id": "inventory_kind_hierarchy",
+      "statement": "document_inventory.json document_kind values (final_permit, fact_sheet, etc.) define a fixed governing hierarchy among package documents.",
+      "status": "refuted"
+    },
+    {
+      "id": "issued_permit_authorization_governs",
+      "statement": "Narrative text of the issued final permit (AUTHORIZATION TO DISCHARGE and conditions set forth in named permit parts of that document) establishes enforceable permit obligations; draft supporting documents establish proposed-condition rationale and background, and defer enforceable limits to the permit text.",
+      "status": "supported"
+    },
+    {
+      "id": "all_package_documents_equally_binding",
+      "statement": "Every inventoried package document is an independently enforceable authorization source with no precedence rule.",
+      "status": "refuted"
+    },
+    {
+      "id": "structured_inventory_only",
+      "statement": "Only filename/hash inventory metadata is available; narrative authority cannot be established.",
+      "status": "refuted"
+    }
+  ],
+  "retained_snippets": [
+    {
+      "source_id": "documents/gcc/final_permit.txt",
+      "location": "lines 4-21",
+      "text": "AUTHORIZATION TO DISCHARGE UNDER THE\nNATIONAL POLLUTANT DISCHARGE ELIMINATION SYSTEM\n...\nis authorized to discharge ... in accordance with this cover page and effluent limitations, monitoring requirements, and other\nconditions set forth in Parts I [Requirements for NPDES Permits], II [Other Conditions], and\nIII [Standard Conditions for NPDES Permits] hereof.",
+      "why_retained": "Issued-permit cover page binds authorization to effluent limitations and other conditions set forth in named permit parts of this document, not to supporting package filenames."
+    },
+    {
+      "source_id": "documents/gcc/final_permit.txt",
+      "location": "lines 23-24",
+      "text": "This permit supersedes and replaces NPDES Permit No. NM0000116 issued November 23,\n2010.",
+      "why_retained": "Explicit supersession rule in issued permit text for prior permit issuance; not derived from document_kind label."
+    },
+    {
+      "source_id": "documents/gcc/final_permit.txt",
+      "location": "lines 149-150",
+      "text": "Current EPA Region 6 minimum quantification levels (MQLs) for reporting and compliance are\nprovided in Appendix A of Part II of this permit.",
+      "why_retained": "Shows part_ii_appendix content is incorporated by permit-part citation within the issued permit rather than ranked by separate filename."
+    },
+    {
+      "source_id": "documents/gcc/fact_sheet.txt",
+      "location": "lines 1-4",
+      "text": "NPDES PERMIT NO. NM0000116\n                                  FACT SHEET\nFOR THE DRAFT NATIONAL POLLUTANT DISCHARGE ELIMINATION SYSTEM\n(NPDES) PERMIT TO DISCHARGE TO WATERS OF THE UNITED STATES",
+      "why_retained": "Fact sheet text frames itself as a draft NPDES permit document, not an issued authorization."
+    },
+    {
+      "source_id": "documents/gcc/fact_sheet.txt",
+      "location": "lines 34-35",
+      "text": "Proposed revocation and reissuance of the current permit issued with an effective date of June 1,\n2016, and an expiration date of May 31, 2021.",
+      "why_retained": "Permit action is proposed reissuance; fact sheet establishes draft/permit-development context rather than final enforceable authorization."
+    },
+    {
+      "source_id": "documents/aztec/statement_of_basis.txt",
+      "location": "lines 1-4",
+      "text": "NPDES PERMIT NO. NM0028762\n                     STATEMENT OF BASIS\nFOR THE DRAFT NATIONAL POLLUTANT DISCHARGE ELIMINATION SYSTEM\n(NPDES) PERMIT TO DISCHARGE TO WATERS OF THE UNITED STATES",
+      "why_retained": "Statement-of-basis text uses the same draft-permit framing as fact sheets; inventory kind alone does not determine authority."
+    },
+    {
+      "source_id": "documents/aztec/statement_of_basis.txt",
+      "location": "lines 556-558",
+      "text": "F.       FINAL EFFLUENT LIMITATIONS\n\nSee the draft permit for limitations.",
+      "why_retained": "Supporting document explicitly defers enforceable effluent limitations to permit text rather than establishing independent limits."
+    },
+    {
+      "source_id": "documents/farmington/final_permit.txt",
+      "location": "lines 24-25",
+      "text": "in accordance with this cover page and the effluent limitations, monitoring requirements, and other\nconditions set forth in Part I, Part II, Part III, and Part IV hereof.",
+      "why_retained": "Second facility confirms issued-permit integration of Parts I–IV by cross-reference within the authorization document."
+    }
+  ],
+  "contradictory_evidence": [
+    {
+      "source_id": "documents/farmington/statement_of_basis.txt",
+      "note": "Not opened within budget; grep shows page headers labeled FACT SHEET while inventory document_kind is statement_of_basis, demonstrating filename/kind labels are not reliable authority signals.",
+      "impact": "Reinforces that hierarchy must come from narrative role text, not inventory naming."
+    },
+    {
+      "source_id": "documents/gcc/minor_modification.txt",
+      "note": "Not opened within budget; inventory kind minor_modification but available extract (from index sizing) appears to be Part I effluent-limit text without modification-framing language in the portion visible to targeted search.",
+      "impact": "No retained snippet establishes whether this document modifies or supersedes issued final-permit limits."
+    }
+  ],
+  "known_limitations": [
+    "Only 5 of 12 inventoried narrative documents were opened under budget; reasonable_potential worksheets and gcc/minor_modification.txt were not directly inspected.",
+    "No workspace text states an explicit general rule such as 'if the fact sheet disagrees with the issued permit, the issued permit governs'; precedence is inferred from issued-authorization versus draft-supporting document roles.",
+    "Farmington Part IV content lives in a separate inventory file (documents/farmington/part_iv.txt) while the final permit cover references Part IV 'hereof'; the package does not contain an explicit conflict-resolution clause among separately filed part extracts.",
+    "documents/gcc/final_permit.txt Part III extract in workspace appears truncated/corrupted (non-standard content after the Part III header), limiting verification of standard-condition integration for that facility.",
+    "Structured CSVs and document_inventory.json alone cannot establish narrative authority; resolution depends on permit-package text extracts under documents/."
+  ],
+  "allowed_dispositions": ["SUPPORTED_RESOLUTION", "SUPPORTED_NEGATIVE", "UNRESOLVED"]
+}

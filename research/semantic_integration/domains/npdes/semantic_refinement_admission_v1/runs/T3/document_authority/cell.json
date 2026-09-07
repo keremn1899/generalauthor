@@ -1,0 +1,3015 @@
+{
+  "trial": "T3",
+  "obligation_id": "document_authority",
+  "reported_model": "Composer 2.5",
+  "retrieval": {
+    "n_tool_paths": 50,
+    "structured_paths": [
+      "/tmp/world-experiment/npdes-semantic-refinement-admission-v1/c30e77a4fcffe80a8960c5bba88e46c2/sources/document_inventory.json"
+    ],
+    "document_paths": [
+      "/tmp/world-experiment/npdes-semantic-refinement-admission-v1/c30e77a4fcffe80a8960c5bba88e46c2/documents/INDEX.md",
+      "/tmp/world-experiment/npdes-semantic-refinement-admission-v1/c30e77a4fcffe80a8960c5bba88e46c2/documents/gcc/minor_modification.txt",
+      "/tmp/world-experiment/npdes-semantic-refinement-admission-v1/c30e77a4fcffe80a8960c5bba88e46c2/documents/gcc/final_permit.txt",
+      "/tmp/world-experiment/npdes-semantic-refinement-admission-v1/c30e77a4fcffe80a8960c5bba88e46c2/documents/farmington/final_permit.txt",
+      "/tmp/world-experiment/npdes-semantic-refinement-admission-v1/c30e77a4fcffe80a8960c5bba88e46c2/documents/gcc/fact_sheet.txt",
+      "/tmp/world-experiment/npdes-semantic-refinement-admission-v1/c30e77a4fcffe80a8960c5bba88e46c2/documents/gcc/fact_sheet.txt",
+      "/tmp/world-experiment/npdes-semantic-refinement-admission-v1/c30e77a4fcffe80a8960c5bba88e46c2/documents/aztec/statement_of_basis.txt",
+      "/tmp/world-experiment/npdes-semantic-refinement-admission-v1/c30e77a4fcffe80a8960c5bba88e46c2/documents/gcc/final_permit.txt",
+      "/tmp/world-experiment/npdes-semantic-refinement-admission-v1/c30e77a4fcffe80a8960c5bba88e46c2/documents/aztec/reasonable_potential.txt",
+      "/tmp/world-experiment/npdes-semantic-refinement-admission-v1/c30e77a4fcffe80a8960c5bba88e46c2/documents/gcc/final_permit.txt",
+      "/tmp/world-experiment/npdes-semantic-refinement-admission-v1/c30e77a4fcffe80a8960c5bba88e46c2/documents/farmington/statement_of_basis.txt",
+      "/tmp/world-experiment/npdes-semantic-refinement-admission-v1/c30e77a4fcffe80a8960c5bba88e46c2/documents/farmington/final_permit.txt",
+      "/tmp/world-experiment/npdes-semantic-refinement-admission-v1/c30e77a4fcffe80a8960c5bba88e46c2/documents/gcc/reasonable_potential.txt",
+      "/tmp/world-experiment/npdes-semantic-refinement-admission-v1/c30e77a4fcffe80a8960c5bba88e46c2/documents/aztec/final_permit.txt",
+      "/tmp/world-experiment/npdes-semantic-refinement-admission-v1/c30e77a4fcffe80a8960c5bba88e46c2/documents/aztec/final_permit.txt",
+      "/tmp/world-experiment/npdes-semantic-refinement-admission-v1/c30e77a4fcffe80a8960c5bba88e46c2/documents/gcc/reasonable_potential.txt",
+      "/tmp/world-experiment/npdes-semantic-refinement-admission-v1/c30e77a4fcffe80a8960c5bba88e46c2/documents/gcc/final_permit.txt",
+      "/tmp/world-experiment/npdes-semantic-refinement-admission-v1/c30e77a4fcffe80a8960c5bba88e46c2/documents/gcc/minor_modification.txt",
+      "/tmp/world-experiment/npdes-semantic-refinement-admission-v1/c30e77a4fcffe80a8960c5bba88e46c2/documents/gcc/reasonable_potential.txt",
+      "/tmp/world-experiment/npdes-semantic-refinement-admission-v1/c30e77a4fcffe80a8960c5bba88e46c2/documents/farmington/part_iv.txt",
+      "/tmp/world-experiment/npdes-semantic-refinement-admission-v1/c30e77a4fcffe80a8960c5bba88e46c2/documents/farmington/final_permit.txt"
+    ],
+    "n_documents_touched": 11,
+    "queries": [
+      "document_inventory",
+      "minor_modification|minor modification|NM0000116",
+      "minor|modification|supersed",
+      "Part IV|part iv|appendix",
+      "REFINEMENT|ADMISSION|EVIDENCE_PLAN",
+      "FACT SHEET|Appendix",
+      "DRAFT|draft permit|proposed",
+      "Appendix A of Part II",
+      "effective|supersed|modif",
+      "fact sheet|appendix",
+      "Part IV hereof|Part IV of"
+    ],
+    "n_queries": 11
+  },
+  "parent": {
+    "parent_id": "document_authority",
+    "parent_status": "REFINED",
+    "independently_admitted": false,
+    "independently_unresolved": false,
+    "reason": "The parent question conflates five mechanically distinct document_kind partitions whose authority roles differ: issued final_permit self-definition, incorporated parts, draft supporting documents, calculation appendices, and an unresolved minor_modification case. Evidence supports partition-specific answers rather than one monolithic governing document or one uniform unresolved state. Children supersede the parent proposition for admission purposes."
+  },
+  "refinement": {
+    "parent_id": "document_authority",
+    "parent_status": "REFINED",
+    "children": [
+      {
+        "child_id": "issued_permit_self_defined_corpus",
+        "exact_semantic_question": "For inventoried documents with document_kind=final_permit, does the issued permit text define the governing authorization corpus by internal part structure (Parts I\u2013III/IV hereof)?",
+        "occurrence_partition_rule": "document_inventory.json entry where document_kind == \"final_permit\"",
+        "affected_count": 3,
+        "semantic_contract": "Issued final_permit documents are the primary authorization corpus; enforceable limitations and monitoring conditions are read from named internal parts of the issued permit, not from filename kind alone.",
+        "evidence_grounding": [
+          "documents/gcc/final_permit.txt cover page lines 19-21",
+          "documents/farmington/final_permit.txt cover page lines 24-25",
+          "documents/aztec/final_permit.txt cover page lines 32-33"
+        ],
+        "disposition": "SUPPORTED_RESOLUTION",
+        "admission_status": "ADMIT_DISPOSABLE",
+        "epistemic_basis": "SOURCE_ESTABLISHED",
+        "scope": "permit package documents where document_kind=final_permit across NM0000116, NM0020583, and NM0028762"
+      },
+      {
+        "child_id": "incorporated_permit_parts",
+        "exact_semantic_question": "For inventoried documents with document_kind in (part_ii_appendix, part_iv), are they incorporated into the issued final_permit by internal cross-reference rather than standing as independent authorization documents?",
+        "occurrence_partition_rule": "document_inventory.json entry where document_kind in (\"part_ii_appendix\", \"part_iv\")",
+        "affected_count": 3,
+        "semantic_contract": "Part II appendix and Part IV inventoried files are subordinate parts of the issued final_permit corpus when the corresponding final_permit cross-references them; they do not independently supersede the issued permit.",
+        "evidence_grounding": [
+          "documents/gcc/final_permit.txt lines 149-150 Appendix A of Part II",
+          "documents/farmington/final_permit.txt line 213 Part IV of the permit",
+          "documents/farmington/final_permit.txt cover page line 25 Part IV hereof"
+        ],
+        "disposition": "SUPPORTED_RESOLUTION",
+        "admission_status": "ADMIT_DISPOSABLE",
+        "epistemic_basis": "SOURCE_ESTABLISHED",
+        "scope": "permit package documents where document_kind in (part_ii_appendix, part_iv)"
+      },
+      {
+        "child_id": "supporting_draft_not_standalone_authorization",
+        "exact_semantic_question": "For inventoried documents with document_kind in (fact_sheet, statement_of_basis), does document text establish draft/proposed explanatory content that defers enforceable limitations to the issued or draft permit rather than standalone authorization?",
+        "occurrence_partition_rule": "document_inventory.json entry where document_kind in (\"fact_sheet\", \"statement_of_basis\")",
+        "affected_count": 3,
+        "semantic_contract": "Fact sheets and statements of basis are supporting draft/proposed or administrative-record documents; they do not independently authorize discharge or establish final enforceable limitations.",
+        "evidence_grounding": [
+          "documents/gcc/fact_sheet.txt line 191 DRAFT PERMIT RATIONALE",
+          "documents/gcc/fact_sheet.txt lines 504-506 FINAL DETERMINATION procedures",
+          "documents/aztec/statement_of_basis.txt lines 556-558 See the draft permit for limitations",
+          "documents/farmington/statement_of_basis.txt lines 1-5 FOR THE DRAFT NPDES PERMIT"
+        ],
+        "disposition": "SUPPORTED_NEGATIVE",
+        "admission_status": "ADMIT_DISPOSABLE",
+        "epistemic_basis": "SOURCE_ESTABLISHED",
+        "scope": "permit package documents where document_kind in (fact_sheet, statement_of_basis)"
+      },
+      {
+        "child_id": "reasonable_potential_calculation_appendix",
+        "exact_semantic_question": "For inventoried documents with document_kind=reasonable_potential, are they calculation appendices subordinate to fact sheets rather than independent authorization documents?",
+        "occurrence_partition_rule": "document_inventory.json entry where document_kind == \"reasonable_potential\"",
+        "affected_count": 2,
+        "semantic_contract": "Reasonable-potential files are WQBEL calculation workbooks appended to the fact sheet / permitting record; they do not independently authorize discharge.",
+        "evidence_grounding": [
+          "documents/aztec/reasonable_potential.txt lines 12-13 APPENDIX A of FACT SHEET",
+          "documents/gcc/reasonable_potential.txt lines 4-5 CALCULATIONS OF NEW MEXICO WATER QUALITY-BASED EFFLUENT LIMITATIONS"
+        ],
+        "disposition": "SUPPORTED_NEGATIVE",
+        "admission_status": "ADMIT_DISPOSABLE",
+        "epistemic_basis": "SOURCE_ESTABLISHED",
+        "scope": "permit package documents where document_kind=reasonable_potential"
+      },
+      {
+        "child_id": "minor_modification_authority_unestablished",
+        "exact_semantic_question": "For permit NM0000116 where both document_kind=final_permit and document_kind=minor_modification exist, which document governs enforceable limitations when both contain permit-like Part I text?",
+        "occurrence_partition_rule": "document_inventory.json entry where permit == \"NM0000116\" and document_kind == \"minor_modification\"",
+        "affected_count": 1,
+        "semantic_contract": "Minor modification may amend or restate permit conditions, but retrieved final_permit text does not incorporate or rank minor_modification; conflict precedence for this pair is not established from workspace text alone.",
+        "evidence_grounding": [
+          "documents/gcc/minor_modification.txt lines 1-10 Part I authorization language",
+          "documents/gcc/final_permit.txt cover page and grep for minor/modification (no incorporation reference retrieved)",
+          "sources/document_inventory.json coexisting NM0000116 final_permit and minor_modification entries"
+        ],
+        "disposition": "UNRESOLVED",
+        "admission_status": "UNRESOLVED",
+        "epistemic_basis": "UNRESOLVED",
+        "scope": "permit NM0000116 document_kind=minor_modification only"
+      }
+    ],
+    "partition_complete": true,
+    "partition_overlap": false,
+    "residual_occurrences": [
+      {
+        "child_id": "minor_modification_authority_unestablished",
+        "occurrence_partition_rule": "document_inventory.json entry where permit == \"NM0000116\" and document_kind == \"minor_modification\"",
+        "affected_count": 1,
+        "reason": "No retrieved workspace text establishes incorporation, supersession, or explicit conflict precedence between minor_modification and final_permit for NM0000116."
+      }
+    ],
+    "mechanically_computable": true
+  },
+  "proposals": [
+    {
+      "id": "issued_permit_self_defined_corpus",
+      "interpretation": "Issued final_permit cover pages define the governing authorization corpus by internal Parts I\u2013III/IV hereof; supporting documents defer to that corpus.",
+      "scope": "document_kind=final_permit across all three permits in document_inventory.json",
+      "epistemic_basis": "SOURCE_ESTABLISHED",
+      "exact_grounding": [
+        "documents/gcc/final_permit.txt lines 19-21",
+        "documents/farmington/final_permit.txt lines 24-25",
+        "documents/aztec/final_permit.txt lines 32-33"
+      ],
+      "semantic_delta": "Map final_permit inventory rows to issued_permit_governing_corpus with governing_scope=issued_permit_parts_internal; narrow permit_document_text_not_available unresolved to non-final_permit partitions.",
+      "admit": true,
+      "remaining_uncertainty": "Does not resolve minor_modification precedence for NM0000116 or every narrative condition within permit parts for Purposes B and C."
+    },
+    {
+      "id": "incorporated_permit_parts",
+      "interpretation": "part_ii_appendix and part_iv files are incorporated into the issued final_permit by internal cross-reference.",
+      "scope": "document_kind in (part_ii_appendix, part_iv)",
+      "epistemic_basis": "SOURCE_ESTABLISHED",
+      "exact_grounding": [
+        "documents/gcc/final_permit.txt lines 149-150",
+        "documents/farmington/final_permit.txt line 213",
+        "documents/farmington/final_permit.txt line 25"
+      ],
+      "semantic_delta": "Derive incorporated_permit_part rows with incorporation_basis=cross_reference_in_final_permit for document_kind in (part_ii_appendix, part_iv).",
+      "admit": true,
+      "remaining_uncertainty": "Cross-reference evidence is explicit for Farmington Part IV and GCC/Farmington Part II appendix; does not by itself parse every appendix section into structured limits."
+    },
+    {
+      "id": "supporting_draft_not_standalone_authorization",
+      "interpretation": "fact_sheet and statement_of_basis documents are draft/proposed supporting material, not standalone authorization.",
+      "scope": "document_kind in (fact_sheet, statement_of_basis)",
+      "epistemic_basis": "SOURCE_ESTABLISHED",
+      "exact_grounding": [
+        "documents/gcc/fact_sheet.txt line 191",
+        "documents/aztec/statement_of_basis.txt lines 556-558",
+        "documents/farmington/statement_of_basis.txt lines 1-5"
+      ],
+      "semantic_delta": "Derive supporting_draft_document rows with authority_role=supporting_draft_explanatory for fact_sheet and statement_of_basis inventory entries.",
+      "admit": true,
+      "remaining_uncertainty": "Supporting documents may still contain condition-relevant facts that must be read through issued permit parts to resolve Purposes B and C."
+    },
+    {
+      "id": "reasonable_potential_calculation_appendix",
+      "interpretation": "reasonable_potential files are calculation appendices subordinate to fact sheets, not independent authorization documents.",
+      "scope": "document_kind=reasonable_potential",
+      "epistemic_basis": "SOURCE_ESTABLISHED",
+      "exact_grounding": [
+        "documents/aztec/reasonable_potential.txt lines 12-13",
+        "documents/gcc/reasonable_potential.txt lines 4-5"
+      ],
+      "semantic_delta": "Derive calculation_appendix_document rows with authority_role=calculation_appendix_subordinate for reasonable_potential inventory entries.",
+      "admit": true,
+      "remaining_uncertainty": "GCC reasonable_potential lacks an explicit 'Appendix A of FACT SHEET' label in retrieved text; subordination is inferred from document_kind plus calculation-workbook content."
+    },
+    {
+      "id": "filename_kind_hierarchy",
+      "interpretation": "Inventory document_kind values determine conflict precedence among package documents.",
+      "scope": "all inventoried documents",
+      "epistemic_basis": "MODEL_GENERALIZATION",
+      "exact_grounding": [
+        "documents/farmington/statement_of_basis.txt lines 1-3 FACT SHEET header with inventory document_kind=statement_of_basis"
+      ],
+      "semantic_delta": "Reject filename_kind ordering; do not derive precedence from document_inventory.json document_kind alone.",
+      "admit": false,
+      "remaining_uncertainty": null
+    },
+    {
+      "id": "all_documents_co_equal",
+      "interpretation": "All twelve inventoried files are independently binding with no precedence rule.",
+      "scope": "all inventoried documents",
+      "epistemic_basis": "MODEL_GENERALIZATION",
+      "exact_grounding": [
+        "documents/gcc/fact_sheet.txt line 191 DRAFT PERMIT RATIONALE",
+        "documents/aztec/statement_of_basis.txt lines 556-558 deferral to draft permit"
+      ],
+      "semantic_delta": "Reject co-equal binding; supporting documents explicitly defer enforceable limitations.",
+      "admit": false,
+      "remaining_uncertainty": null
+    },
+    {
+      "id": "explicit_conflict_clause_required",
+      "interpretation": "Document precedence is unknowable unless an explicit inter-document conflict clause exists.",
+      "scope": "all inventoried documents",
+      "epistemic_basis": "MODEL_GENERALIZATION",
+      "exact_grounding": [
+        "No workspace file retrieved containing an explicit 'in the event of conflict' clause across all inventoried file types"
+      ],
+      "semantic_delta": "Do not require a named conflict clause before admitting issued-permit self-definition and supporting-document deferral as functional precedence.",
+      "admit": false,
+      "remaining_uncertainty": "Absence of a conflict clause does not eliminate the need to resolve minor_modification vs final_permit for NM0000116."
+    },
+    {
+      "id": "minor_modification_authority_unestablished",
+      "interpretation": "For NM0000116, minor_modification authority relative to final_permit is not established from retrieved workspace text.",
+      "scope": "permit NM0000116 document_kind=minor_modification",
+      "epistemic_basis": "UNRESOLVED",
+      "exact_grounding": [
+        "documents/gcc/minor_modification.txt lines 1-10",
+        "documents/gcc/final_permit.txt (no retrieved incorporation reference to minor_modification)"
+      ],
+      "semantic_delta": "Leave minor_modification partition outside admitted authority mappings until incorporation or supersession text is retrieved.",
+      "admit": false,
+      "remaining_uncertainty": "Whether minor_modification amends, supersedes, or duplicates final_permit Part I for Outfall 001."
+    },
+    {
+      "id": "general_npdes_package_precedence_rule",
+      "interpretation": "Across all NPDES permit packages, final_permit always governs over fact_sheet, statement_of_basis, and reasonable_potential when they disagree.",
+      "scope": "WORLD / all NPDES permit packages",
+      "epistemic_basis": "MODEL_GENERALIZATION",
+      "exact_grounding": [
+        "Local evidence from three permits in this workspace only"
+      ],
+      "semantic_delta": "Do not admit as World truth; retain as corpus-local pattern observed in this inventory.",
+      "admit": false,
+      "remaining_uncertainty": "Would require broader corpus licensing or explicit regulatory citation not present in workspace files."
+    }
+  ],
+  "admission": {
+    "ESTABLISHED_PROPOSITIONS": [
+      {
+        "proposition": "Issued final_permit cover pages authorize discharge under named internal parts hereof (Parts I\u2013III/IV).",
+        "semantic_scope": "documents where document_kind=final_permit in this workspace",
+        "epistemic_basis": "SOURCE_ESTABLISHED",
+        "admission_status": "ADMIT_DISPOSABLE",
+        "grounding": [
+          "documents/gcc/final_permit.txt lines 19-21",
+          "documents/farmington/final_permit.txt lines 24-25",
+          "documents/aztec/final_permit.txt lines 32-33"
+        ]
+      },
+      {
+        "proposition": "Part II appendix and Part IV inventoried files are incorporated into the issued final_permit by internal cross-reference.",
+        "semantic_scope": "documents where document_kind in (part_ii_appendix, part_iv) in this workspace",
+        "epistemic_basis": "SOURCE_ESTABLISHED",
+        "admission_status": "ADMIT_DISPOSABLE",
+        "grounding": [
+          "documents/gcc/final_permit.txt lines 149-150",
+          "documents/farmington/final_permit.txt lines 25 and 213"
+        ]
+      },
+      {
+        "proposition": "Fact sheets and statements of basis use draft/proposed framing and defer enforceable limitations to the permit.",
+        "semantic_scope": "documents where document_kind in (fact_sheet, statement_of_basis) in this workspace",
+        "epistemic_basis": "SOURCE_ESTABLISHED",
+        "admission_status": "ADMIT_DISPOSABLE",
+        "grounding": [
+          "documents/gcc/fact_sheet.txt line 191",
+          "documents/aztec/statement_of_basis.txt lines 556-558",
+          "documents/farmington/statement_of_basis.txt lines 1-5"
+        ]
+      },
+      {
+        "proposition": "Reasonable-potential files are calculation appendices, not standalone authorization documents.",
+        "semantic_scope": "documents where document_kind=reasonable_potential in this workspace",
+        "epistemic_basis": "SOURCE_ESTABLISHED",
+        "admission_status": "ADMIT_DISPOSABLE",
+        "grounding": [
+          "documents/aztec/reasonable_potential.txt lines 12-13",
+          "documents/gcc/reasonable_potential.txt lines 4-5"
+        ]
+      },
+      {
+        "proposition": "Inventory document_kind labels alone do not determine document authority or conflict precedence.",
+        "semantic_scope": "all entries in sources/document_inventory.json",
+        "epistemic_basis": "SOURCE_ESTABLISHED",
+        "admission_status": "ADMIT_DISPOSABLE",
+        "grounding": [
+          "documents/farmington/statement_of_basis.txt lines 1-3 FACT SHEET header",
+          "sources/document_inventory.json (kind labels without precedence metadata)"
+        ]
+      }
+    ],
+    "GENERALIZATIONS_CONSIDERED": [
+      {
+        "proposition": "Across NPDES permit packages, final_permit always governs over fact_sheet, statement_of_basis, reasonable_potential, and incorporated parts when package documents disagree.",
+        "scope": "LEVEL_3_GENERAL / WORLD"
+      },
+      {
+        "proposition": "Minor modifications always supersede the base final_permit unless an explicit incorporation clause says otherwise.",
+        "scope": "LEVEL_3_GENERAL / WORLD"
+      },
+      {
+        "proposition": "Precedence requires an explicit 'in the event of conflict' clause; without one no functional precedence exists.",
+        "scope": "LEVEL_3_GENERAL / WORLD"
+      },
+      {
+        "proposition": "Within this three-permit inventory, issued final_permit plus incorporated parts form the enforceable corpus and supporting document kinds defer to it.",
+        "scope": "LEVEL_2_KIND_OR_CORPUS_LOCAL"
+      }
+    ],
+    "GENERALIZATIONS_ADMITTED": [
+      {
+        "proposition": "Within this three-permit inventory, issued final_permit defines the primary authorization corpus; part_ii_appendix and part_iv are incorporated by cross-reference; fact_sheet, statement_of_basis, and reasonable_potential are supporting subordinate documents.",
+        "scope": "LEVEL_2_KIND_OR_CORPUS_LOCAL",
+        "epistemic_basis": "SOURCE_ESTABLISHED",
+        "admission_status": "ADMIT_DISPOSABLE",
+        "note": "Licensed only by repeated document-local patterns across NM0000116, NM0020583, and NM0028762 in this workspace."
+      }
+    ],
+    "GENERALIZATIONS_WITHHELD": [
+      {
+        "proposition": "Across all NPDES permit packages, final_permit always governs over supporting package documents when they disagree.",
+        "why_plausible": "All three final_permits in this inventory self-define authorization by internal parts; supporting documents defer in retrieved text.",
+        "evidence_needed": "Explicit regulatory or multi-corpus workspace rule beyond these three permits.",
+        "why_insufficient": "Observations are document-local and repeated only within this bounded inventory; no workspace file states a universal precedence rule."
+      },
+      {
+        "proposition": "Minor modifications always supersede the base final_permit.",
+        "why_plausible": "minor_modification.txt for NM0000116 contains Part I authorization language resembling a permit.",
+        "evidence_needed": "Retrieved incorporation, supersession, or effective-date conflict language linking minor_modification to final_permit.",
+        "why_insufficient": "final_permit text retrieved does not reference minor_modification; no explicit conflict clause was found."
+      },
+      {
+        "proposition": "Precedence is unknowable without an explicit inter-document conflict clause.",
+        "why_plausible": "No package-wide 'in the event of conflict' clause was retrieved.",
+        "evidence_needed": "Demonstration that functional precedence cannot be read from issued-permit self-definition and supporting-document deferral.",
+        "why_insufficient": "Issued-permit cover pages and supporting-document deferral language establish functional precedence for most partitions without a named conflict clause."
+      }
+    ],
+    "LEVELS": {
+      "LEVEL_1_DOCUMENT_LOCAL": [
+        {
+          "proposition": "GCC final_permit authorizes discharge under Parts I\u2013III hereof.",
+          "semantic_scope": "documents/gcc/final_permit.txt",
+          "epistemic_basis": "SOURCE_ESTABLISHED",
+          "admission_status": "ADMIT_DISPOSABLE"
+        },
+        {
+          "proposition": "Farmington final_permit authorizes discharge under Parts I\u2013IV hereof.",
+          "semantic_scope": "documents/farmington/final_permit.txt",
+          "epistemic_basis": "SOURCE_ESTABLISHED",
+          "admission_status": "ADMIT_DISPOSABLE"
+        },
+        {
+          "proposition": "Aztec statement_of_basis defers final effluent limitations to the draft permit.",
+          "semantic_scope": "documents/aztec/statement_of_basis.txt Section F",
+          "epistemic_basis": "SOURCE_ESTABLISHED",
+          "admission_status": "ADMIT_DISPOSABLE"
+        },
+        {
+          "proposition": "GCC minor_modification contains Part I authorization text but is not referenced by retrieved final_permit text.",
+          "semantic_scope": "documents/gcc/minor_modification.txt relative to documents/gcc/final_permit.txt",
+          "epistemic_basis": "SOURCE_ESTABLISHED",
+          "admission_status": "ADMIT_DISPOSABLE"
+        }
+      ],
+      "LEVEL_2_KIND_OR_CORPUS_LOCAL": [
+        {
+          "proposition": "document_kind=final_permit entries define the issued authorization corpus by internal parts; document_kind in (part_ii_appendix, part_iv) are incorporated parts; document_kind in (fact_sheet, statement_of_basis, reasonable_potential) are supporting subordinate documents within this inventory.",
+          "semantic_scope": "all twelve entries in sources/document_inventory.json except unresolved minor_modification precedence",
+          "epistemic_basis": "SOURCE_ESTABLISHED",
+          "admission_status": "ADMIT_DISPOSABLE"
+        }
+      ],
+      "LEVEL_3_GENERAL": [
+        {
+          "proposition": "Universal NPDES package-document precedence follows document_kind filename ordering.",
+          "semantic_scope": "WORLD",
+          "epistemic_basis": "MODEL_GENERALIZATION",
+          "admission_status": "UNVERIFIED_PROPOSAL"
+        },
+        {
+          "proposition": "Universal rule that final_permit always governs supporting package documents on conflict.",
+          "semantic_scope": "WORLD",
+          "epistemic_basis": "MODEL_GENERALIZATION",
+          "admission_status": "UNVERIFIED_PROPOSAL"
+        },
+        {
+          "proposition": "minor_modification always supersedes final_permit when both exist.",
+          "semantic_scope": "WORLD",
+          "epistemic_basis": "MODEL_GENERALIZATION",
+          "admission_status": "UNVERIFIED_PROPOSAL"
+        }
+      ]
+    }
+  },
+  "plan": {
+    "proposition": "Without ranking from filenames, what do inventoried permit documents establish, and which document governs if they disagree?",
+    "would_establish": [
+      "Issued final_permit cover pages authorize discharge only under named internal parts (Parts I\u2013III/IV and cross-referenced appendices), defining the governing authorization corpus without using filename kind as hierarchy.",
+      "Part II appendix and Part IV inventoried files are incorporated into the issued final_permit by internal cross-reference rather than standing as independent authorization documents.",
+      "Fact sheets and statements of basis frame content as draft/proposed rationale or administrative record and defer enforceable limitations to the issued or draft permit.",
+      "Reasonable-potential files are calculation workbooks subordinate to fact sheets, not standalone authorization documents.",
+      "document_inventory.json document_kind labels alone do not determine conflict precedence; document text must govern classification and authority."
+    ],
+    "would_refute": [
+      "Filename or inventory document_kind values (final_permit > fact_sheet > reasonable_potential, etc.) determine both content authority and conflict precedence.",
+      "All twelve inventoried files are independently binding with no functional precedence among them.",
+      "Precedence is entirely unknowable unless an explicit 'in the event of conflict' clause appears between package documents."
+    ],
+    "documents_plausibly_relevant": [
+      "sources/document_inventory.json",
+      "documents/INDEX.md",
+      "documents/gcc/final_permit.txt",
+      "documents/farmington/final_permit.txt",
+      "documents/aztec/final_permit.txt",
+      "documents/gcc/part_ii_appendix.txt",
+      "documents/farmington/part_ii_appendix.txt",
+      "documents/farmington/part_iv.txt",
+      "documents/gcc/fact_sheet.txt",
+      "documents/farmington/statement_of_basis.txt",
+      "documents/aztec/statement_of_basis.txt",
+      "documents/aztec/reasonable_potential.txt",
+      "documents/gcc/reasonable_potential.txt",
+      "documents/gcc/minor_modification.txt"
+    ],
+    "insufficient_alone": [
+      "sources/document_inventory.json provides path, permit, document_kind, and hash but no precedence or incorporation metadata beyond kind labels.",
+      "documents/INDEX.md lists filenames and kinds but contains no narrative authority rules.",
+      "A single final_permit cover page establishes self-definition for that permit only; it does not by itself resolve minor_modification authority for NM0000116.",
+      "PRIOR_PACKET.json is bounded prior retrieval, not authoritative disposition."
+    ]
+  },
+  "packet": {
+    "obligation_id": "document_authority",
+    "exact_semantic_question": "Without ranking from filenames, what do inventoried permit documents establish, and which document governs if they disagree?",
+    "retained_snippets": [
+      {
+        "source_id": "documents/gcc/final_permit.txt",
+        "location": "lines 19-21, cover page",
+        "text": "in accordance with this cover page and effluent limitations, monitoring requirements, and other conditions set forth in Parts I [Requirements for NPDES Permits], II [Other Conditions], and III [Standard Conditions for NPDES Permits] hereof.",
+        "why_retained": "Defines GCC issued permit governing corpus by internal part structure, not filename kind."
+      },
+      {
+        "source_id": "documents/farmington/final_permit.txt",
+        "location": "lines 24-25, cover page",
+        "text": "in accordance with this cover page and the effluent limitations, monitoring requirements, and other conditions set forth in Part I, Part II, Part III, and Part IV hereof.",
+        "why_retained": "Farmington issued permit self-limits governing text to named parts including separately inventoried Part IV."
+      },
+      {
+        "source_id": "documents/aztec/final_permit.txt",
+        "location": "lines 32-33, cover page",
+        "text": "in accordance with this cover page and the effluent limitations, monitoring requirements, and other conditions set forth in Part I, Part II, and Part III hereof.",
+        "why_retained": "Third issued final_permit confirms the same self-defined authorization pattern across permits."
+      },
+      {
+        "source_id": "documents/gcc/final_permit.txt",
+        "location": "lines 149-150, Part II",
+        "text": "Current EPA Region 6 minimum quantification levels (MQLs) for reporting and compliance are provided in Appendix A of Part II of this permit.",
+        "why_retained": "Incorporates part_ii_appendix content into issued permit by internal cross-reference."
+      },
+      {
+        "source_id": "documents/farmington/final_permit.txt",
+        "location": "line 213, Part II",
+        "text": "The annual sludge report required in Part IV of the permit is due on February 19 of each year",
+        "why_retained": "Cross-reference incorporating separately inventoried part_iv into the issued permit."
+      },
+      {
+        "source_id": "documents/gcc/fact_sheet.txt",
+        "location": "line 191, Section V title",
+        "text": "V.     DRAFT PERMIT RATIONALE AND PROPOSED PERMIT CONDITIONS",
+        "why_retained": "Frames fact_sheet as draft/proposed rationale, not standalone enforceable authorization."
+      },
+      {
+        "source_id": "documents/gcc/fact_sheet.txt",
+        "location": "lines 504-506, Section XV",
+        "text": "XV.     FINAL DETERMINATION\n\nThe public notice describes the procedures for the formulation of final determinations.",
+        "why_retained": "Positions fact sheet in the permitting decision process rather than as issued authorization."
+      },
+      {
+        "source_id": "documents/aztec/statement_of_basis.txt",
+        "location": "lines 556-558, Section F",
+        "text": "F.       FINAL EFFLUENT LIMITATIONS\n\nSee the draft permit for limitations.",
+        "why_retained": "Explicitly defers binding limitations to the permit document."
+      },
+      {
+        "source_id": "documents/farmington/statement_of_basis.txt",
+        "location": "lines 1-5, header",
+        "text": "PERMIT NO. NM0020583                    FACT SHEET                             Page 1\n\n                                FACT SHEET\n\nFOR THE DRAFT NATIONAL POLLUTANT DISCHARGE ELIMINATION SYSTEM",
+        "why_retained": "Shows inventory document_kind is not a reliable hierarchy signal; text must govern classification."
+      },
+      {
+        "source_id": "documents/aztec/reasonable_potential.txt",
+        "location": "lines 12-13",
+        "text": "STEP 1:             REFERENCE IMPLEMENTATION PROCEDURES                                   APPENDIX A\n                    INPUT FACILITY AND RECEIVING STREAM DATA                                of FACT SHEET",
+        "why_retained": "Aztec reasonable_potential explicitly labels itself an appendix to the fact sheet."
+      },
+      {
+        "source_id": "documents/gcc/reasonable_potential.txt",
+        "location": "lines 4-5",
+        "text": "CALCULATIONS OF NEW MEXICO WATER QUALITY-BASED EFFLUENT LIMITATIONS",
+        "why_retained": "GCC reasonable_potential is a calculation workbook, not an authorization cover page."
+      },
+      {
+        "source_id": "documents/gcc/minor_modification.txt",
+        "location": "lines 1-10, Part I opening",
+        "text": "PERMIT NO. NM0000116                                                             PAGE 1 OF PART I\n\nPART I \u2013 REQUIREMENTS FOR NPDES PERMITS\n\nSECTION A. LIMITATIONS AND MONITORING REQUIREMENTS\n\n1.     Outfalls 001\n\nDuring the period beginning the effective date of the permit and lasting through the dismantle of Outfall 001, the permittee is authorized to",
+        "why_retained": "Minor modification contains permit-like authorization language but no retrieved cross-reference from final_permit establishes incorporation or supersession."
+      },
+      {
+        "source_id": "sources/document_inventory.json",
+        "location": "entries for NM0000116",
+        "text": "document_kind values for permit NM0000116: fact_sheet, final_permit, minor_modification, part_ii_appendix, reasonable_potential",
+        "why_retained": "Structured inventory lists coexisting document kinds for one permit without precedence metadata."
+      }
+    ],
+    "candidate_interpretations": [
+      {
+        "id": "filename_kind_hierarchy",
+        "statement": "document_inventory.json document_kind values determine both content authority and conflict precedence.",
+        "status": "refuted_by_evidence",
+        "reason": "Farmington statement_of_basis opens with a FACT SHEET header while inventory labels it statement_of_basis; no workspace text ranks kinds."
+      },
+      {
+        "id": "issued_permit_self_defined_corpus",
+        "statement": "Issued final_permit text defines its own governing corpus via cover-page Parts I\u2013III/IV and internal cross-references; supporting package documents explain draft/proposed rationale and defer enforceable limitations.",
+        "status": "supported_by_evidence",
+        "reason": "All three final_permit cover pages use 'hereof' part structure; supporting documents use draft/proposed framing or defer to the permit."
+      },
+      {
+        "id": "all_documents_co_equal",
+        "statement": "All twelve inventoried files are independently binding with no precedence rule.",
+        "status": "refuted_by_evidence",
+        "reason": "Fact sheets and statements of basis discuss proposed conditions and administrative record rather than standalone authorization."
+      },
+      {
+        "id": "explicit_conflict_clause_required",
+        "statement": "Precedence is unknowable unless a workspace file contains an explicit inter-document conflict clause.",
+        "status": "partially_supported_limitation",
+        "reason": "No explicit package-wide conflict clause was found, but issued-permit self-definition plus supporting-document deferral still establish functional precedence for most partitions."
+      },
+      {
+        "id": "minor_modification_unresolved",
+        "statement": "For NM0000116, minor_modification authority relative to final_permit remains unestablished from retrieved text.",
+        "status": "supported_by_evidence",
+        "reason": "minor_modification contains Part I authorization text, but final_permit does not reference it; no incorporation or supersession clause was retrieved."
+      }
+    ]
+  },
+  "retrieval_log": {
+    "documents_plausibly_relevant": [
+      "sources/document_inventory.json",
+      "documents/INDEX.md",
+      "documents/gcc/final_permit.txt",
+      "documents/farmington/final_permit.txt",
+      "documents/aztec/final_permit.txt",
+      "documents/gcc/part_ii_appendix.txt",
+      "documents/farmington/part_ii_appendix.txt",
+      "documents/farmington/part_iv.txt",
+      "documents/gcc/fact_sheet.txt",
+      "documents/farmington/statement_of_basis.txt",
+      "documents/aztec/statement_of_basis.txt",
+      "documents/aztec/reasonable_potential.txt",
+      "documents/gcc/reasonable_potential.txt",
+      "documents/gcc/minor_modification.txt"
+    ],
+    "documents_inspected": [
+      "sources/document_inventory.json",
+      "documents/INDEX.md",
+      "documents/gcc/final_permit.txt",
+      "documents/farmington/final_permit.txt",
+      "documents/aztec/final_permit.txt",
+      "documents/gcc/part_ii_appendix.txt",
+      "documents/farmington/part_iv.txt",
+      "documents/gcc/fact_sheet.txt",
+      "documents/farmington/statement_of_basis.txt",
+      "documents/aztec/statement_of_basis.txt",
+      "documents/aztec/reasonable_potential.txt",
+      "documents/gcc/reasonable_potential.txt",
+      "documents/gcc/minor_modification.txt",
+      "PRIOR_PACKET.json"
+    ],
+    "retained_snippets_count": 13
+  },
+  "mutated_durable": false,
+  "dry_runs": [
+    {
+      "child_id": "incorporated_permit_parts",
+      "ok": true,
+      "errors": [],
+      "delta": {
+        "relation_count_changes": {
+          "incorporated_permit_part": {
+            "baseline": null,
+            "proposed": 3
+          }
+        },
+        "requirements_added": [],
+        "requirements_removed": [],
+        "requirements_changed": [],
+        "relation_mode_changes": {
+          "incorporated_permit_part": {
+            "baseline": null,
+            "proposed": "WORLD"
+          }
+        },
+        "n_hole_groups": {
+          "baseline": 8,
+          "proposed": 8
+        },
+        "n_hole_instances": {
+          "baseline": 535,
+          "proposed": 535
+        },
+        "hole_requirements_added": [],
+        "hole_requirements_removed": [],
+        "WORLD_semantics_changed": true,
+        "PURPOSE_semantics_changed": true,
+        "ok": {
+          "baseline": true,
+          "proposed": true
+        }
+      },
+      "public": {
+        "ok": true,
+        "errors": [],
+        "n_hole_groups": 8,
+        "n_hole_instances": 535,
+        "relation_row_counts": {
+          "dmr_measurement": 824,
+          "permit_limit": 105,
+          "permit_document": 12,
+          "incorporated_permit_part": 3,
+          "fy2025_measurement": 824,
+          "measurement_limit_pair": 824,
+          "numeric_comparison_candidate": 342,
+          "no_numeric_result_case": 186,
+          "monitoring_requirement_fy2025": 105
+        },
+        "requirement_names": [
+          "fy2025_measurements_materializable",
+          "measurement_limit_pairs_materializable",
+          "unique_applicable_limit_per_measurement",
+          "numeric_comparison_candidates_materializable",
+          "limit_value_for_comparison",
+          "reported_value_for_comparison",
+          "limit_comparison_operator",
+          "reported_value_qualifier",
+          "optional_monitoring_flag_for_limit_applicability",
+          "limit_type_code_for_enforceability",
+          "statistical_base_for_limit_comparison",
+          "monitoring_requirements_materializable",
+          "monitoring_frequency_code",
+          "limit_sample_type_code",
+          "optional_monitoring_flag_for_obligation",
+          "permit_limit_comment_text",
+          "limit_set_designator_for_schedule",
+          "no_numeric_result_cases_materializable",
+          "nodi_code_semantics",
+          "optional_monitoring_flag_for_missing_evidence",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "aggregated_reporting_requirement",
+          "conditional_discharge_dependent_monitoring",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "permit_document_text_not_available"
+        ],
+        "hole_groups": [
+          {
+            "group_id": "g000",
+            "requirement": "aggregated_reporting_requirement",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation": "monitoring_requirement_fy2025",
+            "n_instances": 40,
+            "purpose": [
+              "B",
+              "C"
+            ],
+            "sample_subjects": [
+              {
+                "limit_value_id": "3610673284",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673282",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673283",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673281",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673290",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673289",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673278",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673277",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673280",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673279",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610838794",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610838793",
+                "limit_set_schedule_id": "3600891019"
+              }
+            ],
+            "expected": "purpose-computable interpretation"
+          },
+          {
+            "group_id": "g001",
+            "requirement": "conditional_discharge_dependent_monitoring",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation": "monitoring_requirement_fy2025",
+            "n_instances": 17,
+            "purpose": [
+              "B",
+              "C"
+            ],
+            "sample_subjects": [
+              {
+                "limit_value_id": "3610840344",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840345",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840341",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840343",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840342",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840340",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840349",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840350",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840348",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840339",
+                "limit_set_schedule_id": "3600904606"
+              },
+              {
+                "limit_value_id": "3610840337",
+                "limit_set_schedule_id": "3600904606"
+              },
+              {
+                "limit_value_id": "3610840338",
+                "limit_set_schedule_id": "3600904606"
+              }
+            ],
+            "expected": "purpose-computable interpretation"
+          },
+          {
+            "group_id": "g002",
+            "requirement": "limit_sample_type_code",
+            "failure_kind": "UNINTERPRETED",
+            "relation": "monitoring_requirement_fy2025",
+            "n_instances": 105,
+            "purpose": [
+              "B"
+            ],
+            "sample_subjects": [
+              {
+                "limit_sample_type_code": "12",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673284"
+              },
+              {
+                "limit_sample_type_code": "12",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673282"
+              },
+              {
+                "limit_sample_type_code": "12",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673283"
+              },
+              {
+                "limit_sample_type_code": "12",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673281"
+              },
+              {
+                "limit_sample_type_code": "GR",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129864"
+              },
+              {
+                "limit_sample_type_code": "GR",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833505|limit_value_id=3610129864"
+              },
+              {
+                "limit_sample_type_code": "GR",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833505|limit_value_id=3610129865"
+              },
+              {
+                "limit_sample_type_code": "GR",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129865"
+              },
+              {
+                "limit_sample_type_code": "GR",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673290"
+              },
+              {
+                "limit_sample_type_code": "GR",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673289"
+              },
+              {
+                "limit_sample_type_code": "GR",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840344"
+              },
+              {
+                "limit_sample_type_code": "GR",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840345"
+              }
+            ],
+            "expected": "limit_sample_type_code in known ['']"
+          },
+          {
+            "group_id": "g003",
+            "requirement": "monitoring_frequency_code",
+            "failure_kind": "UNINTERPRETED",
+            "relation": "monitoring_requirement_fy2025",
+            "n_instances": 105,
+            "purpose": [
+              "B"
+            ],
+            "sample_subjects": [
+              {
+                "limit_freq_of_analysis_code": "05/WK",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673284"
+              },
+              {
+                "limit_freq_of_analysis_code": "05/WK",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673282"
+              },
+              {
+                "limit_freq_of_analysis_code": "05/WK",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673283"
+              },
+              {
+                "limit_freq_of_analysis_code": "05/WK",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673281"
+              },
+              {
+                "limit_freq_of_analysis_code": "01/01",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129864"
+              },
+              {
+                "limit_freq_of_analysis_code": "01/01",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833505|limit_value_id=3610129864"
+              },
+              {
+                "limit_freq_of_analysis_code": "01/01",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833505|limit_value_id=3610129865"
+              },
+              {
+                "limit_freq_of_analysis_code": "01/01",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129865"
+              },
+              {
+                "limit_freq_of_analysis_code": "05/WK",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673290"
+              },
+              {
+                "limit_freq_of_analysis_code": "05/WK",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673289"
+              },
+              {
+                "limit_freq_of_analysis_code": "01/07",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840344"
+              },
+              {
+                "limit_freq_of_analysis_code": "01/07",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840345"
+              }
+            ],
+            "expected": "limit_freq_of_analysis_code in known ['']"
+          },
+          {
+            "group_id": "g004",
+            "requirement": "nodi_code_semantics",
+            "failure_kind": "UNINTERPRETED",
+            "relation": "no_numeric_result_case",
+            "n_instances": 186,
+            "purpose": [
+              "C"
+            ],
+            "sample_subjects": [
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662047"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662059"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662071"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662083"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662048"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662060"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662072"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662084"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662049"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662061"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662073"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662085"
+              }
+            ],
+            "expected": "nodi_code in known ['']"
+          },
+          {
+            "group_id": "g005",
+            "requirement": "pass_fail_reporting_semantics",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation": "measurement_limit_pair",
+            "n_instances": 12,
+            "purpose": [
+              "A",
+              "B",
+              "C"
+            ],
+            "sample_subjects": [
+              {
+                "limit_value_id": "3610839676",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839677",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839678",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839679",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839680",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839681",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839682",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839683",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839684",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839685",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839686",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839687",
+                "limit_set_schedule_id": "3600904539"
+              }
+            ],
+            "expected": "purpose-computable interpretation"
+          },
+          {
+            "group_id": "g006",
+            "requirement": "permit_document_text_not_available",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation": "permit_document",
+            "n_instances": 1,
+            "purpose": [
+              "B",
+              "C"
+            ],
+            "sample_subjects": [
+              {
+                "source": "document_inventory.json"
+              }
+            ],
+            "expected": "purpose-computable interpretation"
+          },
+          {
+            "group_id": "g007",
+            "requirement": "permit_limit_comment_text",
+            "failure_kind": "UNINTERPRETED",
+            "relation": "permit_limit",
+            "n_instances": 69,
+            "purpose": [
+              "B",
+              "C"
+            ],
+            "sample_subjects": [
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673284"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673282"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673283"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673281"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673290"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673289"
+              },
+              {
+                "dmr_comment_text": "WHEN DISCHARGING.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840344"
+              },
+              {
+                "dmr_comment_text": "WHEN DISCHARGING.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840345"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673278"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673277"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673280"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673279"
+              }
+            ],
+            "expected": "dmr_comment_text in known ['']"
+          }
+        ]
+      }
+    },
+    {
+      "child_id": "issued_permit_self_defined_corpus",
+      "ok": true,
+      "errors": [],
+      "delta": {
+        "relation_count_changes": {
+          "issued_permit_governing_corpus": {
+            "baseline": null,
+            "proposed": 3
+          }
+        },
+        "requirements_added": [],
+        "requirements_removed": [],
+        "requirements_changed": [],
+        "relation_mode_changes": {
+          "issued_permit_governing_corpus": {
+            "baseline": null,
+            "proposed": "WORLD"
+          }
+        },
+        "n_hole_groups": {
+          "baseline": 8,
+          "proposed": 8
+        },
+        "n_hole_instances": {
+          "baseline": 535,
+          "proposed": 535
+        },
+        "hole_requirements_added": [],
+        "hole_requirements_removed": [],
+        "WORLD_semantics_changed": true,
+        "PURPOSE_semantics_changed": true,
+        "ok": {
+          "baseline": true,
+          "proposed": true
+        }
+      },
+      "public": {
+        "ok": true,
+        "errors": [],
+        "n_hole_groups": 8,
+        "n_hole_instances": 535,
+        "relation_row_counts": {
+          "dmr_measurement": 824,
+          "permit_limit": 105,
+          "permit_document": 12,
+          "issued_permit_governing_corpus": 3,
+          "fy2025_measurement": 824,
+          "measurement_limit_pair": 824,
+          "numeric_comparison_candidate": 342,
+          "no_numeric_result_case": 186,
+          "monitoring_requirement_fy2025": 105
+        },
+        "requirement_names": [
+          "fy2025_measurements_materializable",
+          "measurement_limit_pairs_materializable",
+          "unique_applicable_limit_per_measurement",
+          "numeric_comparison_candidates_materializable",
+          "limit_value_for_comparison",
+          "reported_value_for_comparison",
+          "limit_comparison_operator",
+          "reported_value_qualifier",
+          "optional_monitoring_flag_for_limit_applicability",
+          "limit_type_code_for_enforceability",
+          "statistical_base_for_limit_comparison",
+          "monitoring_requirements_materializable",
+          "monitoring_frequency_code",
+          "limit_sample_type_code",
+          "optional_monitoring_flag_for_obligation",
+          "permit_limit_comment_text",
+          "limit_set_designator_for_schedule",
+          "no_numeric_result_cases_materializable",
+          "nodi_code_semantics",
+          "optional_monitoring_flag_for_missing_evidence",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "aggregated_reporting_requirement",
+          "conditional_discharge_dependent_monitoring",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "permit_document_text_not_available"
+        ],
+        "hole_groups": [
+          {
+            "group_id": "g000",
+            "requirement": "aggregated_reporting_requirement",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation": "monitoring_requirement_fy2025",
+            "n_instances": 40,
+            "purpose": [
+              "B",
+              "C"
+            ],
+            "sample_subjects": [
+              {
+                "limit_value_id": "3610673284",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673282",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673283",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673281",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673290",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673289",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673278",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673277",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673280",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673279",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610838794",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610838793",
+                "limit_set_schedule_id": "3600891019"
+              }
+            ],
+            "expected": "purpose-computable interpretation"
+          },
+          {
+            "group_id": "g001",
+            "requirement": "conditional_discharge_dependent_monitoring",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation": "monitoring_requirement_fy2025",
+            "n_instances": 17,
+            "purpose": [
+              "B",
+              "C"
+            ],
+            "sample_subjects": [
+              {
+                "limit_value_id": "3610840344",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840345",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840341",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840343",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840342",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840340",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840349",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840350",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840348",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840339",
+                "limit_set_schedule_id": "3600904606"
+              },
+              {
+                "limit_value_id": "3610840337",
+                "limit_set_schedule_id": "3600904606"
+              },
+              {
+                "limit_value_id": "3610840338",
+                "limit_set_schedule_id": "3600904606"
+              }
+            ],
+            "expected": "purpose-computable interpretation"
+          },
+          {
+            "group_id": "g002",
+            "requirement": "limit_sample_type_code",
+            "failure_kind": "UNINTERPRETED",
+            "relation": "monitoring_requirement_fy2025",
+            "n_instances": 105,
+            "purpose": [
+              "B"
+            ],
+            "sample_subjects": [
+              {
+                "limit_sample_type_code": "12",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673284"
+              },
+              {
+                "limit_sample_type_code": "12",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673282"
+              },
+              {
+                "limit_sample_type_code": "12",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673283"
+              },
+              {
+                "limit_sample_type_code": "12",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673281"
+              },
+              {
+                "limit_sample_type_code": "GR",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129864"
+              },
+              {
+                "limit_sample_type_code": "GR",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833505|limit_value_id=3610129864"
+              },
+              {
+                "limit_sample_type_code": "GR",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833505|limit_value_id=3610129865"
+              },
+              {
+                "limit_sample_type_code": "GR",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129865"
+              },
+              {
+                "limit_sample_type_code": "GR",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673290"
+              },
+              {
+                "limit_sample_type_code": "GR",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673289"
+              },
+              {
+                "limit_sample_type_code": "GR",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840344"
+              },
+              {
+                "limit_sample_type_code": "GR",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840345"
+              }
+            ],
+            "expected": "limit_sample_type_code in known ['']"
+          },
+          {
+            "group_id": "g003",
+            "requirement": "monitoring_frequency_code",
+            "failure_kind": "UNINTERPRETED",
+            "relation": "monitoring_requirement_fy2025",
+            "n_instances": 105,
+            "purpose": [
+              "B"
+            ],
+            "sample_subjects": [
+              {
+                "limit_freq_of_analysis_code": "05/WK",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673284"
+              },
+              {
+                "limit_freq_of_analysis_code": "05/WK",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673282"
+              },
+              {
+                "limit_freq_of_analysis_code": "05/WK",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673283"
+              },
+              {
+                "limit_freq_of_analysis_code": "05/WK",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673281"
+              },
+              {
+                "limit_freq_of_analysis_code": "01/01",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129864"
+              },
+              {
+                "limit_freq_of_analysis_code": "01/01",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833505|limit_value_id=3610129864"
+              },
+              {
+                "limit_freq_of_analysis_code": "01/01",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833505|limit_value_id=3610129865"
+              },
+              {
+                "limit_freq_of_analysis_code": "01/01",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129865"
+              },
+              {
+                "limit_freq_of_analysis_code": "05/WK",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673290"
+              },
+              {
+                "limit_freq_of_analysis_code": "05/WK",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673289"
+              },
+              {
+                "limit_freq_of_analysis_code": "01/07",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840344"
+              },
+              {
+                "limit_freq_of_analysis_code": "01/07",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840345"
+              }
+            ],
+            "expected": "limit_freq_of_analysis_code in known ['']"
+          },
+          {
+            "group_id": "g004",
+            "requirement": "nodi_code_semantics",
+            "failure_kind": "UNINTERPRETED",
+            "relation": "no_numeric_result_case",
+            "n_instances": 186,
+            "purpose": [
+              "C"
+            ],
+            "sample_subjects": [
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662047"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662059"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662071"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662083"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662048"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662060"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662072"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662084"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662049"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662061"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662073"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662085"
+              }
+            ],
+            "expected": "nodi_code in known ['']"
+          },
+          {
+            "group_id": "g005",
+            "requirement": "pass_fail_reporting_semantics",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation": "measurement_limit_pair",
+            "n_instances": 12,
+            "purpose": [
+              "A",
+              "B",
+              "C"
+            ],
+            "sample_subjects": [
+              {
+                "limit_value_id": "3610839676",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839677",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839678",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839679",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839680",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839681",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839682",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839683",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839684",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839685",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839686",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839687",
+                "limit_set_schedule_id": "3600904539"
+              }
+            ],
+            "expected": "purpose-computable interpretation"
+          },
+          {
+            "group_id": "g006",
+            "requirement": "permit_document_text_not_available",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation": "permit_document",
+            "n_instances": 1,
+            "purpose": [
+              "B",
+              "C"
+            ],
+            "sample_subjects": [
+              {
+                "source": "document_inventory.json"
+              }
+            ],
+            "expected": "purpose-computable interpretation"
+          },
+          {
+            "group_id": "g007",
+            "requirement": "permit_limit_comment_text",
+            "failure_kind": "UNINTERPRETED",
+            "relation": "permit_limit",
+            "n_instances": 69,
+            "purpose": [
+              "B",
+              "C"
+            ],
+            "sample_subjects": [
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673284"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673282"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673283"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673281"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673290"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673289"
+              },
+              {
+                "dmr_comment_text": "WHEN DISCHARGING.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840344"
+              },
+              {
+                "dmr_comment_text": "WHEN DISCHARGING.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840345"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673278"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673277"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673280"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673279"
+              }
+            ],
+            "expected": "dmr_comment_text in known ['']"
+          }
+        ]
+      }
+    },
+    {
+      "child_id": "reasonable_potential_calculation_appendix",
+      "ok": true,
+      "errors": [],
+      "delta": {
+        "relation_count_changes": {
+          "calculation_appendix_document": {
+            "baseline": null,
+            "proposed": 2
+          }
+        },
+        "requirements_added": [],
+        "requirements_removed": [],
+        "requirements_changed": [],
+        "relation_mode_changes": {
+          "calculation_appendix_document": {
+            "baseline": null,
+            "proposed": "WORLD"
+          }
+        },
+        "n_hole_groups": {
+          "baseline": 8,
+          "proposed": 8
+        },
+        "n_hole_instances": {
+          "baseline": 535,
+          "proposed": 535
+        },
+        "hole_requirements_added": [],
+        "hole_requirements_removed": [],
+        "WORLD_semantics_changed": true,
+        "PURPOSE_semantics_changed": true,
+        "ok": {
+          "baseline": true,
+          "proposed": true
+        }
+      },
+      "public": {
+        "ok": true,
+        "errors": [],
+        "n_hole_groups": 8,
+        "n_hole_instances": 535,
+        "relation_row_counts": {
+          "dmr_measurement": 824,
+          "permit_limit": 105,
+          "permit_document": 12,
+          "calculation_appendix_document": 2,
+          "fy2025_measurement": 824,
+          "measurement_limit_pair": 824,
+          "numeric_comparison_candidate": 342,
+          "no_numeric_result_case": 186,
+          "monitoring_requirement_fy2025": 105
+        },
+        "requirement_names": [
+          "fy2025_measurements_materializable",
+          "measurement_limit_pairs_materializable",
+          "unique_applicable_limit_per_measurement",
+          "numeric_comparison_candidates_materializable",
+          "limit_value_for_comparison",
+          "reported_value_for_comparison",
+          "limit_comparison_operator",
+          "reported_value_qualifier",
+          "optional_monitoring_flag_for_limit_applicability",
+          "limit_type_code_for_enforceability",
+          "statistical_base_for_limit_comparison",
+          "monitoring_requirements_materializable",
+          "monitoring_frequency_code",
+          "limit_sample_type_code",
+          "optional_monitoring_flag_for_obligation",
+          "permit_limit_comment_text",
+          "limit_set_designator_for_schedule",
+          "no_numeric_result_cases_materializable",
+          "nodi_code_semantics",
+          "optional_monitoring_flag_for_missing_evidence",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "aggregated_reporting_requirement",
+          "conditional_discharge_dependent_monitoring",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "permit_document_text_not_available"
+        ],
+        "hole_groups": [
+          {
+            "group_id": "g000",
+            "requirement": "aggregated_reporting_requirement",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation": "monitoring_requirement_fy2025",
+            "n_instances": 40,
+            "purpose": [
+              "B",
+              "C"
+            ],
+            "sample_subjects": [
+              {
+                "limit_value_id": "3610673284",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673282",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673283",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673281",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673290",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673289",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673278",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673277",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673280",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673279",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610838794",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610838793",
+                "limit_set_schedule_id": "3600891019"
+              }
+            ],
+            "expected": "purpose-computable interpretation"
+          },
+          {
+            "group_id": "g001",
+            "requirement": "conditional_discharge_dependent_monitoring",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation": "monitoring_requirement_fy2025",
+            "n_instances": 17,
+            "purpose": [
+              "B",
+              "C"
+            ],
+            "sample_subjects": [
+              {
+                "limit_value_id": "3610840344",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840345",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840341",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840343",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840342",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840340",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840349",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840350",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840348",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840339",
+                "limit_set_schedule_id": "3600904606"
+              },
+              {
+                "limit_value_id": "3610840337",
+                "limit_set_schedule_id": "3600904606"
+              },
+              {
+                "limit_value_id": "3610840338",
+                "limit_set_schedule_id": "3600904606"
+              }
+            ],
+            "expected": "purpose-computable interpretation"
+          },
+          {
+            "group_id": "g002",
+            "requirement": "limit_sample_type_code",
+            "failure_kind": "UNINTERPRETED",
+            "relation": "monitoring_requirement_fy2025",
+            "n_instances": 105,
+            "purpose": [
+              "B"
+            ],
+            "sample_subjects": [
+              {
+                "limit_sample_type_code": "12",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673284"
+              },
+              {
+                "limit_sample_type_code": "12",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673282"
+              },
+              {
+                "limit_sample_type_code": "12",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673283"
+              },
+              {
+                "limit_sample_type_code": "12",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673281"
+              },
+              {
+                "limit_sample_type_code": "GR",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129864"
+              },
+              {
+                "limit_sample_type_code": "GR",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833505|limit_value_id=3610129864"
+              },
+              {
+                "limit_sample_type_code": "GR",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833505|limit_value_id=3610129865"
+              },
+              {
+                "limit_sample_type_code": "GR",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129865"
+              },
+              {
+                "limit_sample_type_code": "GR",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673290"
+              },
+              {
+                "limit_sample_type_code": "GR",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673289"
+              },
+              {
+                "limit_sample_type_code": "GR",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840344"
+              },
+              {
+                "limit_sample_type_code": "GR",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840345"
+              }
+            ],
+            "expected": "limit_sample_type_code in known ['']"
+          },
+          {
+            "group_id": "g003",
+            "requirement": "monitoring_frequency_code",
+            "failure_kind": "UNINTERPRETED",
+            "relation": "monitoring_requirement_fy2025",
+            "n_instances": 105,
+            "purpose": [
+              "B"
+            ],
+            "sample_subjects": [
+              {
+                "limit_freq_of_analysis_code": "05/WK",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673284"
+              },
+              {
+                "limit_freq_of_analysis_code": "05/WK",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673282"
+              },
+              {
+                "limit_freq_of_analysis_code": "05/WK",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673283"
+              },
+              {
+                "limit_freq_of_analysis_code": "05/WK",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673281"
+              },
+              {
+                "limit_freq_of_analysis_code": "01/01",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129864"
+              },
+              {
+                "limit_freq_of_analysis_code": "01/01",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833505|limit_value_id=3610129864"
+              },
+              {
+                "limit_freq_of_analysis_code": "01/01",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833505|limit_value_id=3610129865"
+              },
+              {
+                "limit_freq_of_analysis_code": "01/01",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129865"
+              },
+              {
+                "limit_freq_of_analysis_code": "05/WK",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673290"
+              },
+              {
+                "limit_freq_of_analysis_code": "05/WK",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673289"
+              },
+              {
+                "limit_freq_of_analysis_code": "01/07",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840344"
+              },
+              {
+                "limit_freq_of_analysis_code": "01/07",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840345"
+              }
+            ],
+            "expected": "limit_freq_of_analysis_code in known ['']"
+          },
+          {
+            "group_id": "g004",
+            "requirement": "nodi_code_semantics",
+            "failure_kind": "UNINTERPRETED",
+            "relation": "no_numeric_result_case",
+            "n_instances": 186,
+            "purpose": [
+              "C"
+            ],
+            "sample_subjects": [
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662047"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662059"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662071"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662083"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662048"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662060"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662072"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662084"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662049"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662061"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662073"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662085"
+              }
+            ],
+            "expected": "nodi_code in known ['']"
+          },
+          {
+            "group_id": "g005",
+            "requirement": "pass_fail_reporting_semantics",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation": "measurement_limit_pair",
+            "n_instances": 12,
+            "purpose": [
+              "A",
+              "B",
+              "C"
+            ],
+            "sample_subjects": [
+              {
+                "limit_value_id": "3610839676",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839677",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839678",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839679",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839680",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839681",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839682",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839683",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839684",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839685",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839686",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839687",
+                "limit_set_schedule_id": "3600904539"
+              }
+            ],
+            "expected": "purpose-computable interpretation"
+          },
+          {
+            "group_id": "g006",
+            "requirement": "permit_document_text_not_available",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation": "permit_document",
+            "n_instances": 1,
+            "purpose": [
+              "B",
+              "C"
+            ],
+            "sample_subjects": [
+              {
+                "source": "document_inventory.json"
+              }
+            ],
+            "expected": "purpose-computable interpretation"
+          },
+          {
+            "group_id": "g007",
+            "requirement": "permit_limit_comment_text",
+            "failure_kind": "UNINTERPRETED",
+            "relation": "permit_limit",
+            "n_instances": 69,
+            "purpose": [
+              "B",
+              "C"
+            ],
+            "sample_subjects": [
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673284"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673282"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673283"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673281"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673290"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673289"
+              },
+              {
+                "dmr_comment_text": "WHEN DISCHARGING.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840344"
+              },
+              {
+                "dmr_comment_text": "WHEN DISCHARGING.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840345"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673278"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673277"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673280"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673279"
+              }
+            ],
+            "expected": "dmr_comment_text in known ['']"
+          }
+        ]
+      }
+    },
+    {
+      "child_id": "supporting_draft_not_standalone_authorization",
+      "ok": true,
+      "errors": [],
+      "delta": {
+        "relation_count_changes": {
+          "supporting_draft_document": {
+            "baseline": null,
+            "proposed": 3
+          }
+        },
+        "requirements_added": [],
+        "requirements_removed": [],
+        "requirements_changed": [],
+        "relation_mode_changes": {
+          "supporting_draft_document": {
+            "baseline": null,
+            "proposed": "WORLD"
+          }
+        },
+        "n_hole_groups": {
+          "baseline": 8,
+          "proposed": 8
+        },
+        "n_hole_instances": {
+          "baseline": 535,
+          "proposed": 535
+        },
+        "hole_requirements_added": [],
+        "hole_requirements_removed": [],
+        "WORLD_semantics_changed": true,
+        "PURPOSE_semantics_changed": true,
+        "ok": {
+          "baseline": true,
+          "proposed": true
+        }
+      },
+      "public": {
+        "ok": true,
+        "errors": [],
+        "n_hole_groups": 8,
+        "n_hole_instances": 535,
+        "relation_row_counts": {
+          "dmr_measurement": 824,
+          "permit_limit": 105,
+          "permit_document": 12,
+          "supporting_draft_document": 3,
+          "fy2025_measurement": 824,
+          "measurement_limit_pair": 824,
+          "numeric_comparison_candidate": 342,
+          "no_numeric_result_case": 186,
+          "monitoring_requirement_fy2025": 105
+        },
+        "requirement_names": [
+          "fy2025_measurements_materializable",
+          "measurement_limit_pairs_materializable",
+          "unique_applicable_limit_per_measurement",
+          "numeric_comparison_candidates_materializable",
+          "limit_value_for_comparison",
+          "reported_value_for_comparison",
+          "limit_comparison_operator",
+          "reported_value_qualifier",
+          "optional_monitoring_flag_for_limit_applicability",
+          "limit_type_code_for_enforceability",
+          "statistical_base_for_limit_comparison",
+          "monitoring_requirements_materializable",
+          "monitoring_frequency_code",
+          "limit_sample_type_code",
+          "optional_monitoring_flag_for_obligation",
+          "permit_limit_comment_text",
+          "limit_set_designator_for_schedule",
+          "no_numeric_result_cases_materializable",
+          "nodi_code_semantics",
+          "optional_monitoring_flag_for_missing_evidence",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "aggregated_reporting_requirement",
+          "conditional_discharge_dependent_monitoring",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "conditional_discharge_dependent_monitoring",
+          "aggregated_reporting_requirement",
+          "aggregated_reporting_requirement",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "pass_fail_reporting_semantics",
+          "permit_document_text_not_available"
+        ],
+        "hole_groups": [
+          {
+            "group_id": "g000",
+            "requirement": "aggregated_reporting_requirement",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation": "monitoring_requirement_fy2025",
+            "n_instances": 40,
+            "purpose": [
+              "B",
+              "C"
+            ],
+            "sample_subjects": [
+              {
+                "limit_value_id": "3610673284",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673282",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673283",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673281",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673290",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673289",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673278",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673277",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673280",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610673279",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610838794",
+                "limit_set_schedule_id": "3600891019"
+              },
+              {
+                "limit_value_id": "3610838793",
+                "limit_set_schedule_id": "3600891019"
+              }
+            ],
+            "expected": "purpose-computable interpretation"
+          },
+          {
+            "group_id": "g001",
+            "requirement": "conditional_discharge_dependent_monitoring",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation": "monitoring_requirement_fy2025",
+            "n_instances": 17,
+            "purpose": [
+              "B",
+              "C"
+            ],
+            "sample_subjects": [
+              {
+                "limit_value_id": "3610840344",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840345",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840341",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840343",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840342",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840340",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840349",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840350",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840348",
+                "limit_set_schedule_id": "3600904607"
+              },
+              {
+                "limit_value_id": "3610840339",
+                "limit_set_schedule_id": "3600904606"
+              },
+              {
+                "limit_value_id": "3610840337",
+                "limit_set_schedule_id": "3600904606"
+              },
+              {
+                "limit_value_id": "3610840338",
+                "limit_set_schedule_id": "3600904606"
+              }
+            ],
+            "expected": "purpose-computable interpretation"
+          },
+          {
+            "group_id": "g002",
+            "requirement": "limit_sample_type_code",
+            "failure_kind": "UNINTERPRETED",
+            "relation": "monitoring_requirement_fy2025",
+            "n_instances": 105,
+            "purpose": [
+              "B"
+            ],
+            "sample_subjects": [
+              {
+                "limit_sample_type_code": "12",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673284"
+              },
+              {
+                "limit_sample_type_code": "12",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673282"
+              },
+              {
+                "limit_sample_type_code": "12",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673283"
+              },
+              {
+                "limit_sample_type_code": "12",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673281"
+              },
+              {
+                "limit_sample_type_code": "GR",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129864"
+              },
+              {
+                "limit_sample_type_code": "GR",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833505|limit_value_id=3610129864"
+              },
+              {
+                "limit_sample_type_code": "GR",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833505|limit_value_id=3610129865"
+              },
+              {
+                "limit_sample_type_code": "GR",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129865"
+              },
+              {
+                "limit_sample_type_code": "GR",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673290"
+              },
+              {
+                "limit_sample_type_code": "GR",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673289"
+              },
+              {
+                "limit_sample_type_code": "GR",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840344"
+              },
+              {
+                "limit_sample_type_code": "GR",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840345"
+              }
+            ],
+            "expected": "limit_sample_type_code in known ['']"
+          },
+          {
+            "group_id": "g003",
+            "requirement": "monitoring_frequency_code",
+            "failure_kind": "UNINTERPRETED",
+            "relation": "monitoring_requirement_fy2025",
+            "n_instances": 105,
+            "purpose": [
+              "B"
+            ],
+            "sample_subjects": [
+              {
+                "limit_freq_of_analysis_code": "05/WK",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673284"
+              },
+              {
+                "limit_freq_of_analysis_code": "05/WK",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673282"
+              },
+              {
+                "limit_freq_of_analysis_code": "05/WK",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673283"
+              },
+              {
+                "limit_freq_of_analysis_code": "05/WK",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673281"
+              },
+              {
+                "limit_freq_of_analysis_code": "01/01",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129864"
+              },
+              {
+                "limit_freq_of_analysis_code": "01/01",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833505|limit_value_id=3610129864"
+              },
+              {
+                "limit_freq_of_analysis_code": "01/01",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833505|limit_value_id=3610129865"
+              },
+              {
+                "limit_freq_of_analysis_code": "01/01",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129865"
+              },
+              {
+                "limit_freq_of_analysis_code": "05/WK",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673290"
+              },
+              {
+                "limit_freq_of_analysis_code": "05/WK",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673289"
+              },
+              {
+                "limit_freq_of_analysis_code": "01/07",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840344"
+              },
+              {
+                "limit_freq_of_analysis_code": "01/07",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840345"
+              }
+            ],
+            "expected": "limit_freq_of_analysis_code in known ['']"
+          },
+          {
+            "group_id": "g004",
+            "requirement": "nodi_code_semantics",
+            "failure_kind": "UNINTERPRETED",
+            "relation": "no_numeric_result_case",
+            "n_instances": 186,
+            "purpose": [
+              "C"
+            ],
+            "sample_subjects": [
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662047"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662059"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662071"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662083"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662048"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662060"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662072"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662084"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662049"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662061"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662073"
+              },
+              {
+                "nodi_code": "9",
+                "measurement": "measurement:dmr_form_value_id=3920662085"
+              }
+            ],
+            "expected": "nodi_code in known ['']"
+          },
+          {
+            "group_id": "g005",
+            "requirement": "pass_fail_reporting_semantics",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation": "measurement_limit_pair",
+            "n_instances": 12,
+            "purpose": [
+              "A",
+              "B",
+              "C"
+            ],
+            "sample_subjects": [
+              {
+                "limit_value_id": "3610839676",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839677",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839678",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839679",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839680",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839681",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839682",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839683",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839684",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839685",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839686",
+                "limit_set_schedule_id": "3600904539"
+              },
+              {
+                "limit_value_id": "3610839687",
+                "limit_set_schedule_id": "3600904539"
+              }
+            ],
+            "expected": "purpose-computable interpretation"
+          },
+          {
+            "group_id": "g006",
+            "requirement": "permit_document_text_not_available",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "relation": "permit_document",
+            "n_instances": 1,
+            "purpose": [
+              "B",
+              "C"
+            ],
+            "sample_subjects": [
+              {
+                "source": "document_inventory.json"
+              }
+            ],
+            "expected": "purpose-computable interpretation"
+          },
+          {
+            "group_id": "g007",
+            "requirement": "permit_limit_comment_text",
+            "failure_kind": "UNINTERPRETED",
+            "relation": "permit_limit",
+            "n_instances": 69,
+            "purpose": [
+              "B",
+              "C"
+            ],
+            "sample_subjects": [
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673284"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673282"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673283"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673281"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673290"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673289"
+              },
+              {
+                "dmr_comment_text": "WHEN DISCHARGING.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840344"
+              },
+              {
+                "dmr_comment_text": "WHEN DISCHARGING.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840345"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673278"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673277"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673280"
+              },
+              {
+                "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+                "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673279"
+              }
+            ],
+            "expected": "dmr_comment_text in known ['']"
+          }
+        ]
+      }
+    }
+  ],
+  "finished_at": "2026-09-05T16:09:51.810983+00:00"
+}

@@ -1,0 +1,49 @@
+{
+  "answers": [
+    {
+      "id": "T1",
+      "status": "ANSWERED",
+      "value": 240.0,
+      "rationale": "The effective_rate relation establishes job J1 at $240/hr using the named rate_card TOW rate (service_conditions \u00a71)."
+    },
+    {
+      "id": "T2",
+      "status": "ANSWERED",
+      "value": 2280.0,
+      "rationale": "The job_charge relation establishes $2,280 for J2: 8h at $240/hr plus 1h overtime at 1.5\u00d7 (V-BAY day total 9h > 8; service_conditions \u00a72)."
+    },
+    {
+      "id": "T3",
+      "status": "ANSWERED",
+      "value": [
+        {
+          "job": "J2",
+          "berth": "B4"
+        },
+        {
+          "job": "J5",
+          "berth": "B12"
+        }
+      ],
+      "rationale": "tow_job records show vessel V-BAY on job J2 at berth B4 and job J5 at berth B12."
+    },
+    {
+      "id": "T4",
+      "status": "ANSWERED",
+      "value": 3,
+      "rationale": "The billable_hours relation has no established quantity for J5, J6, or J7; only J1\u2013J4 have billable_hours tuples."
+    },
+    {
+      "id": "T5",
+      "status": "ANSWERED",
+      "value": false,
+      "rationale": "J7 billing_outcome is insufficient_evidence with reason 'B12 after-hours towing without emergency documentation'; purpose_requirement_failure berth_b12_after_hours records no emergency log attached for J7."
+    },
+    {
+      "id": "T6",
+      "status": "ANSWERED",
+      "value": 3240.0,
+      "rationale": "Berth B4 jobs are J1, J2, and J6; only J1 ($960) and J2 ($2,280) have established job_charge entries, totaling $3,240."
+    }
+  ]
+}

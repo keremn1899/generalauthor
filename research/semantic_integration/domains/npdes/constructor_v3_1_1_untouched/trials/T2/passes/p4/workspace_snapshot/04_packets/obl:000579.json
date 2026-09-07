@@ -1,0 +1,28 @@
+{
+  "obligation_id": "obl:000579",
+  "selected_observations": [
+    {
+      "source_path": "sources/structured/dmr_measurements.csv",
+      "location": "row 360; key=3847407844",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0020583; PERM_FEATURE_NMBR=TX1; PARAMETER_CODE=TOM6C; PARAMETER_DESC=NOAEC Lethal Static Renewal 48Hr acute Pimephales promelas; MONITORING_PERIOD_END_DATE=05/31/2025; DMR_VALUE_ID=3847407844; DMR_VALUE_NMBR=31; DMR_UNIT_DESC=%; STATISTICAL_BASE_CODE=VA; DMR_VALUE_QUALIFIER_CODE=>; LIMIT_VALUE_ID=3610839685; VALUE_RECEIVED_DATE=06/16/2025"
+    },
+    {
+      "source_path": "02_mechanical_world/world.sqlite",
+      "location": "reported_measurement_stated[measurement:3847407844]",
+      "excerpt": "period_end=2025-05-31; value_number=31.0; statistical_base=VA; nodi_code=(none)"
+    },
+    {
+      "source_path": "sources/structured/permit_limits.csv",
+      "location": "row 104; key=3610839685",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0020583; PERM_FEATURE_NMBR=TX1; PARAMETER_CODE=TOM6C; PARAMETER_DESC=NOAEC Lethal Static Renewal 48Hr acute Pimephales promelas; LIMIT_VALUE_ID=3610839685; LIMIT_UNIT_DESC=%; STATISTICAL_BASE_CODE=VA; LIMIT_TYPE_CODE=ENF; OPTIONAL_MONITORING_FLAG=N; LIMIT_FREQ_OF_ANALYSIS_CODE=01/90; DMR_COMMENT_TEXT=(PASS = 0  FAIL = 1) REPORT PASS AS '0' OR REPORT FAIL AS '1' IN CONCENTRATION MAX. ABOVE.  IF ALL TESTS PASS FOR THE FIRST YEAR OF THE PERMIT, THE FREQUENCY WILL BE REDUCED FOR YEARS 2-5 TO:  1/6 MONTHS FOR DAPHNIA PULEX & 1/YR FOR PIMEPHALES PROMELAS (SEE FOOTNOTE 9, PAGE 3 OF PART I OF PERMIT).; LIMIT_SET_NAME=QUARTERLY 48-HR. ACUTE NOEC FRESHWATER TOXICITY; LIMIT_BEGIN_DATE=12/01/2021; LIMIT_END_DATE=11/30/2026"
+    }
+  ],
+  "selection_rationale": "Packet pairs FY2025 measurement measurement:3847407844 (NM0020583/TX1/TOM6C period_end=2025-05-31) with temporally overlapping stated limit rows sharing locational keys to support applicable-limit selection or unresolved recording.",
+  "known_missing_information": [
+    "Permit PDF files referenced in sources/source_manifest.json are absent from workspace; permit_condition_language_stated and limit narrative grounding rely on CSV comments only.",
+    "P2 materialized C1 base relations only; C4 derivations (fy2025_in_scope_measurement, candidate_limit_for_measurement, fy2025_candidate_monitoring_requirement, monitoring_expectation_without_numeric_result) are not registered in world.sqlite.",
+    "limit_source_classification judgments are unresolved for candidate limits.",
+    "candidate_limit_for_measurement derivation is not materialized; mechanical join candidates inferred from shared facility/outfall/parameter and date overlap only.",
+    "Permit condition precedence among multiple statistical bases (e.g., min/max pH pair) is not resolved from CSV extracts alone."
+  ]
+}

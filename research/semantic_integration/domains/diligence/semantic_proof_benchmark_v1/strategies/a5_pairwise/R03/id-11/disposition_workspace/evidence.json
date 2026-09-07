@@ -1,0 +1,31 @@
+{
+  "propositions": [
+    {
+      "proposition": "Company registry number 09338441 is recorded under the registered name VELLUM PRINT CO LTD in England and Wales with status dissolved.",
+      "source_grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 09338441"
+      },
+      "establishes": "other",
+      "relevance": "Characterizes the right referent (registry:09338441) as a dissolved company registered in England and Wales under that name."
+    },
+    {
+      "proposition": "Billing records identify the billed party as Vellum Print Co Ltd.",
+      "source_grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      },
+      "establishes": "other",
+      "relevance": "Characterizes the left referent (billing:Vellum Print Co Ltd) as the name used on invoices."
+    },
+    {
+      "proposition": "The registry registered name VELLUM PRINT CO LTD and the billing billed name Vellum Print Co Ltd are orthographically the same aside from letter casing.",
+      "source_grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 09338441"
+      },
+      "establishes": "other",
+      "relevance": "The two referents share a name string that differs only in case; name similarity bears on the identity question but, per the grounding contract, does not by itself establish that they denote the same legal counterparty."
+    }
+  ]
+}

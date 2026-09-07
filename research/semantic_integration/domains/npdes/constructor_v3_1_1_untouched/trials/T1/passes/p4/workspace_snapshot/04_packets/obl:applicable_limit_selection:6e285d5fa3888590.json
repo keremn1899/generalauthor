@@ -1,0 +1,31 @@
+{
+  "obligation_id": "obl:applicable_limit_selection:6e285d5fa3888590",
+  "selected_observations": [
+    {
+      "source_path": "sources/structured/dmr_measurements.csv",
+      "location": "line 113; DMR_EVENT_ID=3621391571; DMR_VALUE_ID=3845625282",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0020583; PERM_FEATURE_NMBR=001; PARAMETER_CODE=70295; PARAMETER_DESC=Solids, total dissolved; MONITORING_PERIOD_END_DATE=04/30/2025; DMR_EVENT_ID=3621391571; DMR_VALUE_ID=3845625282; DMR_VALUE_NMBR=42701; DMR_UNIT_CODE=26; DMR_VALUE_QUALIFIER_CODE==; STATISTICAL_BASE_CODE=DD; NODI_CODE=(absent)"
+    },
+    {
+      "source_path": "sources/structured/permit_limits.csv",
+      "location": "line 79; limit:3606239980:3610673286",
+      "excerpt": "LIMIT_ID=3606239980; LIMIT_VALUE_ID=3610673286; LIMIT_VALUE_NMBR=(absent); LIMIT_UNIT_CODE=26; STATISTICAL_BASE_CODE=DD; LIMIT_VALUE_TYPE_CODE=Q2; LIMIT_TYPE_CODE=ENF; OPTIONAL_MONITORING_FLAG=N; LIMIT_FREQ_OF_ANALYSIS_CODE=01/07"
+    },
+    {
+      "source_path": "sources/structured/permit_limits.csv",
+      "location": "line 80; limit:3606239977:3610673273",
+      "excerpt": "LIMIT_ID=3606239977; LIMIT_VALUE_ID=3610673273; LIMIT_VALUE_NMBR=(absent); LIMIT_UNIT_CODE=26; STATISTICAL_BASE_CODE=3C; LIMIT_VALUE_TYPE_CODE=Q1; LIMIT_TYPE_CODE=ENF; OPTIONAL_MONITORING_FLAG=N; LIMIT_FREQ_OF_ANALYSIS_CODE=01/07"
+    },
+    {
+      "source_path": "sources/structured/permit_limits.csv",
+      "location": "line 81; limit:3606239977:3610673275",
+      "excerpt": "LIMIT_ID=3606239977; LIMIT_VALUE_ID=3610673275; LIMIT_VALUE_NMBR=(absent); LIMIT_UNIT_CODE=19; STATISTICAL_BASE_CODE=3C; LIMIT_VALUE_TYPE_CODE=C2; LIMIT_TYPE_CODE=ENF; OPTIONAL_MONITORING_FLAG=N; LIMIT_FREQ_OF_ANALYSIS_CODE=01/07"
+    }
+  ],
+  "selection_rationale": "Grounds limit-selection judgment with the reported measurement and 12 mechanical candidate limit row(s) joined on permit/feature/parameter, effective dates, and active month. Multiple candidates share the join keys but differ in statistical base, limit value type, or unit; permit semantics needed to pick one.",
+  "known_missing_information": [
+    "02_mechanical_world/world.sqlite not present in workspace; evidence selected directly from structured CSV sources using P2 join rules.",
+    "Permit PDF sources listed in sources/source_manifest.json were not ingested; permit_stated_condition packets use structured DMR_COMMENT_TEXT only.",
+    "Packet truncates to three of 12 mechanical candidates; full candidate set not copied."
+  ]
+}

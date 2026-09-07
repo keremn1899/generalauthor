@@ -1,0 +1,40 @@
+{
+  "strategy": "a2_critic",
+  "trial": "R04",
+  "obligation_id": "id-14",
+  "candidate": {
+    "left": "billing:Meridian Energy Partners LLC",
+    "right": "registry:4721193"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 4721193"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Meridian Energy Partners LLC"
+    }
+  ],
+  "support_claim": "The registry row names MERIDIAN ENERGY PARTNERS LLC for ID 4721193 and the billing record uses Meridian Energy Partners LLC, but matching names alone do not establish that the billing referent is the same legal counterparty as registry:4721193.",
+  "proof_size": 2,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "critic": {
+    "decision": "CONFIRM",
+    "reason": "The cited registry row and billing name are mutually compatible but, under the contract's requirement for establishing rather than merely compatible evidence, they do not prove that the billing referent is the legal counterparty registered as 4721193."
+  },
+  "critic_reason": "cannot_upgrade",
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

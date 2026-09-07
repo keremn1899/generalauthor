@@ -1,0 +1,88 @@
+{
+  "case_id": "A20",
+  "obligation_id": "monitoring_frequency",
+  "occurrence_id": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129901",
+  "question": "What monitoring frequencies do opaque LIMIT_FREQ_OF_ANALYSIS_CODE values (e.g. 05/WK, 01/07, 01/01) establish?",
+  "purpose": [
+    "B"
+  ],
+  "requirement_schema": "monitoring_frequency_code",
+  "source_field_value": "LIMIT_FREQ_OF_ANALYSIS_CODE nonempty",
+  "local_structured_context": {
+    "table": "permit_limits.csv",
+    "row": {
+      "EXTERNAL_PERMIT_NMBR": "NM0000116",
+      "PARAMETER_CODE": "00530",
+      "PARAMETER_DESC": "Solids, total suspended",
+      "LIMIT_VALUE_ID": "3610129901",
+      "LIMIT_SET_SCHEDULE_ID": "3600833510",
+      "LIMIT_VALUE_NMBR": "",
+      "LIMIT_FREQ_OF_ANALYSIS_CODE": "01/07",
+      "LIMIT_SAMPLE_TYPE_CODE": "GR",
+      "DMR_COMMENT_TEXT": "",
+      "LIMIT_UNIT_DESC": "mg/L",
+      "STATISTICAL_BASE_CODE": "3C"
+    }
+  },
+  "reported_model": "Composer 2.5",
+  "retrieval": {
+    "n_tool_paths": 21,
+    "structured_paths": [
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/fb7ba73170b92bcbcebd4d3963eabc5d/sources/document_inventory.json",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/fb7ba73170b92bcbcebd4d3963eabc5d/sources/dmr_measurements.csv"
+    ],
+    "document_paths": [
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/fb7ba73170b92bcbcebd4d3963eabc5d/documents/INDEX.md",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/fb7ba73170b92bcbcebd4d3963eabc5d/documents/gcc",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/fb7ba73170b92bcbcebd4d3963eabc5d/documents/gcc/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/fb7ba73170b92bcbcebd4d3963eabc5d/documents/gcc/part_ii_appendix.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/fb7ba73170b92bcbcebd4d3963eabc5d/documents/gcc/fact_sheet.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/fb7ba73170b92bcbcebd4d3963eabc5d/documents/gcc"
+    ],
+    "n_documents_touched": 5,
+    "queries": [
+      "NM0000116|3610129901|3600833510|01/07|00530",
+      "01/07|frequency|FREQ|monitoring|00530|TSS|total suspended|Solids",
+      "01/07|1/Week|weekly|FREQ|frequency code",
+      "01/07|freq_of_analysis|monitoring_frequency|LIMIT_FREQ",
+      "discharge|infrequent|when|storm",
+      "3610129901|NM0000116.*00530",
+      "SUPPORTED_RESOLUTION|semantic_question"
+    ],
+    "n_queries": 7
+  },
+  "judgment": {
+    "occurrence_id": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129901",
+    "semantic_question_used": "What monitoring frequency does limit_freq_of_analysis_code '01/07' require for this permit limit row (Total Suspended Solids, 30-day average, permit NM0000116 Outfall 001) during Federal FY2025?",
+    "disposition": "SUPPORTED_RESOLUTION",
+    "interpretation": "For this limit row, monitoring is required once per week (1/Week). The permit Part I monitoring table for Total Suspended Solids at Outfall 001 specifies measurement frequency '1/Week' with grab sample type. The fact sheet confirms that, under the March 2012 NMIP applied to this facility, all limited parameters other than pH require weekly monitoring frequency. The limit is enforceable (LIMIT_TYPE_CODE ENF), not optional (OPTIONAL_MONITORING_FLAG N), and the limit schedule overlaps FY2025 (06/01/2021\u201305/31/2026). The structured field value '01/07' corresponds to this permit-stated weekly monitoring obligation for Total Suspended Solids at this outfall.",
+    "grounding": "Authoritative permit-package text for permit NM0000116 (GCC Rio Grande) establishes weekly grab monitoring for Total Suspended Solids at Outfall 001. The structured permit_limits.csv row for limit_value_id 3610129901 records LIMIT_FREQ_OF_ANALYSIS_CODE '01/07' for parameter 00530 (Solids, total suspended) on the same permit and outfall. No separate ICIS code legend appears in the workspace; the monitoring frequency meaning is grounded in the permit narrative for this parameter rather than inferred from cross-row CSV patterns alone.",
+    "documents_opened": [
+      "documents/gcc/final_permit.txt",
+      "documents/gcc/fact_sheet.txt",
+      "sources/permit_limits.csv",
+      "OCCURRENCE.md",
+      "construction.py"
+    ],
+    "snippets": [
+      {
+        "source_id": "documents/gcc/final_permit.txt",
+        "text": "Total Suspended          N/A               N/A               Report            50                 1/Week               Grab\nSolids"
+      },
+      {
+        "source_id": "documents/gcc/fact_sheet.txt",
+        "text": "Sample frequency is based on the March, 2012, NMIP. Based on the discharge frequency of the facility, the NMIP requires that pH has daily monitoring frequency and all other limited parameters have weekly monitoring frequency requirements."
+      },
+      {
+        "source_id": "sources/permit_limits.csv",
+        "text": "3602720951,NM0000116,0,3600545262,001,EXO,3600598928,A,DISCHARGE STORM RUNOFFS FROM STORAGE,,3600833510,A,3605908066,06/01/2021,05/31/2026,3,1,00530,\"Solids, total suspended\",1,,3610129901,C2,,19,mg/L,19,mg/L,,3C,AVG,,,ENF,N,GR,01/07,JAN--FEB--MAR--APR--MAY--JUN--JUL--AUG--SEP--OCT--NOV--DEC,Y,Y,Y,Y,Y,Y,Y,Y,Y,Y,Y,Y,0"
+      },
+      {
+        "source_id": "documents/gcc/final_permit.txt",
+        "text": "During the period beginning the effective date of the permit and lasting through the dismantle of Outfall 001, the permittee is authorized to discharge storm runoffs from storage and production areas, once-through cooling water, cleaning water, and Artesian well water from Outfalls 001. Such discharges shall be limited and monitored by the permittee as specified below (1):"
+      }
+    ],
+    "remaining_uncertainty": "The workspace contains no explicit ICIS/NPDES dictionary defining the structured code string '01/07'; the weekly frequency interpretation is established from permit narrative text for Total Suspended Solids at Outfall 001, not from a formal code-to-text lookup table. The permit restricts when discharges may occur (retention-pond overflow events), but this limit row carries no discharge-contingent comment (e.g., 'WHEN DISCHARGING'); whether weekly monitoring applies only on weeks with discharge is not explicitly resolved in the available text for this specific limit row."
+  },
+  "finished_at": "2026-09-05T13:42:38.568312+00:00"
+}

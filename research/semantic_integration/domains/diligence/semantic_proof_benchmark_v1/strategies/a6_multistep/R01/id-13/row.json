@@ -1,0 +1,83 @@
+{
+  "strategy": "a6_multistep",
+  "trial": "R01",
+  "obligation_id": "id-13",
+  "candidate": {
+    "left": "billing:Meridian Energy Partners LLC",
+    "right": "contract:MSA-MER-2024"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Meridian Energy Partners LLC"
+    },
+    {
+      "source_path": "sources/contracts/MSA-MER-2024.md",
+      "location": "header"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "Both referents are associated with the name Meridian Energy Partners LLC and the contract context, but the packet lacks establishing identity evidence such as a shared legal identifier or an explicit uniqueness claim, so neither SAME_ENTITY nor DISTINCT is licensed.",
+  "proof_size": 6,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "steps": [
+    {
+      "fact": "The left referent is billing:Meridian Energy Partners LLC and the right referent is contract:MSA-MER-2024.",
+      "grounding": null,
+      "mechanical": true
+    },
+    {
+      "fact": "The billing observation names the billed party as Meridian Energy Partners LLC.",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Meridian Energy Partners LLC"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Contract MSA-MER-2024 lists its counterparty as Meridian Energy Partners LLC.",
+      "grounding": {
+        "source_path": "sources/contracts/MSA-MER-2024.md",
+        "location": "header"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Commercial notes associate Meridian Energy Partners invoices with the advisory retainer under MSA-MER-2024.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "The packet provides no shared legal identifier, no statement that the name uniquely identifies one entity, and no explicit identity bridge between the billing referent and the contract referent.",
+      "grounding": null,
+      "mechanical": true
+    },
+    {
+      "fact": "Shared counterparty name and contextual association do not meet the burden for SAME_ENTITY; no evidence establishes distinctness for DISTINCT.",
+      "grounding": null,
+      "mechanical": false
+    }
+  ],
+  "admit": {
+    "rule": "unresolved"
+  },
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

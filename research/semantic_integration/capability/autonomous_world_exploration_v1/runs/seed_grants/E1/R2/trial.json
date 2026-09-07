@@ -1,0 +1,141 @@
+{
+  "domain": "seed_grants",
+  "arm": "E1",
+  "trial": "R2",
+  "status": "ANSWERED",
+  "reported_model": "Composer 2.5",
+  "orient_model": "Composer 2.5",
+  "orient_surface": {
+    "n_reads": 8,
+    "n_shells": 4,
+    "n_writes": 0,
+    "header_rereads": 1,
+    "schema_description_calls": 0,
+    "select_count": 2,
+    "join_count": 0,
+    "query_semantic_count": 1,
+    "grounding_inspections": 0,
+    "failure_inspections": 1,
+    "raw_source_reads": []
+  },
+  "orient_exploration": {
+    "reads": [
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/HEADER.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/ACCESS.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/research/semantic_integration/runtime_v0/world.py",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/world/world.purpose.json",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/world/world.admission.json",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/world/world.sqlite.origins.json",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/research/semantic_integration/runtime_v0/purpose.py",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/AGENT.md"
+    ],
+    "writes": [],
+    "shells": [
+      "cd /tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9 && PYTHONPATH=. python3 << 'PYEOF'\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\n\nworld = ConstructionWorld.open(\"world/world.sqlite\")\n\n# List all relations and row counts\nrelations = [\n    \"award\", \"award_match_obligation\", \"award_remaining_balance\", \n    \"award_status_label\", \"disbursement\", \"organization\", \n    \"program_match_rule\", \"purpose_requirement_failure\", \"status_le",
+      "cd /tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9 && PYTHONPATH=. python3 << 'PYEOF'\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\nimport sqlite3\n\nworld = ConstructionWorld.open(\"world/world.sqlite\")\n\nprint(\"=== DISBURSEMENTS ===\")\nfor row in world.relation_rows(\"disbursement\"):\n    print(row)\n\nprint(\"\\n=== JOIN: awards with org, balance, match, status label ===\")\nrows = world.query_semantic(\"\"\"\nSELECT \n  a.award_id, a.org_id",
+      "cd /tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9 && PYTHONPATH=. python3 << 'PYEOF'\nimport sqlite3, json\n\nconn = sqlite3.connect(\"file:world/world.sqlite?mode=ro\", uri=True)\nconn.row_factory = sqlite3.Row\n\n# Assertion schema\nprint(\"=== _tv_assertions columns ===\")\ncols = conn.execute(\"PRAGMA table_info(_tv_assertions)\").fetchall()\nprint([c[1] for c in cols])\n\n# Origins breakdown\nprint(\"\\n=== Assertions by relation and origin ===\")\nrows = conn.execute(\"\"\"\n",
+      "cd /tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9 && PYTHONPATH=. python3 << 'PYEOF'\nimport sqlite3, json\n\nconn = sqlite3.connect(\"file:world/world.sqlite?mode=ro\", uri=True)\nconn.row_factory = sqlite3.Row\n\nprint(\"=== Assertions by relation and origin ===\")\nrows = conn.execute(\"\"\"\nSELECT relation_name, origin, COUNT(*) as cnt\nFROM _tv_assertions\nGROUP BY relation_name, origin\nORDER BY relation_name, origin\n\"\"\").fetchall()\nfor r in rows:\n    print(dict(r))\n"
+    ],
+    "n_reads": 8,
+    "n_writes": 0,
+    "n_shells": 4
+  },
+  "orient_tools": {
+    "tool_calls_started": 15,
+    "shell_calls": 4,
+    "read_calls": 8,
+    "write_calls": 0,
+    "python_executions_guess": 4,
+    "mentioned_paths": [
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/HEADER.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/ACCESS.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/research/semantic_integration/runtime_v0/world.py",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/world/world.purpose.json",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/world/world.admission.json",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/world/world.sqlite.origins.json",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9",
+      "ConstructionWorld.open(\"world/world.sqlite\")",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/research",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9",
+      "ConstructionWorld.open(\"world/world.sqlite\")",
+      "sqlite3.connect(\"file:world/world.sqlite?mode",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/research/semantic_integration/runtime_v0/purpose.py",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9",
+      "sqlite3.connect(\"file:world/world.sqlite?mode",
+      "ConstructionWorld.open(\"world/world.sqlite\")",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/AGENT.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9",
+      "sqlite3.connect(\"file:world/world.sqlite?mode",
+      "ref.split('//')[1].split('@')[0]",
+      "'//'",
+      "ConstructionWorld.open(\"world/world.sqlite\")",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/NOTES.md"
+    ]
+  },
+  "task_surface": {
+    "n_reads": 7,
+    "n_shells": 3,
+    "n_writes": 0,
+    "header_rereads": 1,
+    "schema_description_calls": 0,
+    "select_count": 9,
+    "join_count": 0,
+    "query_semantic_count": 2,
+    "grounding_inspections": 0,
+    "failure_inspections": 0,
+    "raw_source_reads": []
+  },
+  "task_exploration": {
+    "reads": [
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/HEADER.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/NOTES.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/ACCESS.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/TASKS.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/AGENT.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/README.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/world/world.purpose.json"
+    ],
+    "writes": [],
+    "shells": [
+      "cd /tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9 && PYTHONPATH=. python3 << 'PY'\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\nworld = ConstructionWorld.open(\"world/world.sqlite\")\n\n# Get table names\ntables = world.query_semantic(\"SELECT name FROM sqlite_master WHERE type='table' ORDER BY name\")\nprint(\"Tables:\", tables)\n\n# Query all relevant data\nfor q in [\n    \"SELECT * FROM award ORDER BY award_id\",\n    \"SELECT * FROM award",
+      "cd /tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9 && PYTHONPATH=. python3 << 'PY'\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\nworld = ConstructionWorld.open(\"world/world.sqlite\")\n\nfor q in [\n    \"SELECT * FROM award ORDER BY award_id\",\n    \"SELECT * FROM award_remaining_balance ORDER BY award_id\",\n    \"SELECT * FROM award_match_obligation ORDER BY award_id\",\n    \"SELECT * FROM program_match_rule\",\n    \"SELECT * FROM organiz",
+      "cd /tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9 && PYTHONPATH=. python3 << 'PY'\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\nworld = ConstructionWorld.open(\"world/world.sqlite\")\n\n# T6\nt6 = world.query_semantic(\"\"\"\nSELECT SUM(CAST(arb.remaining_balance AS REAL)) as total\nFROM award_remaining_balance arb\nJOIN award_status_label asl ON arb.award_id = asl.award_id\nWHERE asl.status_label = 'Active'\n\"\"\")\nprint(\"T6:\", t6)\n\n# T3\nt"
+    ],
+    "n_reads": 7,
+    "n_writes": 0,
+    "n_shells": 3
+  },
+  "task_tools": {
+    "tool_calls_started": 15,
+    "shell_calls": 3,
+    "read_calls": 7,
+    "write_calls": 0,
+    "python_executions_guess": 3,
+    "mentioned_paths": [
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/HEADER.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/NOTES.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/ACCESS.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/TASKS.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9",
+      "ConstructionWorld.open(\"world/world.sqlite\")",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9",
+      "ConstructionWorld.open(\"world/world.sqlite\")",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/AGENT.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/README.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/world/world.purpose.json",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9",
+      "ConstructionWorld.open(\"world/world.sqlite\")",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b562c6262d20a2c0e39576bfc80d84d9/answers.json"
+    ]
+  },
+  "initial_context": {
+    "header_bytes": 2226,
+    "access_bytes": 350,
+    "purpose_bytes": 233,
+    "agent_bytes": 616,
+    "initial_context_bytes": 3192
+  },
+  "finished_at": "2026-09-06T11:42:22.769250+00:00"
+}

@@ -1,0 +1,79 @@
+{
+  "strategy": "a4_proof_obligation",
+  "trial": "R05",
+  "obligation_id": "id-07",
+  "candidate": {
+    "left": "billing:Oakfield Logistik GmbH",
+    "right": "contract:MSA-OAK-2018"
+  },
+  "proposed_disposition": "SAME_ENTITY",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/contracts/MSA-OAK-2018.md",
+      "location": "header"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row HRB 88421"
+    }
+  ],
+  "support_claim": "Commercial notes explicitly record that Oakfield Logistik GmbH is a 2023 rebrand of contract counterparty Oakfield Logistics GmbH with unchanged Handelsregister number HRB 88421, establishing legal-entity continuity between the billing referent and MSA-OAK-2018.",
+  "proof_size": 3,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "proof_obligations": [
+    {
+      "obligation": "Identify the legal counterparty named in contract MSA-OAK-2018",
+      "required_for": "SAME_ENTITY",
+      "satisfied": true,
+      "evidence": [
+        {
+          "source_path": "sources/contracts/MSA-OAK-2018.md",
+          "location": "header"
+        }
+      ]
+    },
+    {
+      "obligation": "Establish that billing:Oakfield Logistik GmbH denotes the same legal entity as the counterparty to contract MSA-OAK-2018",
+      "required_for": "SAME_ENTITY",
+      "satisfied": true,
+      "evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        },
+        {
+          "source_path": "sources/company_registry.csv",
+          "location": "row HRB 88421"
+        }
+      ]
+    },
+    {
+      "obligation": "Establish that billing:Oakfield Logistik GmbH and the counterparty to contract MSA-OAK-2018 are distinct legal entities",
+      "required_for": "DISTINCT",
+      "satisfied": false,
+      "evidence": []
+    }
+  ],
+  "admit": {
+    "rule": "unsatisfied_obligations_present"
+  },
+  "unsatisfied": [
+    "Establish that billing:Oakfield Logistik GmbH and the counterparty to contract MSA-OAK-2018 are distinct legal entities"
+  ],
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": true,
+  "correct_same_never_proposed": false
+}

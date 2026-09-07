@@ -1,0 +1,36 @@
+{
+  "strategy": "a1_single",
+  "trial": "R05",
+  "obligation_id": "id-10",
+  "candidate": {
+    "left": "billing:Vellum Print Co Ltd",
+    "right": "contract:SOW-VEL-2022"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Vellum Print Co Ltd"
+    },
+    {
+      "source_path": "sources/contracts/SOW-VEL-2022.md",
+      "location": "header"
+    }
+  ],
+  "support_claim": "The billing record and the SOW header both name 'Vellum Print Co Ltd', but no observation provides establishing evidence of legal-entity identity or distinctness between the billing referent and the contract counterparty.",
+  "proof_size": 1,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "justification": "Under the relation contract, SAME_ENTITY requires establishing identity evidence and DISTINCT requires establishing distinctness; shared naming without corroborating identity proof is insufficient for SAME_ENTITY, and the packet contains no evidence that the referents are distinct legal counterparties, so UNRESOLVED is the licensed disposition.",
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

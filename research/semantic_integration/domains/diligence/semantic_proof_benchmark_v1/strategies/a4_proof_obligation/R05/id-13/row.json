@@ -1,0 +1,90 @@
+{
+  "strategy": "a4_proof_obligation",
+  "trial": "R05",
+  "obligation_id": "id-13",
+  "candidate": {
+    "left": "billing:Meridian Energy Partners LLC",
+    "right": "contract:MSA-MER-2024"
+  },
+  "proposed_disposition": "SAME_ENTITY",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/contracts/MSA-MER-2024.md",
+      "location": "header"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Meridian Energy Partners LLC"
+    }
+  ],
+  "support_claim": "MSA-MER-2024 explicitly names Meridian Energy Partners LLC as counterparty, and billing records and commercial notes link that entity to invoices under that agreement.",
+  "proof_size": 4,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "proof_obligations": [
+    {
+      "obligation": "Establish that the legal entity designated by the left referent is explicitly named as the counterparty on the agreement designated by the right referent",
+      "required_for": "SAME_ENTITY",
+      "satisfied": true,
+      "evidence": [
+        {
+          "source_path": "sources/contracts/MSA-MER-2024.md",
+          "location": "header"
+        },
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    },
+    {
+      "obligation": "Establish that billing records name the same legal entity as the contract counterparty",
+      "required_for": "SAME_ENTITY",
+      "satisfied": true,
+      "evidence": [
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Meridian Energy Partners LLC"
+        },
+        {
+          "source_path": "sources/contracts/MSA-MER-2024.md",
+          "location": "header"
+        }
+      ]
+    },
+    {
+      "obligation": "Establish that the left and right referents denote distinct legal counterparties",
+      "required_for": "DISTINCT",
+      "satisfied": false,
+      "evidence": []
+    },
+    {
+      "obligation": "Provide explicit evidence of non-identity between the billing entity and the contract counterparty",
+      "required_for": "DISTINCT",
+      "satisfied": false,
+      "evidence": []
+    }
+  ],
+  "admit": {
+    "rule": "unsatisfied_obligations_present"
+  },
+  "unsatisfied": [
+    "Establish that the left and right referents denote distinct legal counterparties",
+    "Provide explicit evidence of non-identity between the billing entity and the contract counterparty"
+  ],
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": true,
+  "correct_same_never_proposed": false
+}

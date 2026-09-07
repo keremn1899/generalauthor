@@ -1,0 +1,53 @@
+{
+  "candidates": [
+    {
+      "source": "aztec/reasonable_potential.pdf",
+      "locator": "page 9, body, table header",
+      "exact_span": "POLLUTANTS                    CAS No.    STORET   Domestic   Irrigation   Livestock     Acute     Chronic   Human      Daily    Monthly    Daily Max   Mon. Avg     Daily    Monthly\n                                                   Limits     Limits        or Wildlife   Aquatic   Aquatic   Health   Max Conc   Avg Conc     Total      Total     Max Load   Avg Load\n                                                   Limits     Limits      Limits    Limits    Limits     ug/l       ug/l       ug/l        ug/l      Ib/day     lb/day",
+      "affected_purpose": "A",
+      "computation_change_reason": "The table defines multiple parallel limit types (domestic, irrigation, livestock/wildlife, acute/chronic aquatic, human health, concentration, and load columns). Which column is treated as the enforceable discharge limit for a given facility, discharge point, and parameter would change the numeric limit selected for compliance comparison and whether a comparison is performed at all."
+    },
+    {
+      "source": "aztec/reasonable_potential.pdf",
+      "locator": "page 9, body, table row",
+      "exact_span": "Vinyl Chloride                 75-01-4    39175     N/A        N/A           N/A         N/A       N/A       N/A       N/A        N/A        N/A         N/A        N/A        N/A",
+      "affected_purpose": "A,C",
+      "computation_change_reason": "Representative of rows where every limit column is N/A. Interpreting N/A as 'no enforceable numeric limit applies' versus 'limit not established from this evidence' versus 'not applicable to this discharge context' would change whether measurements are compared to a numeric limit, flagged as unresolved, or treated as report-only/no-comparison cases under missing-evidence semantics."
+    },
+    {
+      "source": "aztec/reasonable_potential.pdf",
+      "locator": "page 9, body, table row",
+      "exact_span": "1,1,1-Trichloroethane         71-55-6               N/A        N/A           N/A         N/A       N/A       N/A       N/A        N/A        N/A         N/A        N/A        N/A",
+      "affected_purpose": "A,B,C",
+      "computation_change_reason": "This row has a CAS number but no STORET code where other pollutants in the same table include one. Whether the blank STORET field is an omission, not applicable, or an alternate identifier path affects linkage of reported measurements and monitoring obligations to the correct parameter and can leave applicability unresolved."
+    },
+    {
+      "source": "aztec/reasonable_potential.pdf",
+      "locator": "page 9, body, table row",
+      "exact_span": "Carbon Tetrachloride           56-23-5    32102     N/A        N/A           N/A         N/A       N/A       N/A       N/A        N/A        N/A         N/A        N/A        N/A",
+      "affected_purpose": "A,B",
+      "computation_change_reason": "This pollutant row appears before the repeated column-header block on the page. Whether it is part of the same operative limit table as the rows below affects which parameters are in scope for limit selection and whether associated monitoring requirements are drawn from this segment."
+    },
+    {
+      "source": "aztec/reasonable_potential.pdf",
+      "locator": "page 9, body, section header",
+      "exact_span": "ACID COMPOUNDS",
+      "affected_purpose": "B,C",
+      "computation_change_reason": "The segment groups pollutants into compound-class sections. If monitoring obligations or missing-evidence handling depend on pollutant category rather than individual analyte, treating this header as operative scope language versus mere formatting would change which requirements are evaluated and how no-result cases are classified."
+    },
+    {
+      "source": "aztec/reasonable_potential.pdf",
+      "locator": "page 9, body, section header",
+      "exact_span": "BASE/NEUTRAL",
+      "affected_purpose": "B,C",
+      "computation_change_reason": "Like ACID COMPOUNDS, this header delineates a pollutant subgroup within the table. Interpreting it as defining a monitoring or evidence-evaluation scope rather than a non-operative label would change which parameters are considered required to have evidence in FY2025."
+    },
+    {
+      "source": "aztec/reasonable_potential.pdf",
+      "locator": "page 9, body, table row",
+      "exact_span": "Tolune                        108-88-3    34010     N/A        N/A           N/A         N/A       N/A       N/A       N/A        N/A        N/A         N/A        N/A        N/A",
+      "affected_purpose": "A,B,C",
+      "computation_change_reason": "The pollutant name is spelled 'Tolune' rather than the standard 'Toluene' while retaining CAS 108-88-3. Whether this is a typographical variant of the same analyte or a distinct listing affects parameter matching to reported measurements and whether limits or monitoring obligations attach to that analyte."
+    }
+  ]
+}

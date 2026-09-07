@@ -1,0 +1,237 @@
+{
+  "relations": [
+    {
+      "name": "source_invoice",
+      "roles": [
+        {"name": "invoice", "type": "REFERENT", "semantic_identity": "invoice"},
+        {"name": "invoice_id", "type": "TEXT", "semantic_identity": "invoice_id"},
+        {"name": "billed_name", "type": "TEXT", "semantic_identity": "billed_name"},
+        {"name": "amount", "type": "REAL", "semantic_identity": "amount"},
+        {"name": "currency", "type": "TEXT", "semantic_identity": "currency"},
+        {"name": "period", "type": "TEXT", "semantic_identity": "period"},
+        {"name": "status", "type": "TEXT", "semantic_identity": "status"}
+      ],
+      "role_types": ["REFERENT", "TEXT", "TEXT", "REAL", "TEXT", "TEXT", "TEXT"],
+      "meaning": "One represented billed-revenue invoice row as recorded in billing sources.",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "required_by": ["A", "C", "open_invoice"],
+      "grounding_contract": "Each tuple grounded to sources/billing/invoices.json by invoice_id.",
+      "construction_rule": "Compile one tuple per invoices.json object; mint invoice referent billing:<invoice_id>; copy fields verbatim."
+    },
+    {
+      "name": "source_crm_account",
+      "roles": [
+        {"name": "account", "type": "REFERENT", "semantic_identity": "account"},
+        {"name": "account_name", "type": "TEXT", "semantic_identity": "account_name"}
+      ],
+      "role_types": ["REFERENT", "TEXT"],
+      "meaning": "One CRM account record with its sourced display name.",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "required_by": ["B", "C", "identity_link_candidate"],
+      "grounding_contract": "Each tuple grounded to sources/crm.csv by crm_account_id.",
+      "construction_rule": "Compile one tuple per CRM row; mint account referent crm:<crm_account_id>; copy account_name verbatim."
+    },
+    {
+      "name": "source_registry_entity",
+      "roles": [
+        {"name": "entity", "type": "REFERENT", "semantic_identity": "entity"},
+        {"name": "company_number", "type": "TEXT", "semantic_identity": "company_number"},
+        {"name": "legal_name", "type": "TEXT", "semantic_identity": "legal_name"}
+      ],
+      "role_types": ["REFERENT", "TEXT", "TEXT"],
+      "meaning": "One company-registry row with registered legal name and company number.",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "required_by": ["B", "identity_link_candidate"],
+      "grounding_contract": "Each tuple grounded to sources/company_registry.csv by company_number.",
+      "construction_rule": "Compile one tuple per registry row; mint entity referent registry:<company_number>; copy legal_name verbatim."
+    },
+    {
+      "name": "source_contract",
+      "roles": [
+        {"name": "contract", "type": "REFERENT", "semantic_identity": "contract"},
+        {"name": "contract_id", "type": "TEXT", "semantic_identity": "contract_id"},
+        {"name": "counterparty_text", "type": "TEXT", "semantic_identity": "counterparty_text"}
+      ],
+      "role_types": ["REFERENT", "TEXT", "TEXT"],
+      "meaning": "One contract or statement-of-work document with source-native identifier and counterparty line.",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "required_by": ["A", "B", "C", "contract_active_status", "contract_clause", "identity_link_candidate"],
+      "grounding_contract": "Each tuple grounded to sources/contracts/<filename> header Counterparty line.",
+      "construction_rule": "Compile one tuple per .md contract file; mint contract referent contract:<basename without .md>; contract_id is basename without extension; extract counterparty_text from Counterparty header."
+    },
+    {
+      "name": "contract_active_status",
+      "roles": [
+        {"name": "contract", "type": "REFERENT", "semantic_identity": "contract"},
+        {"name": "active", "type": "BOOLEAN", "semantic_identity": "active"}
+      ],
+      "role_types": ["REFERENT", "BOOLEAN"],
+      "meaning": "Whether a contract or SOW is currently in force according to sourced effective, term, and expiry facts.",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "required_by": ["A", "C"],
+      "grounding_contract": "Each tuple grounded to contract header dates/term text and explicit expiry or expired markers in the source file.",
+      "construction_rule": "Parse Effective, Term, Expiry, and explicit expired/not-renewed statements deterministically; active=false when an explicit expiry date has passed or the document states the SOW has expired."
+    },
+    {
+      "name": "contract_clause",
+      "roles": [
+        {"name": "contract", "type": "REFERENT", "semantic_identity": "contract"},
+        {"name": "clause_kind", "type": "TEXT", "semantic_identity": "clause_kind"}
+      ],
+      "role_types": ["REFERENT", "TEXT"],
+      "meaning": "A contract bears a sourced clause or term-mechanics category present in its text.",
+      "admission": "WORLD",
+      "construction_class": "SEMANTIC",
+      "required_by": ["A", "C"],
+      "grounding_contract": "Bounded evidence packet quoting the clause or term language that supports the classified kind.",
+      "construction_rule": "For each contract, classify present clause kinds from contract body and term mechanics; emit one tuple per accepted kind.",
+      "candidate_generation_rule": "Enumerate contracts from source_contract crossed with the union of Purpose A acquisition-relevant kinds and Purpose C obligation kinds.",
+      "unresolved_judgment": "Whether contract text constitutes the candidate clause_kind.",
+      "allowed_dispositions": ["ACCEPT", "REJECT", "UNRESOLVED"],
+      "dispositions": ["ACCEPT", "REJECT", "UNRESOLVED"],
+      "scope": "WORLD",
+      "algebra": {
+        "symmetric": false,
+        "transitive": false,
+        "conflicts_with": [],
+        "closure_policy": "no_closed_world"
+      },
+      "epistemic_contract": {
+        "positive_disposition": "ACCEPT",
+        "negative_disposition": "REJECT",
+        "unresolved_disposition": "UNRESOLVED"
+      },
+      "semantic_family_hint": "CLAUSE_CLASSIFICATION"
+    },
+    {
+      "name": "identity_judgment",
+      "roles": [
+        {"name": "left", "type": "TEXT", "semantic_identity": "left"},
+        {"name": "right", "type": "TEXT", "semantic_identity": "right"},
+        {"name": "disposition", "type": "TEXT", "semantic_identity": "disposition"}
+      ],
+      "role_types": ["TEXT", "TEXT", "TEXT"],
+      "meaning": "Two typed commercial identifiers denote the same legal counterparty, are distinct, or remain unresolved.",
+      "admission": "WORLD",
+      "construction_class": "SEMANTIC",
+      "required_by": ["B", "C", "invoice_contract_association"],
+      "grounding_contract": "Bounded packet; SAME_ENTITY and DISTINCT require establishing evidence, not mere name compatibility.",
+      "construction_rule": "Resolve each candidate pair to SAME_ENTITY, DISTINCT, or UNRESOLVED with cited source evidence; mechanical legal-form equivalence may ground SAME_ENTITY without fuzzy matching.",
+      "candidate_generation_rule": "Emit directed pairs required by Purpose B link pattern connecting crm:, billing:, contract:, and registry: identifiers for each commercially relevant relationship, plus exact legal-form variant pairs.",
+      "unresolved_judgment": "Whether left and right typed identifiers refer to the same legal counterparty.",
+      "allowed_dispositions": ["SAME_ENTITY", "DISTINCT", "UNRESOLVED"],
+      "dispositions": ["SAME_ENTITY", "DISTINCT", "UNRESOLVED"],
+      "scope": "WORLD",
+      "algebra": {
+        "symmetric": true,
+        "transitive": false,
+        "conflicts_with": [],
+        "closure_policy": "no_closed_world"
+      },
+      "epistemic_contract": {
+        "positive_disposition": "SAME_ENTITY",
+        "negative_disposition": "DISTINCT",
+        "unresolved_disposition": "UNRESOLVED"
+      },
+      "semantic_family_hint": "IDENTITY"
+    },
+    {
+      "name": "identity_link_candidate",
+      "roles": [
+        {"name": "left", "type": "TEXT", "semantic_identity": "left"},
+        {"name": "right", "type": "TEXT", "semantic_identity": "right"}
+      ],
+      "role_types": ["TEXT", "TEXT"],
+      "meaning": "A directed pair of typed identifiers that Purpose B requires be judged for sameness.",
+      "admission": "WORLD",
+      "construction_class": "DERIVED",
+      "required_by": ["B", "identity_judgment"],
+      "grounding_contract": "Derivation inputs list the source relations used to enumerate each endpoint.",
+      "construction_rule": "Derive the required crm-billing-contract-registry link pairs per commercially relevant relationship from compiled source relations and commercial_notes.md relationship hints; do not assign a disposition.",
+      "candidate_generation_rule": "For each CRM account with billing or contract footprint, emit pairs linking crm:<id>, billing:<billed_name>, contract:<basename>, and registry:<company_number> candidates."
+    },
+    {
+      "name": "open_invoice",
+      "roles": [
+        {"name": "invoice", "type": "REFERENT", "semantic_identity": "invoice"},
+        {"name": "invoice_id", "type": "TEXT", "semantic_identity": "invoice_id"}
+      ],
+      "role_types": ["REFERENT", "TEXT"],
+      "meaning": "An invoice whose sourced payment status is open.",
+      "admission": "WORLD",
+      "construction_class": "DERIVED",
+      "required_by": ["C"],
+      "grounding_contract": "Derivation grounded to source_invoice rows where status equals open.",
+      "construction_rule": "SELECT invoice and invoice_id FROM source_invoice WHERE status = 'open'."
+    },
+    {
+      "name": "invoice_contract_association",
+      "roles": [
+        {"name": "invoice", "type": "REFERENT", "semantic_identity": "invoice"},
+        {"name": "contract", "type": "REFERENT", "semantic_identity": "contract"},
+        {"name": "disposition", "type": "TEXT", "semantic_identity": "disposition"}
+      ],
+      "role_types": ["REFERENT", "REFERENT", "TEXT"],
+      "meaning": "For Purpose A reporting, whether an invoice is confidently linked to a governing contract counterparty or the join remains unresolved.",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "required_by": ["A"],
+      "grounding_contract": "Bounded packet citing identity_judgment chain from billing:<billed_name> to contract:<basename> counterparty or explicit uncertainty.",
+      "construction_rule": "For each in-scope invoice, pair with candidate governing contracts; map confident identity chain to disposition asserted, otherwise unresolved; never treat missing confidence as negative non-association.",
+      "candidate_generation_rule": "Cross each source_invoice with source_contract rows reachable via identity_judgment from the invoice billed name to the contract counterparty_text.",
+      "unresolved_judgment": "Whether the invoice billed name and contract counterparty are confidently the same commercial relationship for inclusion reporting.",
+      "allowed_dispositions": ["asserted", "unresolved"],
+      "dispositions": ["asserted", "unresolved"],
+      "scope": "PURPOSE",
+      "algebra": {
+        "symmetric": false,
+        "transitive": false,
+        "conflicts_with": [],
+        "closure_policy": "no_closed_world"
+      },
+      "epistemic_contract": {
+        "positive_disposition": "asserted",
+        "negative_disposition": null,
+        "unresolved_disposition": "unresolved"
+      },
+      "semantic_family_hint": "INVOICE_CONTRACT_LINK"
+    },
+    {
+      "name": "commercial_dependency_judgment",
+      "roles": [
+        {"name": "counterparty", "type": "TEXT"},
+        {"name": "contract", "type": "REFERENT", "semantic_identity": "contract"},
+        {"name": "status", "type": "TEXT", "semantic_identity": "status"}
+      ],
+      "role_types": ["TEXT", "REFERENT", "TEXT"],
+      "meaning": "For Purpose C, whether a counterparty-contract pair is commercially dependent or indeterminate due to unresolved joins.",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "required_by": ["C"],
+      "grounding_contract": "Bounded packet citing open_invoice, contract_active_status, contract_clause kinds, and any identity_judgment used to join endpoints.",
+      "construction_rule": "Apply Purpose C two-part test: current relationship via open invoice or active auto-renew/rolling contract plus qualifying obligation kinds; emit dependent when both parts hold with confident joins, otherwise unresolved.",
+      "candidate_generation_rule": "Enumerate counterparty identifier and contract pairs where an open invoice or active contract with C obligation kinds is plausibly linked via identity_judgment.",
+      "unresolved_judgment": "Whether the counterparty-contract pair satisfies the commercial dependency test with confident identity joins.",
+      "allowed_dispositions": ["dependent", "unresolved"],
+      "dispositions": ["dependent", "unresolved"],
+      "scope": "PURPOSE",
+      "algebra": {
+        "symmetric": false,
+        "transitive": false,
+        "conflicts_with": [],
+        "closure_policy": "no_closed_world"
+      },
+      "epistemic_contract": {
+        "positive_disposition": "dependent",
+        "negative_disposition": null,
+        "unresolved_disposition": "unresolved"
+      },
+      "semantic_family_hint": "COMMERCIAL_DEPENDENCY"
+    }
+  ]
+}

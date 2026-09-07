@@ -1,0 +1,40 @@
+{
+  "propositions": [
+    {
+      "proposition": "Companies House registry number 11847201 corresponds to the legal entity named HELION ROBOTICS LIMITED, registered in England and Wales with active status.",
+      "source_grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847201"
+      },
+      "establishes": "other",
+      "relevance": "Grounds the left referent registry:11847201 to a specific registered legal name and jurisdiction."
+    },
+    {
+      "proposition": "Companies House registry number 11847299 corresponds to the legal entity named HELION INDUSTRIAL SYSTEMS LTD, registered in England and Wales with active status.",
+      "source_grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847299"
+      },
+      "establishes": "other",
+      "relevance": "Grounds the right referent registry:11847299 to a specific registered legal name and jurisdiction."
+    },
+    {
+      "proposition": "Commercial notes state that Helion Robotics Ltd (CRM operating name) and Helion Robotics Limited (invoices and Companies House) are the same legal entity.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "identity",
+      "relevance": "Documents alias variants of the Helion Robotics entity; supports identification of registry:11847201 but does not link it to registry:11847299."
+    },
+    {
+      "proposition": "Commercial notes state that Helion Industrial Systems Ltd is a different company from the Helion Robotics entity described in the same passage.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "distinctness",
+      "relevance": "Third-party commercial documentation explicitly treats Helion Industrial Systems Ltd as a separate company from Helion Robotics, bearing on whether the two registry referents denote the same legal counterparty."
+    }
+  ]
+}

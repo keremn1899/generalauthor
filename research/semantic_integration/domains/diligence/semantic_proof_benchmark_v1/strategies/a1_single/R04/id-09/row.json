@@ -1,0 +1,36 @@
+{
+  "strategy": "a1_single",
+  "trial": "R04",
+  "obligation_id": "id-09",
+  "candidate": {
+    "left": "crm:VEL-19",
+    "right": "billing:Vellum Print Co Ltd"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row VEL-19"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Vellum Print Co Ltd"
+    }
+  ],
+  "support_claim": "CRM row VEL-19 lists the counterparty as 'Vellum Print Co' while billing records the billed name as 'Vellum Print Co Ltd', with no packet observation tying these labels to the same legal entity or proving they are different entities.",
+  "proof_size": 1,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "justification": "Under the identity_judgment contract, SAME_ENTITY and DISTINCT each require establishing evidence, not name compatibility; the packet preserves two referents with similar but non-identical names and no identifier or explicit linkage, so neither the identity nor the distinctness burden is met.",
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

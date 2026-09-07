@@ -1,0 +1,40 @@
+{
+  "answers": [
+    {
+      "id": "Q1",
+      "status": "ANSWERED",
+      "value": 12,
+      "rationale": "C6 lists tool_id L1; adr.txt remaps L1 to LASER-A (hourly_fee 12). Member M-17 holds LASER-1, satisfying the laser certification requirement. Checkout runs 15:00\u201316:00 on 2024-07-03 (before 21:00), so no after-hours multiplier applies. Fee = 12 \u00d7 1 hour = 12."
+    },
+    {
+      "id": "Q2",
+      "status": "ANSWERED",
+      "value": 18,
+      "rationale": "C7 uses LASER-A (hourly_fee 12) for member M-17, who holds LASER-1. Checkout runs 21:15\u201322:15 on 2024-07-04, entirely after 21:00; shop_rules.txt applies a 1.5\u00d7 after-hours multiplier. Fee = 12 \u00d7 1 hour \u00d7 1.5 = 18."
+    },
+    {
+      "id": "Q3",
+      "status": "ANSWERED",
+      "value": 1,
+      "rationale": "LASER-A requires LASER-1 and CNC-1 requires CNC-1 per shop_rules.txt. C4 (M-19 on LASER-A) is the only checkout where the member lacks the required certification: M-19's certs field does not include LASER-1. All other checkouts either match required certs or use tools with no cert_required."
+    },
+    {
+      "id": "Q4",
+      "status": "ANSWERED",
+      "value": 24,
+      "rationale": "C1 uses LASER-A (hourly_fee 12) for member M-17, who holds LASER-1. Checkout runs 18:00\u201320:00 on 2024-07-01 (before 21:00), with 2 hours marked. Fee = 12 \u00d7 2 = 24."
+    },
+    {
+      "id": "Q5",
+      "status": "UNRESOLVED",
+      "value": null,
+      "rationale": "C5 carries note PENDING, but shop_rules.txt only defines HOLD and explicitly states the posting does not define other checkout notes. No source in the packet explains PENDING."
+    },
+    {
+      "id": "Q6",
+      "status": "UNRESOLVED",
+      "value": null,
+      "rationale": "C2 is M-18 on CNC-1, but no source in the packet mentions insurance, riders, or coverage for any member. Coverage cannot be established from the evidence provided."
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "strategy": "a1_single",
+  "trial": "R05",
+  "obligation_id": "id-01",
+  "candidate": {
+    "left": "crm:HEL-441",
+    "right": "billing:Helion Robotics Limited"
+  },
+  "proposed_disposition": "SAME_ENTITY",
+  "final_disposition": "SAME_ENTITY",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row HEL-441"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Helion Robotics Limited"
+    }
+  ],
+  "support_claim": "CRM row HEL-441 names Helion Robotics Ltd, commercial notes explicitly state that Helion Robotics Ltd (CRM) and Helion Robotics Limited (invoices) are the same legal entity, and billing records bill Helion Robotics Limited.",
+  "proof_size": 1,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "justification": "Under the identity_judgment contract, SAME_ENTITY is licensed because the packet supplies establishing evidence\u2014not mere name compatibility\u2014linking the left referent (crm:HEL-441) to Helion Robotics Ltd and asserting that operating name is the same legal entity as the right referent (billing:Helion Robotics Limited); no competing live candidate or unresolved-identity caveat appears in the packet.",
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": true,
+  "unsupported_closure": false,
+  "under_closure": false,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": false
+}

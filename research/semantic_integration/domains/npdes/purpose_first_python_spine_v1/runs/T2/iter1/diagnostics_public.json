@@ -1,0 +1,545 @@
+{
+  "ok": true,
+  "errors": [],
+  "relation_row_counts": {
+    "facility_permit": 3,
+    "discharge_point_identity": 4,
+    "parameter_identity": 33,
+    "limit_identity": 44,
+    "limit_value_identity": 90,
+    "limit_effective_interval": 44,
+    "limit_value_magnitude": 90,
+    "limit_value_qualifier_code": 90,
+    "limit_type_code": 44,
+    "optional_monitoring_flag": 44,
+    "monitoring_schedule": 51,
+    "seasonal_month_flag": 84,
+    "permit_limit_comment": 4,
+    "dmr_measurement": 824,
+    "measurement_value": 824,
+    "measurement_qualifier_code": 824,
+    "measurement_nodi_code": 824,
+    "document_inventory": 12,
+    "fy2025_dmr_measurement": 824,
+    "dmr_permit_link": 824,
+    "permit_monitoring_requirement": 51,
+    "requirement_fy2025_dmr_evidence": 51,
+    "numeric_comparison_pair": 342,
+    "no_numeric_result_case": 186,
+    "monitoring_obligation_subject": 51
+  },
+  "referent_kinds": {
+    "facility": 3,
+    "permit": 3,
+    "discharge_point": 4,
+    "parameter": 33,
+    "limit": 44,
+    "limit_value": 90,
+    "limit_set_schedule": 7,
+    "dmr_report": 824,
+    "monitoring_event": 48,
+    "document": 12,
+    "monitoring_requirement": 51
+  },
+  "n_hole_instances": 1891,
+  "n_hole_groups": 16,
+  "hole_groups": [
+    {
+      "group_id": "g000",
+      "requirement": "conditional_permit_comment_present",
+      "failure_kind": "EXPLICIT_UNRESOLVED",
+      "relation": "permit_limit_comment",
+      "n_instances": 31,
+      "sample_subjects": [
+        {
+          "monitoring_requirement": "monitoring_requirement:limit_id=3606239979|limit_set_schedule_id=3600891019"
+        },
+        {
+          "monitoring_requirement": "monitoring_requirement:limit_id=3606239981|limit_set_schedule_id=3600891019"
+        },
+        {
+          "monitoring_requirement": "monitoring_requirement:limit_id=3606351872|limit_set_schedule_id=3600904607"
+        },
+        {
+          "monitoring_requirement": "monitoring_requirement:limit_id=3606239978|limit_set_schedule_id=3600891019"
+        },
+        {
+          "monitoring_requirement": "monitoring_requirement:limit_id=3606351871|limit_set_schedule_id=3600904607"
+        },
+        {
+          "monitoring_requirement": "monitoring_requirement:limit_id=3606350737|limit_set_schedule_id=3600891019"
+        }
+      ]
+    },
+    {
+      "group_id": "g001",
+      "requirement": "interpret_limit_type_code",
+      "failure_kind": "UNINTERPRETED",
+      "relation": "limit_type_code",
+      "n_instances": 44,
+      "sample_subjects": [
+        {
+          "limit_type_code": "ENF",
+          "limit": "limit:limit_id=3606239979"
+        },
+        {
+          "limit_type_code": "ENF",
+          "limit": "limit:limit_id=3605908064"
+        },
+        {
+          "limit_type_code": "ENF",
+          "limit": "limit:limit_id=3606239981"
+        },
+        {
+          "limit_type_code": "ENF",
+          "limit": "limit:limit_id=3606351872"
+        },
+        {
+          "limit_type_code": "ENF",
+          "limit": "limit:limit_id=3605908066"
+        },
+        {
+          "limit_type_code": "ENF",
+          "limit": "limit:limit_id=3606239978"
+        }
+      ]
+    },
+    {
+      "group_id": "g002",
+      "requirement": "interpret_limit_value_qualifier",
+      "failure_kind": "UNINTERPRETED",
+      "relation": "limit_value_qualifier_code",
+      "n_instances": 39,
+      "sample_subjects": [
+        {
+          "qualifier_code": "<=",
+          "limit_value": "limit_value:limit_value_id=3610673284"
+        },
+        {
+          "qualifier_code": "<=",
+          "limit_value": "limit_value:limit_value_id=3610673282"
+        },
+        {
+          "qualifier_code": "<=",
+          "limit_value": "limit_value:limit_value_id=3610673283"
+        },
+        {
+          "qualifier_code": "<=",
+          "limit_value": "limit_value:limit_value_id=3610673281"
+        },
+        {
+          "qualifier_code": "<=",
+          "limit_value": "limit_value:limit_value_id=3610129864"
+        },
+        {
+          "qualifier_code": ">=",
+          "limit_value": "limit_value:limit_value_id=3610129865"
+        }
+      ]
+    },
+    {
+      "group_id": "g003",
+      "requirement": "interpret_measurement_qualifier",
+      "failure_kind": "UNINTERPRETED",
+      "relation": "measurement_qualifier_code",
+      "n_instances": 638,
+      "sample_subjects": [
+        {
+          "dmr_value_qualifier_code": "<",
+          "dmr_report": "dmr_report:dmr_form_value_id=3920643904"
+        },
+        {
+          "dmr_value_qualifier_code": "<",
+          "dmr_report": "dmr_report:dmr_form_value_id=3920643905"
+        },
+        {
+          "dmr_value_qualifier_code": "<",
+          "dmr_report": "dmr_report:dmr_form_value_id=3920643906"
+        },
+        {
+          "dmr_value_qualifier_code": "<",
+          "dmr_report": "dmr_report:dmr_form_value_id=3920643907"
+        },
+        {
+          "dmr_value_qualifier_code": "<",
+          "dmr_report": "dmr_report:dmr_form_value_id=3920643924"
+        },
+        {
+          "dmr_value_qualifier_code": "<",
+          "dmr_report": "dmr_report:dmr_form_value_id=3920643925"
+        }
+      ]
+    },
+    {
+      "group_id": "g004",
+      "requirement": "interpret_monitoring_frequency_code",
+      "failure_kind": "UNINTERPRETED",
+      "relation": "monitoring_schedule",
+      "n_instances": 51,
+      "sample_subjects": [
+        {
+          "limit_freq_of_analysis_code": "05/WK",
+          "limit_set_schedule": "limit_set_schedule:limit_set_schedule_id=3600891019"
+        },
+        {
+          "limit_freq_of_analysis_code": "01/01",
+          "limit_set_schedule": "limit_set_schedule:limit_set_schedule_id=3600833510"
+        },
+        {
+          "limit_freq_of_analysis_code": "01/01",
+          "limit_set_schedule": "limit_set_schedule:limit_set_schedule_id=3600833505"
+        },
+        {
+          "limit_freq_of_analysis_code": "05/WK",
+          "limit_set_schedule": "limit_set_schedule:limit_set_schedule_id=3600891019"
+        },
+        {
+          "limit_freq_of_analysis_code": "01/07",
+          "limit_set_schedule": "limit_set_schedule:limit_set_schedule_id=3600904607"
+        },
+        {
+          "limit_freq_of_analysis_code": "01/07",
+          "limit_set_schedule": "limit_set_schedule:limit_set_schedule_id=3600833510"
+        }
+      ]
+    },
+    {
+      "group_id": "g005",
+      "requirement": "interpret_nodi_for_limit_applicability",
+      "failure_kind": "UNINTERPRETED",
+      "relation": "measurement_nodi_code",
+      "n_instances": 186,
+      "sample_subjects": [
+        {
+          "nodi_code": "9",
+          "dmr_report": "dmr_report:dmr_form_value_id=3920662047"
+        },
+        {
+          "nodi_code": "9",
+          "dmr_report": "dmr_report:dmr_form_value_id=3920662059"
+        },
+        {
+          "nodi_code": "9",
+          "dmr_report": "dmr_report:dmr_form_value_id=3920662071"
+        },
+        {
+          "nodi_code": "9",
+          "dmr_report": "dmr_report:dmr_form_value_id=3920662083"
+        },
+        {
+          "nodi_code": "9",
+          "dmr_report": "dmr_report:dmr_form_value_id=3920662048"
+        },
+        {
+          "nodi_code": "9",
+          "dmr_report": "dmr_report:dmr_form_value_id=3920662060"
+        }
+      ]
+    },
+    {
+      "group_id": "g006",
+      "requirement": "interpret_nodi_semantics",
+      "failure_kind": "UNINTERPRETED",
+      "relation": "measurement_nodi_code",
+      "n_instances": 186,
+      "sample_subjects": [
+        {
+          "nodi_code": "9",
+          "dmr_report": "dmr_report:dmr_form_value_id=3920662047"
+        },
+        {
+          "nodi_code": "9",
+          "dmr_report": "dmr_report:dmr_form_value_id=3920662059"
+        },
+        {
+          "nodi_code": "9",
+          "dmr_report": "dmr_report:dmr_form_value_id=3920662071"
+        },
+        {
+          "nodi_code": "9",
+          "dmr_report": "dmr_report:dmr_form_value_id=3920662083"
+        },
+        {
+          "nodi_code": "9",
+          "dmr_report": "dmr_report:dmr_form_value_id=3920662048"
+        },
+        {
+          "nodi_code": "9",
+          "dmr_report": "dmr_report:dmr_form_value_id=3920662060"
+        }
+      ]
+    },
+    {
+      "group_id": "g007",
+      "requirement": "interpret_optional_monitoring_for_limits",
+      "failure_kind": "UNINTERPRETED",
+      "relation": "optional_monitoring_flag",
+      "n_instances": 44,
+      "sample_subjects": [
+        {
+          "optional_monitoring_flag": "N",
+          "limit": "limit:limit_id=3606239979"
+        },
+        {
+          "optional_monitoring_flag": "N",
+          "limit": "limit:limit_id=3605908064"
+        },
+        {
+          "optional_monitoring_flag": "N",
+          "limit": "limit:limit_id=3606239981"
+        },
+        {
+          "optional_monitoring_flag": "N",
+          "limit": "limit:limit_id=3606351872"
+        },
+        {
+          "optional_monitoring_flag": "N",
+          "limit": "limit:limit_id=3605908066"
+        },
+        {
+          "optional_monitoring_flag": "N",
+          "limit": "limit:limit_id=3606239978"
+        }
+      ]
+    },
+    {
+      "group_id": "g008",
+      "requirement": "interpret_optional_monitoring_for_no_result",
+      "failure_kind": "UNINTERPRETED",
+      "relation": "optional_monitoring_flag",
+      "n_instances": 44,
+      "sample_subjects": [
+        {
+          "optional_monitoring_flag": "N",
+          "limit": "limit:limit_id=3606239979"
+        },
+        {
+          "optional_monitoring_flag": "N",
+          "limit": "limit:limit_id=3605908064"
+        },
+        {
+          "optional_monitoring_flag": "N",
+          "limit": "limit:limit_id=3606239981"
+        },
+        {
+          "optional_monitoring_flag": "N",
+          "limit": "limit:limit_id=3606351872"
+        },
+        {
+          "optional_monitoring_flag": "N",
+          "limit": "limit:limit_id=3605908066"
+        },
+        {
+          "optional_monitoring_flag": "N",
+          "limit": "limit:limit_id=3606239978"
+        }
+      ]
+    },
+    {
+      "group_id": "g009",
+      "requirement": "interpret_optional_monitoring_for_obligations",
+      "failure_kind": "UNINTERPRETED",
+      "relation": "optional_monitoring_flag",
+      "n_instances": 44,
+      "sample_subjects": [
+        {
+          "optional_monitoring_flag": "N",
+          "limit": "limit:limit_id=3606239979"
+        },
+        {
+          "optional_monitoring_flag": "N",
+          "limit": "limit:limit_id=3605908064"
+        },
+        {
+          "optional_monitoring_flag": "N",
+          "limit": "limit:limit_id=3606239981"
+        },
+        {
+          "optional_monitoring_flag": "N",
+          "limit": "limit:limit_id=3606351872"
+        },
+        {
+          "optional_monitoring_flag": "N",
+          "limit": "limit:limit_id=3605908066"
+        },
+        {
+          "optional_monitoring_flag": "N",
+          "limit": "limit:limit_id=3606239978"
+        }
+      ]
+    },
+    {
+      "group_id": "g010",
+      "requirement": "interpret_permit_dmr_comment",
+      "failure_kind": "UNINTERPRETED",
+      "relation": "permit_limit_comment",
+      "n_instances": 4,
+      "sample_subjects": [
+        {
+          "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+          "limit_set_schedule": "limit_set_schedule:limit_set_schedule_id=3600891019"
+        },
+        {
+          "dmr_comment_text": "WHEN DISCHARGING.",
+          "limit_set_schedule": "limit_set_schedule:limit_set_schedule_id=3600904607"
+        },
+        {
+          "dmr_comment_text": "(PASS = 0  FAIL = 1) REPORT PASS AS '0' OR REPORT FAIL AS '1' IN CONCENTRATION MAX. ABOVE.  IF ALL TESTS PASS FOR THE FIRST YEAR OF THE PERMIT, THE FREQUENCY WILL BE REDUCED FOR YEARS 2-5 TO:  1/6 MONTHS FOR DAPHNIA PULEX & 1/YR FOR PIMEPHALES PROMELAS (SEE FOOTNOTE 9, PAGE 3 OF PART I OF PERMIT).",
+          "limit_set_schedule": "limit_set_schedule:limit_set_schedule_id=3600904539"
+        },
+        {
+          "dmr_comment_text": "WHEN DISCHARGING.",
+          "limit_set_schedule": "limit_set_schedule:limit_set_schedule_id=3600904606"
+        }
+      ]
+    },
+    {
+      "group_id": "g011",
+      "requirement": "interpret_seasonal_month_flag",
+      "failure_kind": "UNINTERPRETED",
+      "relation": "seasonal_month_flag",
+      "n_instances": 84,
+      "sample_subjects": [
+        {
+          "active_flag": "Y",
+          "limit_set_schedule": "limit_set_schedule:limit_set_schedule_id=3600891019",
+          "month": "JAN"
+        },
+        {
+          "active_flag": "Y",
+          "limit_set_schedule": "limit_set_schedule:limit_set_schedule_id=3600891019",
+          "month": "FEB"
+        },
+        {
+          "active_flag": "Y",
+          "limit_set_schedule": "limit_set_schedule:limit_set_schedule_id=3600891019",
+          "month": "MAR"
+        },
+        {
+          "active_flag": "Y",
+          "limit_set_schedule": "limit_set_schedule:limit_set_schedule_id=3600891019",
+          "month": "APR"
+        },
+        {
+          "active_flag": "Y",
+          "limit_set_schedule": "limit_set_schedule:limit_set_schedule_id=3600891019",
+          "month": "MAY"
+        },
+        {
+          "active_flag": "Y",
+          "limit_set_schedule": "limit_set_schedule:limit_set_schedule_id=3600891019",
+          "month": "JUN"
+        }
+      ]
+    },
+    {
+      "group_id": "g012",
+      "requirement": "multiple_permit_schedules_for_limit",
+      "failure_kind": "EXPLICIT_UNRESOLVED",
+      "relation": "monitoring_schedule",
+      "n_instances": 7,
+      "sample_subjects": [
+        {
+          "limit": "limit:limit_id=3605908064"
+        },
+        {
+          "limit": "limit:limit_id=3605908066"
+        },
+        {
+          "limit": "limit:limit_id=3605908068"
+        },
+        {
+          "limit": "limit:limit_id=3605908069"
+        },
+        {
+          "limit": "limit:limit_id=3605908065"
+        },
+        {
+          "limit": "limit:limit_id=3605908063"
+        }
+      ]
+    },
+    {
+      "group_id": "g013",
+      "requirement": "nodi_without_interpretation",
+      "failure_kind": "EXPLICIT_UNRESOLVED",
+      "relation": "measurement_nodi_code",
+      "n_instances": 186,
+      "sample_subjects": [
+        {
+          "dmr_report": "dmr_report:dmr_form_value_id=3896611084"
+        },
+        {
+          "dmr_report": "dmr_report:dmr_form_value_id=3896611085"
+        },
+        {
+          "dmr_report": "dmr_report:dmr_form_value_id=3896611086"
+        },
+        {
+          "dmr_report": "dmr_report:dmr_form_value_id=3896611087"
+        },
+        {
+          "dmr_report": "dmr_report:dmr_form_value_id=3896611088"
+        },
+        {
+          "dmr_report": "dmr_report:dmr_form_value_id=3896611089"
+        }
+      ]
+    },
+    {
+      "group_id": "g014",
+      "requirement": "permit_requirement_without_fy2025_dmr",
+      "failure_kind": "EXPLICIT_UNRESOLVED",
+      "relation": "requirement_fy2025_dmr_evidence",
+      "n_instances": 7,
+      "sample_subjects": [
+        {
+          "monitoring_requirement": "monitoring_requirement:limit_id=3605908064|limit_set_schedule_id=3600833505"
+        },
+        {
+          "monitoring_requirement": "monitoring_requirement:limit_id=3605908066|limit_set_schedule_id=3600833505"
+        },
+        {
+          "monitoring_requirement": "monitoring_requirement:limit_id=3605908068|limit_set_schedule_id=3600833505"
+        },
+        {
+          "monitoring_requirement": "monitoring_requirement:limit_id=3605908069|limit_set_schedule_id=3600833505"
+        },
+        {
+          "monitoring_requirement": "monitoring_requirement:limit_id=3605908065|limit_set_schedule_id=3600833505"
+        },
+        {
+          "monitoring_requirement": "monitoring_requirement:limit_id=3605908063|limit_set_schedule_id=3600833505"
+        }
+      ]
+    },
+    {
+      "group_id": "g015",
+      "requirement": "reported_value_without_numeric_limit",
+      "failure_kind": "EXPLICIT_UNRESOLVED",
+      "relation": "dmr_measurement",
+      "n_instances": 296,
+      "sample_subjects": [
+        {
+          "dmr_report": "dmr_report:dmr_form_value_id=3920643904"
+        },
+        {
+          "dmr_report": "dmr_report:dmr_form_value_id=3920643905"
+        },
+        {
+          "dmr_report": "dmr_report:dmr_form_value_id=3920643906"
+        },
+        {
+          "dmr_report": "dmr_report:dmr_form_value_id=3920643907"
+        },
+        {
+          "dmr_report": "dmr_report:dmr_form_value_id=3920643924"
+        },
+        {
+          "dmr_report": "dmr_report:dmr_form_value_id=3920643925"
+        }
+      ]
+    }
+  ],
+  "note": "Holes are failed purpose requirements, not gold labels. Revise only if ok is false."
+}

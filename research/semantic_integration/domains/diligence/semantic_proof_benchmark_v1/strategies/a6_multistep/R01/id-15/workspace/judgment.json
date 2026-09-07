@@ -1,0 +1,52 @@
+{
+  "steps": [
+    {
+      "fact": "Left referent crm:HEL-441 is recorded as Helion Robotics Ltd in CRM row HEL-441.",
+      "grounding": {
+        "source_path": "sources/crm.csv",
+        "location": "row HEL-441"
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "Right referent registry:11847299 is recorded as HELION INDUSTRIAL SYSTEMS LTD in registry row 11847299.",
+      "grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847299"
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "Commercial notes state that Helion Industrial Systems Ltd is a different company from Helion Robotics Ltd.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "The registry legal name for registry:11847299 (HELION INDUSTRIAL SYSTEMS LTD) is the company named Helion Industrial Systems Ltd in the commercial notes.",
+      "grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847299"
+      },
+      "mechanical": true
+    }
+  ],
+  "disposition": "DISTINCT",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row HEL-441"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 11847299"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "The packet maps crm:HEL-441 to Helion Robotics Ltd and registry:11847299 to HELION INDUSTRIAL SYSTEMS LTD, and commercial notes explicitly state Helion Industrial Systems Ltd is a different company from Helion Robotics Ltd."
+}

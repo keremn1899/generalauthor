@@ -1,0 +1,44 @@
+{
+  "steps": [
+    {
+      "fact": "CRM record HEL-441 names the counterparty as Helion Robotics Ltd.",
+      "grounding": {
+        "source_path": "sources/crm.csv",
+        "location": "row HEL-441"
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "Registry record 11847299 names the company as HELION INDUSTRIAL SYSTEMS LTD.",
+      "grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847299"
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "Commercial notes state that Helion Industrial Systems Ltd is a different company from Helion Robotics Ltd, the CRM operating name described as the same legal entity as Helion Robotics Limited.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    }
+  ],
+  "disposition": "DISTINCT",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row HEL-441"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 11847299"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "The CRM referent is Helion Robotics Ltd while the registry referent is Helion Industrial Systems Ltd, and the packet explicitly states those are different companies."
+}

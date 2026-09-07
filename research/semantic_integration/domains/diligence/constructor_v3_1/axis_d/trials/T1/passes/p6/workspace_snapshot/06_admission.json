@@ -1,0 +1,100 @@
+{
+  "relations": [
+    {
+      "relation": "invoice",
+      "admission": "WORLD",
+      "reason": "A represented billed-revenue invoice as recorded in billing sources with source-native identifiers and metadata.",
+      "purpose_independence_test": "Invoice rows are source-native billing facts; truth does not depend on which diligence purpose is active."
+    },
+    {
+      "relation": "crm_account",
+      "admission": "WORLD",
+      "reason": "A CRM commercial account record as it appears in the authoritative CRM export.",
+      "purpose_independence_test": "CRM account records are export facts independent of analytical purpose."
+    },
+    {
+      "relation": "registry_entity",
+      "admission": "WORLD",
+      "reason": "A company-registry legal entity row as recorded in the authoritative registry export.",
+      "purpose_independence_test": "Registry legal-entity rows are authoritative registry facts independent of purpose."
+    },
+    {
+      "relation": "contract",
+      "admission": "WORLD",
+      "reason": "A contract or statement-of-work document with source-native identifier and counterparty naming as it appears in the markdown header.",
+      "purpose_independence_test": "Contract documents and identifiers exist as source artifacts regardless of diligence question."
+    },
+    {
+      "relation": "contract_term",
+      "admission": "WORLD",
+      "reason": "Observed effective, expiry, and free-text term language for a contract document as stated in source headers.",
+      "purpose_independence_test": "Observed effective/expiry/term text is a mechanical source observation independent of purpose policy."
+    },
+    {
+      "relation": "contract_section",
+      "admission": "WORLD",
+      "reason": "A numbered or titled contractual section excerpt exactly as it appears in a source contract document.",
+      "purpose_independence_test": "Section excerpts are verbatim source observations independent of clause-classification purposes."
+    },
+    {
+      "relation": "contract_in_force",
+      "admission": "WORLD",
+      "reason": "Whether a contract is currently in force on the evaluation date according to its stated dates and term language, independent of any diligence purpose.",
+      "purpose_independence_test": "Whether a contract is in force on the evaluation date is a lifecycle fact with stable meaning absent any purpose threshold."
+    },
+    {
+      "relation": "clause_presence",
+      "admission": "PURPOSE",
+      "reason": "Whether a contract bears a specified clause kind under the analytical vocabulary requested by purposes A or C.",
+      "purpose_independence_test": "Clause-kind presence is classified against purpose A/C vocabularies and acquisition/obligation analytical frames."
+    },
+    {
+      "relation": "identity_judgment",
+      "admission": "PURPOSE",
+      "reason": "Two commercially relevant identifiers denote the same legal counterparty, are confidently distinct, or remain unresolved.",
+      "purpose_independence_test": "Identity sameness/distinctness is resolved for purpose-driven entity threading, not as a purpose-independent world fact."
+    },
+    {
+      "relation": "invoice_contract_association",
+      "admission": "PURPOSE",
+      "reason": "Whether a billed invoice can be confidently associated with a governing contract/counterparty thread for purpose A reporting.",
+      "purpose_independence_test": "Invoice-to-contract association is asserted for purpose A reporting joins, not as a source-native mechanical link."
+    },
+    {
+      "relation": "identity_candidate_pair",
+      "admission": "WORLD",
+      "reason": "A directed pair of purpose-B identifier strings that are comparable candidates within the same commercial relationship thread.",
+      "purpose_independence_test": "Directed identifier pairs for connectivity are compiled correspondence candidates, not purpose-scoped identity verdicts."
+    },
+    {
+      "relation": "open_invoice",
+      "admission": "WORLD",
+      "reason": "Invoices whose source status is open as recorded in billing data.",
+      "purpose_independence_test": "Open invoice status is a mechanical filter on source billing status, not a purpose policy."
+    },
+    {
+      "relation": "contract_in_force_active",
+      "admission": "WORLD",
+      "reason": "Boolean projection of resolved contract_in_force judgments for consumer fields requiring semantic_identity active.",
+      "purpose_independence_test": "Boolean active projection is a mechanical view of resolved in-force judgments, not a purpose-specific active-contract rule."
+    },
+    {
+      "relation": "commercial_dependency",
+      "admission": "PURPOSE",
+      "reason": "Purpose-C dependency row asserting dependent or unresolved status for a contract/counterparty thread under the joint current-relationship and obligation test.",
+      "purpose_independence_test": "Dependency status applies the joint purpose-C current-relationship and obligation test."
+    }
+  ],
+  "world_persisted_semantics": {
+    "asserted": 5,
+    "skipped_purpose": 134,
+    "by_relation": {
+      "contract_in_force": 5
+    }
+  },
+  "limitations": [
+    "Purpose relations (clause_presence, identity_judgment, invoice_contract_association, commercial_dependency) are not promoted into 06_world per admission policy.",
+    "contract_in_force UNRESOLVED rows are persisted in World but omitted from contract_in_force_active per vocabulary construction rule.",
+    "Prior pass dispositions carry empty grounding arrays; P6 supplies SOURCE packet and source-location groundings at assertion time."
+  ]
+}

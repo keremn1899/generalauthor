@@ -1,0 +1,41 @@
+{
+  "payload": [
+    {
+      "obligation_id": "R3/c0428",
+      "relation": "probe_obligation",
+      "values": [
+        "Nominated table row showing numeric 30-DAY AVG limits (27,664 lbs/day and 497 mg/L) alongside DAILY MAX entries marked 'Report', each referencing footnote (*10)",
+        "Footnote (*8) defining net total dissolved solids as the difference between Outfall 001 discharge and flow-weighted average influent at the two drinking water treatment plants",
+        "Footnote (*10) stating that the limits apply from the permit effective date through three years thereafter"
+      ],
+      "disposition": "REJECT",
+      "grounding": [
+        {
+          "packet": "04_packets/R3_c0428.json",
+          "location": "selected_observations[0].location",
+          "detail": "Page: 5, Section: part_i, table row (*10)",
+          "excerpt": "Total Dissolved Solids, Net Increase (*8): 30-DAY AVG columns carry numeric limits (27,664 lbs/day and 497 mg/L) with footnote (*10); both DAILY MAX columns read 'Report' with footnote (*10), not numeric values."
+        },
+        {
+          "packet": "04_packets/R3_c0428.json",
+          "location": "selected_observations[1].location",
+          "detail": "adjacent pages around 5, same table",
+          "excerpt": "Pollutants with enforceable DAILY MAX limits in this table express them as numeric values (e.g., E. Coli DAILY MAX 31.9/235; Cyanide DAILY MAX 1.225 lbs/day and 22 ug/L). The TDS Net Increase (*10) row places 'Report' in DAILY MAX cells while reserving numeric values for 30-DAY AVG only."
+        },
+        {
+          "packet": "04_packets/R3_c0428.json",
+          "location": "selected_observations[1].excerpt, footnote *10",
+          "detail": "adjacent pages around 5, footnotes",
+          "excerpt": "*10 The limits begin on the effective date of this permit and lasting through 3 years from the permit effective date."
+        },
+        {
+          "packet": "04_packets/R3_c0428.json",
+          "location": "selected_observations[1].excerpt, footnote *8",
+          "detail": "adjacent pages around 5, footnotes",
+          "excerpt": "*8 Net total dissolved solids calculated by taking the difference between Outfall 001 discharge and flow weighted average influent of the two drinking water treatment plants."
+        }
+      ],
+      "rationale": "The obligation asks whether DAILY MAX cells marked 'Report' (footnote *10) establish enforceable numeric discharge limits or monitoring/reporting without numeric compliance comparison. The packet grounds a REJECT of the enforceable-limit reading: in the nominated (*10) row, DAILY MAX columns contain the token 'Report', not numeric limits, while the enforceable numeric values (27,664 lbs/day and 497 mg/L) appear only under 30-DAY AVG in the same row. Within the same permit table, parameters subject to numeric DAILY MAX limits are expressed with numbers in those columns; 'Report' is structurally distinct from those entries. Footnote (*10) governs the temporal applicability of 'the limits' but does not supply or convert the DAILY MAX 'Report' cells into numeric limits. Footnote (*8) defines the net-TDS calculation only. Therefore the DAILY MAX 'Report' entries establish monitoring/reporting obligations without an applicable numeric compliance limit in those columns; the numeric limits for this row are confined to the 30-DAY AVG columns."
+    }
+  ]
+}

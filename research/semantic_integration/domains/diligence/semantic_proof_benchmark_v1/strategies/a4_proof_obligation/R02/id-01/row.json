@@ -1,0 +1,64 @@
+{
+  "strategy": "a4_proof_obligation",
+  "trial": "R02",
+  "obligation_id": "id-01",
+  "candidate": {
+    "left": "crm:HEL-441",
+    "right": "billing:Helion Robotics Limited"
+  },
+  "proposed_disposition": "SAME_ENTITY",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row HEL-441"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "CRM row HEL-441 maps to Helion Robotics Ltd, and commercial notes explicitly state that Helion Robotics Ltd (CRM) and Helion Robotics Limited (invoices) are the same legal entity.",
+  "proof_size": 2,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "proof_obligations": [
+    {
+      "obligation": "Establish that crm:HEL-441 and billing:Helion Robotics Limited denote the same legal counterparty",
+      "required_for": "SAME_ENTITY",
+      "satisfied": true,
+      "evidence": [
+        {
+          "source_path": "sources/crm.csv",
+          "location": "row HEL-441"
+        },
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    },
+    {
+      "obligation": "Establish that crm:HEL-441 and billing:Helion Robotics Limited denote distinct legal counterparties",
+      "required_for": "DISTINCT",
+      "satisfied": false,
+      "evidence": []
+    }
+  ],
+  "admit": {
+    "rule": "unsatisfied_obligations_present"
+  },
+  "unsatisfied": [
+    "Establish that crm:HEL-441 and billing:Helion Robotics Limited denote distinct legal counterparties"
+  ],
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": true,
+  "correct_same_never_proposed": false
+}

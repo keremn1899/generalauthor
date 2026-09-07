@@ -1,0 +1,4886 @@
+{
+  "experiment_id": "npdes-constructor-v3-1-1-untouched",
+  "evaluated_at": "2026-09-03T21:24:33.452702+00:00",
+  "model": "composer-2.5",
+  "world_freeze": {
+    "frozen_at": "2026-09-03T21:24:31.953754+00:00",
+    "note": "World freeze after A/B/C construction, before Purpose D is revealed to any consumer workspace.",
+    "trials": {
+      "T1": {
+        "world_p6": "sha256:73e519493de8f8b333d85665204cdfb92123ce715027340399ba19f2c0b8ab13",
+        "world_p8": "sha256:73e519493de8f8b333d85665204cdfb92123ce715027340399ba19f2c0b8ab13",
+        "p6_eq_p8": true,
+        "vocabulary": "sha256:14b3b415748ac94f003dd73f049fe52eae4be16a6600493378c6546c8486818d",
+        "bytes_p8": 6811648
+      },
+      "T2": {
+        "world_p6": "sha256:233283e3dfb8ac2ae60086ed491df43bfb42830fff11843eacb72ce603cc3123",
+        "world_p8": "sha256:233283e3dfb8ac2ae60086ed491df43bfb42830fff11843eacb72ce603cc3123",
+        "p6_eq_p8": true,
+        "vocabulary": "sha256:2855b4316b9aab6323ff005d832ea9bdaa6f65fa0fbefed8bbea3a7e0d255dfb",
+        "bytes_p8": 5869568
+      },
+      "T3": {
+        "world_p6": "sha256:01b211ff025b027897335856d4667883b8792f17a48f83508622d2e8a77aa7c0",
+        "world_p8": "sha256:01b211ff025b027897335856d4667883b8792f17a48f83508622d2e8a77aa7c0",
+        "p6_eq_p8": true,
+        "vocabulary": "sha256:4dbff4c576457e3ac0322dffbb6365ce30b6ccba0b39b9d5445b25c971622604",
+        "bytes_p8": 6168576
+      },
+      "T4": {
+        "world_p6": "sha256:a281569a4c24b0dfddc1d6bd02da3f3e937240419e8b486489dccd8bf48bad19",
+        "world_p8": "sha256:a281569a4c24b0dfddc1d6bd02da3f3e937240419e8b486489dccd8bf48bad19",
+        "p6_eq_p8": true,
+        "vocabulary": "sha256:bc1a3de22866e93d78cc29f6cdc2b20a1818cfd26c7c0e3f36c8db02129658d9",
+        "bytes_p8": 5992448
+      },
+      "T5": {
+        "world_p6": "sha256:ac3d6248e28f52d446db419690f01a4302443fab4f46b9d572e0e1ab4d4a07bd",
+        "world_p8": "sha256:ac3d6248e28f52d446db419690f01a4302443fab4f46b9d572e0e1ab4d4a07bd",
+        "p6_eq_p8": true,
+        "vocabulary": "sha256:999858e401e2808a5990914cceaa3e57d63bc000a935c74268129a2fb5e300df",
+        "bytes_p8": 4251648
+      }
+    }
+  },
+  "trials": {
+    "T1": {
+      "trial": 1,
+      "isolation": {
+        "leaks": [],
+        "timeouts": [],
+        "models": [
+          "composer-2.5"
+        ],
+        "reported_models": [
+          "Composer 2.5"
+        ],
+        "all_returncode_zero": true,
+        "p8_source_path_mentions": []
+      },
+      "vocabulary": {
+        "n_relations": 15,
+        "by_admission": {
+          "WORLD": [
+            "in_scope_facility",
+            "reported_dmr_measurement",
+            "permit_limit_schedule_row",
+            "permit_limit_active_month",
+            "fy2025_in_scope_measurement",
+            "measurement_limit_candidate_join",
+            "monitoring_requirement_candidate",
+            "no_ordinary_numeric_result_measurement",
+            "permit_stated_condition",
+            "documented_no_discharge_assertion"
+          ],
+          "PURPOSE": [
+            "applicable_limit_selection",
+            "limit_numeric_comparison_applicability",
+            "exceedance_determination",
+            "monitoring_obligation_applicability",
+            "missing_evidence_classification"
+          ]
+        },
+        "by_class": {
+          "MECHANICAL": [
+            "in_scope_facility",
+            "reported_dmr_measurement",
+            "permit_limit_schedule_row",
+            "permit_limit_active_month"
+          ],
+          "DERIVED": [
+            "fy2025_in_scope_measurement",
+            "measurement_limit_candidate_join",
+            "monitoring_requirement_candidate",
+            "no_ordinary_numeric_result_measurement"
+          ],
+          "SEMANTIC": [
+            "permit_stated_condition",
+            "documented_no_discharge_assertion",
+            "applicable_limit_selection",
+            "limit_numeric_comparison_applicability",
+            "exceedance_determination",
+            "monitoring_obligation_applicability",
+            "missing_evidence_classification"
+          ]
+        },
+        "relations": [
+          {
+            "name": "in_scope_facility",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "A selected NPDES facility permit number within the Federal FY2025 diligence universe.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "reported_dmr_measurement",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "A DMR-reported measurement row as recorded in structured source data, including value, unit, qualifier, statistical basis, monitoring period end, and optional NODI code.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "permit_limit_schedule_row",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "A permit limit schedule value row with numeric limit metadata, type codes, effective dates, frequency, and optional monitoring flag as compiled from structured permit limit tables.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "permit_limit_active_month",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "Whether a permit limit schedule row is active in a given calendar month according to compiled month flags from structured limit data.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "fy2025_in_scope_measurement",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "meaning": "A reported DMR measurement whose monitoring period end falls within Federal FY2025 for an in-scope facility.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "measurement_limit_candidate_join",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "meaning": "A mechanical correspondence linking a reported measurement to a permit limit schedule row by shared permit, discharge feature, parameter, and overlapping effective/period dates.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "monitoring_requirement_candidate",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "meaning": "A monitoring obligation candidate derived from compiled permit schedule metadata (frequency, parameter, location, optional flag) without deciding FY2025 applicability.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "no_ordinary_numeric_result_measurement",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "meaning": "An in-scope FY2025 monitoring expectation lacking an ordinary numeric reported result, including empty DMR values and NODI-coded rows.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "permit_stated_condition",
+            "admission": "WORLD",
+            "construction_class": "SEMANTIC",
+            "meaning": "Permit-source language stating a conditional monitoring or discharge trigger (e.g., when discharging, seasonal, event) independent of whether the condition held in FY2025.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "documented_no_discharge_assertion",
+            "admission": "WORLD",
+            "construction_class": "SEMANTIC",
+            "meaning": "Source-documented claim that no discharge occurred for a facility feature within a stated period, as grounded in DMR NODI/permit/operator statements.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "applicable_limit_selection",
+            "admission": "PURPOSE",
+            "construction_class": "SEMANTIC",
+            "meaning": "Purpose A selection of at most one enforceable numeric limit candidate applicable to a measurement for compliance comparison, or an explicit unresolved disposition.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "limit_numeric_comparison_applicability",
+            "admission": "PURPOSE",
+            "construction_class": "SEMANTIC",
+            "meaning": "Purpose A classification of whether a numeric compliance comparison is applicable, distinguishing enforceable numeric limits from report-only or non-comparable monitoring.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "exceedance_determination",
+            "admission": "PURPOSE",
+            "construction_class": "SEMANTIC",
+            "meaning": "Purpose A determination whether a reported measurement exceeds the selected applicable limit after unit and statistical-base comparability checks.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "monitoring_obligation_applicability",
+            "admission": "PURPOSE",
+            "construction_class": "SEMANTIC",
+            "meaning": "Purpose B judgment whether a monitoring requirement was required, not required, or unresolved for FY2025 given schedule, season, and conditional trigger evidence.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "missing_evidence_classification",
+            "admission": "PURPOSE",
+            "construction_class": "SEMANTIC",
+            "meaning": "Purpose C classification of what evidence establishes for a no-ordinary-numeric-result monitoring expectation, without inferring compliance or violation from absence alone.",
+            "classification": "DOMAIN_SPECIFIC"
+          }
+        ],
+        "limitations": [
+          "Consumer field ids are not enumerated as a dedicated block in 00_intention_contract.json; bindings follow evaluation_unit and row_expectations language.",
+          "Permit PDF semantic extraction vocabulary is declared but C0\u2013C1 PDF compilation is not yet available from prior passes; permit_stated_condition tuples may be absent until a later pass ingests sources/permit_files.",
+          "Closed-world negation for affirmative not-required outcomes is not representable as persistent World negation; Purpose B not-required and Purpose C classifications rely on positive evidence or UNRESOLVED."
+        ]
+      },
+      "world": {
+        "world_path": "/home/kerem/Desktop/Personal Projects/generalauthor/research/semantic_integration/domains/npdes/constructor_v3_1_1_untouched/trials/T1/passes/p8/workspace_snapshot/06_world/world.sqlite",
+        "hash": "sha256:73e519493de8f8b333d85665204cdfb92123ce715027340399ba19f2c0b8ab13",
+        "stats": {
+          "assertions": 6735,
+          "relations": 10,
+          "by_origin": {
+            "ASSERTED": 2003,
+            "DERIVED": 4732
+          },
+          "groundings": 7756
+        },
+        "tables": {
+          "_tv_view": 1,
+          "_tv_referents": 1008,
+          "_tv_relations": 10,
+          "_tv_roles": 77,
+          "_tv_assertions": 6735,
+          "_tv_groundings": 7756,
+          "_tv_derivations": 4,
+          "_tv_derivation_inputs": 9,
+          "_tv_derivation_run_inputs": 9,
+          "_tv_completeness": 4,
+          "in_scope_facility": 3,
+          "reported_dmr_measurement": 824,
+          "permit_limit_schedule_row": 90,
+          "permit_limit_active_month": 1080,
+          "fy2025_in_scope_measurement": 824,
+          "measurement_limit_candidate_join": 3632,
+          "monitoring_requirement_candidate": 90,
+          "no_ordinary_numeric_result_measurement": 186,
+          "documented_no_discharge_assertion": 0,
+          "permit_stated_condition": 6
+        },
+        "columns": {
+          "in_scope_facility": [
+            "_assertion_id",
+            "facility_id",
+            "permit_nbr"
+          ],
+          "reported_dmr_measurement": [
+            "_assertion_id",
+            "measurement_id",
+            "permit_nbr",
+            "perm_feature_nbr",
+            "parameter_code",
+            "monitoring_period_end",
+            "dmr_event_id",
+            "dmr_value_id",
+            "dmr_value_nbr",
+            "dmr_unit_code",
+            "dmr_qualifier_code",
+            "statistical_base_code",
+            "nodi_code",
+            "value_received_date",
+            "limit_id",
+            "limit_value_id"
+          ],
+          "permit_limit_schedule_row": [
+            "_assertion_id",
+            "limit_row_id",
+            "permit_nbr",
+            "perm_feature_nbr",
+            "parameter_code",
+            "limit_id",
+            "limit_value_id",
+            "limit_value_nbr",
+            "limit_unit_code",
+            "limit_qualifier_code",
+            "statistical_base_code",
+            "limit_type_code",
+            "optional_monitoring_flag",
+            "limit_begin_date",
+            "limit_end_date",
+            "limit_freq_of_analysis_code",
+            "limit_sample_type_code",
+            "limit_set_designator",
+            "dmr_comment_text"
+          ],
+          "permit_limit_active_month": [
+            "_assertion_id",
+            "limit_row_id",
+            "calendar_month",
+            "active"
+          ],
+          "fy2025_in_scope_measurement": [
+            "_assertion_id",
+            "measurement_id",
+            "permit_nbr",
+            "monitoring_period_end"
+          ],
+          "measurement_limit_candidate_join": [
+            "_assertion_id",
+            "measurement_id",
+            "limit_row_id",
+            "permit_nbr",
+            "perm_feature_nbr",
+            "parameter_code",
+            "monitoring_period_end",
+            "join_basis"
+          ],
+          "monitoring_requirement_candidate": [
+            "_assertion_id",
+            "requirement_id",
+            "limit_row_id",
+            "permit_nbr",
+            "perm_feature_nbr",
+            "parameter_code",
+            "limit_freq_of_analysis_code",
+            "optional_monitoring_flag",
+            "requirement_kind"
+          ],
+          "no_ordinary_numeric_result_measurement": [
+            "_assertion_id",
+            "measurement_id",
+            "expectation_id",
+            "permit_nbr",
+            "perm_feature_nbr",
+            "parameter_code",
+            "monitoring_period_end",
+            "nodi_code",
+            "has_numeric_value"
+          ],
+          "documented_no_discharge_assertion": [
+            "_assertion_id",
+            "assertion_id",
+            "permit_nbr",
+            "perm_feature_nbr",
+            "period_start",
+            "period_end",
+            "source_reference"
+          ],
+          "permit_stated_condition": [
+            "_assertion_id",
+            "condition_id",
+            "permit_nbr",
+            "perm_feature_nbr",
+            "parameter_code",
+            "source_kind",
+            "source_reference",
+            "stated_trigger_text"
+          ]
+        },
+        "mechanical_report": {
+          "referents": 1007,
+          "base_tuples": 1997,
+          "candidate_tuples": 3908,
+          "notes": [
+            "Pass P2 mechanical compilation only; no semantic adjudication or identity closures.",
+            "Permit PDF sources not ingested; permit_stated_condition and documented_no_discharge_assertion deferred to later passes.",
+            "Absent source numeric values encoded as REAL sentinel -1e+31; detect via nodi_code or sentinel equality.",
+            "Dates normalized from MM/DD/YYYY source format to ISO YYYY-MM-DD.",
+            "permit_limits.csv: read 105 rows, deduplicated 15 duplicate LIMIT_ID/LIMIT_VALUE_ID rows, loaded 90 unique limit rows.",
+            "dmr_measurements.csv: 824 rows for in-scope facilities; 186 measurements with absent DMR_VALUE_NMBR.",
+            "permit_limit_schedule_row: 51 rows with absent LIMIT_VALUE_NMBR.",
+            "permit_limit_active_month: 1080 month-flag tuples (12 months per unique limit row).",
+            "monitoring_requirement_candidate.requirement_kind is mechanical: standing_schedule or comment_text_present.",
+            "measurement_limit_candidate_join requires active month flag match for monitoring period month."
+          ],
+          "compile_stats": {
+            "dmr_rows_read": 824,
+            "dmr_absent_numeric": 186,
+            "limit_rows_read": 105,
+            "limit_rows_deduped": 15,
+            "limit_absent_numeric": 51,
+            "active_month_tuples": 1080
+          },
+          "relations": {
+            "fy2025_in_scope_measurement": {
+              "mode": "DERIVED",
+              "row_count": 824
+            },
+            "in_scope_facility": {
+              "mode": "BASE",
+              "row_count": 3
+            },
+            "measurement_limit_candidate_join": {
+              "mode": "DERIVED",
+              "row_count": 3632
+            },
+            "monitoring_requirement_candidate": {
+              "mode": "DERIVED",
+              "row_count": 90
+            },
+            "no_ordinary_numeric_result_measurement": {
+              "mode": "DERIVED",
+              "row_count": 186
+            },
+            "permit_limit_active_month": {
+              "mode": "BASE",
+              "row_count": 1080
+            },
+            "permit_limit_schedule_row": {
+              "mode": "BASE",
+              "row_count": 90
+            },
+            "reported_dmr_measurement": {
+              "mode": "BASE",
+              "row_count": 824
+            }
+          }
+        },
+        "admission_persisted": [
+          {
+            "relation": "in_scope_facility",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "persisted_count": 3
+          },
+          {
+            "relation": "reported_dmr_measurement",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "persisted_count": 824
+          },
+          {
+            "relation": "permit_limit_schedule_row",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "persisted_count": 90
+          },
+          {
+            "relation": "permit_limit_active_month",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "persisted_count": 1080
+          },
+          {
+            "relation": "fy2025_in_scope_measurement",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "persisted_count": 824
+          },
+          {
+            "relation": "measurement_limit_candidate_join",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "persisted_count": 3632
+          },
+          {
+            "relation": "monitoring_requirement_candidate",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "persisted_count": 90
+          },
+          {
+            "relation": "no_ordinary_numeric_result_measurement",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "persisted_count": 186
+          },
+          {
+            "relation": "permit_stated_condition",
+            "admission": "WORLD",
+            "construction_class": "SEMANTIC",
+            "persisted_count": 6
+          },
+          {
+            "relation": "documented_no_discharge_assertion",
+            "admission": "WORLD",
+            "construction_class": "SEMANTIC",
+            "persisted_count": 0
+          },
+          {
+            "relation": "applicable_limit_selection",
+            "admission": "PURPOSE",
+            "construction_class": "SEMANTIC",
+            "persisted_count": 824
+          },
+          {
+            "relation": "limit_numeric_comparison_applicability",
+            "admission": "PURPOSE",
+            "construction_class": "SEMANTIC",
+            "persisted_count": 824
+          },
+          {
+            "relation": "exceedance_determination",
+            "admission": "PURPOSE",
+            "construction_class": "SEMANTIC",
+            "persisted_count": 638
+          },
+          {
+            "relation": "monitoring_obligation_applicability",
+            "admission": "PURPOSE",
+            "construction_class": "SEMANTIC",
+            "persisted_count": 90
+          },
+          {
+            "relation": "missing_evidence_classification",
+            "admission": "PURPOSE",
+            "construction_class": "SEMANTIC",
+            "persisted_count": 186
+          }
+        ],
+        "admission_limitations": [
+          "Consumer field ids are not enumerated as a dedicated block in 00_intention_contract.json; bindings follow evaluation_unit and row_expectations language.",
+          "Permit PDF semantic extraction vocabulary is declared but C0\u2013C1 PDF compilation is not yet available from prior passes; permit_stated_condition tuples may be absent until a later pass ingests sources/permit_files.",
+          "Closed-world negation for affirmative not-required outcomes is not representable as persistent World negation; Purpose B not-required and Purpose C classifications rely on positive evidence or UNRESOLVED.",
+          "documented_no_discharge_assertion: 186 candidates adjudicated but none ACCEPT; no World tuples persisted (REJECT/UNRESOLVED only)."
+        ],
+        "provenance": {
+          "ok": true,
+          "ungrounded_count": 0,
+          "reason": null
+        },
+        "origins_sidecar_present": false
+      },
+      "fractions": {
+        "assertions_total": 6735,
+        "origin_asserted": 2003,
+        "origin_derived": 4732,
+        "persisted_mechanical": 1997,
+        "persisted_semantic": 2568,
+        "persisted_derived": 4732,
+        "mechanical_fraction_of_persisted_base": 0.43745892661555313,
+        "semantic_fraction_of_persisted_base": 0.5625410733844469,
+        "mechanical_fraction_of_all_persisted": 0.21480047327094762
+      },
+      "frontier": {
+        "n_obligations": 2776,
+        "required_clauses": 12,
+        "hits": [
+          {
+            "id": "S-FARM-CN-SCHEDULE",
+            "concept": "compliance schedule then final numeric limit",
+            "found": true
+          },
+          {
+            "id": "S-FARM-REPORT-ONLY",
+            "concept": "report-only monitoring vs enforceable numeric limit",
+            "found": true
+          },
+          {
+            "id": "S-AZTEC-WHEN-DISCHARGING",
+            "concept": "when-discharging / intermittent-flow monitoring obligation",
+            "found": true
+          },
+          {
+            "id": "S-AZTEC-REPORT-ONLY",
+            "concept": "report-only vs numeric",
+            "found": true
+          },
+          {
+            "id": "S-AZTEC-WET-SEASONAL",
+            "concept": "seasonal / special-study / once-per-term monitoring",
+            "found": true
+          },
+          {
+            "id": "S-GCC-EVENT-DISCHARGE",
+            "concept": "event-dependent / conditional authorization",
+            "found": true
+          },
+          {
+            "id": "S-GCC-REPORT-ONLY",
+            "concept": "report-only vs numeric",
+            "found": true
+          }
+        ],
+        "misses": [
+          {
+            "id": "S-FARM-TDS-STAGE",
+            "concept": "time-staged numeric limits",
+            "found": false
+          },
+          {
+            "id": "S-FARM-TRC-CONDITIONAL",
+            "concept": "conditional monitoring / event-dependent TRC",
+            "found": false
+          },
+          {
+            "id": "S-AZTEC-DELTA-BHC",
+            "concept": "special study / compliance schedule",
+            "found": false
+          },
+          {
+            "id": "S-GCC-WET-FIRST-DISCHARGE",
+            "concept": "event-triggered special monitoring",
+            "found": false
+          },
+          {
+            "id": "S-SOURCE-AUTHORITY",
+            "concept": "operative permit condition vs supporting rationale",
+            "found": false
+          }
+        ],
+        "recall": 0.5833333333333334,
+        "obligation_relations": {
+          "applicable_limit_selection": 824,
+          "limit_numeric_comparison_applicability": 824,
+          "exceedance_determination": 638,
+          "monitoring_obligation_applicability": 90,
+          "missing_evidence_classification": 186,
+          "permit_stated_condition": 28,
+          "documented_no_discharge_assertion": 186
+        },
+        "duplicate_ids": 0
+      },
+      "p5": {
+        "n_dispositions": 2776,
+        "dispositions": {
+          "UNRESOLVED": 2345,
+          "ACCEPT": 373,
+          "REJECT": 58
+        },
+        "n_audit": 2345,
+        "final_dispositions": {
+          "UNRESOLVED": 2345
+        },
+        "negative_closure": {
+          "none": 2345
+        }
+      },
+      "abi": {
+        "ok": false,
+        "n_required": 14,
+        "n_satisfied": 6,
+        "n_unsatisfied": 5,
+        "n_ambiguous": 3,
+        "unsatisfied": [
+          "applicable_limit",
+          "condition_evidence",
+          "exceedance_outcome",
+          "missing_evidence_state",
+          "obligation_applicability"
+        ],
+        "ambiguous": [
+          "facility",
+          "monitoring_period",
+          "numeric_comparison_applicable"
+        ],
+        "unsatisfied_reasons": {
+          "applicable_limit": "NOT_MATERIALIZABLE",
+          "condition_evidence": "NOT_MATERIALIZABLE",
+          "exceedance_outcome": "NOT_MATERIALIZABLE",
+          "facility": "AMBIGUOUS",
+          "missing_evidence_state": "NOT_MATERIALIZABLE",
+          "monitoring_period": "AMBIGUOUS",
+          "numeric_comparison_applicable": "AMBIGUOUS",
+          "obligation_applicability": "NOT_MATERIALIZABLE"
+        },
+        "invariant_violations": [],
+        "incomplete_purpose_marked": false
+      },
+      "source_authority": {
+        "mentions_fact_sheet": false,
+        "mentions_statement_of_basis": false,
+        "mentions_operative_or_authority": false,
+        "mentions_permit_part": false
+      },
+      "purpose_a": {
+        "n_rows": 120,
+        "n_unresolved": 704,
+        "scoreable_covered": 36,
+        "n_scoreable": 334,
+        "compared": 36,
+        "exact": 12,
+        "exact_rate": 0.3333333333333333,
+        "false_exceedance": 24,
+        "miss_exceedance": 0,
+        "report_only_as_exceedance": 0,
+        "examples": [],
+        "has_incomplete_purpose": false
+      },
+      "purpose_b": {
+        "n_rows": 67,
+        "n_unresolved": 23,
+        "concept_mentions": {
+          "when_discharging": true,
+          "report_only": false,
+          "seasonal_or_wet": false,
+          "special_study": true,
+          "conditional": true,
+          "staged_time": true
+        },
+        "n_concepts_present": 4
+      },
+      "purpose_c": {
+        "n_rows": 0,
+        "n_unresolved": 186,
+        "matched_keys": 186,
+        "exact_state": 0,
+        "nodi_c_established": 0,
+        "nodi_9_established": 0,
+        "missing_as_violation": 0,
+        "nodi_c_as_violation": 0,
+        "gold_by_state": {
+          "ESTABLISHED_MONITORING_NOT_REQUIRED": 36,
+          "OBSERVATION_PRESENT": 638,
+          "ESTABLISHED_NO_DISCHARGE": 150
+        }
+      },
+      "programming": {
+        "ok": true,
+        "n_analyses_ok": 3,
+        "user_tables": [
+          "in_scope_facility",
+          "reported_dmr_measurement",
+          "permit_limit_schedule_row",
+          "permit_limit_active_month",
+          "fy2025_in_scope_measurement",
+          "measurement_limit_candidate_join",
+          "monitoring_requirement_candidate",
+          "no_ordinary_numeric_result_measurement",
+          "documented_no_discharge_assertion",
+          "permit_stated_condition"
+        ],
+        "bindings_sample": {
+          "facility": [
+            [
+              "in_scope_facility",
+              "facility"
+            ],
+            [
+              "in_scope_facility",
+              "permit_nbr"
+            ],
+            [
+              "reported_dmr_measurement",
+              "permit_nbr"
+            ],
+            [
+              "permit_limit_schedule_row",
+              "permit_nbr"
+            ]
+          ],
+          "reported_measurement": [
+            [
+              "reported_dmr_measurement",
+              "measurement"
+            ],
+            [
+              "fy2025_in_scope_measurement",
+              "measurement"
+            ],
+            [
+              "measurement_limit_candidate_join",
+              "measurement"
+            ],
+            [
+              "no_ordinary_numeric_result_measurement",
+              "measurement"
+            ]
+          ],
+          "discharge_point": [
+            [
+              "reported_dmr_measurement",
+              "perm_feature_nbr"
+            ],
+            [
+              "permit_limit_schedule_row",
+              "perm_feature_nbr"
+            ],
+            [
+              "measurement_limit_candidate_join",
+              "perm_feature_nbr"
+            ],
+            [
+              "monitoring_requirement_candidate",
+              "perm_feature_nbr"
+            ]
+          ],
+          "parameter": [
+            [
+              "reported_dmr_measurement",
+              "parameter_code"
+            ],
+            [
+              "permit_limit_schedule_row",
+              "parameter_code"
+            ],
+            [
+              "measurement_limit_candidate_join",
+              "parameter_code"
+            ],
+            [
+              "monitoring_requirement_candidate",
+              "parameter_code"
+            ]
+          ],
+          "monitoring_period": [
+            [
+              "reported_dmr_measurement",
+              "monitoring_period_end"
+            ],
+            [
+              "fy2025_in_scope_measurement",
+              "monitoring_period_end"
+            ],
+            [
+              "measurement_limit_candidate_join",
+              "monitoring_period_end"
+            ],
+            [
+              "no_ordinary_numeric_result_measurement",
+              "monitoring_period_end"
+            ]
+          ],
+          "limit_schedule_row": [
+            [
+              "permit_limit_schedule_row",
+              "limit_row"
+            ],
+            [
+              "permit_limit_active_month",
+              "limit_row"
+            ],
+            [
+              "measurement_limit_candidate_join",
+              "limit_row"
+            ],
+            [
+              "monitoring_requirement_candidate",
+              "limit_row"
+            ]
+          ],
+          "monitoring_requirement": [
+            [
+              "monitoring_requirement_candidate",
+              "requirement"
+            ],
+            [
+              "monitoring_obligation_applicability",
+              "requirement"
+            ]
+          ],
+          "monitoring_expectation": [
+            [
+              "no_ordinary_numeric_result_measurement",
+              "expectation"
+            ],
+            [
+              "missing_evidence_classification",
+              "expectation"
+            ]
+          ],
+          "applicable_limit": [
+            [
+              "applicable_limit_selection",
+              "selected_limit"
+            ],
+            [
+              "exceedance_determination",
+              "limit_row"
+            ]
+          ],
+          "numeric_comparison_applicable": [
+            [
+              "limit_numeric_comparison_applicability",
+              "comparison_applicable"
+            ],
+            [
+              "limit_numeric_comparison_applicability",
+              "comparison_class"
+            ]
+          ],
+          "exceedance_outcome": [
+            [
+              "exceedance_determination",
+              "exceedance_outcome"
+            ]
+          ],
+          "obligation_applicability": [
+            [
+              "monitoring_obligation_applicability",
+              "applicability"
+            ]
+          ]
+        },
+        "analyses": {
+          "exceedance": {
+            "sql_ok": true,
+            "n": 586,
+            "sample": [
+              {
+                "permit": "NM0000116",
+                "outfall": "001",
+                "parameter": "01105",
+                "period": "2025-09-30",
+                "reported": 9.9,
+                "limit_value": 0.75
+              },
+              {
+                "permit": "NM0000116",
+                "outfall": "001",
+                "parameter": "01105",
+                "period": "2025-09-30",
+                "reported": 9.9,
+                "limit_value": 0.75
+              },
+              {
+                "permit": "NM0000116",
+                "outfall": "001",
+                "parameter": "01105",
+                "period": "2025-09-30",
+                "reported": 9.9,
+                "limit_value": 0.78
+              },
+              {
+                "permit": "NM0000116",
+                "outfall": "001",
+                "parameter": "01105",
+                "period": "2025-09-30",
+                "reported": 9.9,
+                "limit_value": 0.78
+              },
+              {
+                "permit": "NM0000116",
+                "outfall": "001",
+                "parameter": "01105",
+                "period": "2025-09-30",
+                "reported": 9.9,
+                "limit_value": 0.78
+              },
+              {
+                "permit": "NM0000116",
+                "outfall": "001",
+                "parameter": "01105",
+                "period": "2025-09-30",
+                "reported": 9.9,
+                "limit_value": 0.78
+              },
+              {
+                "permit": "NM0000116",
+                "outfall": "001",
+                "parameter": "01105",
+                "period": "2025-09-30",
+                "reported": 9.9,
+                "limit_value": 0.75
+              },
+              {
+                "permit": "NM0000116",
+                "outfall": "001",
+                "parameter": "01105",
+                "period": "2025-09-30",
+                "reported": 9.9,
+                "limit_value": 0.75
+              }
+            ],
+            "tables": {
+              "measurement": "reported_dmr_measurement",
+              "limit": "permit_limit_schedule_row"
+            }
+          },
+          "evidence_state": {
+            "sql_ok": true,
+            "nodi_counts": {
+              "": 638,
+              "9": 36,
+              "C": 150
+            },
+            "has_value_column": true
+          },
+          "follow_up": {
+            "sql_ok": true,
+            "n_exceedance": 586,
+            "n_missing_without_c_or_9": 0,
+            "sample_missing": [],
+            "note": "Follow-up is the union of numeric exceedance and missing values that are not NODI C/9. Report-only exclusion requires a World flag; OPTIONAL_MONITORING_FLAG used when present."
+          }
+        },
+        "programmer_recovered_source_semantics": [
+          "NODI_CODE_STORED_WITHOUT_CANONICAL_STATE_RELATION"
+        ]
+      }
+    },
+    "T2": {
+      "trial": 2,
+      "isolation": {
+        "leaks": [],
+        "timeouts": [],
+        "models": [
+          "composer-2.5"
+        ],
+        "reported_models": [
+          "Composer 2.5"
+        ],
+        "all_returncode_zero": true,
+        "p8_source_path_mentions": []
+      },
+      "vocabulary": {
+        "n_relations": 19,
+        "by_admission": {
+          "WORLD": [
+            "facility_identified",
+            "discharge_point_identified",
+            "parameter_identified",
+            "permit_limit_value_stated",
+            "reported_measurement_stated",
+            "monitoring_requirement_stated",
+            "permit_condition_language_stated",
+            "documented_no_discharge_notation",
+            "limit_source_classification",
+            "fy2025_in_scope_measurement",
+            "measurement_has_ordinary_numeric_value",
+            "candidate_limit_for_measurement",
+            "numeric_comparison_eligible",
+            "numeric_exceedance_result",
+            "fy2025_candidate_monitoring_requirement",
+            "monitoring_expectation_without_numeric_result"
+          ],
+          "PURPOSE": [
+            "applicable_limit_judgment",
+            "monitoring_obligation_judgment",
+            "missing_evidence_judgment"
+          ]
+        },
+        "by_class": {
+          "MECHANICAL": [
+            "facility_identified",
+            "discharge_point_identified",
+            "parameter_identified",
+            "permit_limit_value_stated",
+            "reported_measurement_stated",
+            "monitoring_requirement_stated",
+            "permit_condition_language_stated",
+            "documented_no_discharge_notation"
+          ],
+          "SEMANTIC": [
+            "limit_source_classification",
+            "applicable_limit_judgment",
+            "monitoring_obligation_judgment",
+            "missing_evidence_judgment"
+          ],
+          "DERIVED": [
+            "fy2025_in_scope_measurement",
+            "measurement_has_ordinary_numeric_value",
+            "candidate_limit_for_measurement",
+            "numeric_comparison_eligible",
+            "numeric_exceedance_result",
+            "fy2025_candidate_monitoring_requirement",
+            "monitoring_expectation_without_numeric_result"
+          ]
+        },
+        "relations": [
+          {
+            "name": "facility_identified",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "A regulated facility is identified by its NPDES permit number in compiled sources.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "discharge_point_identified",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "A permit discharge point (outfall/feature) is identified for a facility in compiled limit and DMR sources.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "parameter_identified",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "A monitored parameter is identified by EPA parameter code and description in compiled sources.",
+            "classification": "CROSS_DOMAIN_STRUCTURAL_ANALOGUE"
+          },
+          {
+            "name": "permit_limit_value_stated",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "A numeric or qualitative limit value is stated in compiled permit limit sources for a facility, discharge point, and parameter with documented temporal scope and limit metadata.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "reported_measurement_stated",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "A DMR-reported measurement or no-data notation exists for a facility, discharge point, parameter, and monitoring period end date in compiled measurement sources.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "monitoring_requirement_stated",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "A monitoring requirement (parameter, frequency, location, and stated schedule window) is documented in permit authority or compiled limit extracts.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "permit_condition_language_stated",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "Conditional trigger language (discharge occurrence, season, events, special studies) governing a monitoring requirement is stated in permit authority documents.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "documented_no_discharge_notation",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "A source explicitly documents a no-discharge or equivalent period for a facility, discharge point, parameter, and monitoring period.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "limit_source_classification",
+            "admission": "WORLD",
+            "construction_class": "SEMANTIC",
+            "meaning": "A stated permit limit value is classified in source material as enforceable-numeric, report-only, or non-numeric for compliance comparison purposes.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "fy2025_in_scope_measurement",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "meaning": "A reported measurement falls within Federal FY2025 and the selected facility universe for Purpose A evaluation.",
+            "classification": "CROSS_DOMAIN_STRUCTURAL_ANALOGUE"
+          },
+          {
+            "name": "measurement_has_ordinary_numeric_value",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "meaning": "A reported measurement row carries an ordinary numeric reported result suitable for Purpose A limit comparison (excluding NODI-only or blank non-numeric placeholders).",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "candidate_limit_for_measurement",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "meaning": "A permit limit value is a mechanical join candidate for a reported measurement sharing facility, discharge point, parameter, and overlapping limit effective dates.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "numeric_comparison_eligible",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "meaning": "A measurement and candidate limit share compatible units, statistical basis, and numeric values such that a defensible numeric comparison can be performed mechanically.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "numeric_exceedance_result",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "meaning": "A mechanical numeric comparison outcome between a measurement and limit value when numeric_comparison_eligible is true, respecting limit qualifier direction.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "applicable_limit_judgment",
+            "admission": "PURPOSE",
+            "construction_class": "SEMANTIC",
+            "meaning": "For a Purpose A evaluation unit, the evidence establishes which single enforceable numeric limit applies, that no limit applies for comparison, or that applicability remains indeterminate.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "fy2025_candidate_monitoring_requirement",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "meaning": "A stated monitoring requirement could apply during Federal FY2025 at a selected facility and is included in the Purpose B evaluation universe.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "monitoring_obligation_judgment",
+            "admission": "PURPOSE",
+            "construction_class": "SEMANTIC",
+            "meaning": "For a Purpose B evaluation unit, evidence establishes whether monitoring was required, not required, or unresolved for FY2025 given stated conditions and documented facts.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "monitoring_expectation_without_numeric_result",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "meaning": "A FY2025 monitoring expectation at a selected facility lacks an ordinary numeric reported result and therefore belongs to the Purpose C evaluation universe.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "missing_evidence_judgment",
+            "admission": "PURPOSE",
+            "construction_class": "SEMANTIC",
+            "meaning": "For a Purpose C evaluation unit, available evidence establishes the missing-result explanation among documented no-discharge, conditional not required, other documented no-data, inadequate-evidence gap, or leaves the case unresolved.",
+            "classification": "DOMAIN_SPECIFIC"
+          }
+        ],
+        "limitations": [
+          "00_intention_contract.json does not declare an explicit consumer_fields section; consumer field ids below are inferred from evaluation_unit, rows_when_resolved, and required_semantic_distinctions and bound via semantic_identity on supplying roles."
+        ]
+      },
+      "world": {
+        "world_path": "/home/kerem/Desktop/Personal Projects/generalauthor/research/semantic_integration/domains/npdes/constructor_v3_1_1_untouched/trials/T2/passes/p8/workspace_snapshot/06_world/world.sqlite",
+        "hash": "sha256:233283e3dfb8ac2ae60086ed491df43bfb42830fff11843eacb72ce603cc3123",
+        "stats": {
+          "assertions": 6595,
+          "relations": 16,
+          "by_origin": {
+            "ASSERTED": 1113,
+            "DERIVED": 5482
+          },
+          "groundings": 8302
+        },
+        "tables": {
+          "_tv_view": 1,
+          "_tv_referents": 1260,
+          "_tv_relations": 16,
+          "_tv_roles": 94,
+          "_tv_assertions": 6595,
+          "_tv_groundings": 8302,
+          "_tv_derivations": 7,
+          "_tv_derivation_inputs": 19,
+          "_tv_derivation_run_inputs": 19,
+          "_tv_completeness": 7,
+          "facility_identified": 3,
+          "discharge_point_identified": 4,
+          "parameter_identified": 33,
+          "permit_limit_value_stated": 90,
+          "reported_measurement_stated": 824,
+          "monitoring_requirement_stated": 44,
+          "permit_condition_language_stated": 6,
+          "documented_no_discharge_notation": 70,
+          "limit_source_classification": 39,
+          "fy2025_in_scope_measurement": 824,
+          "measurement_has_ordinary_numeric_value": 824,
+          "candidate_limit_for_measurement": 1608,
+          "numeric_comparison_eligible": 1608,
+          "numeric_exceedance_result": 388,
+          "fy2025_candidate_monitoring_requirement": 44,
+          "monitoring_expectation_without_numeric_result": 186
+        },
+        "columns": {
+          "facility_identified": [
+            "_assertion_id",
+            "facility_id",
+            "permit_number"
+          ],
+          "discharge_point_identified": [
+            "_assertion_id",
+            "discharge_point_id",
+            "facility_id",
+            "feature_number",
+            "feature_type"
+          ],
+          "parameter_identified": [
+            "_assertion_id",
+            "parameter_id",
+            "code",
+            "description"
+          ],
+          "permit_limit_value_stated": [
+            "_assertion_id",
+            "limit_value_id",
+            "facility_id",
+            "discharge_point_id",
+            "parameter_id",
+            "limit_value_number",
+            "unit_code",
+            "standard_value",
+            "standard_unit_code",
+            "qualifier",
+            "statistical_base",
+            "limit_type_code",
+            "optional_monitoring",
+            "begin_date",
+            "end_date",
+            "limit_id",
+            "frequency_code",
+            "sample_type_code"
+          ],
+          "reported_measurement_stated": [
+            "_assertion_id",
+            "measurement_id",
+            "facility_id",
+            "discharge_point_id",
+            "parameter_id",
+            "period_end",
+            "value_number",
+            "unit_code",
+            "standard_value",
+            "qualifier",
+            "nodi_code",
+            "dmr_value_id",
+            "received_date",
+            "statistical_base"
+          ],
+          "monitoring_requirement_stated": [
+            "_assertion_id",
+            "requirement_id",
+            "facility_id",
+            "discharge_point_id",
+            "parameter_id",
+            "frequency_code",
+            "sample_type_code",
+            "limit_set_name",
+            "dmr_comment",
+            "season_months",
+            "begin_date",
+            "end_date",
+            "limit_id"
+          ],
+          "permit_condition_language_stated": [
+            "_assertion_id",
+            "condition_id",
+            "facility_id",
+            "requirement_id",
+            "condition_text",
+            "source_document"
+          ],
+          "documented_no_discharge_notation": [
+            "_assertion_id",
+            "notation_id",
+            "facility_id",
+            "discharge_point_id",
+            "parameter_id",
+            "period_end",
+            "source_document",
+            "notation_text"
+          ],
+          "limit_source_classification": [
+            "_assertion_id",
+            "limit_value_id",
+            "classification",
+            "disposition"
+          ],
+          "fy2025_in_scope_measurement": [
+            "_assertion_id",
+            "measurement_id",
+            "facility_id",
+            "period_end"
+          ],
+          "measurement_has_ordinary_numeric_value": [
+            "_assertion_id",
+            "measurement_id",
+            "has_numeric_value"
+          ],
+          "candidate_limit_for_measurement": [
+            "_assertion_id",
+            "measurement_id",
+            "limit_value_id",
+            "facility_id",
+            "discharge_point_id",
+            "parameter_id",
+            "period_end"
+          ],
+          "numeric_comparison_eligible": [
+            "_assertion_id",
+            "measurement_id",
+            "limit_value_id",
+            "eligible",
+            "ineligibility_reason"
+          ],
+          "numeric_exceedance_result": [
+            "_assertion_id",
+            "measurement_id",
+            "limit_value_id",
+            "exceeds",
+            "comparison_performed"
+          ],
+          "fy2025_candidate_monitoring_requirement": [
+            "_assertion_id",
+            "requirement_id",
+            "facility_id",
+            "evaluation_period"
+          ],
+          "monitoring_expectation_without_numeric_result": [
+            "_assertion_id",
+            "expectation_id",
+            "facility_id",
+            "discharge_point_id",
+            "parameter_id",
+            "period_end",
+            "source_measurement_id"
+          ]
+        },
+        "mechanical_report": {
+          "referents": 1074,
+          "base_tuples": 1074,
+          "candidate_tuples": 90,
+          "notes": [
+            "TaskView REAL roles cannot store SQL NULL; empty source numerics use sentinel -999999999.0 with grounding detail source_field_empty.",
+            "Permit PDF files referenced in source_manifest.json are not present in workspace; permit_condition_language_stated uses CSV comments only.",
+            "TaskView maps referent limit_value to column limit_value_id, colliding with TEXT role limit_value_id; explicit LIMIT_VALUE_ID is encoded in referent ids (limit_value:<id>) and assertion grounding."
+          ],
+          "compile_stats": null,
+          "relations": null
+        },
+        "admission_persisted": [],
+        "admission_limitations": [
+          "Purpose relations (applicable_limit_judgment, monitoring_obligation_judgment, missing_evidence_judgment) are classified but not persisted in World.",
+          "limit_source_classification UNRESOLVED dispositions are not admitted as World truth.",
+          "Schedule-only monitoring expectation slots without DMR rows cannot be enumerated from base relations; monitoring_expectation_without_numeric_result covers DMR rows only.",
+          "Permit PDF files are absent; permit_condition_language_stated uses CSV comments only."
+        ],
+        "provenance": {
+          "ok": true,
+          "ungrounded_count": 0,
+          "reason": null
+        },
+        "origins_sidecar_present": false
+      },
+      "fractions": {
+        "assertions_total": 6595,
+        "origin_asserted": 1113,
+        "origin_derived": 5482,
+        "persisted_mechanical": 0,
+        "persisted_semantic": 0,
+        "persisted_derived": 0,
+        "mechanical_fraction_of_persisted_base": null,
+        "semantic_fraction_of_persisted_base": null,
+        "mechanical_fraction_of_all_persisted": null
+      },
+      "frontier": {
+        "n_obligations": 958,
+        "required_clauses": 12,
+        "hits": [
+          {
+            "id": "S-FARM-REPORT-ONLY",
+            "concept": "report-only monitoring vs enforceable numeric limit",
+            "found": true
+          },
+          {
+            "id": "S-AZTEC-REPORT-ONLY",
+            "concept": "report-only vs numeric",
+            "found": true
+          },
+          {
+            "id": "S-GCC-REPORT-ONLY",
+            "concept": "report-only vs numeric",
+            "found": true
+          }
+        ],
+        "misses": [
+          {
+            "id": "S-FARM-TDS-STAGE",
+            "concept": "time-staged numeric limits",
+            "found": false
+          },
+          {
+            "id": "S-FARM-CN-SCHEDULE",
+            "concept": "compliance schedule then final numeric limit",
+            "found": false
+          },
+          {
+            "id": "S-FARM-TRC-CONDITIONAL",
+            "concept": "conditional monitoring / event-dependent TRC",
+            "found": false
+          },
+          {
+            "id": "S-AZTEC-WHEN-DISCHARGING",
+            "concept": "when-discharging / intermittent-flow monitoring obligation",
+            "found": false
+          },
+          {
+            "id": "S-AZTEC-WET-SEASONAL",
+            "concept": "seasonal / special-study / once-per-term monitoring",
+            "found": false
+          },
+          {
+            "id": "S-AZTEC-DELTA-BHC",
+            "concept": "special study / compliance schedule",
+            "found": false
+          },
+          {
+            "id": "S-GCC-EVENT-DISCHARGE",
+            "concept": "event-dependent / conditional authorization",
+            "found": false
+          },
+          {
+            "id": "S-GCC-WET-FIRST-DISCHARGE",
+            "concept": "event-triggered special monitoring",
+            "found": false
+          },
+          {
+            "id": "S-SOURCE-AUTHORITY",
+            "concept": "operative permit condition vs supporting rationale",
+            "found": false
+          }
+        ],
+        "recall": 0.25,
+        "obligation_relations": {
+          "limit_source_classification": 90,
+          "applicable_limit_judgment": 638,
+          "monitoring_obligation_judgment": 44,
+          "missing_evidence_judgment": 186
+        },
+        "duplicate_ids": 0
+      },
+      "p5": {
+        "n_dispositions": 958,
+        "dispositions": {
+          "ACCEPT": 381,
+          "UNRESOLVED": 281,
+          "REJECT": 296
+        },
+        "n_audit": 281,
+        "final_dispositions": {
+          "UNRESOLVED": 281
+        },
+        "negative_closure": {
+          "none": 281
+        }
+      },
+      "abi": {
+        "ok": false,
+        "n_required": 14,
+        "n_satisfied": 8,
+        "n_unsatisfied": 3,
+        "n_ambiguous": 3,
+        "unsatisfied": [
+          "applicability_unresolved_reason",
+          "established_missing_evidence_state",
+          "obligation_outcome"
+        ],
+        "ambiguous": [
+          "discharge_point",
+          "facility_permit_number",
+          "parameter_code"
+        ],
+        "unsatisfied_reasons": {
+          "applicability_unresolved_reason": "NOT_MATERIALIZABLE",
+          "discharge_point": "AMBIGUOUS",
+          "established_missing_evidence_state": "NOT_MATERIALIZABLE",
+          "facility_permit_number": "AMBIGUOUS",
+          "obligation_outcome": "NOT_MATERIALIZABLE",
+          "parameter_code": "AMBIGUOUS"
+        },
+        "invariant_violations": [],
+        "incomplete_purpose_marked": false
+      },
+      "source_authority": {
+        "mentions_fact_sheet": false,
+        "mentions_statement_of_basis": false,
+        "mentions_operative_or_authority": true,
+        "mentions_permit_part": false
+      },
+      "purpose_a": {
+        "n_rows": 612,
+        "n_unresolved": 26,
+        "scoreable_covered": 326,
+        "n_scoreable": 334,
+        "compared": 313,
+        "exact": 263,
+        "exact_rate": 0.8402555910543131,
+        "false_exceedance": 24,
+        "miss_exceedance": 26,
+        "report_only_as_exceedance": 10,
+        "examples": [
+          {
+            "kind": "report_only_as_exceedance",
+            "key": [
+              "NM0020583",
+              "001",
+              "70295",
+              "2024-12-31"
+            ],
+            "row": {
+              "facility_permit_number": "NM0020583",
+              "discharge_point": "001",
+              "parameter_code": "70295",
+              "monitoring_period_end": "2024-12-31",
+              "measurement": "measurement:3834617629",
+              "applicable_limit_value": "limit_value:3610838803",
+              "comparison_performed": true,
+              "exceeds_limit": true
+            }
+          },
+          {
+            "kind": "report_only_as_exceedance",
+            "key": [
+              "NM0020583",
+              "001",
+              "70295",
+              "2025-01-31"
+            ],
+            "row": {
+              "facility_permit_number": "NM0020583",
+              "discharge_point": "001",
+              "parameter_code": "70295",
+              "monitoring_period_end": "2025-01-31",
+              "measurement": "measurement:3837049243",
+              "applicable_limit_value": "limit_value:3610838803",
+              "comparison_performed": true,
+              "exceeds_limit": true
+            }
+          },
+          {
+            "kind": "report_only_as_exceedance",
+            "key": [
+              "NM0020583",
+              "001",
+              "70295",
+              "2025-02-28"
+            ],
+            "row": {
+              "facility_permit_number": "NM0020583",
+              "discharge_point": "001",
+              "parameter_code": "70295",
+              "monitoring_period_end": "2025-02-28",
+              "measurement": "measurement:3839823732",
+              "applicable_limit_value": "limit_value:3610838803",
+              "comparison_performed": true,
+              "exceeds_limit": true
+            }
+          },
+          {
+            "kind": "report_only_as_exceedance",
+            "key": [
+              "NM0020583",
+              "001",
+              "70295",
+              "2025-03-31"
+            ],
+            "row": {
+              "facility_permit_number": "NM0020583",
+              "discharge_point": "001",
+              "parameter_code": "70295",
+              "monitoring_period_end": "2025-03-31",
+              "measurement": "measurement:3840988744",
+              "applicable_limit_value": "limit_value:3610838803",
+              "comparison_performed": true,
+              "exceeds_limit": true
+            }
+          },
+          {
+            "kind": "report_only_as_exceedance",
+            "key": [
+              "NM0020583",
+              "001",
+              "70295",
+              "2025-04-30"
+            ],
+            "row": {
+              "facility_permit_number": "NM0020583",
+              "discharge_point": "001",
+              "parameter_code": "70295",
+              "monitoring_period_end": "2025-04-30",
+              "measurement": "measurement:3845625296",
+              "applicable_limit_value": "limit_value:3610838803",
+              "comparison_performed": true,
+              "exceeds_limit": true
+            }
+          },
+          {
+            "kind": "report_only_as_exceedance",
+            "key": [
+              "NM0020583",
+              "001",
+              "70295",
+              "2025-05-31"
+            ],
+            "row": {
+              "facility_permit_number": "NM0020583",
+              "discharge_point": "001",
+              "parameter_code": "70295",
+              "monitoring_period_end": "2025-05-31",
+              "measurement": "measurement:3847188383",
+              "applicable_limit_value": "limit_value:3610838803",
+              "comparison_performed": true,
+              "exceeds_limit": true
+            }
+          },
+          {
+            "kind": "report_only_as_exceedance",
+            "key": [
+              "NM0020583",
+              "001",
+              "70295",
+              "2025-06-30"
+            ],
+            "row": {
+              "facility_permit_number": "NM0020583",
+              "discharge_point": "001",
+              "parameter_code": "70295",
+              "monitoring_period_end": "2025-06-30",
+              "measurement": "measurement:3848301350",
+              "applicable_limit_value": "limit_value:3610838803",
+              "comparison_performed": true,
+              "exceeds_limit": true
+            }
+          },
+          {
+            "kind": "report_only_as_exceedance",
+            "key": [
+              "NM0020583",
+              "001",
+              "70295",
+              "2025-07-31"
+            ],
+            "row": {
+              "facility_permit_number": "NM0020583",
+              "discharge_point": "001",
+              "parameter_code": "70295",
+              "monitoring_period_end": "2025-07-31",
+              "measurement": "measurement:3851430853",
+              "applicable_limit_value": "limit_value:3610838803",
+              "comparison_performed": true,
+              "exceeds_limit": true
+            }
+          },
+          {
+            "kind": "report_only_as_exceedance",
+            "key": [
+              "NM0020583",
+              "001",
+              "70295",
+              "2025-08-31"
+            ],
+            "row": {
+              "facility_permit_number": "NM0020583",
+              "discharge_point": "001",
+              "parameter_code": "70295",
+              "monitoring_period_end": "2025-08-31",
+              "measurement": "measurement:3853940616",
+              "applicable_limit_value": "limit_value:3610838803",
+              "comparison_performed": true,
+              "exceeds_limit": true
+            }
+          },
+          {
+            "kind": "report_only_as_exceedance",
+            "key": [
+              "NM0020583",
+              "001",
+              "70295",
+              "2025-09-30"
+            ],
+            "row": {
+              "facility_permit_number": "NM0020583",
+              "discharge_point": "001",
+              "parameter_code": "70295",
+              "monitoring_period_end": "2025-09-30",
+              "measurement": "measurement:3855797860",
+              "applicable_limit_value": "limit_value:3610838803",
+              "comparison_performed": true,
+              "exceeds_limit": true
+            }
+          }
+        ],
+        "has_incomplete_purpose": false
+      },
+      "purpose_b": {
+        "n_rows": 0,
+        "n_unresolved": 44,
+        "concept_mentions": {
+          "when_discharging": false,
+          "report_only": false,
+          "seasonal_or_wet": false,
+          "special_study": false,
+          "conditional": false,
+          "staged_time": true
+        },
+        "n_concepts_present": 1
+      },
+      "purpose_c": {
+        "n_rows": 150,
+        "n_unresolved": 36,
+        "matched_keys": 186,
+        "exact_state": 150,
+        "nodi_c_established": 150,
+        "nodi_9_established": 0,
+        "missing_as_violation": 0,
+        "nodi_c_as_violation": 0,
+        "gold_by_state": {
+          "ESTABLISHED_MONITORING_NOT_REQUIRED": 36,
+          "OBSERVATION_PRESENT": 638,
+          "ESTABLISHED_NO_DISCHARGE": 150
+        }
+      },
+      "programming": {
+        "ok": false,
+        "n_analyses_ok": 1,
+        "user_tables": [
+          "facility_identified",
+          "discharge_point_identified",
+          "parameter_identified",
+          "permit_limit_value_stated",
+          "reported_measurement_stated",
+          "monitoring_requirement_stated",
+          "permit_condition_language_stated",
+          "documented_no_discharge_notation",
+          "limit_source_classification",
+          "fy2025_in_scope_measurement",
+          "measurement_has_ordinary_numeric_value",
+          "candidate_limit_for_measurement",
+          "numeric_comparison_eligible",
+          "numeric_exceedance_result",
+          "fy2025_candidate_monitoring_requirement",
+          "monitoring_expectation_without_numeric_result"
+        ],
+        "bindings_sample": {
+          "facility_permit_number": [
+            [
+              "facility_identified",
+              "facility"
+            ],
+            [
+              "facility_identified",
+              "permit_number"
+            ],
+            [
+              "discharge_point_identified",
+              "facility"
+            ],
+            [
+              "permit_limit_value_stated",
+              "facility"
+            ]
+          ],
+          "discharge_point": [
+            [
+              "discharge_point_identified",
+              "discharge_point"
+            ],
+            [
+              "discharge_point_identified",
+              "feature_number"
+            ],
+            [
+              "permit_limit_value_stated",
+              "discharge_point"
+            ],
+            [
+              "reported_measurement_stated",
+              "discharge_point"
+            ]
+          ],
+          "parameter_code": [
+            [
+              "parameter_identified",
+              "parameter"
+            ],
+            [
+              "parameter_identified",
+              "code"
+            ],
+            [
+              "permit_limit_value_stated",
+              "parameter"
+            ],
+            [
+              "reported_measurement_stated",
+              "parameter"
+            ]
+          ],
+          "applicable_limit_value": [
+            [
+              "permit_limit_value_stated",
+              "limit_value"
+            ],
+            [
+              "limit_source_classification",
+              "limit_value"
+            ],
+            [
+              "candidate_limit_for_measurement",
+              "limit_value"
+            ],
+            [
+              "numeric_comparison_eligible",
+              "limit_value"
+            ]
+          ],
+          "measurement": [
+            [
+              "reported_measurement_stated",
+              "measurement"
+            ],
+            [
+              "fy2025_in_scope_measurement",
+              "measurement"
+            ],
+            [
+              "measurement_has_ordinary_numeric_value",
+              "measurement"
+            ],
+            [
+              "candidate_limit_for_measurement",
+              "measurement"
+            ]
+          ],
+          "monitoring_period_end": [
+            [
+              "reported_measurement_stated",
+              "period_end"
+            ],
+            [
+              "documented_no_discharge_notation",
+              "period_end"
+            ],
+            [
+              "fy2025_in_scope_measurement",
+              "period_end"
+            ],
+            [
+              "candidate_limit_for_measurement",
+              "period_end"
+            ]
+          ],
+          "monitoring_requirement": [
+            [
+              "monitoring_requirement_stated",
+              "requirement"
+            ],
+            [
+              "permit_condition_language_stated",
+              "requirement"
+            ],
+            [
+              "fy2025_candidate_monitoring_requirement",
+              "requirement"
+            ],
+            [
+              "monitoring_obligation_judgment",
+              "requirement"
+            ]
+          ],
+          "comparison_performed": [
+            [
+              "numeric_comparison_eligible",
+              "eligible"
+            ],
+            [
+              "numeric_exceedance_result",
+              "comparison_performed"
+            ]
+          ],
+          "exceeds_limit": [
+            [
+              "numeric_exceedance_result",
+              "exceeds"
+            ]
+          ],
+          "applicability_unresolved_reason": [
+            [
+              "applicable_limit_judgment",
+              "unresolved_reason"
+            ]
+          ],
+          "fy2025_period": [
+            [
+              "fy2025_candidate_monitoring_requirement",
+              "evaluation_period"
+            ],
+            [
+              "monitoring_obligation_judgment",
+              "evaluation_period"
+            ]
+          ],
+          "obligation_outcome": [
+            [
+              "monitoring_obligation_judgment",
+              "outcome"
+            ]
+          ]
+        },
+        "analyses": {
+          "exceedance": {
+            "sql_ok": false,
+            "reason": "missing_join_columns",
+            "measure_cols": [
+              "_assertion_id",
+              "discharge_point_id",
+              "dmr_value_id",
+              "facility_id",
+              "measurement_id",
+              "nodi_code",
+              "parameter_id",
+              "period_end",
+              "qualifier",
+              "received_date",
+              "standard_value",
+              "statistical_base",
+              "unit_code",
+              "value_number"
+            ],
+            "limit_cols": [
+              "_assertion_id",
+              "begin_date",
+              "discharge_point_id",
+              "end_date",
+              "facility_id",
+              "frequency_code",
+              "limit_id",
+              "limit_type_code",
+              "limit_value_id",
+              "limit_value_number",
+              "optional_monitoring",
+              "parameter_id",
+              "qualifier",
+              "sample_type_code",
+              "standard_unit_code",
+              "standard_value",
+              "statistical_base",
+              "unit_code"
+            ]
+          },
+          "evidence_state": {
+            "sql_ok": true,
+            "nodi_counts": {
+              "": 638,
+              "9": 36,
+              "C": 150
+            },
+            "has_value_column": false
+          },
+          "follow_up": {
+            "sql_ok": false
+          }
+        },
+        "programmer_recovered_source_semantics": [
+          "need_column_map_for_numeric_limit_join",
+          "NODI_CODE_STORED_WITHOUT_CANONICAL_STATE_RELATION"
+        ]
+      }
+    },
+    "T3": {
+      "trial": 3,
+      "isolation": {
+        "leaks": [],
+        "timeouts": [],
+        "models": [
+          "composer-2.5"
+        ],
+        "reported_models": [
+          "Composer 2.5"
+        ],
+        "all_returncode_zero": true,
+        "p8_source_path_mentions": []
+      },
+      "vocabulary": {
+        "n_relations": 23,
+        "by_admission": {
+          "WORLD": [
+            "workspace_facility",
+            "permit_discharge_feature",
+            "monitored_parameter",
+            "monitoring_period",
+            "compiled_limit_value",
+            "compiled_dmr_measurement",
+            "source_document_anchor",
+            "monitoring_requirement_schedule",
+            "period_in_fy2025",
+            "dmr_in_fy2025_scope",
+            "measurement_has_ordinary_numeric_result",
+            "limit_active_in_period",
+            "measurement_limit_candidate_pair",
+            "monitoring_requirement_in_fy2025",
+            "missing_evidence_case_universe"
+          ],
+          "PURPOSE": [
+            "limit_applicability_resolution",
+            "limit_kind_resolution",
+            "exceedance_resolution",
+            "monitoring_obligation_resolution",
+            "missing_evidence_resolution",
+            "purpose_a_output_row",
+            "purpose_b_output_row",
+            "purpose_c_output_row"
+          ]
+        },
+        "by_class": {
+          "MECHANICAL": [
+            "workspace_facility",
+            "permit_discharge_feature",
+            "monitored_parameter",
+            "monitoring_period",
+            "compiled_limit_value",
+            "compiled_dmr_measurement",
+            "source_document_anchor",
+            "monitoring_requirement_schedule"
+          ],
+          "DERIVED": [
+            "period_in_fy2025",
+            "dmr_in_fy2025_scope",
+            "measurement_has_ordinary_numeric_result",
+            "limit_active_in_period",
+            "measurement_limit_candidate_pair",
+            "monitoring_requirement_in_fy2025",
+            "missing_evidence_case_universe",
+            "purpose_a_output_row",
+            "purpose_b_output_row",
+            "purpose_c_output_row"
+          ],
+          "SEMANTIC": [
+            "limit_applicability_resolution",
+            "limit_kind_resolution",
+            "exceedance_resolution",
+            "monitoring_obligation_resolution",
+            "missing_evidence_resolution"
+          ]
+        },
+        "relations": [
+          {
+            "name": "workspace_facility",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "An NPDES-permitted facility listed in the workspace source manifest.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "permit_discharge_feature",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "A permit-authorized discharge or monitoring feature (outfall, toxicity outfall, etc.) as reported in structured extracts.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "monitored_parameter",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "A pollutant or monitoring parameter code and description as compiled from permit limit and DMR extracts.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "monitoring_period",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "A DMR monitoring period identified by its period-end date and facility context.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "compiled_limit_value",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "One permit limit value row from the compiled limit schedule, including numeric threshold, units, statistical base, type code, and schedule metadata.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "compiled_dmr_measurement",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "A reported DMR measurement value (numeric, qualified, or NODI-coded) as compiled from structured DMR extracts.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "source_document_anchor",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "A permit or supporting PDF acquired for a facility, anchored by path and content hash.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "monitoring_requirement_schedule",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "A monitoring obligation tuple extracted from compiled permit limit schedules, including frequency and any schedule-stated condition anchor text.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "period_in_fy2025",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "meaning": "Whether a monitoring period's end date falls within Federal FY2025 (2024-10-01 through 2025-09-30 inclusive).",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "dmr_in_fy2025_scope",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "meaning": "DMR measurements whose monitoring period ends within Federal FY2025.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "measurement_has_ordinary_numeric_result",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "meaning": "Whether a compiled DMR row carries an ordinary numeric reported value suitable for Purpose A exceedance comparison (excludes blank, NODI-only, and qualifier-only non-numeric forms).",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "limit_active_in_period",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "meaning": "Compiled limit value whose effective date window overlaps the monitoring period end date.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "measurement_limit_candidate_pair",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "meaning": "Candidate pairing of an in-scope DMR measurement with a compiled limit value sharing facility, feature, parameter, and period overlap.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "monitoring_requirement_in_fy2025",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "meaning": "Monitoring requirements whose schedule effective window could apply during some portion of Federal FY2025.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "missing_evidence_case_universe",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "meaning": "In-scope FY2025 monitoring expectations paired with DMR rows that lack an ordinary numeric result, or expected submissions with no located DMR row.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "limit_applicability_resolution",
+            "admission": "PURPOSE",
+            "construction_class": "SEMANTIC",
+            "meaning": "Purpose A judgment establishing which enforceable numeric limit (if any) applies to a measurement tuple for its monitoring period.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "limit_kind_resolution",
+            "admission": "PURPOSE",
+            "construction_class": "SEMANTIC",
+            "meaning": "Purpose A classification of whether a candidate or selected limit is enforceable-numeric, report-only, or structurally non-comparable for numeric compliance.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "exceedance_resolution",
+            "admission": "PURPOSE",
+            "construction_class": "SEMANTIC",
+            "meaning": "Purpose A numeric comparison verdict between a reported measurement and an applicable enforceable limit under explicit unit and statistical-base alignment.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "monitoring_obligation_resolution",
+            "admission": "PURPOSE",
+            "construction_class": "SEMANTIC",
+            "meaning": "Purpose B judgment whether monitoring was required, not required, or unresolved for a schedule requirement within an evaluated FY2025 context.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "missing_evidence_resolution",
+            "admission": "PURPOSE",
+            "construction_class": "SEMANTIC",
+            "meaning": "Purpose C classification of what available evidence establishes for monitoring expectations lacking an ordinary numeric DMR result.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "purpose_a_output_row",
+            "admission": "PURPOSE",
+            "construction_class": "DERIVED",
+            "meaning": "Projected Purpose A output row assembling world facts and purpose resolutions for one measurement-limit evaluation.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "purpose_b_output_row",
+            "admission": "PURPOSE",
+            "construction_class": "DERIVED",
+            "meaning": "Projected Purpose B output row for one evaluated monitoring requirement.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "purpose_c_output_row",
+            "admission": "PURPOSE",
+            "construction_class": "DERIVED",
+            "meaning": "Projected Purpose C output row for one missing-evidence or non-ordinary-result case.",
+            "classification": "CROSS_DOMAIN_STRUCTURAL_ANALOGUE"
+          }
+        ],
+        "limitations": [
+          "Permit PDF text extraction relations are deferred; condition_anchor_text is limited to DMR_COMMENT_TEXT from structured CSV until C1 permit parsing exists.",
+          "Monthly seasonal activation for limits is partially represented via all_months_active boolean; per-month columns from permit_limits.csv are not yet modeled as separate relations.",
+          "Absent-submission detection in missing_evidence_case_universe depends on frequency-code interpretation rules not yet compiled as world facts.",
+          "No closed-world negation for unlocated limits; unresolved dispositions carry obligation to emit explicit unresolved output rather than inferring absence."
+        ]
+      },
+      "world": {
+        "world_path": "/home/kerem/Desktop/Personal Projects/generalauthor/research/semantic_integration/domains/npdes/constructor_v3_1_1_untouched/trials/T3/passes/p8/workspace_snapshot/06_world/world.sqlite",
+        "hash": "sha256:01b211ff025b027897335856d4667883b8792f17a48f83508622d2e8a77aa7c0",
+        "stats": {
+          "assertions": 8284,
+          "relations": 15,
+          "by_origin": {
+            "ASSERTED": 1060,
+            "DERIVED": 7224
+          },
+          "groundings": 9615
+        },
+        "tables": {
+          "_tv_view": 1,
+          "_tv_referents": 1269,
+          "_tv_relations": 15,
+          "_tv_roles": 78,
+          "_tv_assertions": 8284,
+          "_tv_groundings": 9615,
+          "_tv_derivations": 7,
+          "_tv_derivation_inputs": 13,
+          "_tv_derivation_run_inputs": 15,
+          "_tv_completeness": 7,
+          "workspace_facility": 3,
+          "permit_discharge_feature": 4,
+          "monitored_parameter": 33,
+          "monitoring_period": 36,
+          "compiled_limit_value": 105,
+          "compiled_dmr_measurement": 824,
+          "source_document_anchor": 12,
+          "monitoring_requirement_schedule": 43,
+          "period_in_fy2025": 36,
+          "dmr_in_fy2025_scope": 824,
+          "measurement_has_ordinary_numeric_result": 824,
+          "limit_active_in_period": 1212,
+          "measurement_limit_candidate_pair": 4076,
+          "monitoring_requirement_in_fy2025": 43,
+          "missing_evidence_case_universe": 209
+        },
+        "columns": {
+          "workspace_facility": [
+            "_assertion_id",
+            "facility_id",
+            "permit_number",
+            "facility_name"
+          ],
+          "permit_discharge_feature": [
+            "_assertion_id",
+            "feature_id",
+            "facility_id",
+            "feature_number",
+            "feature_type_code"
+          ],
+          "monitored_parameter": [
+            "_assertion_id",
+            "parameter_id",
+            "parameter_code",
+            "parameter_description"
+          ],
+          "monitoring_period": [
+            "_assertion_id",
+            "period_id",
+            "period_end_date",
+            "facility_id"
+          ],
+          "compiled_limit_value": [
+            "_assertion_id",
+            "limit_value_ref_id",
+            "facility_id",
+            "feature_id",
+            "parameter_id",
+            "limit_id",
+            "limit_value_id",
+            "limit_type_code",
+            "optional_monitoring_flag",
+            "limit_begin_date",
+            "limit_end_date",
+            "limit_value_number",
+            "limit_unit_code",
+            "standard_unit_code",
+            "statistical_base_code",
+            "limit_value_qualifier",
+            "frequency_code",
+            "limit_set_designator",
+            "limit_set_name",
+            "dmr_comment_text",
+            "all_months_active"
+          ],
+          "compiled_dmr_measurement": [
+            "_assertion_id",
+            "measurement_id",
+            "facility_id",
+            "feature_id",
+            "parameter_id",
+            "period_id",
+            "dmr_event_id",
+            "dmr_value_id",
+            "reported_value_number",
+            "reported_unit_code",
+            "value_qualifier",
+            "nodi_code",
+            "value_received_date",
+            "linked_limit_value_id"
+          ],
+          "source_document_anchor": [
+            "_assertion_id",
+            "document_id",
+            "facility_id",
+            "document_path",
+            "sha256"
+          ],
+          "monitoring_requirement_schedule": [
+            "_assertion_id",
+            "requirement_id",
+            "facility_id",
+            "feature_id",
+            "parameter_id",
+            "limit_set_designator",
+            "frequency_code",
+            "limit_begin_date",
+            "limit_end_date",
+            "optional_monitoring_flag",
+            "condition_anchor_text",
+            "source_limit_value_id"
+          ],
+          "period_in_fy2025": [
+            "_assertion_id",
+            "period_id",
+            "in_fy2025"
+          ],
+          "dmr_in_fy2025_scope": [
+            "_assertion_id",
+            "measurement_id"
+          ],
+          "measurement_has_ordinary_numeric_result": [
+            "_assertion_id",
+            "measurement_id",
+            "has_ordinary_numeric"
+          ],
+          "limit_active_in_period": [
+            "_assertion_id",
+            "limit_value_id",
+            "period_id"
+          ],
+          "measurement_limit_candidate_pair": [
+            "_assertion_id",
+            "measurement_id",
+            "limit_value_id"
+          ],
+          "monitoring_requirement_in_fy2025": [
+            "_assertion_id",
+            "requirement_id"
+          ],
+          "missing_evidence_case_universe": [
+            "_assertion_id",
+            "case_id",
+            "facility_id",
+            "feature_id",
+            "parameter_id",
+            "period_id",
+            "measurement_id",
+            "requirement_id"
+          ]
+        },
+        "mechanical_report": {
+          "referents": 1060,
+          "base_tuples": 1060,
+          "candidate_tuples": 4076,
+          "notes": [
+            "Blank LIMIT_VALUE_NMBR stored as 0.0 because TaskView REAL columns are NOT NULL.",
+            "Blank DMR_VALUE_NMBR stored as 0.0 because TaskView REAL columns are NOT NULL.",
+            "Permit PDF text extraction not performed; condition_anchor_text limited to DMR_COMMENT_TEXT from permit_limits.csv.",
+            "15 LIMIT_VALUE_ID values appear on multiple permit_limits.csv rows; referents keyed by LIMIT_VALUE_ID plus LIMIT_SET_SCHEDULE_ID.",
+            "TaskView referent columns use *_ref_id suffix when a TEXT role name would collide with the default *_id column (compiled_limit_value, compiled_dmr_measurement).",
+            "TaskView referent columns use *_ref_id suffix when a TEXT role name would collide with the default *_id column (compiled_limit_value, compiled_dmr_measurement).",
+            "Permit PDF text extraction relations are deferred; condition_anchor_text is limited to DMR_COMMENT_TEXT from structured CSV until C1 permit parsing exists.",
+            "Monthly seasonal activation for limits is partially represented via all_months_active boolean; per-month columns from permit_limits.csv are not yet modeled as separate relations.",
+            "Absent-submission detection in missing_evidence_case_universe depends on frequency-code interpretation rules not yet compiled as world facts.",
+            "No closed-world negation for unlocated limits; unresolved dispositions carry obligation to emit explicit unresolved output rather than inferring absence."
+          ],
+          "compile_stats": null,
+          "relations": null
+        },
+        "admission_persisted": [],
+        "admission_limitations": [
+          "Permit PDF text extraction relations are deferred; condition_anchor_text is limited to DMR_COMMENT_TEXT from structured CSV until C1 permit parsing exists.",
+          "Monthly seasonal activation for limits is partially represented via all_months_active boolean; per-month columns from permit_limits.csv are not yet modeled as separate relations.",
+          "Absent-submission detection in missing_evidence_case_universe depends on frequency-code interpretation rules not yet compiled as world facts.",
+          "No closed-world negation for unlocated limits; unresolved dispositions carry obligation to emit explicit unresolved output rather than inferring absence.",
+          "exceedance_resolution obligations were not adjudicated in 05_dispositions.json; no exceedance_resolution tuples admitted.",
+          "missing_evidence_case_universe completeness is INCOMPLETE: absent-submission cases require frequency-code rules not yet compiled as world facts."
+        ],
+        "provenance": {
+          "ok": true,
+          "ungrounded_count": 0,
+          "reason": null
+        },
+        "origins_sidecar_present": false
+      },
+      "fractions": {
+        "assertions_total": 8284,
+        "origin_asserted": 1060,
+        "origin_derived": 7224,
+        "persisted_mechanical": 0,
+        "persisted_semantic": 0,
+        "persisted_derived": 0,
+        "mechanical_fraction_of_persisted_base": null,
+        "semantic_fraction_of_persisted_base": null,
+        "mechanical_fraction_of_all_persisted": null
+      },
+      "frontier": {
+        "n_obligations": 5152,
+        "required_clauses": 12,
+        "hits": [
+          {
+            "id": "S-FARM-CN-SCHEDULE",
+            "concept": "compliance schedule then final numeric limit",
+            "found": true
+          },
+          {
+            "id": "S-FARM-REPORT-ONLY",
+            "concept": "report-only monitoring vs enforceable numeric limit",
+            "found": true
+          },
+          {
+            "id": "S-AZTEC-WHEN-DISCHARGING",
+            "concept": "when-discharging / intermittent-flow monitoring obligation",
+            "found": true
+          },
+          {
+            "id": "S-AZTEC-REPORT-ONLY",
+            "concept": "report-only vs numeric",
+            "found": true
+          },
+          {
+            "id": "S-GCC-EVENT-DISCHARGE",
+            "concept": "event-dependent / conditional authorization",
+            "found": true
+          },
+          {
+            "id": "S-GCC-REPORT-ONLY",
+            "concept": "report-only vs numeric",
+            "found": true
+          }
+        ],
+        "misses": [
+          {
+            "id": "S-FARM-TDS-STAGE",
+            "concept": "time-staged numeric limits",
+            "found": false
+          },
+          {
+            "id": "S-FARM-TRC-CONDITIONAL",
+            "concept": "conditional monitoring / event-dependent TRC",
+            "found": false
+          },
+          {
+            "id": "S-AZTEC-WET-SEASONAL",
+            "concept": "seasonal / special-study / once-per-term monitoring",
+            "found": false
+          },
+          {
+            "id": "S-AZTEC-DELTA-BHC",
+            "concept": "special study / compliance schedule",
+            "found": false
+          },
+          {
+            "id": "S-GCC-WET-FIRST-DISCHARGE",
+            "concept": "event-triggered special monitoring",
+            "found": false
+          },
+          {
+            "id": "S-SOURCE-AUTHORITY",
+            "concept": "operative permit condition vs supporting rationale",
+            "found": false
+          }
+        ],
+        "recall": 0.5,
+        "obligation_relations": {
+          "limit_applicability_resolution": 824,
+          "limit_kind_resolution": 4076,
+          "monitoring_obligation_resolution": 43,
+          "missing_evidence_resolution": 209
+        },
+        "duplicate_ids": 0
+      },
+      "p5": {
+        "n_dispositions": 5152,
+        "dispositions": {
+          "ACCEPT": 1005,
+          "UNRESOLVED": 2881,
+          "REJECT": 1266
+        },
+        "n_audit": 2881,
+        "final_dispositions": {
+          "UNRESOLVED": 2881
+        },
+        "negative_closure": {
+          "none": 2881
+        }
+      },
+      "abi": {
+        "ok": false,
+        "n_required": 17,
+        "n_satisfied": 9,
+        "n_unsatisfied": 8,
+        "n_ambiguous": 0,
+        "unsatisfied": [
+          "applicability period or trigger context within FY2025",
+          "applicability verdict (required / not required / unresolved)",
+          "condition dependencies evaluated (discharge occurrence, season, permit year, special study, event, etc.)",
+          "established_state classification",
+          "exceedance determination (when comparison is applicable)",
+          "grounding references to world-compiled evidence",
+          "limit applicability status",
+          "limit category (enforceable numeric vs report-only vs no numeric comparison)"
+        ],
+        "ambiguous": [],
+        "unsatisfied_reasons": {
+          "applicability period or trigger context within FY2025": "NOT_MATERIALIZABLE",
+          "applicability verdict (required / not required / unresolved)": "NOT_MATERIALIZABLE",
+          "condition dependencies evaluated (discharge occurrence, season, permit year, special study, event, etc.)": "NOT_MATERIALIZABLE",
+          "established_state classification": "NOT_MATERIALIZABLE",
+          "exceedance determination (when comparison is applicable)": "NOT_MATERIALIZABLE",
+          "grounding references to world-compiled evidence": "NOT_MATERIALIZABLE",
+          "limit applicability status": "NOT_MATERIALIZABLE",
+          "limit category (enforceable numeric vs report-only vs no numeric comparison)": "NOT_MATERIALIZABLE"
+        },
+        "invariant_violations": [],
+        "incomplete_purpose_marked": false
+      },
+      "source_authority": {
+        "mentions_fact_sheet": false,
+        "mentions_statement_of_basis": false,
+        "mentions_operative_or_authority": false,
+        "mentions_permit_part": false
+      },
+      "purpose_a": {
+        "n_rows": 262,
+        "n_unresolved": 353,
+        "scoreable_covered": 153,
+        "n_scoreable": 334,
+        "compared": 131,
+        "exact": 8,
+        "exact_rate": 0.061068702290076333,
+        "false_exceedance": 109,
+        "miss_exceedance": 14,
+        "report_only_as_exceedance": 0,
+        "examples": [],
+        "has_incomplete_purpose": false
+      },
+      "purpose_b": {
+        "n_rows": 13,
+        "n_unresolved": 30,
+        "concept_mentions": {
+          "when_discharging": false,
+          "report_only": false,
+          "seasonal_or_wet": false,
+          "special_study": true,
+          "conditional": true,
+          "staged_time": true
+        },
+        "n_concepts_present": 3
+      },
+      "purpose_c": {
+        "n_rows": 0,
+        "n_unresolved": 209,
+        "matched_keys": 209,
+        "exact_state": 0,
+        "nodi_c_established": 0,
+        "nodi_9_established": 0,
+        "missing_as_violation": 0,
+        "nodi_c_as_violation": 0,
+        "gold_by_state": {
+          "ESTABLISHED_MONITORING_NOT_REQUIRED": 36,
+          "OBSERVATION_PRESENT": 638,
+          "ESTABLISHED_NO_DISCHARGE": 150
+        }
+      },
+      "programming": {
+        "ok": false,
+        "n_analyses_ok": 0,
+        "user_tables": [
+          "workspace_facility",
+          "permit_discharge_feature",
+          "monitored_parameter",
+          "monitoring_period",
+          "compiled_limit_value",
+          "compiled_dmr_measurement",
+          "source_document_anchor",
+          "monitoring_requirement_schedule",
+          "period_in_fy2025",
+          "dmr_in_fy2025_scope",
+          "measurement_has_ordinary_numeric_result",
+          "limit_active_in_period",
+          "measurement_limit_candidate_pair",
+          "monitoring_requirement_in_fy2025",
+          "missing_evidence_case_universe"
+        ],
+        "bindings_sample": {
+          "facility identifier": [
+            [
+              "workspace_facility",
+              "facility"
+            ],
+            [
+              "permit_discharge_feature",
+              "facility"
+            ],
+            [
+              "monitoring_period",
+              "facility"
+            ],
+            [
+              "compiled_limit_value",
+              "facility"
+            ]
+          ],
+          "discharge point / permit feature": [
+            [
+              "permit_discharge_feature",
+              "feature"
+            ],
+            [
+              "compiled_limit_value",
+              "feature"
+            ],
+            [
+              "compiled_dmr_measurement",
+              "feature"
+            ],
+            [
+              "monitoring_requirement_schedule",
+              "feature"
+            ]
+          ],
+          "parameter": [
+            [
+              "monitored_parameter",
+              "parameter"
+            ],
+            [
+              "compiled_limit_value",
+              "parameter"
+            ],
+            [
+              "compiled_dmr_measurement",
+              "parameter"
+            ],
+            [
+              "monitoring_requirement_schedule",
+              "parameter"
+            ]
+          ],
+          "monitoring period": [
+            [
+              "monitoring_period",
+              "period"
+            ],
+            [
+              "compiled_dmr_measurement",
+              "period"
+            ],
+            [
+              "period_in_fy2025",
+              "period"
+            ],
+            [
+              "limit_active_in_period",
+              "period"
+            ]
+          ],
+          "applicable limit identification (when established)": [
+            [
+              "compiled_limit_value",
+              "limit_value"
+            ],
+            [
+              "limit_active_in_period",
+              "limit_value"
+            ],
+            [
+              "measurement_limit_candidate_pair",
+              "limit_value"
+            ],
+            [
+              "limit_applicability_resolution",
+              "selected_limit"
+            ]
+          ],
+          "reported measurement reference or value summary": [
+            [
+              "compiled_dmr_measurement",
+              "measurement"
+            ],
+            [
+              "dmr_in_fy2025_scope",
+              "measurement"
+            ],
+            [
+              "measurement_has_ordinary_numeric_result",
+              "measurement"
+            ],
+            [
+              "measurement_limit_candidate_pair",
+              "measurement"
+            ]
+          ],
+          "observed result form (NODI code, blank, qualifier-only, absent submission, etc.)": [
+            [
+              "compiled_dmr_measurement",
+              "nodi_code"
+            ],
+            [
+              "missing_evidence_case_universe",
+              "measurement"
+            ],
+            [
+              "missing_evidence_resolution",
+              "observed_form"
+            ],
+            [
+              "purpose_c_output_row",
+              "observed_form"
+            ]
+          ],
+          "requirement identification (parameter, feature, frequency, limit set, or permit condition anchor)": [
+            [
+              "monitoring_requirement_schedule",
+              "requirement"
+            ],
+            [
+              "monitoring_requirement_in_fy2025",
+              "requirement"
+            ],
+            [
+              "missing_evidence_case_universe",
+              "requirement"
+            ],
+            [
+              "monitoring_obligation_resolution",
+              "requirement"
+            ]
+          ],
+          "monitoring period or expectation interval": [
+            [
+              "missing_evidence_case_universe",
+              "period"
+            ],
+            [
+              "missing_evidence_resolution",
+              "period"
+            ],
+            [
+              "purpose_c_output_row",
+              "period"
+            ]
+          ],
+          "limit applicability status": [
+            [
+              "limit_applicability_resolution",
+              "applicability_status"
+            ],
+            [
+              "purpose_a_output_row",
+              "applicability_status"
+            ]
+          ],
+          "grounding references to world-compiled evidence": [
+            [
+              "limit_applicability_resolution",
+              "grounding"
+            ],
+            [
+              "limit_kind_resolution",
+              "grounding"
+            ],
+            [
+              "exceedance_resolution",
+              "grounding"
+            ],
+            [
+              "monitoring_obligation_resolution",
+              "grounding"
+            ]
+          ],
+          "limit category (enforceable numeric vs report-only vs no numeric comparison)": [
+            [
+              "limit_kind_resolution",
+              "limit_category"
+            ],
+            [
+              "purpose_a_output_row",
+              "limit_category"
+            ]
+          ]
+        },
+        "analyses": {
+          "exceedance": {
+            "sql_ok": false,
+            "reason": "missing_measurement_or_limit_table",
+            "tables": [
+              "workspace_facility",
+              "permit_discharge_feature",
+              "monitored_parameter",
+              "monitoring_period",
+              "compiled_limit_value",
+              "compiled_dmr_measurement",
+              "source_document_anchor",
+              "monitoring_requirement_schedule",
+              "period_in_fy2025",
+              "dmr_in_fy2025_scope",
+              "measurement_has_ordinary_numeric_result",
+              "limit_active_in_period",
+              "measurement_limit_candidate_pair",
+              "monitoring_requirement_in_fy2025",
+              "missing_evidence_case_universe"
+            ]
+          },
+          "evidence_state": {
+            "sql_ok": false,
+            "reason": "no_measurement_table"
+          },
+          "follow_up": {
+            "sql_ok": false
+          }
+        },
+        "programmer_recovered_source_semantics": [
+          "no_measurement_or_limit_table"
+        ]
+      }
+    },
+    "T4": {
+      "trial": 4,
+      "isolation": {
+        "leaks": [],
+        "timeouts": [],
+        "models": [
+          "composer-2.5"
+        ],
+        "reported_models": [
+          "Composer 2.5"
+        ],
+        "all_returncode_zero": true,
+        "p8_source_path_mentions": []
+      },
+      "vocabulary": {
+        "n_relations": 27,
+        "by_admission": {
+          "WORLD": [
+            "facility",
+            "permit_feature",
+            "parameter",
+            "monitoring_period",
+            "permit_limit_extract_row",
+            "limit_value_attributes",
+            "limit_source_flags",
+            "limit_season_month_active",
+            "conditional_trigger_language",
+            "dmr_measurement_extract_row",
+            "dmr_reported_value_kind",
+            "dmr_limit_correspondence",
+            "limit_effective_during_period",
+            "fy2025_in_scope_measurement",
+            "monitoring_requirement_candidate",
+            "special_study_or_event_reference",
+            "source_permit_document",
+            "discharge_occurrence_evidence",
+            "permit_no_discharge_statement",
+            "conditional_monitoring_relief_evidence",
+            "documented_nodata_reason",
+            "expected_monitoring_without_dmr_row",
+            "measurement_limit_evaluation_pair"
+          ],
+          "PURPOSE": [
+            "applicable_limit_assessment",
+            "numeric_exceedance_assessment",
+            "monitoring_obligation_applicability",
+            "missing_evidence_classification"
+          ]
+        },
+        "by_class": {
+          "MECHANICAL": [
+            "facility",
+            "permit_feature",
+            "parameter",
+            "monitoring_period",
+            "permit_limit_extract_row",
+            "limit_value_attributes",
+            "limit_source_flags",
+            "limit_season_month_active",
+            "conditional_trigger_language",
+            "dmr_measurement_extract_row",
+            "dmr_reported_value_kind",
+            "special_study_or_event_reference",
+            "source_permit_document"
+          ],
+          "DERIVED": [
+            "dmr_limit_correspondence",
+            "limit_effective_during_period",
+            "fy2025_in_scope_measurement",
+            "monitoring_requirement_candidate",
+            "expected_monitoring_without_dmr_row",
+            "measurement_limit_evaluation_pair"
+          ],
+          "SEMANTIC": [
+            "discharge_occurrence_evidence",
+            "permit_no_discharge_statement",
+            "conditional_monitoring_relief_evidence",
+            "documented_nodata_reason",
+            "applicable_limit_assessment",
+            "numeric_exceedance_assessment",
+            "monitoring_obligation_applicability",
+            "missing_evidence_classification"
+          ]
+        },
+        "relations": [
+          {
+            "name": "facility",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "A manifest NPDES facility identified by permit number in source evidence.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "permit_feature",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "A permit discharge or outfall feature (PERM_FEATURE) tied to exactly one facility.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "parameter",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "A monitored discharge parameter identified by EPA parameter code and description text.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "monitoring_period",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "A monitoring reporting period anchored by its period-end date for a facility.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "permit_limit_extract_row",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "One compiled row from the permit limit structured extract representing a limit value record and its identifying keys.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "limit_value_attributes",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "Numeric limit value, units, and statistical-base metadata carried by a permit limit extract row.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "limit_source_flags",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "Source-supplied limit typing and monitoring schedule flags from the limit extract without enforceability interpretation.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "limit_season_month_active",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "Whether a limit row's seasonal month flags mark a calendar month as in-scope for the limit schedule.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "conditional_trigger_language",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "Verbatim conditional or situational language attached to a limit row or limit set in structured extract or permit text.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "dmr_measurement_extract_row",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "One DMR measurement event row from the structured extract with keys linking to limit and period context.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "dmr_reported_value_kind",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "Characterization of whether a DMR row reports a numeric value, qualifier-only result, or NODI-coded no-data.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "dmr_limit_correspondence",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "meaning": "Deterministic linkage between a DMR measurement row and a permit limit row sharing facility, feature, parameter, and limit keys.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "limit_effective_during_period",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "meaning": "Whether a limit row's effective date range overlaps the monitoring period end date.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "fy2025_in_scope_measurement",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "meaning": "Whether a DMR measurement's monitoring period end falls within Federal FY2025 per shared_universe.period.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "monitoring_requirement_candidate",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "meaning": "A monitoring obligation candidate enumerated from permit limit schedule fields without applicability verdict.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "special_study_or_event_reference",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "Documented reference to a special study, toxicity test, or event-driven monitoring requirement in permit materials.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "source_permit_document",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "A permit-package PDF file listed in the source manifest for a facility.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "discharge_occurrence_evidence",
+            "admission": "WORLD",
+            "construction_class": "SEMANTIC",
+            "meaning": "Grounded evidence about whether discharge occurred or was documented as absent for a facility-period context.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "permit_no_discharge_statement",
+            "admission": "WORLD",
+            "construction_class": "SEMANTIC",
+            "meaning": "Whether permit or submission evidence explicitly documents no discharge for a facility monitoring period.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "conditional_monitoring_relief_evidence",
+            "admission": "WORLD",
+            "construction_class": "SEMANTIC",
+            "meaning": "Whether grounded evidence shows a conditional monitoring requirement did not apply for the evaluated period.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "documented_nodata_reason",
+            "admission": "WORLD",
+            "construction_class": "SEMANTIC",
+            "meaning": "Whether a DMR no-data reason (NODI or qualifier narrative) is documented and interpretable from source evidence.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "expected_monitoring_without_dmr_row",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "meaning": "A monitoring expectation for a period where structured evidence shows no corresponding DMR measurement row.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "measurement_limit_evaluation_pair",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "meaning": "An FY2025 reported measurement paired with limit row(s) entering Purpose A applicability and comparison evaluation.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "applicable_limit_assessment",
+            "admission": "PURPOSE",
+            "construction_class": "SEMANTIC",
+            "meaning": "Purpose A classification of whether an enforceable numeric limit applies, monitoring is report-only, or no numeric comparison applies.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "numeric_exceedance_assessment",
+            "admission": "PURPOSE",
+            "construction_class": "SEMANTIC",
+            "meaning": "Purpose A numeric comparison outcome when an enforceable limit and comparable measurement are established.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "monitoring_obligation_applicability",
+            "admission": "PURPOSE",
+            "construction_class": "SEMANTIC",
+            "meaning": "Purpose B verdict on whether monitoring was required, not required, or unresolved for a requirement-period context.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "missing_evidence_classification",
+            "admission": "PURPOSE",
+            "construction_class": "SEMANTIC",
+            "meaning": "Purpose C taxonomy class for FY2025 cases without ordinary numeric DMR results.",
+            "classification": "DOMAIN_SPECIFIC"
+          }
+        ],
+        "limitations": [
+          "00_intention_contract.json does not declare an explicit consumer_fields block; semantic_identity bindings use slug ids derived from required_semantic_distinctions and row_expectation context nouns (facility, discharge_point, parameter, monitoring_period, monitoring_requirement, monitoring_expectation).",
+          "Permit PDF semantic extractions beyond structured CSV columns are deferred to C2 candidate generation; vocabulary does not add permit-text parsing primitives.",
+          "Closed-world negation for absent DMR rows is represented only as derived absence flags with explicit completeness receipts, not as negative world assertions."
+        ]
+      },
+      "world": {
+        "world_path": "/home/kerem/Desktop/Personal Projects/generalauthor/research/semantic_integration/domains/npdes/constructor_v3_1_1_untouched/trials/T4/passes/p8/workspace_snapshot/06_world/world.sqlite",
+        "hash": "sha256:a281569a4c24b0dfddc1d6bd02da3f3e937240419e8b486489dccd8bf48bad19",
+        "stats": {
+          "assertions": 7037,
+          "relations": 23,
+          "by_origin": {
+            "ASSERTED": 3187,
+            "DERIVED": 3850
+          },
+          "groundings": 8415
+        },
+        "tables": {
+          "_tv_view": 1,
+          "_tv_referents": 1309,
+          "_tv_relations": 23,
+          "_tv_roles": 103,
+          "_tv_assertions": 7037,
+          "_tv_groundings": 8415,
+          "_tv_derivations": 6,
+          "_tv_derivation_inputs": 13,
+          "_tv_derivation_run_inputs": 13,
+          "_tv_completeness": 6,
+          "facility": 3,
+          "permit_feature": 4,
+          "parameter": 33,
+          "monitoring_period": 36,
+          "permit_limit_extract_row": 90,
+          "limit_value_attributes": 90,
+          "limit_source_flags": 90,
+          "limit_season_month_active": 1080,
+          "conditional_trigger_language": 93,
+          "dmr_measurement_extract_row": 824,
+          "dmr_reported_value_kind": 824,
+          "special_study_or_event_reference": 8,
+          "source_permit_document": 12,
+          "dmr_limit_correspondence": 824,
+          "limit_effective_during_period": 1080,
+          "fy2025_in_scope_measurement": 824,
+          "monitoring_requirement_candidate": 90,
+          "expected_monitoring_without_dmr_row": 208,
+          "measurement_limit_evaluation_pair": 824,
+          "discharge_occurrence_evidence": 0,
+          "permit_no_discharge_statement": 0,
+          "conditional_monitoring_relief_evidence": 0,
+          "documented_nodata_reason": 0
+        },
+        "columns": {
+          "facility": [
+            "_assertion_id",
+            "facility_id"
+          ],
+          "permit_feature": [
+            "_assertion_id",
+            "feature_id",
+            "facility_id",
+            "feature_number",
+            "feature_type_code"
+          ],
+          "parameter": [
+            "_assertion_id",
+            "parameter_id",
+            "parameter_code",
+            "parameter_description"
+          ],
+          "monitoring_period": [
+            "_assertion_id",
+            "period_id",
+            "period_end_date",
+            "facility_id"
+          ],
+          "permit_limit_extract_row": [
+            "_assertion_id",
+            "limit_row_id",
+            "facility_id",
+            "feature_id",
+            "parameter_id",
+            "limit_id",
+            "limit_value_id",
+            "limit_set_id",
+            "limit_begin_date",
+            "limit_end_date"
+          ],
+          "limit_value_attributes": [
+            "_assertion_id",
+            "limit_row_id",
+            "limit_value_id",
+            "has_numeric_value",
+            "limit_value_nmbr",
+            "limit_unit_code",
+            "standard_unit_code",
+            "statistical_base_code",
+            "limit_value_qualifier_code"
+          ],
+          "limit_source_flags": [
+            "_assertion_id",
+            "limit_row_id",
+            "limit_type_code",
+            "optional_monitoring_flag",
+            "limit_sample_type_code",
+            "limit_freq_of_analysis_code"
+          ],
+          "limit_season_month_active": [
+            "_assertion_id",
+            "limit_row_id",
+            "calendar_month",
+            "active_in_month"
+          ],
+          "conditional_trigger_language": [
+            "_assertion_id",
+            "limit_row_id",
+            "trigger_text",
+            "text_origin"
+          ],
+          "dmr_measurement_extract_row": [
+            "_assertion_id",
+            "measurement_id",
+            "facility_id",
+            "feature_id",
+            "parameter_id",
+            "period_id",
+            "dmr_event_id",
+            "limit_value_id",
+            "monitoring_period_end_date"
+          ],
+          "dmr_reported_value_kind": [
+            "_assertion_id",
+            "measurement_id",
+            "value_kind",
+            "dmr_value_nmbr",
+            "dmr_value_qualifier_code",
+            "nodi_code",
+            "dmr_unit_code"
+          ],
+          "special_study_or_event_reference": [
+            "_assertion_id",
+            "reference_id",
+            "facility_id",
+            "reference_text",
+            "source_document_id"
+          ],
+          "source_permit_document": [
+            "_assertion_id",
+            "document_id",
+            "facility_id",
+            "path",
+            "sha256"
+          ],
+          "dmr_limit_correspondence": [
+            "_assertion_id",
+            "measurement_id",
+            "limit_row_id",
+            "correspondence_basis"
+          ],
+          "limit_effective_during_period": [
+            "_assertion_id",
+            "limit_row_id",
+            "period_id",
+            "overlaps"
+          ],
+          "fy2025_in_scope_measurement": [
+            "_assertion_id",
+            "measurement_id",
+            "in_fy2025"
+          ],
+          "monitoring_requirement_candidate": [
+            "_assertion_id",
+            "requirement_id",
+            "facility_id",
+            "feature_id",
+            "parameter_id",
+            "limit_row_id",
+            "frequency_code",
+            "sample_type_code"
+          ],
+          "expected_monitoring_without_dmr_row": [
+            "_assertion_id",
+            "expectation_id",
+            "requirement_id",
+            "period_id",
+            "facility_id",
+            "dmr_row_absent"
+          ],
+          "measurement_limit_evaluation_pair": [
+            "_assertion_id",
+            "measurement_id",
+            "limit_row_id",
+            "facility_id",
+            "feature_id",
+            "parameter_id",
+            "period_id"
+          ],
+          "discharge_occurrence_evidence": [
+            "_assertion_id",
+            "facility_id",
+            "period_id",
+            "evidence_kind",
+            "source_anchor"
+          ],
+          "permit_no_discharge_statement": [
+            "_assertion_id",
+            "facility_id",
+            "period_id",
+            "statement_supported",
+            "source_anchor"
+          ],
+          "conditional_monitoring_relief_evidence": [
+            "_assertion_id",
+            "requirement_id",
+            "period_id",
+            "relief_established",
+            "source_anchor"
+          ],
+          "documented_nodata_reason": [
+            "_assertion_id",
+            "measurement_id",
+            "reason_code",
+            "reason_established",
+            "source_anchor"
+          ]
+        },
+        "mechanical_report": {
+          "referents": 1309,
+          "base_tuples": 3438,
+          "candidate_tuples": 399,
+          "notes": [
+            "Permit PDF text parsing deferred to C2; only structured CSV columns compiled mechanically.",
+            "Semantic relations (discharge_occurrence_evidence, permit_no_discharge_statement, conditional_monitoring_relief_evidence, documented_nodata_reason) not adjudicated in P2.",
+            "Compiled 3 manifest facilities, 105 permit limit rows (90 distinct LIMIT_VALUE_ID), 824 DMR rows (one measurement referent per DMR_VALUE_ID).",
+            "15 duplicate permit limit CSV rows collapsed to existing LIMIT_VALUE_ID tuples.",
+            "limit_value_nmbr and dmr_value_nmbr use 0.0 placeholder when source field is non-numeric.",
+            "Candidate relations materialized: conditional_trigger_language, expected_monitoring_without_dmr_row, monitoring_requirement_candidate, special_study_or_event_reference."
+          ],
+          "compile_stats": null,
+          "relations": null
+        },
+        "admission_persisted": [
+          {
+            "relation": "facility",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "persisted_count": null
+          },
+          {
+            "relation": "permit_feature",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "persisted_count": null
+          },
+          {
+            "relation": "parameter",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "persisted_count": null
+          },
+          {
+            "relation": "monitoring_period",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "persisted_count": null
+          },
+          {
+            "relation": "permit_limit_extract_row",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "persisted_count": null
+          },
+          {
+            "relation": "limit_value_attributes",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "persisted_count": null
+          },
+          {
+            "relation": "limit_source_flags",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "persisted_count": null
+          },
+          {
+            "relation": "limit_season_month_active",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "persisted_count": null
+          },
+          {
+            "relation": "conditional_trigger_language",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "persisted_count": null
+          },
+          {
+            "relation": "dmr_measurement_extract_row",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "persisted_count": null
+          },
+          {
+            "relation": "dmr_reported_value_kind",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "persisted_count": null
+          },
+          {
+            "relation": "dmr_limit_correspondence",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "persisted_count": null
+          },
+          {
+            "relation": "limit_effective_during_period",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "persisted_count": null
+          },
+          {
+            "relation": "fy2025_in_scope_measurement",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "persisted_count": null
+          },
+          {
+            "relation": "monitoring_requirement_candidate",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "persisted_count": null
+          },
+          {
+            "relation": "special_study_or_event_reference",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "persisted_count": null
+          },
+          {
+            "relation": "source_permit_document",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "persisted_count": null
+          },
+          {
+            "relation": "discharge_occurrence_evidence",
+            "admission": "WORLD",
+            "construction_class": "SEMANTIC",
+            "persisted_count": null
+          },
+          {
+            "relation": "permit_no_discharge_statement",
+            "admission": "WORLD",
+            "construction_class": "SEMANTIC",
+            "persisted_count": null
+          },
+          {
+            "relation": "conditional_monitoring_relief_evidence",
+            "admission": "WORLD",
+            "construction_class": "SEMANTIC",
+            "persisted_count": null
+          },
+          {
+            "relation": "documented_nodata_reason",
+            "admission": "WORLD",
+            "construction_class": "SEMANTIC",
+            "persisted_count": null
+          },
+          {
+            "relation": "expected_monitoring_without_dmr_row",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "persisted_count": null
+          },
+          {
+            "relation": "measurement_limit_evaluation_pair",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "persisted_count": null
+          },
+          {
+            "relation": "applicable_limit_assessment",
+            "admission": "PURPOSE",
+            "construction_class": "SEMANTIC",
+            "persisted_count": null
+          },
+          {
+            "relation": "numeric_exceedance_assessment",
+            "admission": "PURPOSE",
+            "construction_class": "SEMANTIC",
+            "persisted_count": null
+          },
+          {
+            "relation": "monitoring_obligation_applicability",
+            "admission": "PURPOSE",
+            "construction_class": "SEMANTIC",
+            "persisted_count": null
+          },
+          {
+            "relation": "missing_evidence_classification",
+            "admission": "PURPOSE",
+            "construction_class": "SEMANTIC",
+            "persisted_count": null
+          }
+        ],
+        "admission_limitations": [
+          "No WORLD semantic ACCEPT tuples had non-empty grounding in 05_dispositions.json; semantic relation schemas are declared but carry zero asserted tuples.",
+          "Purpose relations (applicable_limit_assessment, numeric_exceedance_assessment, monitoring_obligation_applicability, missing_evidence_classification) are admitted to PURPOSE only and are not materialized in 06_world/world.sqlite.",
+          "72 ACCEPT monitoring_obligation_applicability dispositions remain in Purpose IR; not promoted to World per admission policy.",
+          "Closed-world negation for rejected or unresolved semantic candidates is not persisted as negative world assertions."
+        ],
+        "provenance": {
+          "ok": true,
+          "ungrounded_count": 0,
+          "reason": null
+        },
+        "origins_sidecar_present": false
+      },
+      "fractions": {
+        "assertions_total": 7037,
+        "origin_asserted": 3187,
+        "origin_derived": 3850,
+        "persisted_mechanical": 0,
+        "persisted_semantic": 0,
+        "persisted_derived": 0,
+        "mechanical_fraction_of_persisted_base": null,
+        "semantic_fraction_of_persisted_base": null,
+        "mechanical_fraction_of_all_persisted": null
+      },
+      "frontier": {
+        "n_obligations": 4092,
+        "required_clauses": 12,
+        "hits": [
+          {
+            "id": "S-FARM-TRC-CONDITIONAL",
+            "concept": "conditional monitoring / event-dependent TRC",
+            "found": true
+          },
+          {
+            "id": "S-FARM-REPORT-ONLY",
+            "concept": "report-only monitoring vs enforceable numeric limit",
+            "found": true
+          },
+          {
+            "id": "S-AZTEC-REPORT-ONLY",
+            "concept": "report-only vs numeric",
+            "found": true
+          },
+          {
+            "id": "S-GCC-REPORT-ONLY",
+            "concept": "report-only vs numeric",
+            "found": true
+          }
+        ],
+        "misses": [
+          {
+            "id": "S-FARM-TDS-STAGE",
+            "concept": "time-staged numeric limits",
+            "found": false
+          },
+          {
+            "id": "S-FARM-CN-SCHEDULE",
+            "concept": "compliance schedule then final numeric limit",
+            "found": false
+          },
+          {
+            "id": "S-AZTEC-WHEN-DISCHARGING",
+            "concept": "when-discharging / intermittent-flow monitoring obligation",
+            "found": false
+          },
+          {
+            "id": "S-AZTEC-WET-SEASONAL",
+            "concept": "seasonal / special-study / once-per-term monitoring",
+            "found": false
+          },
+          {
+            "id": "S-AZTEC-DELTA-BHC",
+            "concept": "special study / compliance schedule",
+            "found": false
+          },
+          {
+            "id": "S-GCC-EVENT-DISCHARGE",
+            "concept": "event-dependent / conditional authorization",
+            "found": false
+          },
+          {
+            "id": "S-GCC-WET-FIRST-DISCHARGE",
+            "concept": "event-triggered special monitoring",
+            "found": false
+          },
+          {
+            "id": "S-SOURCE-AUTHORITY",
+            "concept": "operative permit condition vs supporting rationale",
+            "found": false
+          }
+        ],
+        "recall": 0.3333333333333333,
+        "obligation_relations": {
+          "applicable_limit_assessment": 824,
+          "numeric_exceedance_assessment": 638,
+          "monitoring_obligation_applicability": 1032,
+          "conditional_monitoring_relief_evidence": 960,
+          "discharge_occurrence_evidence": 36,
+          "documented_nodata_reason": 186,
+          "permit_no_discharge_statement": 22,
+          "missing_evidence_classification": 394
+        },
+        "duplicate_ids": 0
+      },
+      "p5": {
+        "n_dispositions": 4092,
+        "dispositions": {
+          "UNRESOLVED": 3242,
+          "REJECT": 778,
+          "ACCEPT": 72
+        },
+        "n_audit": 3242,
+        "final_dispositions": {
+          "UNRESOLVED": 3242
+        },
+        "negative_closure": {
+          "none": 3242
+        }
+      },
+      "abi": {
+        "ok": false,
+        "n_required": 27,
+        "n_satisfied": 17,
+        "n_unsatisfied": 8,
+        "n_ambiguous": 2,
+        "unsatisfied": [
+          "applicability_unresolved",
+          "conditional_monitoring_relief_grounded_in_permit_or_operational_evidence",
+          "discharge_occurrence_or_no_discharge_documentation_in_evidence",
+          "documented_no_discharge_period",
+          "enforceable_numeric_limit_applicable_to_this_measurement_context",
+          "measurement_exceeds_applicable_enforceable_numeric_limit",
+          "monitoring_required_for_the_evaluated_period_context",
+          "permit_or_submission_documents_no_discharge"
+        ],
+        "ambiguous": [
+          "documented_no_data_reason_codes_or_narrative_in_source",
+          "limit_type_category_flags_from_source_e_g_enforceable_vs_optional_monitoring"
+        ],
+        "unsatisfied_reasons": {
+          "applicability_unresolved": "NOT_MATERIALIZABLE",
+          "conditional_monitoring_relief_grounded_in_permit_or_operational_evidence": "NOT_MATERIALIZABLE",
+          "discharge_occurrence_or_no_discharge_documentation_in_evidence": "NOT_MATERIALIZABLE",
+          "documented_no_data_reason_codes_or_narrative_in_source": "AMBIGUOUS",
+          "documented_no_discharge_period": "NOT_MATERIALIZABLE",
+          "enforceable_numeric_limit_applicable_to_this_measurement_context": "NOT_MATERIALIZABLE",
+          "limit_type_category_flags_from_source_e_g_enforceable_vs_optional_monitoring": "AMBIGUOUS",
+          "measurement_exceeds_applicable_enforceable_numeric_limit": "NOT_MATERIALIZABLE",
+          "monitoring_required_for_the_evaluated_period_context": "NOT_MATERIALIZABLE",
+          "permit_or_submission_documents_no_discharge": "NOT_MATERIALIZABLE"
+        },
+        "invariant_violations": [],
+        "incomplete_purpose_marked": false
+      },
+      "source_authority": {
+        "mentions_fact_sheet": false,
+        "mentions_statement_of_basis": false,
+        "mentions_operative_or_authority": false,
+        "mentions_permit_part": false
+      },
+      "purpose_a": {
+        "n_rows": 646,
+        "n_unresolved": 178,
+        "scoreable_covered": 182,
+        "n_scoreable": 334,
+        "compared": 182,
+        "exact": 181,
+        "exact_rate": 0.9945054945054945,
+        "false_exceedance": 0,
+        "miss_exceedance": 1,
+        "report_only_as_exceedance": 0,
+        "examples": [],
+        "has_incomplete_purpose": false
+      },
+      "purpose_b": {
+        "n_rows": 120,
+        "n_unresolved": 960,
+        "concept_mentions": {
+          "when_discharging": false,
+          "report_only": false,
+          "seasonal_or_wet": true,
+          "special_study": true,
+          "conditional": true,
+          "staged_time": true
+        },
+        "n_concepts_present": 4
+      },
+      "purpose_c": {
+        "n_rows": 234,
+        "n_unresolved": 160,
+        "matched_keys": 186,
+        "exact_state": 0,
+        "nodi_c_established": 0,
+        "nodi_9_established": 0,
+        "missing_as_violation": 0,
+        "nodi_c_as_violation": 0,
+        "gold_by_state": {
+          "ESTABLISHED_MONITORING_NOT_REQUIRED": 36,
+          "OBSERVATION_PRESENT": 638,
+          "ESTABLISHED_NO_DISCHARGE": 150
+        }
+      },
+      "programming": {
+        "ok": false,
+        "n_analyses_ok": 0,
+        "user_tables": [
+          "facility",
+          "permit_feature",
+          "parameter",
+          "monitoring_period",
+          "permit_limit_extract_row",
+          "limit_value_attributes",
+          "limit_source_flags",
+          "limit_season_month_active",
+          "conditional_trigger_language",
+          "dmr_measurement_extract_row",
+          "dmr_reported_value_kind",
+          "special_study_or_event_reference",
+          "source_permit_document",
+          "dmr_limit_correspondence",
+          "limit_effective_during_period",
+          "fy2025_in_scope_measurement",
+          "monitoring_requirement_candidate",
+          "expected_monitoring_without_dmr_row",
+          "measurement_limit_evaluation_pair",
+          "discharge_occurrence_evidence",
+          "permit_no_discharge_statement",
+          "conditional_monitoring_relief_evidence",
+          "documented_nodata_reason"
+        ],
+        "bindings_sample": {
+          "facility": [
+            [
+              "facility",
+              "facility"
+            ],
+            [
+              "permit_feature",
+              "facility"
+            ],
+            [
+              "monitoring_period",
+              "facility"
+            ],
+            [
+              "permit_limit_extract_row",
+              "facility"
+            ]
+          ],
+          "discharge_point": [
+            [
+              "permit_feature",
+              "feature"
+            ],
+            [
+              "permit_limit_extract_row",
+              "feature"
+            ],
+            [
+              "dmr_measurement_extract_row",
+              "feature"
+            ],
+            [
+              "monitoring_requirement_candidate",
+              "feature"
+            ]
+          ],
+          "parameter": [
+            [
+              "parameter",
+              "parameter"
+            ],
+            [
+              "permit_limit_extract_row",
+              "parameter"
+            ],
+            [
+              "dmr_measurement_extract_row",
+              "parameter"
+            ],
+            [
+              "monitoring_requirement_candidate",
+              "parameter"
+            ]
+          ],
+          "monitoring_period": [
+            [
+              "monitoring_period",
+              "period"
+            ],
+            [
+              "dmr_measurement_extract_row",
+              "period"
+            ],
+            [
+              "limit_effective_during_period",
+              "period"
+            ],
+            [
+              "discharge_occurrence_evidence",
+              "period"
+            ]
+          ],
+          "limit_record_exists_in_permit_limit_extract": [
+            [
+              "permit_limit_extract_row",
+              "limit_row"
+            ],
+            [
+              "limit_value_attributes",
+              "limit_row"
+            ],
+            [
+              "limit_source_flags",
+              "limit_row"
+            ],
+            [
+              "limit_season_month_active",
+              "limit_row"
+            ]
+          ],
+          "limit_has_numeric_value_and_unit": [
+            [
+              "limit_value_attributes",
+              "has_numeric_value"
+            ]
+          ],
+          "limit_type_category_flags_from_source_e_g_enforceable_vs_optional_monitoring": [
+            [
+              "limit_source_flags",
+              "limit_type_code"
+            ],
+            [
+              "limit_source_flags",
+              "optional_monitoring_flag"
+            ]
+          ],
+          "monitoring_requirement_text_schedule_exists_in_permit_or_limit_extract": [
+            [
+              "limit_source_flags",
+              "limit_freq_of_analysis_code"
+            ],
+            [
+              "monitoring_requirement_candidate",
+              "requirement"
+            ],
+            [
+              "conditional_monitoring_relief_evidence",
+              "requirement"
+            ],
+            [
+              "expected_monitoring_without_dmr_row",
+              "requirement"
+            ]
+          ],
+          "seasonal_month_flags_or_permit_year_boundaries": [
+            [
+              "limit_season_month_active",
+              "active_in_month"
+            ]
+          ],
+          "conditional_trigger_language_present": [
+            [
+              "conditional_trigger_language",
+              "trigger_text"
+            ],
+            [
+              "monitoring_obligation_applicability",
+              "condition_basis"
+            ]
+          ],
+          "measurement_record_exists_in_dmr_extract": [
+            [
+              "dmr_measurement_extract_row",
+              "measurement"
+            ],
+            [
+              "dmr_reported_value_kind",
+              "measurement"
+            ],
+            [
+              "dmr_limit_correspondence",
+              "measurement"
+            ],
+            [
+              "fy2025_in_scope_measurement",
+              "measurement"
+            ]
+          ],
+          "measurement_has_numeric_reported_value_vs_qualifier_only_vs_nodi": [
+            [
+              "dmr_reported_value_kind",
+              "value_kind"
+            ]
+          ]
+        },
+        "analyses": {
+          "exceedance": {
+            "sql_ok": false,
+            "reason": "missing_join_columns",
+            "measure_cols": [
+              "_assertion_id",
+              "dmr_event_id",
+              "facility_id",
+              "feature_id",
+              "limit_value_id",
+              "measurement_id",
+              "monitoring_period_end_date",
+              "parameter_id",
+              "period_id"
+            ],
+            "limit_cols": [
+              "_assertion_id",
+              "facility_id",
+              "feature_id",
+              "limit_begin_date",
+              "limit_end_date",
+              "limit_id",
+              "limit_row_id",
+              "limit_set_id",
+              "limit_value_id",
+              "parameter_id"
+            ]
+          },
+          "evidence_state": {
+            "sql_ok": false,
+            "reason": "no_nodi_column",
+            "cols": [
+              "_assertion_id",
+              "dmr_event_id",
+              "facility_id",
+              "feature_id",
+              "limit_value_id",
+              "measurement_id",
+              "monitoring_period_end_date",
+              "parameter_id",
+              "period_id"
+            ]
+          },
+          "follow_up": {
+            "sql_ok": false
+          }
+        },
+        "programmer_recovered_source_semantics": [
+          "need_column_map_for_numeric_limit_join",
+          "nodi_not_in_world_schema"
+        ]
+      }
+    },
+    "T5": {
+      "trial": 5,
+      "isolation": {
+        "leaks": [],
+        "timeouts": [],
+        "models": [
+          "composer-2.5"
+        ],
+        "reported_models": [
+          "Composer 2.5"
+        ],
+        "all_returncode_zero": true,
+        "p8_source_path_mentions": []
+      },
+      "vocabulary": {
+        "n_relations": 19,
+        "by_admission": {
+          "WORLD": [
+            "facility_registry",
+            "discharge_point_registry",
+            "parameter_registry",
+            "monitoring_period_registry",
+            "limit_set_record",
+            "permit_limit_assertion",
+            "dmr_measurement_assertion",
+            "limit_period_overlaps_monitoring_period",
+            "measurement_limit_structural_candidate",
+            "fy2025_in_scope_measurement",
+            "fy2025_monitoring_requirement",
+            "measurement_has_numeric_result",
+            "monitoring_expectation_without_numeric_result",
+            "evidenced_operational_context"
+          ],
+          "PURPOSE": [
+            "limit_applicability_judgment",
+            "numeric_comparison_regime_judgment",
+            "exceedance_judgment",
+            "monitoring_requirement_applicability_judgment",
+            "missing_evidence_semantic_judgment"
+          ]
+        },
+        "by_class": {
+          "MECHANICAL": [
+            "facility_registry",
+            "discharge_point_registry",
+            "parameter_registry",
+            "monitoring_period_registry",
+            "limit_set_record",
+            "permit_limit_assertion",
+            "dmr_measurement_assertion"
+          ],
+          "DERIVED": [
+            "limit_period_overlaps_monitoring_period",
+            "measurement_limit_structural_candidate",
+            "fy2025_in_scope_measurement",
+            "fy2025_monitoring_requirement",
+            "measurement_has_numeric_result",
+            "monitoring_expectation_without_numeric_result"
+          ],
+          "SEMANTIC": [
+            "evidenced_operational_context",
+            "limit_applicability_judgment",
+            "numeric_comparison_regime_judgment",
+            "exceedance_judgment",
+            "monitoring_requirement_applicability_judgment",
+            "missing_evidence_semantic_judgment"
+          ]
+        },
+        "relations": [
+          {
+            "name": "facility_registry",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "A permitted facility identified by NPDES permit number and evidenced name.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "discharge_point_registry",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "A permit discharge feature (outfall or monitoring location) tied to a facility permit.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "parameter_registry",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "A monitored parameter identified by EPA parameter code and description.",
+            "classification": "CROSS_DOMAIN_STRUCTURAL_ANALOGUE"
+          },
+          {
+            "name": "monitoring_period_registry",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "A DMR monitoring period end date for a facility as recorded in discharge monitoring evidence.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "limit_set_record",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "A permit limit-set bundle naming a monitoring schedule and any verbatim conditional comment from the limit record.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "permit_limit_assertion",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "A permit-recorded numeric limit value with units, statistical basis, enforceability flags, and effective dates.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "dmr_measurement_assertion",
+            "admission": "WORLD",
+            "construction_class": "MECHANICAL",
+            "meaning": "A reported DMR measurement row including value, units, qualifiers, and NODI code as recorded.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "limit_period_overlaps_monitoring_period",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "meaning": "Mechanical calendar overlap between a limit effective period and a monitoring period end date.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "measurement_limit_structural_candidate",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "meaning": "Mechanically supportable correspondence between a DMR measurement and a candidate permit limit sharing permit, outfall, parameter, limit linkage, and temporal overlap.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "fy2025_in_scope_measurement",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "meaning": "DMR measurements whose monitoring period end date falls in Federal FY2025 (2024-10-01 through 2025-09-30 inclusive).",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "fy2025_monitoring_requirement",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "meaning": "Limit-set monitoring requirements with permit limit effective dates intersecting Federal FY2025.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "measurement_has_numeric_result",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "meaning": "Measurements with an ordinary numeric reported value suitable as input to numeric comparison mechanics.",
+            "classification": "CROSS_DOMAIN_STRUCTURAL_ANALOGUE"
+          },
+          {
+            "name": "monitoring_expectation_without_numeric_result",
+            "admission": "WORLD",
+            "construction_class": "DERIVED",
+            "meaning": "FY2025 monitoring slots or DMR rows lacking an ordinary numeric reported result but evidenced by schedule structure or non-numeric DMR reporting.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "evidenced_operational_context",
+            "admission": "WORLD",
+            "construction_class": "SEMANTIC",
+            "meaning": "Positive operational or discharge-occurrence facts evidenced in DMR NODI codes, permit text, or operational records for a bounded period.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "limit_applicability_judgment",
+            "admission": "PURPOSE",
+            "construction_class": "SEMANTIC",
+            "meaning": "Purpose A judgment selecting the enforceable numeric limit applicable to a reported measurement context or recording why applicability cannot be established.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "numeric_comparison_regime_judgment",
+            "admission": "PURPOSE",
+            "construction_class": "SEMANTIC",
+            "meaning": "Purpose A classification of whether a measurement/limit pair is subject to enforceable numeric compliance comparison, report-only monitoring, or non-comparable reporting.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "exceedance_judgment",
+            "admission": "PURPOSE",
+            "construction_class": "SEMANTIC",
+            "meaning": "Purpose A determination whether a reported measurement exceeds an established applicable enforceable numeric limit.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "monitoring_requirement_applicability_judgment",
+            "admission": "PURPOSE",
+            "construction_class": "SEMANTIC",
+            "meaning": "Purpose B judgment whether a monitoring requirement was required, not required, or conditionally resolved for Federal FY2025.",
+            "classification": "DOMAIN_SPECIFIC"
+          },
+          {
+            "name": "missing_evidence_semantic_judgment",
+            "admission": "PURPOSE",
+            "construction_class": "SEMANTIC",
+            "meaning": "Purpose C classification of what evidence establishes for a no-result or non-numeric monitoring episode in FY2025.",
+            "classification": "DOMAIN_SPECIFIC"
+          }
+        ],
+        "limitations": [
+          "00_intention_contract.json does not declare an explicit consumer_fields block; semantic_identity bindings are derived from row_expectations and universe_scope granularity for purposes A, B, and C.",
+          "Permit PDF prose beyond structured CSV fields is not fully enumerated in sources/; evidenced_operational_context and conditional requirement evaluation may be incomplete until permit extraction passes run.",
+          "Closed-world negatives (e.g., established absence of a limit) are not modeled as World relations per kernel constraints."
+        ]
+      },
+      "world": {
+        "world_path": "/home/kerem/Desktop/Personal Projects/generalauthor/research/semantic_integration/domains/npdes/constructor_v3_1_1_untouched/trials/T5/passes/p8/workspace_snapshot/06_world/world.sqlite",
+        "hash": "sha256:ac3d6248e28f52d446db419690f01a4302443fab4f46b9d572e0e1ab4d4a07bd",
+        "stats": {
+          "assertions": 4506,
+          "relations": 14,
+          "by_origin": {
+            "ASSERTED": 996,
+            "DERIVED": 3510
+          },
+          "groundings": 5784
+        },
+        "tables": {
+          "_tv_view": 1,
+          "_tv_referents": 1182,
+          "_tv_relations": 14,
+          "_tv_roles": 70,
+          "_tv_assertions": 4506,
+          "_tv_groundings": 5784,
+          "_tv_derivations": 6,
+          "_tv_derivation_inputs": 13,
+          "_tv_derivation_run_inputs": 14,
+          "_tv_completeness": 6,
+          "facility_registry": 3,
+          "discharge_point_registry": 4,
+          "parameter_registry": 33,
+          "monitoring_period_registry": 36,
+          "limit_set_record": 6,
+          "permit_limit_assertion": 90,
+          "dmr_measurement_assertion": 824,
+          "limit_period_overlaps_monitoring_period": 1032,
+          "measurement_limit_structural_candidate": 824,
+          "fy2025_in_scope_measurement": 824,
+          "fy2025_monitoring_requirement": 6,
+          "measurement_has_numeric_result": 638,
+          "monitoring_expectation_without_numeric_result": 186,
+          "evidenced_operational_context": 0
+        },
+        "columns": {
+          "facility_registry": [
+            "_assertion_id",
+            "facility_id",
+            "permit_number",
+            "facility_name"
+          ],
+          "discharge_point_registry": [
+            "_assertion_id",
+            "discharge_point_id",
+            "facility_id",
+            "feature_number",
+            "feature_type_code"
+          ],
+          "parameter_registry": [
+            "_assertion_id",
+            "parameter_id",
+            "parameter_code",
+            "parameter_desc"
+          ],
+          "monitoring_period_registry": [
+            "_assertion_id",
+            "monitoring_period_id",
+            "facility_id",
+            "period_end_date"
+          ],
+          "limit_set_record": [
+            "_assertion_id",
+            "monitoring_requirement_id",
+            "facility_id",
+            "discharge_point_id",
+            "limit_set_id",
+            "designator",
+            "limit_set_name",
+            "schedule_id",
+            "status_flag",
+            "conditional_comment"
+          ],
+          "permit_limit_assertion": [
+            "_assertion_id",
+            "limit_value_id",
+            "facility_id",
+            "discharge_point_id",
+            "parameter_id",
+            "monitoring_requirement_id",
+            "limit_id",
+            "limit_value_nmbr",
+            "limit_unit_code",
+            "statistical_base_code",
+            "limit_value_qualifier",
+            "limit_type_code",
+            "optional_monitoring_flag",
+            "limit_begin_date",
+            "limit_end_date",
+            "frequency_code"
+          ],
+          "dmr_measurement_assertion": [
+            "_assertion_id",
+            "measurement_id",
+            "facility_id",
+            "discharge_point_id",
+            "parameter_id",
+            "monitoring_period_id",
+            "limit_value_id",
+            "dmr_event_id",
+            "reported_value_nmbr",
+            "reported_unit_code",
+            "value_qualifier",
+            "nodi_code",
+            "value_received_date"
+          ],
+          "limit_period_overlaps_monitoring_period": [
+            "_assertion_id",
+            "limit_value_id",
+            "monitoring_period_id",
+            "overlap_start",
+            "overlap_end"
+          ],
+          "measurement_limit_structural_candidate": [
+            "_assertion_id",
+            "measurement_id",
+            "limit_value_id"
+          ],
+          "fy2025_in_scope_measurement": [
+            "_assertion_id",
+            "measurement_id"
+          ],
+          "fy2025_monitoring_requirement": [
+            "_assertion_id",
+            "monitoring_requirement_id"
+          ],
+          "measurement_has_numeric_result": [
+            "_assertion_id",
+            "measurement_id"
+          ],
+          "monitoring_expectation_without_numeric_result": [
+            "_assertion_id",
+            "monitoring_expectation_id",
+            "facility_id",
+            "discharge_point_id",
+            "parameter_id",
+            "monitoring_period_id",
+            "measurement_id"
+          ],
+          "evidenced_operational_context": [
+            "_assertion_id",
+            "facility_id",
+            "discharge_point_id",
+            "context_period_start",
+            "context_period_end",
+            "context_kind",
+            "evidence_summary"
+          ]
+        },
+        "mechanical_report": {
+          "referents": 1182,
+          "base_tuples": 996,
+          "candidate_tuples": 824,
+          "notes": [
+            "permit_limit_assertion: omitted 1 TEXT role(s) that would duplicate TaskView REFERENT physical columns.",
+            "15 permit_limits.csv rows share LIMIT_VALUE_ID with an identical semantic tuple; collapsed to one assertion with multi-row grounding.",
+            "57 permit_limit_assertion rows lacked LIMIT_VALUE_NMBR; stored sentinel -9.999999e+99 because TaskView REAL columns are NOT NULL.",
+            "186 dmr_measurement_assertion rows lacked DMR_VALUE_NMBR; stored sentinel -9.999999e+99 because TaskView REAL columns are NOT NULL.",
+            "evidenced_operational_context not compiled in P2 (SEMANTIC construction_class).",
+            "Purpose relations (limit_applicability_judgment, numeric_comparison_regime_judgment, exceedance_judgment, monitoring_requirement_applicability_judgment, missing_evidence_semantic_judgment) not compiled in P2.",
+            "monitoring_expectation_without_numeric_result is INCOMPLETE: schedule-implied slots from permit schedules were not mechanically extracted in this pass.",
+            "Permit PDF prose not compiled; only structured CSV extracts and source_manifest facilities."
+          ],
+          "compile_stats": null,
+          "relations": null
+        },
+        "admission_persisted": [],
+        "admission_limitations": [
+          "00_intention_contract.json does not declare an explicit consumer_fields block; semantic_identity bindings are derived from row_expectations and universe_scope granularity for purposes A, B, and C.",
+          "Permit PDF prose beyond structured CSV fields is not fully enumerated in sources/; evidenced_operational_context and conditional requirement evaluation may be incomplete until permit extraction passes run.",
+          "Closed-world negatives (e.g., established absence of a limit) are not modeled as World relations per kernel constraints.",
+          "No evidenced_operational_context tuples were persisted: all 28 adjudicated obligations were UNRESOLVED and lacked positive operational evidence required for ACCEPT World assertions.",
+          "Purpose adjudications (2506 obligations across five PURPOSE relations) were not promoted into 06_world/world.sqlite per admission policy."
+        ],
+        "provenance": {
+          "ok": true,
+          "ungrounded_count": 0,
+          "reason": null
+        },
+        "origins_sidecar_present": false
+      },
+      "fractions": {
+        "assertions_total": 4506,
+        "origin_asserted": 996,
+        "origin_derived": 3510,
+        "persisted_mechanical": 0,
+        "persisted_semantic": 0,
+        "persisted_derived": 0,
+        "mechanical_fraction_of_persisted_base": null,
+        "semantic_fraction_of_persisted_base": null,
+        "mechanical_fraction_of_all_persisted": null
+      },
+      "frontier": {
+        "n_obligations": 2506,
+        "required_clauses": 12,
+        "hits": [
+          {
+            "id": "S-FARM-CN-SCHEDULE",
+            "concept": "compliance schedule then final numeric limit",
+            "found": true
+          },
+          {
+            "id": "S-FARM-TRC-CONDITIONAL",
+            "concept": "conditional monitoring / event-dependent TRC",
+            "found": true
+          },
+          {
+            "id": "S-FARM-REPORT-ONLY",
+            "concept": "report-only monitoring vs enforceable numeric limit",
+            "found": true
+          },
+          {
+            "id": "S-AZTEC-WHEN-DISCHARGING",
+            "concept": "when-discharging / intermittent-flow monitoring obligation",
+            "found": true
+          },
+          {
+            "id": "S-AZTEC-REPORT-ONLY",
+            "concept": "report-only vs numeric",
+            "found": true
+          },
+          {
+            "id": "S-AZTEC-WET-SEASONAL",
+            "concept": "seasonal / special-study / once-per-term monitoring",
+            "found": true
+          },
+          {
+            "id": "S-AZTEC-DELTA-BHC",
+            "concept": "special study / compliance schedule",
+            "found": true
+          },
+          {
+            "id": "S-GCC-EVENT-DISCHARGE",
+            "concept": "event-dependent / conditional authorization",
+            "found": true
+          },
+          {
+            "id": "S-GCC-REPORT-ONLY",
+            "concept": "report-only vs numeric",
+            "found": true
+          }
+        ],
+        "misses": [
+          {
+            "id": "S-FARM-TDS-STAGE",
+            "concept": "time-staged numeric limits",
+            "found": false
+          },
+          {
+            "id": "S-GCC-WET-FIRST-DISCHARGE",
+            "concept": "event-triggered special monitoring",
+            "found": false
+          },
+          {
+            "id": "S-SOURCE-AUTHORITY",
+            "concept": "operative permit condition vs supporting rationale",
+            "found": false
+          }
+        ],
+        "recall": 0.75,
+        "obligation_relations": {
+          "limit_applicability_judgment": 824,
+          "numeric_comparison_regime_judgment": 824,
+          "exceedance_judgment": 638,
+          "monitoring_requirement_applicability_judgment": 6,
+          "evidenced_operational_context": 28,
+          "missing_evidence_semantic_judgment": 186
+        },
+        "duplicate_ids": 0
+      },
+      "p5": {
+        "n_dispositions": 2506,
+        "dispositions": {
+          "ACCEPT": 1534,
+          "UNRESOLVED": 720,
+          "REJECT": 252
+        },
+        "n_audit": 720,
+        "final_dispositions": {
+          "UNRESOLVED": 720
+        },
+        "negative_closure": {
+          "none": 720
+        }
+      },
+      "abi": {
+        "ok": false,
+        "n_required": 16,
+        "n_satisfied": 10,
+        "n_unsatisfied": 6,
+        "n_ambiguous": 0,
+        "unsatisfied": [
+          "applicability_outcome",
+          "applicability_period",
+          "applicable_limit",
+          "comparison_regime",
+          "exceedance_outcome",
+          "missing_evidence_state"
+        ],
+        "ambiguous": [],
+        "unsatisfied_reasons": {
+          "applicability_outcome": "NOT_MATERIALIZABLE",
+          "applicability_period": "NOT_MATERIALIZABLE",
+          "applicable_limit": "NOT_MATERIALIZABLE",
+          "comparison_regime": "NOT_MATERIALIZABLE",
+          "exceedance_outcome": "NOT_MATERIALIZABLE",
+          "missing_evidence_state": "NOT_MATERIALIZABLE"
+        },
+        "invariant_violations": [],
+        "incomplete_purpose_marked": false
+      },
+      "source_authority": {
+        "mentions_fact_sheet": false,
+        "mentions_statement_of_basis": false,
+        "mentions_operative_or_authority": false,
+        "mentions_permit_part": true
+      },
+      "purpose_a": {
+        "n_rows": 682,
+        "n_unresolved": 142,
+        "scoreable_covered": 272,
+        "n_scoreable": 334,
+        "compared": 251,
+        "exact": 246,
+        "exact_rate": 0.9800796812749004,
+        "false_exceedance": 1,
+        "miss_exceedance": 4,
+        "report_only_as_exceedance": 0,
+        "examples": [],
+        "has_incomplete_purpose": false
+      },
+      "purpose_b": {
+        "n_rows": 0,
+        "n_unresolved": 6,
+        "concept_mentions": {
+          "when_discharging": true,
+          "report_only": true,
+          "seasonal_or_wet": false,
+          "special_study": true,
+          "conditional": true,
+          "staged_time": true
+        },
+        "n_concepts_present": 5
+      },
+      "purpose_c": {
+        "n_rows": 0,
+        "n_unresolved": 186,
+        "matched_keys": 186,
+        "exact_state": 0,
+        "nodi_c_established": 0,
+        "nodi_9_established": 0,
+        "missing_as_violation": 0,
+        "nodi_c_as_violation": 0,
+        "gold_by_state": {
+          "ESTABLISHED_MONITORING_NOT_REQUIRED": 36,
+          "OBSERVATION_PRESENT": 638,
+          "ESTABLISHED_NO_DISCHARGE": 150
+        }
+      },
+      "programming": {
+        "ok": false,
+        "n_analyses_ok": 1,
+        "user_tables": [
+          "facility_registry",
+          "discharge_point_registry",
+          "parameter_registry",
+          "monitoring_period_registry",
+          "limit_set_record",
+          "permit_limit_assertion",
+          "dmr_measurement_assertion",
+          "limit_period_overlaps_monitoring_period",
+          "measurement_limit_structural_candidate",
+          "fy2025_in_scope_measurement",
+          "fy2025_monitoring_requirement",
+          "measurement_has_numeric_result",
+          "monitoring_expectation_without_numeric_result",
+          "evidenced_operational_context"
+        ],
+        "bindings_sample": {
+          "facility": [
+            [
+              "facility_registry",
+              "facility"
+            ],
+            [
+              "discharge_point_registry",
+              "facility"
+            ],
+            [
+              "monitoring_period_registry",
+              "facility"
+            ],
+            [
+              "limit_set_record",
+              "facility"
+            ]
+          ],
+          "discharge_point": [
+            [
+              "discharge_point_registry",
+              "discharge_point"
+            ],
+            [
+              "limit_set_record",
+              "discharge_point"
+            ],
+            [
+              "permit_limit_assertion",
+              "discharge_point"
+            ],
+            [
+              "dmr_measurement_assertion",
+              "discharge_point"
+            ]
+          ],
+          "parameter": [
+            [
+              "parameter_registry",
+              "parameter"
+            ],
+            [
+              "permit_limit_assertion",
+              "parameter"
+            ],
+            [
+              "dmr_measurement_assertion",
+              "parameter"
+            ],
+            [
+              "monitoring_expectation_without_numeric_result",
+              "parameter"
+            ]
+          ],
+          "monitoring_period": [
+            [
+              "monitoring_period_registry",
+              "monitoring_period"
+            ],
+            [
+              "dmr_measurement_assertion",
+              "monitoring_period"
+            ],
+            [
+              "limit_period_overlaps_monitoring_period",
+              "monitoring_period"
+            ],
+            [
+              "monitoring_expectation_without_numeric_result",
+              "monitoring_period"
+            ]
+          ],
+          "monitoring_requirement": [
+            [
+              "limit_set_record",
+              "monitoring_requirement"
+            ],
+            [
+              "permit_limit_assertion",
+              "monitoring_requirement"
+            ],
+            [
+              "fy2025_monitoring_requirement",
+              "monitoring_requirement"
+            ],
+            [
+              "monitoring_requirement_applicability_judgment",
+              "monitoring_requirement"
+            ]
+          ],
+          "triggering_conditions": [
+            [
+              "limit_set_record",
+              "conditional_comment"
+            ],
+            [
+              "monitoring_requirement_applicability_judgment",
+              "triggering_conditions"
+            ]
+          ],
+          "limit_value": [
+            [
+              "permit_limit_assertion",
+              "limit_value"
+            ],
+            [
+              "dmr_measurement_assertion",
+              "limit_value"
+            ],
+            [
+              "limit_period_overlaps_monitoring_period",
+              "limit_value"
+            ],
+            [
+              "measurement_limit_structural_candidate",
+              "limit_value"
+            ]
+          ],
+          "measurement": [
+            [
+              "dmr_measurement_assertion",
+              "measurement"
+            ],
+            [
+              "measurement_limit_structural_candidate",
+              "measurement"
+            ],
+            [
+              "fy2025_in_scope_measurement",
+              "measurement"
+            ],
+            [
+              "measurement_has_numeric_result",
+              "measurement"
+            ]
+          ],
+          "nodi_code": [
+            [
+              "dmr_measurement_assertion",
+              "nodi_code"
+            ]
+          ],
+          "monitoring_expectation": [
+            [
+              "monitoring_expectation_without_numeric_result",
+              "monitoring_expectation"
+            ],
+            [
+              "missing_evidence_semantic_judgment",
+              "monitoring_expectation"
+            ]
+          ],
+          "applicability_period": [
+            [
+              "evidenced_operational_context",
+              "context_period_start"
+            ],
+            [
+              "monitoring_requirement_applicability_judgment",
+              "applicability_period"
+            ]
+          ],
+          "applicable_limit": [
+            [
+              "limit_applicability_judgment",
+              "applicable_limit"
+            ],
+            [
+              "exceedance_judgment",
+              "applicable_limit"
+            ]
+          ]
+        },
+        "analyses": {
+          "exceedance": {
+            "sql_ok": false,
+            "reason": "missing_join_columns",
+            "measure_cols": [
+              "_assertion_id",
+              "discharge_point_id",
+              "dmr_event_id",
+              "facility_id",
+              "limit_value_id",
+              "measurement_id",
+              "monitoring_period_id",
+              "nodi_code",
+              "parameter_id",
+              "reported_unit_code",
+              "reported_value_nmbr",
+              "value_qualifier",
+              "value_received_date"
+            ],
+            "limit_cols": [
+              "_assertion_id",
+              "discharge_point_id",
+              "facility_id",
+              "frequency_code",
+              "limit_begin_date",
+              "limit_end_date",
+              "limit_id",
+              "limit_type_code",
+              "limit_unit_code",
+              "limit_value_id",
+              "limit_value_nmbr",
+              "limit_value_qualifier",
+              "monitoring_requirement_id",
+              "optional_monitoring_flag",
+              "parameter_id",
+              "statistical_base_code"
+            ]
+          },
+          "evidence_state": {
+            "sql_ok": true,
+            "nodi_counts": {
+              "": 638,
+              "9": 36,
+              "C": 150
+            },
+            "has_value_column": false
+          },
+          "follow_up": {
+            "sql_ok": false
+          }
+        },
+        "programmer_recovered_source_semantics": [
+          "need_column_map_for_numeric_limit_join",
+          "NODI_CODE_STORED_WITHOUT_CANONICAL_STATE_RELATION"
+        ]
+      }
+    }
+  },
+  "manifest": {
+    "frozen_at": "2026-09-03T19:00:24.818662+00:00",
+    "note": "Frozen before constructor inference. No tuning after this point.",
+    "hashes": {
+      "participant_sources": "b022722197b1f1cc715b6dca50c7de8d729fa1bdad62c5449fc20920c0c00836",
+      "evaluator_only": "9ae3b7a14ebdd4c4ba70992780945429dc0f1479fc86a8a964e92984609a13aa",
+      "column_keep_remove": "5da7f6d17072fe74871ae338bb07fbac8ff88a648b470955fcc0c8abf8ae9d64",
+      "facility_selection": "5698b8e3da99339226a7ead3750c6a27057b6a85799778487117a47382e93b6b",
+      "suitability": "cbf541fd0420e881629ca00040eb2f57fee677df4fc9a06427803f8e36f34a3b",
+      "source_manifest": "8a08c2aa5f3b2d48204eac4a3dc09b8ebb3199474145fcf182766773f8da5feb",
+      "purpose_a": "a86f654e44d50f0405e87b5e50923690390cd8aa3e8e1452e893b21f4c97fe66",
+      "purpose_b": "a3c47bcb20c2148c9717799df16fd6d56c0ad95718fa2f1d2c7560e196520d47",
+      "purpose_c": "b78113a090d1c1ce0fa0d1d5eec1932aa7c8220d5aaa431b4070ef20823f4c55",
+      "purpose_d_evaluator_only": "fe9a8af64c284f556a6213f5bbb50e019f14fb756b61d26d60277537f45d6190",
+      "gold_m": "481b0224b697b2f0b2d2850006179869469db3af0e8d2655b22609df4a6b7b35",
+      "gold_s": "f092dc30aacdb09da5fded1489ef76f18281a3b04b8decffe98ea99b7416b595",
+      "gold_e": "868a863d6880590918167aca0b75d17cbd7e4587d20ef173f370d42bbe63e823",
+      "constructor_v3_1_1_runtime": "8d6e4358640a9d19309477d25f3eb4ca82718e4bc9d3ba47f8c5a3494f092444",
+      "npdes_campaign_prompts": "1d1d990ccfcb3dd11f12f3e1afd02108fc3b7e9209d4dea7dde4dcf075965e4a",
+      "npdes_campaign": "7d101bfa9fcfd8f25f296496cde6de553e72eff0883a84aced56c3474cca1d52",
+      "kernel_assets": "691893dd508f32ce8168677b144eec1825b4b63c6ac139078235d0b2f7be047e",
+      "taskview": "7503c6ce7b56a56fb0e639468fdea409116524989d885331c91206bcdea67c2f"
+    },
+    "model": {
+      "requested": "composer-2.5",
+      "adapter": "cursor-agent-bwrap-isolated-constructor-v3-1-1-npdes"
+    },
+    "scope": {
+      "domain": "EPA NPDES individual permit compliance",
+      "jurisdiction": "New Mexico",
+      "period": "Federal FY2025 2024-10-01 through 2025-09-30 inclusive",
+      "facilities": [
+        "NM0020583",
+        "NM0028762",
+        "NM0000116"
+      ],
+      "substitution": false
+    }
+  }
+}

@@ -27,6 +27,7 @@ import {
 import { DEFAULT_MOTION_PLANS } from "../styles/motion";
 import { SelectionAnts, type AntTarget } from "../styles/SelectionAnts";
 import { furnitureOf, isDecoration, MARK_DEFAULTS, paintOf } from "./marks";
+import { ensureWorldFilamentRegistered } from "./filaments";
 import { observeHostSize } from "./canvasHost";
 import { transitionCanvasData, type CanvasDatum } from "./canvasMotion";
 import { useFocusPan, type CameraInsets } from "./canvasFocus";
@@ -162,6 +163,9 @@ export function SchemaCanvas({
   useEffect(() => {
     const host = hostRef.current;
     if (!host) return;
+    // The vocabulary draws the same marks the field does, and G6 resolves an
+    // edge's type as it builds it. Registration is global and idempotent.
+    ensureWorldFilamentRegistered();
     const graph = new Graph({
       container: host,
       data: data as never,

@@ -1,0 +1,99 @@
+{
+  "experiment_id": "npdes-spine-compiler-probe-v1",
+  "frozen_before_model_calls": true,
+  "primary_scoring_excludes": [
+    "PROSE_ORIGINATING",
+    "AMBIGUOUS"
+  ],
+  "n_gold_s": 12,
+  "n_primary": 7,
+  "seams": [
+    {
+      "gold_id": "S-FARM-TDS-STAGE",
+      "class": "STRUCTURE_TRIGGERABLE",
+      "mechanically_visible_pattern": "permit_limits.csv parameter 70295 (Solids, total dissolved) for NM0020583 Outfall 001 has adjacent LIMIT_BEGIN_DATE/LIMIT_END_DATE intervals (2021-12-01/2024-11-30 vs 2024-12-01/2026-11-30) carrying different numeric LIMIT_VALUE_NMBR (497 vs 449 mg/L; 27664 vs 24992 lb/d). FY2025 (2024-10-01/2025-09-30) straddles the partition.",
+      "purpose_dependency": "A requires one applicable numeric limit per measurement/period.",
+      "why_forced": "Same permit/outfall/parameter with two dated numeric regimes forces applicable-limit selection. No prose is required to see the insufficiency of a single untensed limit."
+    },
+    {
+      "gold_id": "S-FARM-CN-SCHEDULE",
+      "class": "PROSE_ORIGINATING",
+      "mechanically_visible_pattern": "Cyanide 00720 appears as one numeric limit interval 2021-12-01/2026-11-30 covering the whole permit term. No second dated cyanide regime and no 12-month delay field exist in the participant CSVs.",
+      "purpose_dependency": "A/B cyanide applicability in FY2025.",
+      "why_forced": "Structured rows already present a single final-looking numeric cyanide limit spanning FY2025. The compliance-schedule delay is permit-prose-only. A structural compiler is not forced to ask about a schedule."
+    },
+    {
+      "gold_id": "S-FARM-TRC-CONDITIONAL",
+      "class": "PROSE_ORIGINATING",
+      "mechanically_visible_pattern": "Chlorine total residual 50060 has LIMIT_VALUE_NMBR=19, OPTIONAL_MONITORING_FLAG=N, frequency 01/01. NODI_CODE 9 appears on some Farmington DMR rows, with no legend in the participant corpus.",
+      "purpose_dependency": "B/C conditional monitoring and missing-evidence.",
+      "why_forced": "Structure presents TRC as ordinary required numeric monitoring. The UV/chlorine-use condition is a permit footnote. NODI 9 is an uninterpreted code (generic), not the TRC-conditional seam itself."
+    },
+    {
+      "gold_id": "S-FARM-REPORT-ONLY",
+      "class": "STRUCTURE_TRIGGERABLE",
+      "mechanically_visible_pattern": "Many NM0020583 limit rows have empty LIMIT_VALUE_NMBR (Flow 50050, several toxics, WET codes, some 70295 statistic types) beside sibling rows with numeric limits and LIMIT_VALUE_QUALIFIER_CODE <= or >=.",
+      "purpose_dependency": "A explicitly distinguishes enforceable numeric comparison from report-only / not-applicable comparison.",
+      "why_forced": "Empty numeric limit beside a reported DMR value is a structural comparison insufficiency."
+    },
+    {
+      "gold_id": "S-AZTEC-WHEN-DISCHARGING",
+      "class": "STRUCTURE_TRIGGERABLE",
+      "mechanically_visible_pattern": "permit_limits.csv DMR_COMMENT_TEXT for NM0028762 is the literal 'WHEN DISCHARGING.' LIMIT_SET_NAME is DISCHARGE BACKWASH WATER.",
+      "purpose_dependency": "B monitoring applicability depending on discharge occurrence; C no-discharge vs missing evidence.",
+      "why_forced": "The condition is in a structured comment field, not PDF prose. Purpose B names discharge-occurrence dependence."
+    },
+    {
+      "gold_id": "S-AZTEC-REPORT-ONLY",
+      "class": "STRUCTURE_TRIGGERABLE",
+      "mechanically_visible_pattern": "NM0028762 Flow, Cyanide total recoverable 78248, and TDS 70295 have empty LIMIT_VALUE_NMBR; TSS and TRC/pH have numeric values.",
+      "purpose_dependency": "A report-only vs numeric comparison.",
+      "why_forced": "Empty vs numeric limit values on the same outfall are visible without prose."
+    },
+    {
+      "gold_id": "S-AZTEC-WET-SEASONAL",
+      "class": "PROSE_ORIGINATING",
+      "mechanically_visible_pattern": "No Aztec WET/seasonal/once-per-term limit rows appear in participant permit_limits.csv.",
+      "purpose_dependency": "B special-study / seasonal monitoring.",
+      "why_forced": "The springtime/irrigation-season once-per-term rule is permit footnote prose. Structure does not present a WET seasonal regime."
+    },
+    {
+      "gold_id": "S-AZTEC-DELTA-BHC",
+      "class": "PROSE_ORIGINATING",
+      "mechanically_visible_pattern": "No Delta-BHC / BHC parameter rows in participant CSVs.",
+      "purpose_dependency": "A/B special-study vs numeric discharge limit.",
+      "why_forced": "The special-study obligation exists only in permit prose. Absence of a parameter is not a positive structured insufficiency for that named study."
+    },
+    {
+      "gold_id": "S-GCC-EVENT-DISCHARGE",
+      "class": "STRUCTURE_TRIGGERABLE",
+      "mechanically_visible_pattern": "NM0000116 LIMIT_SET_NAME is DISCHARGE STORM RUNOFFS FROM STORAGE. DMR NODI_CODE C appears on 150 of 180 GCC rows; 30 rows have ordinary numeric DMR values.",
+      "purpose_dependency": "B event/conditional monitoring; C documented no-discharge vs missing evidence. Purpose C forbids treating missing data as compliance.",
+      "why_forced": "Event-named limit set plus a repeated uninterpreted NODI code with mixed numeric rows is a structural applicability gap. NODI legend is not in the corpus; the gap is still visible as uninterpreted code + event-named set."
+    },
+    {
+      "gold_id": "S-GCC-REPORT-ONLY",
+      "class": "STRUCTURE_TRIGGERABLE",
+      "mechanically_visible_pattern": "NM0000116 Flow, dissolved Cu, hardness daily max, TSS monthly average have empty LIMIT_VALUE_NMBR; TSS daily max is 50; pH and some metals have numbers.",
+      "purpose_dependency": "A mixed numeric vs report-only comparison.",
+      "why_forced": "Empty vs numeric cells on the same parameter family are structured."
+    },
+    {
+      "gold_id": "S-GCC-WET-FIRST-DISCHARGE",
+      "class": "PROSE_ORIGINATING",
+      "mechanically_visible_pattern": "No GCC WET first-discharge / once-per-5-years limit rows in participant CSVs.",
+      "purpose_dependency": "B event-triggered special monitoring.",
+      "why_forced": "The first-discharge WET rule is permit footnote prose."
+    },
+    {
+      "gold_id": "S-SOURCE-AUTHORITY",
+      "class": "SOURCE_METADATA_TRIGGERABLE",
+      "mechanically_visible_pattern": "source_manifest.json lists, per permit, final_permit.pdf plus statement_of_basis.pdf and/or fact_sheet.pdf and reasonable_potential.pdf, with document-type filenames but no document text.",
+      "purpose_dependency": "A enforceable numeric limits; grounding of operative conditions.",
+      "why_forced": "Multiple document types for the same permit, some named as permits and others as fact sheets/statements of basis, make source-precedence a mechanically visible question if purposes require uniquely grounded operative limits. It does not require reading prose. It does not appear in the CSVs themselves."
+    }
+  ],
+  "reused_from": "npdes-spine-compiler-probe-v1",
+  "reused_unchanged": true,
+  "this_experiment_id": "npdes-purpose-first-python-spine-v1"
+}

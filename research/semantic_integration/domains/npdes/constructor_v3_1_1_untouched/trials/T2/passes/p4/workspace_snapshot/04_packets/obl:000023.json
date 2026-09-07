@@ -1,0 +1,27 @@
+{
+  "obligation_id": "obl:000023",
+  "selected_observations": [
+    {
+      "source_path": "sources/structured/permit_limits.csv",
+      "location": "row 82; key=3610673276",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0020583; PERM_FEATURE_NMBR=001; PARAMETER_CODE=70295; PARAMETER_DESC=Solids, total dissolved; LIMIT_VALUE_ID=3610673276; LIMIT_UNIT_DESC=mg/L; STATISTICAL_BASE_CODE=DD; LIMIT_TYPE_CODE=ENF; OPTIONAL_MONITORING_FLAG=N; LIMIT_FREQ_OF_ANALYSIS_CODE=01/07; DMR_COMMENT_TEXT=TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.; LIMIT_SET_NAME=TREATED MUNICIPAL WASTEWATER; LIMIT_BEGIN_DATE=12/01/2021; LIMIT_END_DATE=11/30/2026"
+    },
+    {
+      "source_path": "02_mechanical_world/world.sqlite",
+      "location": "permit_limit_value_stated[limit_value:3610673276]",
+      "excerpt": "limit_value_number=-999999999.0; qualifier=; statistical_base=DD; limit_type_code=ENF; optional_monitoring=0; begin_date=2021-12-01; end_date=2026-11-30"
+    },
+    {
+      "source_path": "02_mechanical_world/world.sqlite",
+      "location": "limit_source_classification[limit_value:3610673276]",
+      "excerpt": "disposition=CANDIDATE; classification=(empty)"
+    }
+  ],
+  "selection_rationale": "Packet anchors limit_value limit_value:3610673276 to compiled permit_limits.csv metadata (LIMIT_TYPE_CODE, OPTIONAL_MONITORING_FLAG, numeric value presence, statistical basis) needed to judge enforceable-numeric classification before Purpose A applicability selection.",
+  "known_missing_information": [
+    "Permit PDF files referenced in sources/source_manifest.json are absent from workspace; permit_condition_language_stated and limit narrative grounding rely on CSV comments only.",
+    "P2 materialized C1 base relations only; C4 derivations (fy2025_in_scope_measurement, candidate_limit_for_measurement, fy2025_candidate_monitoring_requirement, monitoring_expectation_without_numeric_result) are not registered in world.sqlite.",
+    "Semantic classification (enforceable-numeric vs report-only vs non-numeric) is not yet ACCEPT-grounded.",
+    "Permit narrative text for ambiguous LIMIT_TYPE_CODE or OPTIONAL_MONITORING_FLAG interpretation is unavailable (PDFs absent)."
+  ]
+}

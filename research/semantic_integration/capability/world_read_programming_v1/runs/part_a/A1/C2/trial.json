@@ -1,0 +1,99 @@
+{
+  "part": "A",
+  "arm": "A1",
+  "trial": "C2",
+  "status": "ANSWERED",
+  "reported_model": "Composer 2.5",
+  "tools": {
+    "tool_calls_started": 16,
+    "shell_calls": 5,
+    "read_calls": 8,
+    "write_calls": 0,
+    "python_executions_guess": 5,
+    "mentioned_paths": [
+      "/tmp/world-experiment/world-read-programming-v1/40b43cd098692a53dd95879a61133eb1/CONTRACT.md",
+      "/tmp/world-experiment/world-read-programming-v1/40b43cd098692a53dd95879a61133eb1/CONSUMER.md",
+      "/tmp/world-experiment/world-read-programming-v1/40b43cd098692a53dd95879a61133eb1/PURPOSE.md",
+      "/tmp/world-experiment/world-read-programming-v1/40b43cd098692a53dd95879a61133eb1/QUESTIONS.md",
+      "/tmp/world-experiment/world-read-programming-v1/40b43cd098692a53dd95879a61133eb1/inspect_worlds.py",
+      "/tmp/world-experiment/world-read-programming-v1/40b43cd098692a53dd95879a61133eb1",
+      "inspect_worlds.py",
+      "/tmp/world-experiment/world-read-programming-v1/40b43cd098692a53dd95879a61133eb1",
+      "/",
+      "\"worlds/harbor_towing/world.sqlite\")",
+      "/",
+      "\"worlds/seed_grants/world.sqlite\")",
+      "/",
+      "\"worlds/makerspace_checkout/world.sqlite\")",
+      "/tmp/world-experiment/world-read-programming-v1/40b43cd098692a53dd95879a61133eb1",
+      "/",
+      "\"worlds/harbor_towing/world.sqlite\")",
+      "/",
+      "\"worlds/seed_grants/world.sqlite\")",
+      "/",
+      "\"worlds/makerspace_checkout/world.sqlite\")",
+      "/tmp/world-experiment/world-read-programming-v1/40b43cd098692a53dd95879a61133eb1/worlds/harbor_towing/world.purpose.json",
+      "/tmp/world-experiment/world-read-programming-v1/40b43cd098692a53dd95879a61133eb1/worlds/seed_grants/world.purpose.json",
+      "/tmp/world-experiment/world-read-programming-v1/40b43cd098692a53dd95879a61133eb1/worlds/makerspace_checkout/world.purpose.json",
+      "/tmp/world-experiment/world-read-programming-v1/40b43cd098692a53dd95879a61133eb1",
+      "/",
+      "f'worlds/{domain}/world.sqlite'",
+      "/",
+      "\"worlds/harbor_towing/world.sqlite\")",
+      "/",
+      "\"worlds/seed_grants/world.sqlite\")",
+      "/tmp/world-experiment/world-read-programming-v1/40b43cd098692a53dd95879a61133eb1",
+      "/tmp/world-experiment/world-read-programming-v1/40b43cd098692a53dd95879a61133eb1/answers.json",
+      "/tmp/world-experiment/world-read-programming-v1/40b43cd098692a53dd95879a61133eb1"
+    ]
+  },
+  "exploration": {
+    "reads": [
+      "/tmp/world-experiment/world-read-programming-v1/40b43cd098692a53dd95879a61133eb1/CONTRACT.md",
+      "/tmp/world-experiment/world-read-programming-v1/40b43cd098692a53dd95879a61133eb1/CONSUMER.md",
+      "/tmp/world-experiment/world-read-programming-v1/40b43cd098692a53dd95879a61133eb1/PURPOSE.md",
+      "/tmp/world-experiment/world-read-programming-v1/40b43cd098692a53dd95879a61133eb1/QUESTIONS.md",
+      "/tmp/world-experiment/world-read-programming-v1/40b43cd098692a53dd95879a61133eb1/inspect_worlds.py",
+      "/tmp/world-experiment/world-read-programming-v1/40b43cd098692a53dd95879a61133eb1/worlds/harbor_towing/world.purpose.json",
+      "/tmp/world-experiment/world-read-programming-v1/40b43cd098692a53dd95879a61133eb1/worlds/seed_grants/world.purpose.json",
+      "/tmp/world-experiment/world-read-programming-v1/40b43cd098692a53dd95879a61133eb1/worlds/makerspace_checkout/world.purpose.json"
+    ],
+    "writes": [],
+    "shells": [
+      "cd /tmp/world-experiment/world-read-programming-v1/40b43cd098692a53dd95879a61133eb1 && python3 inspect_worlds.py",
+      "cd /tmp/world-experiment/world-read-programming-v1/40b43cd098692a53dd95879a61133eb1 && python3 << 'PYEOF'\nimport json, sys\nfrom pathlib import Path\nROOT = Path('.').resolve()\nsys.path.insert(0, str(ROOT))\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\n\ndef q(world, sql):\n    return world.query_semantic(sql)\n\n# HARBOR TOWING\nprint(\"=== HARBOR TOWING ===\")\nw = ConstructionWorld.open(ROOT / \"worlds/harbor_towing/world.sqlite\")\ntry:\n    print(\"\\n-- tow_job (all) --\")\n  ",
+      "cd /tmp/world-experiment/world-read-programming-v1/40b43cd098692a53dd95879a61133eb1 && python3 << 'PYEOF'\nimport json, sys\nfrom pathlib import Path\nROOT = Path('.').resolve()\nsys.path.insert(0, str(ROOT))\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\n\ndef q(world, sql):\n    return world.query_semantic(sql)\n\n# HARBOR - J3 fuel surcharge\nprint(\"=== HARBOR J3 fuel ===\")\nw = ConstructionWorld.open(ROOT / \"worlds/harbor_towing/world.sqlite\")\ntry:\n    print(json.dumps(q(",
+      "cd /tmp/world-experiment/world-read-programming-v1/40b43cd098692a53dd95879a61133eb1 && python3 << 'PYEOF'\nimport json, sys, sqlite3\nfrom pathlib import Path\nROOT = Path('.').resolve()\nsys.path.insert(0, str(ROOT))\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\n\n# Direct sqlite for any tables not in semantic layer\nfor domain in ['harbor_towing', 'seed_grants', 'makerspace_checkout']:\n    db = ROOT / f'worlds/{domain}/world.sqlite'\n    conn = sqlite3.connect(db)\n    t",
+      "cd /tmp/world-experiment/world-read-programming-v1/40b43cd098692a53dd95879a61133eb1 && python3 -c \"\nimport json, re\nquestions = re.findall(r'## (\\S+)', open('QUESTIONS.md').read())\nanswers = json.load(open('answers.json'))['answers']\nanswered_ids = {a['id'] for a in answers}\nprint('Questions:', questions)\nprint('Answered:', sorted(answered_ids))\nmissing = set(questions) - answered_ids\nextra = answered_ids - set(questions)\nprint('Missing:', missing)\nprint('Extra:', extra)\nprint('Count:', len(answ"
+    ],
+    "n_reads": 8,
+    "n_writes": 0,
+    "n_shells": 5
+  },
+  "surface": {
+    "n_reads": 8,
+    "n_shells": 5,
+    "n_writes": 0,
+    "catalog_calls": 1,
+    "schema_inspections": 0,
+    "select_count": 0,
+    "join_count": 0,
+    "cte_count": 0,
+    "query_semantic_count": 2,
+    "inspect_world_calls": 1,
+    "raw_source_reads": [],
+    "n_sql_hint": 2
+  },
+  "initial_context": {
+    "initial_context_bytes": 3858,
+    "contract_bytes": 1176,
+    "questions_bytes": 1126,
+    "purpose_bytes": 708
+  },
+  "world_hashes": {
+    "harbor_towing": "e653bd02b174a30015f2c58685cc86627cb117c36065f0069717bbc926b9d129",
+    "seed_grants": "2ebec5507f8a5ca51e06dd33843035e7ab50a072f86abf51ad53be613be64473",
+    "makerspace_checkout": "79c8b5ad902d6e8015ef53e850a625de7428d103a3ce447cf219f846cb0019a5"
+  },
+  "finished_at": "2026-09-06T09:48:28.547642+00:00"
+}

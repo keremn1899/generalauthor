@@ -1,0 +1,81 @@
+{
+  "parent_id": "geometric_mean",
+  "parent_status": "REFINED",
+  "children": [
+    {
+      "child_id": "non_tds_limit_set_comment_carryover",
+      "exact_semantic_question": "When DMR_COMMENT_TEXT names TDS discharge reporting but PARAMETER_CODE is not 70295, does the geometric-mean comment alter limit-comparison semantics for individual monitoring-period values?",
+      "occurrence_partition_rule": "DMR_COMMENT_TEXT contains 'GEOMETRIC MEAN' (case-insensitive) AND PARAMETER_CODE != '70295'",
+      "affected_count": 24,
+      "semantic_contract": "Limit-set schedule comment propagation does not impose TDS-specific geometric-mean comparison semantics on non-TDS parameters; structured STATISTICAL_BASE_TYPE_CODE and ordinary numeric comparison fields govern.",
+      "evidence_grounding": [
+        "sources/permit_limits.csv rows with PARAMETER_CODE in {00310, 00530, 00400, 00720, 50050, 50060, 51040, 81010, 81011} sharing identical TDS-specific DMR_COMMENT_TEXT",
+        "sources/dmr_measurements.csv monthly BOD value paired with LIMIT_VALUE_ID=3610673282 using AVG base"
+      ],
+      "disposition": "SUPPORTED_NEGATIVE",
+      "admission_status": "ADMIT_DISPOSABLE",
+      "epistemic_basis": "SOURCE_ESTABLISHED",
+      "scope": "permit_limits rows in limit set 3600645646 schedule 3600891019 where comment trigger matches but parameter is not TDS"
+    },
+    {
+      "child_id": "tds_discharge_geometric_mean_reporting",
+      "exact_semantic_question": "For TDS discharge reporting rows (PARAMETER_CODE=70295, MONITORING_LOCATION_CODE=1), what aggregation must be reported instead of a raw single monitoring-period value?",
+      "occurrence_partition_rule": "DMR_COMMENT_TEXT contains 'GEOMETRIC MEAN' AND PARAMETER_CODE = '70295' AND MONITORING_LOCATION_CODE = '1'",
+      "affected_count": 4,
+      "semantic_contract": "TDS discharge limits are report-only on this schedule; permit footnote *6 requires reporting the geometric mean of weekly values measured at Outfall 001. Individual monthly DMR slots are not the authoritative single-sample comparison unit for this reporting obligation.",
+      "evidence_grounding": [
+        "documents/farmington/final_permit.txt footnote *6 and TDS Discharge (*6) table row marked Report",
+        "sources/permit_limits.csv LIMIT_VALUE_ID in {3610673285, 3610673286, 3610673287, 3610673288} with empty LIMIT_VALUE_NMBR"
+      ],
+      "disposition": "SUPPORTED_RESOLUTION",
+      "admission_status": "ADMIT_DISPOSABLE",
+      "epistemic_basis": "SOURCE_ESTABLISHED",
+      "scope": "TDS discharge reporting permit_limit rows for NM0020583 FY2025"
+    },
+    {
+      "child_id": "tds_net_increase_avg_enforcement",
+      "exact_semantic_question": "For TDS net-increase rows with numeric concentration limits (PARAMETER_CODE=70295, MONITORING_LOCATION_CODE=2, LIMIT_VALUE_NMBR present), does the geometric-mean comment govern the statistic used for limit comparison?",
+      "occurrence_partition_rule": "DMR_COMMENT_TEXT contains 'GEOMETRIC MEAN' AND PARAMETER_CODE = '70295' AND MONITORING_LOCATION_CODE = '2' AND LIMIT_VALUE_NMBR is non-empty",
+      "affected_count": 4,
+      "semantic_contract": "Enforceable TDS net-increase concentration comparison uses the structured 30-day average (AVG) limit per permit basis; the limit-set geometric-mean comment does not replace that comparison statistic.",
+      "evidence_grounding": [
+        "documents/farmington/final_permit.txt TDS Net Increase (*8) row with 497 mg/L under 30-DAY AVG column",
+        "documents/farmington/statement_of_basis.txt 30-day average TDS net incremental increase limit discussion",
+        "sources/permit_limits.csv LIMIT_VALUE_ID=3610673300 with STATISTICAL_BASE_TYPE_CODE=AVG and LIMIT_VALUE_NMBR=497",
+        "sources/dmr_measurements.csv monthly TDS value 269 compared to limit 497 using AVG fields"
+      ],
+      "disposition": "SUPPORTED_NEGATIVE",
+      "admission_status": "ADMIT_DISPOSABLE",
+      "epistemic_basis": "SOURCE_ESTABLISHED",
+      "scope": "TDS net-increase enforceable concentration permit_limit rows for NM0020583"
+    },
+    {
+      "child_id": "tds_residual_reporting_locations",
+      "exact_semantic_question": "For remaining TDS rows with the geometric-mean comment (PARAMETER_CODE=70295, MONITORING_LOCATION_CODE in {0, 2} without numeric LIMIT_VALUE_NMBR), what aggregation applies before individual monitoring-period values enter comparison or reporting fields?",
+      "occurrence_partition_rule": "DMR_COMMENT_TEXT contains 'GEOMETRIC MEAN' AND PARAMETER_CODE = '70295' AND ((MONITORING_LOCATION_CODE = '2' AND LIMIT_VALUE_NMBR is empty) OR MONITORING_LOCATION_CODE = '0')",
+      "affected_count": 8,
+      "semantic_contract": "Report-only TDS net-increase mass rows and MONITORING_LOCATION_CODE=0 TDS rows lack workspace text linking them to footnote *6 vs *7 intake reporting or establishing how monthly DMR values relate to weekly geometric means.",
+      "evidence_grounding": [
+        "sources/permit_limits.csv LIMIT_VALUE_ID in {3610673273, 3610673274, 3610673275, 3610673276, 3610673297, 3610673298, 3610673299} with empty LIMIT_VALUE_NMBR",
+        "documents/farmington/final_permit.txt footnote *7 (intake geometric mean) without structured MONITORING_LOCATION_CODE mapping in workspace"
+      ],
+      "disposition": "UNRESOLVED",
+      "admission_status": "UNRESOLVED",
+      "epistemic_basis": "UNRESOLVED",
+      "scope": "residual TDS permit_limit rows after discharge and net-increase enforcement partitions"
+    }
+  ],
+  "partition_complete": true,
+  "partition_overlap": false,
+  "residual_occurrences": [
+    "3610673273|3600891019",
+    "3610673274|3600891019",
+    "3610673275|3600891019",
+    "3610673276|3600891019",
+    "3610673297|3600891019",
+    "3610673299|3600891019",
+    "3610838802|3600891019",
+    "3610838804|3600891019"
+  ],
+  "mechanically_computable": true
+}

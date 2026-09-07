@@ -1,0 +1,49 @@
+{
+  "obligation_id": "obl:a:limit_applicability:dmr:3842360851",
+  "selected_observations": [
+    {
+      "source_path": "sources/structured/dmr_measurements.csv",
+      "location": "row 252, DMR_VALUE_ID=3842360851",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0000116; PERM_FEATURE_NMBR=001; PARAMETER_CODE=50050; PARAMETER_DESC=Flow, in conduit or thru treatment plant; MONITORING_PERIOD_END_DATE=01/31/2025; DMR_VALUE_ID=3842360851; NODI_CODE=C; LIMIT_TYPE_CODE=ENF; LIMIT_VALUE_ID=3610129869; STATISTICAL_BASE_CODE=3C; VALUE_RECEIVED_DATE=04/28/2025"
+    },
+    {
+      "source_path": "02_mechanical_world/world.sqlite",
+      "location": "compiled_dmr_measurement/dmr:3842360851",
+      "excerpt": "measurement_id=dmr:3842360851; permit=NM0000116; feature=001; parameter_code=50050; period_end=2025-01-31; dmr_value_id=3842360851; reported_value_number=0.0; reported_unit_code=; value_qualifier=; nodi_code=C; linked_limit_value_id=3610129869"
+    },
+    {
+      "source_path": "02_mechanical_world/world.sqlite",
+      "location": "compiled_limit_value/limit_val:3610129868:3600833505",
+      "excerpt": "limit_value_ref_id=limit_val:3610129868:3600833505; limit_value_id=3610129868; limit_type_code=ENF; optional_monitoring_flag=N; limit_value_number=0.0; limit_unit_code=03; statistical_base_code=DD; limit_value_qualifier=; limit_set_designator=A; all_months_active=1; frequency_code=01/01; effective=2021-06-01..2026-05-31"
+    },
+    {
+      "source_path": "sources/structured/permit_limits.csv",
+      "location": "row 58, LIMIT_VALUE_ID=3610129868",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0000116; PERM_FEATURE_NMBR=001; PARAMETER_CODE=50050; PARAMETER_DESC=Flow, in conduit or thru treatment plant; LIMIT_VALUE_ID=3610129868; LIMIT_SET_SCHEDULE_ID=3600833505; LIMIT_TYPE_CODE=ENF; LIMIT_UNIT_CODE=03; STATISTICAL_BASE_CODE=DD; OPTIONAL_MONITORING_FLAG=N; LIMIT_BEGIN_DATE=06/01/2021; LIMIT_END_DATE=05/31/2026; LIMIT_SET_DESIGNATOR=A; LIMIT_FREQ_OF_ANALYSIS_CODE=01/01; ALL_MONTHS_LIMIT=JAN--FEB--MAR--APR--MAY--JUN--JUL--AUG--SEP--OCT--NOV--DEC"
+    },
+    {
+      "source_path": "02_mechanical_world/world.sqlite",
+      "location": "compiled_limit_value/limit_val:3610129868:3600833510",
+      "excerpt": "limit_value_ref_id=limit_val:3610129868:3600833510; limit_value_id=3610129868; limit_type_code=ENF; optional_monitoring_flag=N; limit_value_number=0.0; limit_unit_code=03; statistical_base_code=DD; limit_value_qualifier=; limit_set_designator=A; all_months_active=1; frequency_code=01/01; effective=2021-06-01..2026-05-31"
+    },
+    {
+      "source_path": "sources/structured/permit_limits.csv",
+      "location": "row 60, LIMIT_VALUE_ID=3610129868",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0000116; PERM_FEATURE_NMBR=001; PARAMETER_CODE=50050; PARAMETER_DESC=Flow, in conduit or thru treatment plant; LIMIT_VALUE_ID=3610129868; LIMIT_SET_SCHEDULE_ID=3600833510; LIMIT_TYPE_CODE=ENF; LIMIT_UNIT_CODE=03; STATISTICAL_BASE_CODE=DD; OPTIONAL_MONITORING_FLAG=N; LIMIT_BEGIN_DATE=06/01/2021; LIMIT_END_DATE=05/31/2026; LIMIT_SET_DESIGNATOR=A; LIMIT_FREQ_OF_ANALYSIS_CODE=01/01; ALL_MONTHS_LIMIT=JAN--FEB--MAR--APR--MAY--JUN--JUL--AUG--SEP--OCT--NOV--DEC"
+    },
+    {
+      "source_path": "02_mechanical_world/world.sqlite",
+      "location": "measurement_limit_candidate_pair/dmr:3842360851",
+      "excerpt": "candidate_count=4; distinct_stat_base_unit_set_months=3C/03/A/months_active=1; DD/03/A/months_active=1"
+    }
+  ],
+  "selection_rationale": "Packet grounds limit_applicability_resolution for dmr:3842360851: compiled DMR measurement in FY2025 scope with 4 mechanical candidate limit(s). Evidence selected to support disambiguation of statistical base, unit, limit-set designator, and seasonal schedule.",
+  "known_missing_information": [
+    "Multiple period-overlapping limits share facility/feature/parameter; per-month seasonal flags and limit-set designator disambiguation may require permit text",
+    "P2 compiled BASE relations only; DERIVED universes (period_in_fy2025, dmr_in_fy2025_scope, measurement_limit_candidate_pair, monitoring_requirement_in_fy2025, missing_evidence_case_universe) computed inline per 01_vocabulary.json C4 rules, not persisted in world.sqlite.",
+    "Purpose C absent-submission cases are not enumerable: frequency-code interpretation rules are not compiled as world facts.",
+    "Blank LIMIT_VALUE_NMBR and DMR_VALUE_NMBR stored as 0.0 (TaskView REAL NOT NULL); ordinary-numeric detection treats bare 0.0 as non-ordinary.",
+    "Per-month seasonal activation not modeled; only all_months_active boolean available for limit schedule disambiguation.",
+    "Permit PDF text extraction deferred; condition_anchor_text limited to DMR_COMMENT_TEXT from permit_limits.csv."
+  ]
+}

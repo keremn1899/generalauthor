@@ -1,0 +1,84 @@
+{
+  "strategy": "a6_multistep",
+  "trial": "R02",
+  "obligation_id": "id-07",
+  "candidate": {
+    "left": "billing:Oakfield Logistik GmbH",
+    "right": "contract:MSA-OAK-2018"
+  },
+  "proposed_disposition": "SAME_ENTITY",
+  "final_disposition": "SAME_ENTITY",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/contracts/MSA-OAK-2018.md",
+      "location": "header"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row HRB 88421"
+    }
+  ],
+  "support_claim": "MSA-OAK-2018's counterparty Oakfield Logistics GmbH is the same legal entity as billing Oakfield Logistik GmbH because the packet documents a 2023 rebrand with unchanged HRB 88421.",
+  "proof_size": 5,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "steps": [
+    {
+      "fact": "Contract MSA-OAK-2018 names Oakfield Logistics GmbH as its counterparty.",
+      "grounding": {
+        "source_path": "sources/contracts/MSA-OAK-2018.md",
+        "location": "header"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "The left referent billing:Oakfield Logistik GmbH corresponds to billed_name Oakfield Logistik GmbH in billing records.",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Oakfield Logistik GmbH"
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "Oakfield Logistics GmbH rebranded to Oakfield Logistik GmbH and Handelsregister number HRB 88421 did not change.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Registry row HRB 88421 records Oakfield Logistik GmbH as the active registered entity.",
+      "grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row HRB 88421"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "The contract counterparty Oakfield Logistics GmbH and the billing entity Oakfield Logistik GmbH denote the same legal counterparty because the packet documents a rebrand with unchanged HRB 88421.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    }
+  ],
+  "admit": {
+    "rule": "steps_grounded"
+  },
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": true,
+  "unsupported_closure": false,
+  "under_closure": false,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": false
+}

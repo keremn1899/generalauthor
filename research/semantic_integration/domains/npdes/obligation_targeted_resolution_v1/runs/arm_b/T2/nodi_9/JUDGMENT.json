@@ -1,0 +1,17 @@
+{
+  "disposition": "UNRESOLVED",
+  "grounding": [
+    "sources/dmr_measurements.csv: 36 FY2025-applicable rows with NODI_CODE='9', empty DMR_VALUE_NMBR, all EXTERNAL_PERMIT_NMBR=NM0020583; split into 12 parameter-50060 rows (OPTIONAL_MONITORING_FLAG=N, LIMIT_FREQ_OF_ANALYSIS_CODE=01/01) and 24 WET-retest rows (OPTIONAL_MONITORING_FLAG=Y, LIMIT_FREQ_OF_ANALYSIS_CODE=09/99).",
+    "sources/dmr_measurements.csv: 150 rows with NODI_CODE='C' are entirely on NM0000116 with disjoint parameters; no row carries both codes or crosses permits, supporting the relation contract that C and 9 must not inherit each other.",
+    "sources/permit_limits.csv: parameter 50060 (Chlorine, total residual) is OPTIONAL_MONITORING_FLAG=N with daily grab frequency; parameter 22415 WET retest is OPTIONAL_MONITORING_FLAG=Y with LIMIT_FREQ_OF_ANALYSIS_CODE=09/99.",
+    "documents/farmington/final_permit.txt footnote *5: TRC monitoring is required only when chlorine is used; does not name NODI code 9 or assign any no-data code when chlorine is unused.",
+    "documents/farmington/final_permit.txt Part II §D.3: WET retest reporting is labeled '(If required)' with pass/fail entry rules; does not define NODI code 9 or equate conditional omission to code 9.",
+    "OBLIGATION.md known_structured_evidence: no codebook table for NODI codes in structured sources.",
+    "construction.py nodi_code_semantics requirement: only empty nodi_code is treated as known; nonempty values including '9' remain UNINTERPRETED."
+  ],
+  "interpretation": null,
+  "epistemic_basis": "UNRESOLVED",
+  "scope": "ONE_RELATION_OR_VOCABULARY",
+  "remaining_uncertainty": "No workspace source defines what NODI code 9 means on a no-numeric-result DMR row. The 36 occurrences fall into two structurally opposite contexts (required daily TRC vs optional conditional WET retests), and permit narrative text conditions monitoring for those parameters but never maps either condition to code 9. A single reusable meaning for code 9 cannot be established from admissible evidence.",
+  "failure_mode_if_unresolved": "EVIDENCE_INSUFFICIENT"
+}

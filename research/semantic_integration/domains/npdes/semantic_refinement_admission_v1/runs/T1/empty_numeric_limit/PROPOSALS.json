@@ -1,0 +1,62 @@
+[
+  {
+    "id": "parent_numeric_limit_recovery",
+    "interpretation": "All empty LIMIT_VALUE_NMBR rows are latent numeric limits recoverable from sibling rows or permit narrative.",
+    "scope": "all 57 empty-limit permit_limit rows",
+    "epistemic_basis": "MODEL_GENERALIZATION",
+    "exact_grounding": "LIMIT_TYPE_CODE=ENF on all rows; 8/57 share LIMIT_ID with numeric siblings",
+    "semantic_delta": "Treat empty LIMIT_VALUE_NMBR as numeric_comparison_candidate once sibling LIMIT_VALUE_NMBR is copied",
+    "admit": false,
+    "remaining_uncertainty": "Contradicted by zero populated LIMIT_VALUE_STANDARD_UNITS, heterogeneous DMR_COMMENT_TEXT partitions, and permit-table Report/N/A cells for representative rows."
+  },
+  {
+    "id": "permit_table_report_only_cell",
+    "interpretation": "Blank-comment empty-limit rows denote report-only monitoring per permit-table Report labeling.",
+    "scope": "18 permit_limit rows: empty LIMIT_VALUE_NMBR, blank DMR_COMMENT_TEXT",
+    "epistemic_basis": "SOURCE_ESTABLISHED",
+    "exact_grounding": "documents/gcc/final_permit.txt lines 68-74; documents/farmington/final_permit.txt lines 87-92; sources/permit_limits.csv LIMIT_VALUE_ID=3610129901",
+    "semantic_delta": "Derive empty_limit_report_only_monitoring with classification report_only_monitoring for blank-comment partition",
+    "admit": true,
+    "remaining_uncertainty": "No ICIS codebook in workspace; classification relies on permit-table text for inspected permits only."
+  },
+  {
+    "id": "conditional_when_discharging_mass_load_na",
+    "interpretation": "WHEN DISCHARGING empty-limit rows mark non-applicable mass-load columns, not missing numeric concentration limits.",
+    "scope": "12 permit_limit rows: empty LIMIT_VALUE_NMBR, DMR_COMMENT_TEXT contains WHEN DISCHARGING",
+    "epistemic_basis": "SOURCE_ESTABLISHED",
+    "exact_grounding": "documents/aztec/final_permit.txt lines 78-79, 93; sources/permit_limits.csv LIMIT_VALUE_ID=3610840340",
+    "semantic_delta": "Derive empty_limit_non_applicable_mass_load with classification non_applicable_mass_load_column",
+    "admit": true,
+    "remaining_uncertainty": "Whether discharge occurred for a given monitoring period is not established from structured sources alone (separate conditional applicability obligation)."
+  },
+  {
+    "id": "pass_fail_wet_reporting",
+    "interpretation": "Pass/fail DMR-comment empty-limit rows are special WET reporting obligations encoded as pass=0/fail=1, not numeric concentration limits.",
+    "scope": "12 permit_limit rows: empty LIMIT_VALUE_NMBR, DMR_COMMENT_TEXT contains PASS=0 and FAIL=1",
+    "epistemic_basis": "SOURCE_ESTABLISHED",
+    "exact_grounding": "sources/permit_limits.csv LIMIT_VALUE_ID=3610839676 LIMIT_UNIT_DESC=pass=0;fail=1",
+    "semantic_delta": "Derive empty_limit_pass_fail_reporting with classification special_non_numeric_pass_fail_reporting",
+    "admit": true,
+    "remaining_uncertainty": "Pass/fail compliance semantics for Purpose A comparison remain unresolved beyond classification (construction.py pass_fail_reporting_semantics)."
+  },
+  {
+    "id": "geometric_mean_aggregated_reporting",
+    "interpretation": "Geometric-mean-comment empty-limit rows are aggregated reporting requirements without per-period numeric limit in that cell.",
+    "scope": "15 permit_limit rows: empty LIMIT_VALUE_NMBR, DMR_COMMENT_TEXT contains GEOMETRIC MEAN",
+    "epistemic_basis": "SOURCE_ESTABLISHED",
+    "exact_grounding": "documents/farmington/final_permit.txt lines 97-98, 121; sources/permit_limits.csv geometric-mean DMR_COMMENT_TEXT rows",
+    "semantic_delta": "Derive empty_limit_geometric_mean_reporting with classification aggregated_geometric_mean_reporting",
+    "admit": true,
+    "remaining_uncertainty": "How weekly values aggregate to compliance for a given period is not established from structured sources alone."
+  },
+  {
+    "id": "enf_implies_numeric_limit",
+    "interpretation": "LIMIT_TYPE_CODE=ENF on empty-limit rows implies they are enforceable numeric effluent limits.",
+    "scope": "all 57 empty-limit rows",
+    "epistemic_basis": "MODEL_GENERALIZATION",
+    "exact_grounding": "sources/permit_limits.csv LIMIT_TYPE_CODE=ENF count 57/57",
+    "semantic_delta": "Include all empty-limit rows in numeric_comparison_candidate when DMR_VALUE_NMBR is present",
+    "admit": false,
+    "remaining_uncertainty": "ENF types monitoring schedules including Report-only and special reporting rows; LIMIT_VALUE_NMBR and LIMIT_VALUE_STANDARD_UNITS are empty on all 57."
+  }
+]

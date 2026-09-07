@@ -1,0 +1,24 @@
+{
+  "obligation_id": "identity_judgment:0008",
+  "selected_observations": [
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "invoice_id=INV-2001",
+      "excerpt": "{\n  \"invoice_id\": \"INV-2001\",\n  \"billed_name\": \"Northbridge Analytics Inc.\",\n  \"vat_or_tax_id\": \"\",\n  \"amount\": 96000,\n  \"currency\": \"USD\",\n  \"period\": \"2024-Q4\",\n  \"status\": \"paid\"\n}"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "company_number=3840192",
+      "excerpt": "company_number,legal_name,jurisdiction,status\n3840192,NORTHBRIDGE ANALYTICS INC,Delaware,active"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "internal note",
+      "excerpt": "Northbridge: sales uses the short name \"Northbridge Analytics\". Billing and the MSA use \"Northbridge Analytics Inc.\" A 2024 credit check also returned a Wyoming LLC, \"Northbridge Analytics LLC\". Legal has not determined which registry entity is the contracting party. Treat that registry link as unresolved."
+    }
+  ],
+  "selection_rationale": "Pair links billing:Northbridge Analytics Inc. and registry:3840192. Selected one authoritative excerpt per referent plus any internal commercial note that names the relationship or ambiguity.",
+  "known_missing_information": [
+    "Additional 1 invoice(s) share billed_name 'Northbridge Analytics Inc.' but only one representative excerpt included."
+  ]
+}

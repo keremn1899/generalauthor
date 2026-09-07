@@ -1,0 +1,109 @@
+{
+  "strategy": "a3_entailment",
+  "trial": "R05",
+  "obligation_id": "id-09",
+  "candidate": {
+    "left": "crm:VEL-19",
+    "right": "billing:Vellum Print Co Ltd"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row VEL-19"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Vellum Print Co Ltd"
+    }
+  ],
+  "support_claim": "The packet links each referent only to similar but non-identical names ('Vellum Print Co' vs 'Vellum Print Co Ltd') without evidence establishing that crm:VEL-19 and billing:Vellum Print Co Ltd are the same or distinct legal counterparty.",
+  "proof_size": 6,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "claims": [
+    {
+      "claim": "The CRM referent crm:VEL-19 is associated with the customer name 'Vellum Print Co'.",
+      "status": "ESTABLISHED",
+      "burden": "identity",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/crm.csv",
+          "location": "row VEL-19"
+        }
+      ]
+    },
+    {
+      "claim": "The billing referent billing:Vellum Print Co Ltd is recorded with the billed name 'Vellum Print Co Ltd'.",
+      "status": "ESTABLISHED",
+      "burden": "identity",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Vellum Print Co Ltd"
+        }
+      ]
+    },
+    {
+      "claim": "Commercial notes state that 'Vellum Print Co' dissolved.",
+      "status": "ESTABLISHED",
+      "burden": "other",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    },
+    {
+      "claim": "crm:VEL-19 and billing:Vellum Print Co Ltd denote the same legal counterparty.",
+      "status": "NOT_ESTABLISHED",
+      "burden": "identity",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/crm.csv",
+          "location": "row VEL-19"
+        },
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Vellum Print Co Ltd"
+        }
+      ]
+    },
+    {
+      "claim": "crm:VEL-19 and billing:Vellum Print Co Ltd denote distinct legal counterparties.",
+      "status": "NOT_ESTABLISHED",
+      "burden": "distinctness",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/crm.csv",
+          "location": "row VEL-19"
+        },
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Vellum Print Co Ltd"
+        }
+      ]
+    },
+    {
+      "claim": "The packet preserves multiple live candidates or states that identity cannot be established.",
+      "status": "NOT_ESTABLISHED",
+      "burden": "unresolved_preservation",
+      "supporting_evidence": []
+    }
+  ],
+  "admit": {
+    "rule": "proposed_unresolved"
+  },
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

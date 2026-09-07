@@ -1,0 +1,94 @@
+{
+  "strategy": "a3_entailment",
+  "trial": "R03",
+  "obligation_id": "id-15",
+  "candidate": {
+    "left": "crm:HEL-441",
+    "right": "registry:11847299"
+  },
+  "proposed_disposition": "DISTINCT",
+  "final_disposition": "DISTINCT",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row HEL-441"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 11847299"
+    }
+  ],
+  "support_claim": "The packet grounds crm:HEL-441 as Helion Robotics Ltd and registry:11847299 as HELION INDUSTRIAL SYSTEMS LTD, and commercial notes explicitly state that Helion Industrial Systems Ltd is a different company from Helion Robotics, establishing distinctness without any identity evidence linking the two referents.",
+  "proof_size": 5,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "claims": [
+    {
+      "claim": "crm:HEL-441 denotes Helion Robotics Ltd",
+      "status": "ESTABLISHED",
+      "burden": "other",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/crm.csv",
+          "location": "row HEL-441"
+        }
+      ]
+    },
+    {
+      "claim": "registry:11847299 denotes HELION INDUSTRIAL SYSTEMS LTD",
+      "status": "ESTABLISHED",
+      "burden": "other",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/company_registry.csv",
+          "location": "row 11847299"
+        }
+      ]
+    },
+    {
+      "claim": "Helion Robotics Ltd and Helion Industrial Systems Ltd are distinct legal companies",
+      "status": "ESTABLISHED",
+      "burden": "distinctness",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    },
+    {
+      "claim": "crm:HEL-441 and registry:11847299 denote the same legal counterparty",
+      "status": "NOT_ESTABLISHED",
+      "burden": "identity",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    },
+    {
+      "claim": "Identity between crm:HEL-441 and registry:11847299 must remain unresolved because the packet preserves live competing candidates or states identity cannot be established",
+      "status": "NOT_ESTABLISHED",
+      "burden": "unresolved_preservation",
+      "supporting_evidence": []
+    }
+  ],
+  "admit": {
+    "rule": "distinctness_burden_established"
+  },
+  "oracle": "DISTINCT",
+  "in_oracle": true,
+  "exact": true,
+  "unsupported_closure": false,
+  "under_closure": false,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": false
+}

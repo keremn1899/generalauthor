@@ -1,0 +1,91 @@
+{
+  "strategy": "a6_multistep",
+  "trial": "R02",
+  "obligation_id": "id-05",
+  "candidate": {
+    "left": "billing:Northbridge Analytics Inc.",
+    "right": "contract:MSA-NBA-2021"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Northbridge Analytics Inc."
+    },
+    {
+      "source_path": "sources/contracts/MSA-NBA-2021.md",
+      "location": "header"
+    }
+  ],
+  "support_claim": "Billing and the MSA share a compatible trade name, but the packet preserves unresolved registry identity and provides no legal-identifier or other establishing evidence to conclude same-entity or distinctness.",
+  "proof_size": 7,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "steps": [
+    {
+      "fact": "The left referent is billing:Northbridge Analytics Inc.",
+      "grounding": null,
+      "mechanical": true
+    },
+    {
+      "fact": "The right referent is contract:MSA-NBA-2021.",
+      "grounding": null,
+      "mechanical": true
+    },
+    {
+      "fact": "Billing records bill the name Northbridge Analytics Inc.",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Northbridge Analytics Inc."
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "MSA-NBA-2021 lists counterparty Northbridge Analytics, Inc.",
+      "grounding": {
+        "source_path": "sources/contracts/MSA-NBA-2021.md",
+        "location": "header"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Commercial notes state that billing and the MSA use the name Northbridge Analytics Inc., but legal has not determined which registry entity is the contracting party and instructs treating the registry link as unresolved.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "No shared legal identifier or other establishing identity evidence links the billing referent to the contract referent; name similarity and compatible naming are insufficient under the grounding contract.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "No evidence establishes that billing:Northbridge Analytics Inc. and contract:MSA-NBA-2021 denote distinct legal counterparties.",
+      "grounding": null,
+      "mechanical": false
+    }
+  ],
+  "admit": {
+    "rule": "unresolved"
+  },
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

@@ -1,0 +1,553 @@
+{
+  "referents": [
+    {
+      "name": "Measurement",
+      "key": [
+        "permit_id",
+        "outfall",
+        "parameter_code",
+        "period_end"
+      ]
+    },
+    {
+      "name": "Limit",
+      "key": [
+        "limit_value_id",
+        "limit_set_schedule_id",
+        "nmbr_of_submission"
+      ]
+    },
+    {
+      "name": "Document",
+      "key": [
+        "path"
+      ]
+    }
+  ],
+  "maps": [
+    {
+      "id": "map_dmr",
+      "source": "dmr_measurements.csv",
+      "referent": "Measurement",
+      "fields": {
+        "permit_id": "EXTERNAL_PERMIT_NMBR",
+        "outfall": "PERM_FEATURE_NMBR",
+        "parameter_code": "PARAMETER_CODE",
+        "period_end": "MONITORING_PERIOD_END_DATE",
+        "reported_value": "DMR_VALUE_NMBR",
+        "nodi_code": "NODI_CODE",
+        "value_type_code": "LIMIT_VALUE_TYPE_CODE",
+        "statistical_base_code": "STATISTICAL_BASE_CODE",
+        "optional_monitoring_flag": "OPTIONAL_MONITORING_FLAG"
+      }
+    },
+    {
+      "id": "map_limits",
+      "source": "permit_limits.csv",
+      "referent": "Limit",
+      "fields": {
+        "limit_value_id": "LIMIT_VALUE_ID",
+        "limit_set_schedule_id": "LIMIT_SET_SCHEDULE_ID",
+        "nmbr_of_submission": "NMBR_OF_SUBMISSION",
+        "permit_id": "EXTERNAL_PERMIT_NMBR",
+        "outfall": "PERM_FEATURE_NMBR",
+        "parameter_code": "PARAMETER_CODE",
+        "begin_date": "LIMIT_BEGIN_DATE",
+        "end_date": "LIMIT_END_DATE",
+        "limit_value": "LIMIT_VALUE_NMBR",
+        "qualifier_code": "LIMIT_VALUE_QUALIFIER_CODE",
+        "optional_monitoring_flag": "OPTIONAL_MONITORING_FLAG",
+        "value_type_code": "LIMIT_VALUE_TYPE_CODE",
+        "statistical_base_code": "STATISTICAL_BASE_CODE",
+        "freq_code": "LIMIT_FREQ_OF_ANALYSIS_CODE"
+      }
+    },
+    {
+      "id": "map_inventory",
+      "source": "document_inventory.json",
+      "referent": "Document",
+      "fields": {
+        "path": "path",
+        "permit": "permit",
+        "document_kind": "document_kind"
+      }
+    }
+  ],
+  "relations": [
+    {
+      "name": "measurement",
+      "kind": "base",
+      "map": "map_dmr",
+      "roles": [
+        {
+          "name": "measurement",
+          "type": "REFERENT",
+          "field": "_referent",
+          "of": "Measurement"
+        },
+        {
+          "name": "permit_id",
+          "type": "TEXT",
+          "field": "permit_id"
+        },
+        {
+          "name": "outfall",
+          "type": "TEXT",
+          "field": "outfall"
+        },
+        {
+          "name": "parameter_code",
+          "type": "TEXT",
+          "field": "parameter_code"
+        },
+        {
+          "name": "period_end",
+          "type": "TEXT",
+          "field": "period_end"
+        },
+        {
+          "name": "reported_value",
+          "type": "TEXT",
+          "field": "reported_value"
+        },
+        {
+          "name": "nodi_code",
+          "type": "TEXT",
+          "field": "nodi_code"
+        },
+        {
+          "name": "value_type_code",
+          "type": "TEXT",
+          "field": "value_type_code"
+        },
+        {
+          "name": "statistical_base_code",
+          "type": "TEXT",
+          "field": "statistical_base_code"
+        },
+        {
+          "name": "optional_monitoring_flag",
+          "type": "TEXT",
+          "field": "optional_monitoring_flag"
+        }
+      ]
+    },
+    {
+      "name": "limit_row",
+      "kind": "base",
+      "map": "map_limits",
+      "roles": [
+        {
+          "name": "limit",
+          "type": "REFERENT",
+          "field": "_referent",
+          "of": "Limit"
+        },
+        {
+          "name": "permit_id",
+          "type": "TEXT",
+          "field": "permit_id"
+        },
+        {
+          "name": "outfall",
+          "type": "TEXT",
+          "field": "outfall"
+        },
+        {
+          "name": "parameter_code",
+          "type": "TEXT",
+          "field": "parameter_code"
+        },
+        {
+          "name": "begin_date",
+          "type": "TEXT",
+          "field": "begin_date"
+        },
+        {
+          "name": "end_date",
+          "type": "TEXT",
+          "field": "end_date"
+        },
+        {
+          "name": "limit_value",
+          "type": "TEXT",
+          "field": "limit_value"
+        },
+        {
+          "name": "qualifier_code",
+          "type": "TEXT",
+          "field": "qualifier_code"
+        },
+        {
+          "name": "optional_monitoring_flag",
+          "type": "TEXT",
+          "field": "optional_monitoring_flag"
+        },
+        {
+          "name": "value_type_code",
+          "type": "TEXT",
+          "field": "value_type_code"
+        },
+        {
+          "name": "statistical_base_code",
+          "type": "TEXT",
+          "field": "statistical_base_code"
+        },
+        {
+          "name": "freq_code",
+          "type": "TEXT",
+          "field": "freq_code"
+        }
+      ]
+    },
+    {
+      "name": "document_row",
+      "kind": "base",
+      "map": "map_inventory",
+      "roles": [
+        {
+          "name": "document",
+          "type": "REFERENT",
+          "field": "_referent",
+          "of": "Document"
+        },
+        {
+          "name": "permit",
+          "type": "TEXT",
+          "field": "permit"
+        },
+        {
+          "name": "document_kind",
+          "type": "TEXT",
+          "field": "document_kind"
+        }
+      ]
+    },
+    {
+      "name": "candidate_limit",
+      "kind": "derived",
+      "from": [
+        "measurement",
+        "limit_row"
+      ],
+      "roles": [
+        {
+          "name": "measurement",
+          "type": "REFERENT",
+          "from_role": "measurement.measurement"
+        },
+        {
+          "name": "limit",
+          "type": "REFERENT",
+          "from_role": "limit_row.limit"
+        },
+        {
+          "name": "reported_value",
+          "type": "TEXT",
+          "from_role": "measurement.reported_value"
+        },
+        {
+          "name": "nodi_code",
+          "type": "TEXT",
+          "from_role": "measurement.nodi_code"
+        },
+        {
+          "name": "limit_value",
+          "type": "TEXT",
+          "from_role": "limit_row.limit_value"
+        },
+        {
+          "name": "qualifier_code",
+          "type": "TEXT",
+          "from_role": "limit_row.qualifier_code"
+        },
+        {
+          "name": "optional_monitoring_flag",
+          "type": "TEXT",
+          "from_role": "limit_row.optional_monitoring_flag"
+        }
+      ],
+      "match": [
+        {
+          "left": "measurement.permit_id",
+          "right": "limit_row.permit_id"
+        },
+        {
+          "left": "measurement.outfall",
+          "right": "limit_row.outfall"
+        },
+        {
+          "left": "measurement.parameter_code",
+          "right": "limit_row.parameter_code"
+        },
+        {
+          "left": "measurement.value_type_code",
+          "right": "limit_row.value_type_code"
+        },
+        {
+          "left": "measurement.statistical_base_code",
+          "right": "limit_row.statistical_base_code"
+        }
+      ],
+      "where": [
+        {
+          "op": "interval_contains",
+          "point": "measurement.period_end",
+          "begin": "limit_row.begin_date",
+          "end": "limit_row.end_date"
+        }
+      ]
+    },
+    {
+      "name": "enforceable_candidate",
+      "kind": "derived",
+      "from": [
+        "candidate_limit"
+      ],
+      "roles": [
+        {
+          "name": "measurement",
+          "type": "REFERENT",
+          "from_role": "candidate_limit.measurement"
+        },
+        {
+          "name": "limit",
+          "type": "REFERENT",
+          "from_role": "candidate_limit.limit"
+        },
+        {
+          "name": "reported_value",
+          "type": "TEXT",
+          "from_role": "candidate_limit.reported_value"
+        },
+        {
+          "name": "nodi_code",
+          "type": "TEXT",
+          "from_role": "candidate_limit.nodi_code"
+        },
+        {
+          "name": "limit_value",
+          "type": "TEXT",
+          "from_role": "candidate_limit.limit_value"
+        },
+        {
+          "name": "qualifier_code",
+          "type": "TEXT",
+          "from_role": "candidate_limit.qualifier_code"
+        },
+        {
+          "name": "optional_monitoring_flag",
+          "type": "TEXT",
+          "from_role": "candidate_limit.optional_monitoring_flag"
+        }
+      ],
+      "where": [
+        {
+          "op": "neq",
+          "left": "candidate_limit.optional_monitoring_flag",
+          "right": "Y"
+        },
+        {
+          "op": "not_empty",
+          "left": "candidate_limit.qualifier_code"
+        }
+      ]
+    },
+    {
+      "name": "no_numeric_result",
+      "kind": "derived",
+      "from": [
+        "measurement"
+      ],
+      "roles": [
+        {
+          "name": "measurement",
+          "type": "REFERENT",
+          "from_role": "measurement.measurement"
+        },
+        {
+          "name": "permit_id",
+          "type": "TEXT",
+          "from_role": "measurement.permit_id"
+        },
+        {
+          "name": "outfall",
+          "type": "TEXT",
+          "from_role": "measurement.outfall"
+        },
+        {
+          "name": "parameter_code",
+          "type": "TEXT",
+          "from_role": "measurement.parameter_code"
+        },
+        {
+          "name": "period_end",
+          "type": "TEXT",
+          "from_role": "measurement.period_end"
+        },
+        {
+          "name": "reported_value",
+          "type": "TEXT",
+          "from_role": "measurement.reported_value"
+        },
+        {
+          "name": "nodi_code",
+          "type": "TEXT",
+          "from_role": "measurement.nodi_code"
+        },
+        {
+          "name": "optional_monitoring_flag",
+          "type": "TEXT",
+          "from_role": "measurement.optional_monitoring_flag"
+        }
+      ],
+      "where": [
+        {
+          "op": "eq",
+          "left": "measurement.reported_value",
+          "right": ""
+        }
+      ]
+    },
+    {
+      "name": "permit_document",
+      "kind": "derived",
+      "from": [
+        "limit_row",
+        "document_row"
+      ],
+      "roles": [
+        {
+          "name": "limit",
+          "type": "REFERENT",
+          "from_role": "limit_row.limit"
+        },
+        {
+          "name": "document",
+          "type": "REFERENT",
+          "from_role": "document_row.document"
+        },
+        {
+          "name": "permit_id",
+          "type": "TEXT",
+          "from_role": "limit_row.permit_id"
+        },
+        {
+          "name": "document_kind",
+          "type": "TEXT",
+          "from_role": "document_row.document_kind"
+        }
+      ],
+      "match": [
+        {
+          "left": "limit_row.permit_id",
+          "right": "document_row.permit"
+        }
+      ]
+    }
+  ],
+  "requirements": [
+    {
+      "id": "applicable_limit",
+      "purpose": [
+        "A"
+      ],
+      "over": "candidate_limit",
+      "group_by": [
+        "measurement"
+      ],
+      "cardinality": "ONE",
+      "require_numeric": [
+        "limit_value"
+      ],
+      "require_interpreted_code": {
+        "field": "nodi_code",
+        "known": [
+          ""
+        ]
+      }
+    },
+    {
+      "id": "enforceable_comparison",
+      "purpose": [
+        "A"
+      ],
+      "over": "enforceable_candidate",
+      "group_by": [
+        "measurement"
+      ],
+      "cardinality": "ONE",
+      "require_numeric": [
+        "limit_value",
+        "reported_value"
+      ],
+      "require_comparison_operator": {
+        "field": "qualifier_code",
+        "known": [
+          "<=",
+          ">="
+        ]
+      }
+    },
+    {
+      "id": "monitoring_obligation",
+      "purpose": [
+        "B"
+      ],
+      "over": "limit_row",
+      "group_by": [
+        "limit"
+      ],
+      "cardinality": "ONE",
+      "require_interpreted_code": {
+        "field": "optional_monitoring_flag",
+        "known": [
+          "N",
+          "Y"
+        ]
+      }
+    },
+    {
+      "id": "permit_evidence",
+      "purpose": [
+        "B"
+      ],
+      "over": "permit_document",
+      "group_by": [
+        "limit"
+      ],
+      "cardinality": "AT_LEAST_ONE",
+      "require_interpreted_code": {
+        "field": "document_kind",
+        "known": [
+          "final_permit",
+          "part_ii_appendix",
+          "part_iv",
+          "statement_of_basis",
+          "reasonable_potential",
+          "fact_sheet",
+          "minor_modification"
+        ]
+      }
+    },
+    {
+      "id": "missing_evidence_nodi",
+      "purpose": [
+        "C"
+      ],
+      "over": "no_numeric_result",
+      "group_by": [
+        "measurement"
+      ],
+      "cardinality": "ONE",
+      "require_interpreted_code": {
+        "field": "nodi_code",
+        "known": [
+          "",
+          "9",
+          "C"
+        ]
+      }
+    }
+  ]
+}

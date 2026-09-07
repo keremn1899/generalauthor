@@ -1,0 +1,110 @@
+{
+  "strategy": "a5_pairwise",
+  "trial": "R01",
+  "obligation_id": "id-12",
+  "candidate": {
+    "left": "crm:MER-55",
+    "right": "billing:Meridian Energy Partners LLC"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row MER-55"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Meridian Energy Partners LLC"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row MER-55"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Meridian Energy Partners LLC"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "No proposition establishes identity or distinctness between crm:MER-55 and billing:Meridian Energy Partners LLC, and unresolved_preservation evidence prevents closing the judgment.",
+  "proof_size": 6,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "propositions": [
+    {
+      "proposition": "CRM record MER-55 lists the counterparty name as Meridian Energy Partners.",
+      "source_grounding": {
+        "source_path": "sources/crm.csv",
+        "location": "row MER-55"
+      },
+      "establishes": "other",
+      "relevance": "Characterizes the left referent (crm:MER-55); the name lacks the LLC suffix used in billing."
+    },
+    {
+      "proposition": "Billing records use the billed name Meridian Energy Partners LLC.",
+      "source_grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Meridian Energy Partners LLC"
+      },
+      "establishes": "other",
+      "relevance": "Characterizes the right referent (billing:Meridian Energy Partners LLC) by its legal billing name."
+    },
+    {
+      "proposition": "Commercial notes state that Meridian Energy Partners invoices are the advisory retainer under MSA-MER-2024.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "other",
+      "relevance": "Links the Meridian Energy Partners name to invoice activity, but does not reference CRM identifier MER-55 or the billing name Meridian Energy Partners LLC."
+    },
+    {
+      "proposition": "The CRM excerpt for MER-55 does not reference Meridian Energy Partners LLC or any billing identifier.",
+      "source_grounding": {
+        "source_path": "sources/crm.csv",
+        "location": "row MER-55"
+      },
+      "establishes": "unresolved_preservation",
+      "relevance": "No cross-reference from crm:MER-55 to the billing referent appears in the CRM observation, so identity is not established."
+    },
+    {
+      "proposition": "The billing excerpt provides only the billed name Meridian Energy Partners LLC with no CRM identifier or MER-55 reference.",
+      "source_grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Meridian Energy Partners LLC"
+      },
+      "establishes": "unresolved_preservation",
+      "relevance": "No cross-reference from billing:Meridian Energy Partners LLC to crm:MER-55 appears in the billing observation, so identity is not established."
+    },
+    {
+      "proposition": "Commercial notes mention Meridian Energy Partners invoices but do not reference CRM record MER-55.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "unresolved_preservation",
+      "relevance": "The notes do not supply an explicit linkage between the two candidate referents required for SAME_ENTITY."
+    }
+  ],
+  "admit": {
+    "rule": "evidence_preserves_unresolved"
+  },
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

@@ -1,0 +1,255 @@
+{
+  "pass": "P6",
+  "view_id": "diligence-world",
+  "source_world": "02_mechanical_world/world.sqlite",
+  "output_world": "06_world/world.sqlite",
+  "admissions": [
+    {
+      "relation": "facility",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Vocabulary marks facility as WORLD mechanical: A manifest NPDES facility identified by permit number in source evidence.",
+      "purpose_independence_test": "Truth conditions depend only on compiled source rows and identifiers; the proposition would retain the same meaning if purposes A/B/C were not being asked."
+    },
+    {
+      "relation": "permit_feature",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Vocabulary marks permit_feature as WORLD mechanical: A permit discharge or outfall feature (PERM_FEATURE) tied to exactly one facility.",
+      "purpose_independence_test": "Truth conditions depend only on compiled source rows and identifiers; the proposition would retain the same meaning if purposes A/B/C were not being asked."
+    },
+    {
+      "relation": "parameter",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Vocabulary marks parameter as WORLD mechanical: A monitored discharge parameter identified by EPA parameter code and description text.",
+      "purpose_independence_test": "Truth conditions depend only on compiled source rows and identifiers; the proposition would retain the same meaning if purposes A/B/C were not being asked."
+    },
+    {
+      "relation": "monitoring_period",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Vocabulary marks monitoring_period as WORLD mechanical: A monitoring reporting period anchored by its period-end date for a facility.",
+      "purpose_independence_test": "Truth conditions depend only on compiled source rows and identifiers; the proposition would retain the same meaning if purposes A/B/C were not being asked."
+    },
+    {
+      "relation": "permit_limit_extract_row",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Vocabulary marks permit_limit_extract_row as WORLD mechanical: One compiled row from the permit limit structured extract representing a limit value record and its identifying keys.",
+      "purpose_independence_test": "Truth conditions depend only on compiled source rows and identifiers; the proposition would retain the same meaning if purposes A/B/C were not being asked."
+    },
+    {
+      "relation": "limit_value_attributes",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Vocabulary marks limit_value_attributes as WORLD mechanical: Numeric limit value, units, and statistical-base metadata carried by a permit limit extract row.",
+      "purpose_independence_test": "Truth conditions depend only on compiled source rows and identifiers; the proposition would retain the same meaning if purposes A/B/C were not being asked."
+    },
+    {
+      "relation": "limit_source_flags",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Vocabulary marks limit_source_flags as WORLD mechanical: Source-supplied limit typing and monitoring schedule flags from the limit extract without enforceability interpretation.",
+      "purpose_independence_test": "Truth conditions depend only on compiled source rows and identifiers; the proposition would retain the same meaning if purposes A/B/C were not being asked."
+    },
+    {
+      "relation": "limit_season_month_active",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Vocabulary marks limit_season_month_active as WORLD mechanical: Whether a limit row's seasonal month flags mark a calendar month as in-scope for the limit schedule.",
+      "purpose_independence_test": "Truth conditions depend only on compiled source rows and identifiers; the proposition would retain the same meaning if purposes A/B/C were not being asked."
+    },
+    {
+      "relation": "conditional_trigger_language",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Vocabulary marks conditional_trigger_language as WORLD mechanical: Verbatim conditional or situational language attached to a limit row or limit set in structured extract or permit text.",
+      "purpose_independence_test": "Truth conditions depend only on compiled source rows and identifiers; the proposition would retain the same meaning if purposes A/B/C were not being asked."
+    },
+    {
+      "relation": "dmr_measurement_extract_row",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Vocabulary marks dmr_measurement_extract_row as WORLD mechanical: One DMR measurement event row from the structured extract with keys linking to limit and period context.",
+      "purpose_independence_test": "Truth conditions depend only on compiled source rows and identifiers; the proposition would retain the same meaning if purposes A/B/C were not being asked."
+    },
+    {
+      "relation": "dmr_reported_value_kind",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Vocabulary marks dmr_reported_value_kind as WORLD mechanical: Characterization of whether a DMR row reports a numeric value, qualifier-only result, or NODI-coded no-data.",
+      "purpose_independence_test": "Truth conditions depend only on compiled source rows and identifiers; the proposition would retain the same meaning if purposes A/B/C were not being asked."
+    },
+    {
+      "relation": "dmr_limit_correspondence",
+      "admission": "WORLD",
+      "construction_class": "DERIVED",
+      "reason": "Vocabulary marks dmr_limit_correspondence as WORLD derived: Deterministic linkage between a DMR measurement row and a permit limit row sharing facility, feature, parameter, and limit keys.",
+      "purpose_independence_test": "Truth conditions follow deterministically from other world relations and shared calendar scope; no purpose policy enters the derivation."
+    },
+    {
+      "relation": "limit_effective_during_period",
+      "admission": "WORLD",
+      "construction_class": "DERIVED",
+      "reason": "Vocabulary marks limit_effective_during_period as WORLD derived: Whether a limit row's effective date range overlaps the monitoring period end date.",
+      "purpose_independence_test": "Truth conditions follow deterministically from other world relations and shared calendar scope; no purpose policy enters the derivation."
+    },
+    {
+      "relation": "fy2025_in_scope_measurement",
+      "admission": "WORLD",
+      "construction_class": "DERIVED",
+      "reason": "Vocabulary marks fy2025_in_scope_measurement as WORLD derived: Whether a DMR measurement's monitoring period end falls within Federal FY2025 per shared_universe.period.",
+      "purpose_independence_test": "Truth conditions follow deterministically from other world relations and shared calendar scope; no purpose policy enters the derivation."
+    },
+    {
+      "relation": "monitoring_requirement_candidate",
+      "admission": "WORLD",
+      "construction_class": "DERIVED",
+      "reason": "Vocabulary marks monitoring_requirement_candidate as WORLD derived: A monitoring obligation candidate enumerated from permit limit schedule fields without applicability verdict.",
+      "purpose_independence_test": "Truth conditions follow deterministically from other world relations and shared calendar scope; no purpose policy enters the derivation."
+    },
+    {
+      "relation": "special_study_or_event_reference",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Vocabulary marks special_study_or_event_reference as WORLD mechanical: Documented reference to a special study, toxicity test, or event-driven monitoring requirement in permit materials.",
+      "purpose_independence_test": "Truth conditions depend only on compiled source rows and identifiers; the proposition would retain the same meaning if purposes A/B/C were not being asked."
+    },
+    {
+      "relation": "source_permit_document",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "Vocabulary marks source_permit_document as WORLD mechanical: A permit-package PDF file listed in the source manifest for a facility.",
+      "purpose_independence_test": "Truth conditions depend only on compiled source rows and identifiers; the proposition would retain the same meaning if purposes A/B/C were not being asked."
+    },
+    {
+      "relation": "discharge_occurrence_evidence",
+      "admission": "WORLD",
+      "construction_class": "SEMANTIC",
+      "reason": "Vocabulary marks discharge_occurrence_evidence as WORLD semantic: Accepted tuples must cite permit text, DMR narrative, or submission passage supporting discharge, no-discharge, or insufficient evidence.",
+      "purpose_independence_test": "The judgment is about grounded evidence (discharge, relief, no-data, no-discharge) independent of which purpose question is active; only ACCEPT tuples with non-empty grounding are persisted as world truth."
+    },
+    {
+      "relation": "permit_no_discharge_statement",
+      "admission": "WORLD",
+      "construction_class": "SEMANTIC",
+      "reason": "Vocabulary marks permit_no_discharge_statement as WORLD semantic: Accepted tuples require grounded permit or DMR passage explicitly stating no discharge for the period; absence of rows is not sufficient.",
+      "purpose_independence_test": "The judgment is about grounded evidence (discharge, relief, no-data, no-discharge) independent of which purpose question is active; only ACCEPT tuples with non-empty grounding are persisted as world truth."
+    },
+    {
+      "relation": "conditional_monitoring_relief_evidence",
+      "admission": "WORLD",
+      "construction_class": "SEMANTIC",
+      "reason": "Vocabulary marks conditional_monitoring_relief_evidence as WORLD semantic: Accepted tuples must cite permit condition satisfaction/failure or operational evidence; not inferred from missing DMR alone.",
+      "purpose_independence_test": "The judgment is about grounded evidence (discharge, relief, no-data, no-discharge) independent of which purpose question is active; only ACCEPT tuples with non-empty grounding are persisted as world truth."
+    },
+    {
+      "relation": "documented_nodata_reason",
+      "admission": "WORLD",
+      "construction_class": "SEMANTIC",
+      "reason": "Vocabulary marks documented_nodata_reason as WORLD semantic: Ground reason_code to NODI_CODE/qualifier columns; accepted reason_established requires explicit code or narrative meaning in source or permit glossary.",
+      "purpose_independence_test": "The judgment is about grounded evidence (discharge, relief, no-data, no-discharge) independent of which purpose question is active; only ACCEPT tuples with non-empty grounding are persisted as world truth."
+    },
+    {
+      "relation": "expected_monitoring_without_dmr_row",
+      "admission": "WORLD",
+      "construction_class": "DERIVED",
+      "reason": "Vocabulary marks expected_monitoring_without_dmr_row as WORLD derived: A monitoring expectation for a period where structured evidence shows no corresponding DMR measurement row.",
+      "purpose_independence_test": "Truth conditions follow deterministically from other world relations and shared calendar scope; no purpose policy enters the derivation."
+    },
+    {
+      "relation": "measurement_limit_evaluation_pair",
+      "admission": "WORLD",
+      "construction_class": "DERIVED",
+      "reason": "Vocabulary marks measurement_limit_evaluation_pair as WORLD derived: An FY2025 reported measurement paired with limit row(s) entering Purpose A applicability and comparison evaluation.",
+      "purpose_independence_test": "Truth conditions follow deterministically from other world relations and shared calendar scope; no purpose policy enters the derivation."
+    },
+    {
+      "relation": "applicable_limit_assessment",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "reason": "Vocabulary marks applicable_limit_assessment as PURPOSE (SEMANTIC): Purpose policy applies enforceability_threshold and report_only_classification over world relations; never persist as world truth.",
+      "purpose_independence_test": "If the analytical purpose were removed, the proposition would lose its verdict-oriented meaning: it applies purpose policy (enforceability thresholds, three-valued monitoring logic, or Purpose C taxonomy) rather than stating independently grounded facts."
+    },
+    {
+      "relation": "numeric_exceedance_assessment",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "reason": "Vocabulary marks numeric_exceedance_assessment as PURPOSE (SEMANTIC): Purpose exceedance_rule: emit within_limit or exceeds_limit only when enforceable numeric limit and numeric measurement align; otherwise comparison_not_applicable or unresolved.",
+      "purpose_independence_test": "If the analytical purpose were removed, the proposition would lose its verdict-oriented meaning: it applies purpose policy (enforceability thresholds, three-valued monitoring logic, or Purpose C taxonomy) rather than stating independently grounded facts."
+    },
+    {
+      "relation": "monitoring_obligation_applicability",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "reason": "Vocabulary marks monitoring_obligation_applicability as PURPOSE (SEMANTIC): Purpose three_valued_logic and conditional_evaluation_order over world relations; map to required|not_required|unresolved output rows.",
+      "purpose_independence_test": "If the analytical purpose were removed, the proposition would lose its verdict-oriented meaning: it applies purpose policy (enforceability thresholds, three-valued monitoring logic, or Purpose C taxonomy) rather than stating independently grounded facts."
+    },
+    {
+      "relation": "missing_evidence_classification",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "reason": "Vocabulary marks missing_evidence_classification as PURPOSE (SEMANTIC): Purpose taxonomy policy over expected_monitoring_without_dmr_row, dmr_reported_value_kind non-numeric cases, and documented world evidence.",
+      "purpose_independence_test": "If the analytical purpose were removed, the proposition would lose its verdict-oriented meaning: it applies purpose policy (enforceability thresholds, three-valued monitoring logic, or Purpose C taxonomy) rather than stating independently grounded facts."
+    }
+  ],
+  "summary": {
+    "total_relations": 27,
+    "world_relations": [
+      "facility",
+      "permit_feature",
+      "parameter",
+      "monitoring_period",
+      "permit_limit_extract_row",
+      "limit_value_attributes",
+      "limit_source_flags",
+      "limit_season_month_active",
+      "conditional_trigger_language",
+      "dmr_measurement_extract_row",
+      "dmr_reported_value_kind",
+      "dmr_limit_correspondence",
+      "limit_effective_during_period",
+      "fy2025_in_scope_measurement",
+      "monitoring_requirement_candidate",
+      "special_study_or_event_reference",
+      "source_permit_document",
+      "discharge_occurrence_evidence",
+      "permit_no_discharge_statement",
+      "conditional_monitoring_relief_evidence",
+      "documented_nodata_reason",
+      "expected_monitoring_without_dmr_row",
+      "measurement_limit_evaluation_pair"
+    ],
+    "purpose_relations": [
+      "applicable_limit_assessment",
+      "numeric_exceedance_assessment",
+      "monitoring_obligation_applicability",
+      "missing_evidence_classification"
+    ],
+    "declared_world_semantic_relations": [
+      "discharge_occurrence_evidence",
+      "permit_no_discharge_statement",
+      "conditional_monitoring_relief_evidence",
+      "documented_nodata_reason"
+    ],
+    "world_semantic_acceptance_stats": {
+      "attempted": 0,
+      "asserted": 0,
+      "skipped_no_grounding": 0,
+      "skipped_unmappable": 0
+    },
+    "world_semantic_unresolved_counts": {
+      "conditional_monitoring_relief_evidence": 960,
+      "discharge_occurrence_evidence": 36,
+      "documented_nodata_reason": 186,
+      "permit_no_discharge_statement": 22
+    }
+  },
+  "limitations": [
+    "No WORLD semantic ACCEPT tuples had non-empty grounding in 05_dispositions.json; semantic relation schemas are declared but carry zero asserted tuples.",
+    "Purpose relations (applicable_limit_assessment, numeric_exceedance_assessment, monitoring_obligation_applicability, missing_evidence_classification) are admitted to PURPOSE only and are not materialized in 06_world/world.sqlite.",
+    "72 ACCEPT monitoring_obligation_applicability dispositions remain in Purpose IR; not promoted to World per admission policy.",
+    "Closed-world negation for rejected or unresolved semantic candidates is not persisted as negative world assertions."
+  ]
+}

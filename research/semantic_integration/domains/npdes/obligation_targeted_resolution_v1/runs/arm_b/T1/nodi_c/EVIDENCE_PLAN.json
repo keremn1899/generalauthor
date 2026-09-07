@@ -1,0 +1,31 @@
+{
+  "proposition": "For FY2025 DMR measurement rows with no numeric reported result (DMR_VALUE_NMBR empty), NODI_CODE='C' has an interpretable regulatory/reporting meaning that can be mapped to a Purpose C missing-evidence state (documented no-discharge, conditional monitoring not required, other authorized no-data state, or required monitoring lacking adequate evidence).",
+  "would_establish": [
+    "Workspace text defining NODI code C (codebook, permit DMR instructions, NetDMR reporting guidance extract, or equivalent legend tied to this permit package).",
+    "Permit-authorized reporting instructions for NM0000116 that equate a specific no-data indicator or checkbox to NODI C and state what that indicator documents.",
+    "Structured source field documentation mapping NODI_CODE values to named reporting semantics."
+  ],
+  "would_refute": [
+    "Authoritative workspace text defining NODI C as a different missing-evidence category than any candidate interpretation.",
+    "Authoritative workspace text stating NODI C is not a valid or meaningful code for the affected rows.",
+    "Evidence that NODI C on these rows unambiguously means optional/conditional monitoring was not required (would conflict with OPTIONAL_MONITORING_FLAG='N' on all affected rows if C were defined that way)."
+  ],
+  "likely_authoritative_source_types": [
+    "sources/dmr_measurements.csv structural fields and co-occurrence patterns for NODI_CODE='C'",
+    "sources/permit_limits.csv limit metadata for permit NM0000116 (the sole permit with C-coded FY2025 no-numeric rows)",
+    "documents/gcc/final_permit.txt DMR/reporting instructions for NM0000116",
+    "documents/gcc/fact_sheet.txt facility discharge and monitoring context for NM0000116"
+  ],
+  "insufficient_alone": [
+    "Observing that NODI_CODE='C' co-occurs with empty DMR_VALUE_NMBR across 150 FY2025 rows",
+    "Observing that all C-coded rows are for permit NM0000116 and OPTIONAL_MONITORING_FLAG='N'",
+    "Observing that C-coded rows appear in batches of 15 parameters per monthly monitoring period",
+    "Narrative that GCC discharge is infrequent or that the permittee has not discharged in years (facility history without a NODI legend)",
+    "Presence of NO DISCHARGE reporting instructions in a different permit package (not NM0000116)"
+  ],
+  "unknowable_from_structured_data_alone": [
+    "The semantic label or regulatory definition of NODI code C",
+    "Whether NODI C documents no discharge, waived monitoring, absent sampling, or another authorized no-data condition",
+    "Whether NODI C establishes compliance, non-applicability, or merely reports a reporting-form state"
+  ]
+}

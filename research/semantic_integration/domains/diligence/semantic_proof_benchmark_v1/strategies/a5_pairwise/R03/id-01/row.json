@@ -1,0 +1,110 @@
+{
+  "strategy": "a5_pairwise",
+  "trial": "R03",
+  "obligation_id": "id-01",
+  "candidate": {
+    "left": "crm:HEL-441",
+    "right": "billing:Helion Robotics Limited"
+  },
+  "proposed_disposition": "SAME_ENTITY",
+  "final_disposition": "SAME_ENTITY",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row HEL-441"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Helion Robotics Limited"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "CRM record HEL-441 is tied to Helion Robotics Ltd, and commercial notes explicitly state that this operating name and the billing legal name Helion Robotics Limited are the same legal entity.",
+  "proof_size": 6,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "propositions": [
+    {
+      "proposition": "CRM record HEL-441 lists the counterparty name as Helion Robotics Ltd.",
+      "source_grounding": {
+        "source_path": "sources/crm.csv",
+        "location": "row HEL-441"
+      },
+      "establishes": "identity",
+      "relevance": "Links the left referent crm:HEL-441 to the CRM trading name Helion Robotics Ltd."
+    },
+    {
+      "proposition": "Billing records bill under the name Helion Robotics Limited.",
+      "source_grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Helion Robotics Limited"
+      },
+      "establishes": "other",
+      "relevance": "Identifies the right referent billing:Helion Robotics Limited as the name used on invoices."
+    },
+    {
+      "proposition": "Commercial notes describe Helion Robotics Ltd as the operating name used in CRM.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "identity",
+      "relevance": "Characterizes the CRM name associated with HEL-441 as an operating name for the entity under discussion."
+    },
+    {
+      "proposition": "Commercial notes state that invoices and Companies House use the name Helion Robotics Limited.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "other",
+      "relevance": "Connects the billing name Helion Robotics Limited to the legal name used on invoices and at Companies House."
+    },
+    {
+      "proposition": "Commercial notes state that Helion Robotics Ltd (CRM operating name) and Helion Robotics Limited (invoices and Companies House) are the same legal entity.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "identity",
+      "relevance": "Provides explicit same-entity evidence between the CRM name tied to HEL-441 and the billing legal name."
+    },
+    {
+      "proposition": "Commercial notes state that Helion Industrial Systems Ltd is a different company and has no current MSA.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "distinctness",
+      "relevance": "Records that a similarly named third party is distinct; does not directly establish distinctness between crm:HEL-441 and billing:Helion Robotics Limited."
+    }
+  ],
+  "admit": {
+    "rule": "identity_proposition_present"
+  },
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": true,
+  "unsupported_closure": false,
+  "under_closure": false,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": false
+}

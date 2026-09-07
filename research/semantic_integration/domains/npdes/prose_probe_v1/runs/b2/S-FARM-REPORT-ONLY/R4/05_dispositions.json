@@ -1,0 +1,50 @@
+[
+  {
+    "obligation_id": "oracle:S-FARM-REPORT-ONLY",
+    "relation": "numeric_comparison_applicable",
+    "values": {
+      "permit": "NM0020583",
+      "parameters": [
+        "Flow",
+        "TDS discharge",
+        "TDS intake",
+        "WET",
+        "named Report toxics"
+      ]
+    },
+    "disposition": "UNRESOLVED",
+    "grounding": [
+      {
+        "packet_field": "selected_observations[0]",
+        "source_path": "farmington/final_permit.pdf",
+        "location": "page 4 section part_i",
+        "excerpt": "Flow                       Report MGD      Report MGD      Report MGD"
+      },
+      {
+        "packet_field": "selected_observations[1]",
+        "source_path": "farmington/final_permit.pdf",
+        "location": "page 4 section part_i",
+        "excerpt": "Total Dissolved Solids,                                                                                                               12-Hour\n                              Report          Report          N/A          Report        Report        N/A          1/Week"
+      },
+      {
+        "packet_field": "selected_observations[2]",
+        "source_path": "farmington/final_permit.pdf",
+        "location": "page 5 section part_i",
+        "excerpt": "Daphnia pulex                                                Report                Once/Quarter"
+      },
+      {
+        "packet_field": "selected_observations[3]",
+        "source_path": "farmington/final_permit.pdf",
+        "location": "cover page",
+        "excerpt": "This permit shall become effective on December 1, 2021. This permit and the authorization to discharge shall expire at midnight, November 30, 2026."
+      },
+      {
+        "packet_field": "selected_observations[4]",
+        "source_path": "purposes/visible_a.md",
+        "location": "purpose A period",
+        "excerpt": "Federal FY2025 (2024-10-01 through 2025-09-30 inclusive)"
+      }
+    ],
+    "rationale": "The packet shows Report or N/A (not numeric effluent limits) for Flow, Total Dissolved Solids, and Daphnia pulex/WET, which weighs against ACCEPT but does not fully meet the REJECT burden for the bundled obligation. Flow and WET excerpts each show report-only monitoring without numeric limits, yet the obligation also names TDS discharge and TDS intake as distinct parameters while the packet supplies only one undifferentiated TDS row with no column-to-outfall mapping, so applicability for those two values cannot be established. No selected observation addresses named Report toxics at all. Prior pass artifacts include no world.sqlite or compiled referent mapping, so column semantics cannot be resolved from outside the packet. Neither ACCEPT nor REJECT is fully grounded across all listed parameters; UNRESOLVED is the correct disposition."
+  }
+]

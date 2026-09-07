@@ -1,0 +1,16 @@
+{
+  "obligation_id": "obl:documented_no_discharge_assertion:59115830352b71ef",
+  "selected_observations": [
+    {
+      "source_path": "sources/structured/dmr_measurements.csv",
+      "location": "line 572; DMR_EVENT_ID=3619518338; DMR_VALUE_ID=3842360836",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0000116; PERM_FEATURE_NMBR=001; PARAMETER_CODE=01105; PARAMETER_DESC=Aluminum, total [as Al]; MONITORING_PERIOD_END_DATE=03/31/2025; DMR_EVENT_ID=3619518338; DMR_VALUE_ID=3842360836; NODI_CODE=C"
+    }
+  ],
+  "selection_rationale": "Includes the DMR row carrying NODI_CODE and absent numeric value as candidate no-discharge documentary evidence.",
+  "known_missing_information": [
+    "02_mechanical_world/world.sqlite not present in workspace; evidence selected directly from structured CSV sources using P2 join rules.",
+    "Permit PDF sources listed in sources/source_manifest.json were not ingested; permit_stated_condition packets use structured DMR_COMMENT_TEXT only.",
+    "NODI code C (or other codes) alone does not establish affirmative no-discharge documentation without semantic adjudication."
+  ]
+}

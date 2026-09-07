@@ -1,0 +1,52 @@
+[
+  {
+    "id": "aggregate_before_compare",
+    "interpretation": "All geometric-mean-comment rows require computing a weekly geometric mean before any numeric limit comparison; individual monitoring-period values must not be compared directly.",
+    "scope": "All 40 occurrences with GEOMETRIC MEAN in DMR_COMMENT_TEXT",
+    "epistemic_basis": "MODEL_GENERALIZATION",
+    "exact_grounding": "Comment text phrase 'REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES' read without partition context",
+    "semantic_delta": "Block numeric_comparison_candidate for any row whose paired permit_limit has geometric-mean comment text",
+    "admit": false,
+    "remaining_uncertainty": "Contradicted by non-TDS carryover, TDS net-increase 30-day average enforcement language, and structured AVG/MAX/MIN bases on all 40 rows."
+  },
+  {
+    "id": "reporting_only",
+    "interpretation": "Geometric-mean comment governs DMR reporting of weekly aggregates for TDS discharge/intake; numeric net-increase limits use a separate 30-day average comparison statistic.",
+    "scope": "TDS rows (PARAMETER_CODE=70295) within NM0020583 limit set 3600891019",
+    "epistemic_basis": "SOURCE_ESTABLISHED",
+    "exact_grounding": "documents/farmington/final_permit.txt footnotes *6 and *8; documents/farmington/statement_of_basis.txt lines 521-522",
+    "semantic_delta": "Do not emit aggregated_reporting_requirement unresolved for TDS rows with numeric LIMIT_VALUE_NMBR; comparison proceeds via structured AVG",
+    "admit": true,
+    "remaining_uncertainty": "Workspace lacks weekly sub-period sample values to verify whether monthly DMR entries are pre-computed geometric means."
+  },
+  {
+    "id": "limit_set_metadata_artifact",
+    "interpretation": "The geometric-mean comment is TDS-specific permit language propagated at limit-set level; it does not change comparison semantics for non-TDS parameters.",
+    "scope": "Non-TDS rows (PARAMETER_CODE != 70295) with GEOMETRIC MEAN in DMR_COMMENT_TEXT",
+    "epistemic_basis": "SOURCE_ESTABLISHED",
+    "exact_grounding": "sources/permit_limits.csv row LIMIT_VALUE_ID=3610673282; documents/farmington/final_permit.txt footnote *6 names TDS only",
+    "semantic_delta": "Skip aggregated_reporting_requirement unresolved when PARAMETER_CODE != '70295'",
+    "admit": true,
+    "remaining_uncertainty": "None for comparison semantics; carryover is a data-quality artifact, not an alternate permit interpretation."
+  },
+  {
+    "id": "tds_discharge_report_only",
+    "interpretation": "For TDS rows without numeric limits, the geometric-mean comment establishes a reporting obligation only; no monitoring-period numeric comparison applies.",
+    "scope": "TDS rows with empty LIMIT_VALUE_NMBR (12 occurrences)",
+    "epistemic_basis": "SOURCE_ESTABLISHED",
+    "exact_grounding": "documents/farmington/final_permit.txt lines 80-85, 121; sources/permit_limits.csv TDS rows with Report-only structured limits",
+    "semantic_delta": "Skip aggregated_reporting_requirement unresolved when PARAMETER_CODE='70295' and LIMIT_VALUE_NMBR is empty",
+    "admit": true,
+    "remaining_uncertainty": "Whether permittee must compute geometric mean from weekly samples before entering monthly DMR is not verified from dmr_measurements.csv (no weekly sub-rows)."
+  },
+  {
+    "id": "unresolved_parent",
+    "interpretation": "Retain parent-level UNRESOLVED because structured sources alone cannot link monthly DMR values to weekly geometric means.",
+    "scope": "All 40 occurrences",
+    "epistemic_basis": "UNRESOLVED",
+    "exact_grounding": "sources/dmr_measurements.csv stores one value per MONITORING_PERIOD_END_DATE; no weekly sub-sample table",
+    "semantic_delta": "None; keep construction.py EXPLICIT_UNRESOLVED for all geometric-mean rows",
+    "admit": false,
+    "remaining_uncertainty": "Superseded by partition refinement: document-grounded answers exist per child class; parent coarseness caused apparent uniform insufficiency."
+  }
+]

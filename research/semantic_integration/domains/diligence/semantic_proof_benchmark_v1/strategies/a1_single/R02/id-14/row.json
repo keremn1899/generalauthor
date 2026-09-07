@@ -1,0 +1,36 @@
+{
+  "strategy": "a1_single",
+  "trial": "R02",
+  "obligation_id": "id-14",
+  "candidate": {
+    "left": "billing:Meridian Energy Partners LLC",
+    "right": "registry:4721193"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 4721193"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Meridian Energy Partners LLC"
+    }
+  ],
+  "support_claim": "Registry row 4721193 lists MERIDIAN ENERGY PARTNERS LLC and billing records use Meridian Energy Partners LLC, but the packet provides only name correspondence between the billing referent and the registry identifier, not evidence that establishes they are the same legal counterparty.",
+  "proof_size": 1,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "justification": "Under the relation contract, SAME_ENTITY requires establishing identity and name similarity is insufficient; the packet offers no linkage beyond matching names and no evidence of distinctness, so neither SAME_ENTITY nor DISTINCT is licensed.",
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

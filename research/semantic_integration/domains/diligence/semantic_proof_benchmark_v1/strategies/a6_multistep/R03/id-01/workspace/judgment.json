@@ -1,0 +1,54 @@
+{
+  "steps": [
+    {
+      "fact": "CRM record HEL-441 has company name Helion Robotics Ltd.",
+      "grounding": {
+        "source_path": "sources/crm.csv",
+        "location": "row HEL-441"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Candidate left referent crm:HEL-441 denotes the CRM record HEL-441.",
+      "grounding": null,
+      "mechanical": true
+    },
+    {
+      "fact": "Commercial notes state that Helion Robotics Ltd is the operating name used in CRM and that Helion Robotics Limited is used on invoices and Companies House, and that these are the same legal entity.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Billing invoice billed_name is Helion Robotics Limited.",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Helion Robotics Limited"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Candidate right referent billing:Helion Robotics Limited denotes the billing billed_name Helion Robotics Limited.",
+      "grounding": null,
+      "mechanical": true
+    }
+  ],
+  "disposition": "SAME_ENTITY",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row HEL-441"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Helion Robotics Limited"
+    }
+  ],
+  "support_claim": "HEL-441 maps to Helion Robotics Ltd in CRM, commercial notes explicitly identify Helion Robotics Ltd and Helion Robotics Limited as the same legal entity, and the billing record billed_name is Helion Robotics Limited."
+}

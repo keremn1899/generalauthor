@@ -1,0 +1,40 @@
+{
+  "answers": [
+    {
+      "id": "Q1",
+      "status": "ANSWERED",
+      "value": 240,
+      "rationale": "Job J1 uses service_code TOW. rate_card.csv lists TOW at 240 currency units per hour, and service_conditions.txt §1 states named rate_card rates apply by service with no exception for TOW."
+    },
+    {
+      "id": "Q2",
+      "status": "ANSWERED",
+      "value": 180,
+      "rationale": "Job J4 uses service_code ASST. service_conditions.txt §4 directs billing ASST jobs using the ESCORT rate_card row, not the ASST row. rate_card.csv lists ESCORT at 180 currency units per hour."
+    },
+    {
+      "id": "Q3",
+      "status": "ANSWERED",
+      "value": 1,
+      "rationale": "service_conditions.txt §5 states blank billed_hours is not an established billable quantity. In jobs.csv, only J6 has a blank billed_hours field; all other jobs (J1–J5, J7) have numeric values."
+    },
+    {
+      "id": "Q4",
+      "status": "ANSWERED",
+      "value": 2280,
+      "rationale": "J2 has established billed_hours of 9 for service_code TOW at 240/hour. service_conditions.txt §2 applies overtime: the first 8 hours bill at 240 (1920), and the 1 hour beyond 8 on that calendar day for vessel V-BAY bills at 1.5×240 (360), totaling 2280."
+    },
+    {
+      "id": "Q5",
+      "status": "UNRESOLVED",
+      "value": null,
+      "rationale": "service_conditions.txt §6 states fuel surcharges are published in a separate circular and that this excerpt does not contain a fuel schedule. No fuel surcharge amount for J3 appears in the available sources."
+    },
+    {
+      "id": "Q6",
+      "status": "UNRESOLVED",
+      "value": null,
+      "rationale": "J7 occurred at berth B12 starting at 20:00 (after 18:00). berth_notice.txt permits commercial towing at B12 after 18:00 only for a documented emergency, but explicitly states no emergency log is attached and that documentation is not included in this packet. The evidence does not establish whether a documented emergency authorized J7."
+    }
+  ]
+}

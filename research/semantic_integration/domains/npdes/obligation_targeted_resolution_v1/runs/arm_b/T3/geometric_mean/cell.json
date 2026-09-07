@@ -1,0 +1,767 @@
+{
+  "trial": "T3",
+  "obligation_id": "geometric_mean",
+  "n_occurrences": 40,
+  "reported_model_retrieve": "Composer 2.5",
+  "reported_model_adjudicate": "Composer 2.5",
+  "retrieval": {
+    "n_tool_paths": 26,
+    "structured_paths": [
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/0a3b87ba0a7e722f6b169337bc8c0b2c/sources/document_inventory.json",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/0a3b87ba0a7e722f6b169337bc8c0b2c/sources/permit_limits.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/0a3b87ba0a7e722f6b169337bc8c0b2c/sources/dmr_measurements.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/0a3b87ba0a7e722f6b169337bc8c0b2c/sources/permit_limits.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/0a3b87ba0a7e722f6b169337bc8c0b2c/sources/permit_limits.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/0a3b87ba0a7e722f6b169337bc8c0b2c/sources/permit_limits.csv"
+    ],
+    "document_paths": [
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/0a3b87ba0a7e722f6b169337bc8c0b2c/documents/INDEX.md",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/0a3b87ba0a7e722f6b169337bc8c0b2c/documents/farmington/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/0a3b87ba0a7e722f6b169337bc8c0b2c/documents/farmington/statement_of_basis.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/0a3b87ba0a7e722f6b169337bc8c0b2c/documents/farmington/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/0a3b87ba0a7e722f6b169337bc8c0b2c/documents/farmington/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/0a3b87ba0a7e722f6b169337bc8c0b2c/documents/farmington/statement_of_basis.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/0a3b87ba0a7e722f6b169337bc8c0b2c/documents/farmington/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/0a3b87ba0a7e722f6b169337bc8c0b2c/documents/farmington/final_permit.txt"
+    ],
+    "n_documents_touched": 3,
+    "queries": [
+      "GEOMETRIC MEAN|geometric mean",
+      "geometric_mean|aggregated_reporting",
+      "geometric mean|GEOMETRIC MEAN|weekly values|TDS|total dissolved solids",
+      "70295|3610673273|3610673285|GEOMETRIC|3600891019",
+      "GEOMETRIC MEAN",
+      "30.day|geometric mean|weekly|cannot be averaged",
+      "GEOMETRIC MEAN",
+      "GEOMETRIC MEAN.*70295|70295.*GEOMETRIC",
+      "MONITORING_LOCATION|monitoring location|Outfall 001"
+    ],
+    "n_queries": 9
+  },
+  "plan": {
+    "proposition": "A permit limit DMR comment containing 'GEOMETRIC MEAN' establishes that aggregated reporting\u2014not ordinary single-period numeric comparison\u2014governs how individual monitoring-period values relate to applicable effluent limits.",
+    "would_establish": [
+      "Permit narrative or limit-table footnotes defining what must be reported (geometric mean of weekly values) and what statistic is compared to numeric limits (e.g., 30-day average)",
+      "Explicit contrast in the same permit between parameters that cannot be averaged and parameters requiring geometric-mean aggregation",
+      "Structured rows where the comment text identifies the pollutant and reporting statistic, linked to permit footnotes for that pollutant",
+      "DMR or permit language stating which reported aggregate constitutes evidence of violation"
+    ],
+    "would_refute": [
+      "Permit text requiring direct comparison of each individual weekly or monthly sample to the effluent limit without aggregation",
+      "Evidence that the geometric-mean comment applies uniformly to every parameter sharing the limit-set schedule comment, not only the named pollutant",
+      "Numeric effluent limits stated as instantaneous or single-sample maxima for the same rows governed by the geometric-mean comment"
+    ],
+    "likely_authoritative_source_types": [
+      "final_permit.txt footnotes and effluent-limit tables for permit NM0020583",
+      "statement_of_basis.txt discussion of TDS monitoring and limit derivation",
+      "permit_limits.csv DMR_COMMENT_TEXT and parameter linkage on limit set schedule 3600891019",
+      "dmr_measurements.csv exemplar TDS reporting rows (to observe reporting grain, not as compliance legend)"
+    ],
+    "insufficient_alone": [
+      "Presence of 'GEOMETRIC MEAN' in DMR_COMMENT_TEXT on all 40 schedule rows without reading which pollutant the text names",
+      "STATISTICAL_BASE_TYPE_CODE = AVG on structured limit rows",
+      "LIMIT_FREQ_OF_ANALYSIS_CODE = 01/07 (weekly) without permit narrative",
+      "A single monthly DMR numeric value for TDS without underlying weekly sub-period data"
+    ],
+    "unknowable_from_structured_data_alone": [
+      "Whether each monthly DMR reported value is already the geometric mean of that month's weekly measurements",
+      "The exact aggregation window for limit comparison when permit states both weekly monitoring and 30-day average limits",
+      "Whether non-TDS parameters on the same limit set are semantically subject to geometric-mean reporting when the comment text names only TDS"
+    ]
+  },
+  "packet": {
+    "obligation_id": "geometric_mean",
+    "exact_semantic_question": "What does a geometric-mean reporting comment require for comparison of individual monitoring-period values?",
+    "purpose": [
+      "A",
+      "B",
+      "C"
+    ],
+    "relation_contract": "aggregated reporting is not an ordinary single-period numeric comparison",
+    "candidate_interpretations": [
+      {
+        "id": "tds_aggregated_reporting",
+        "text": "For TDS limits governed by footnotes *6\u2013*8, weekly measurements must be aggregated (geometric mean of weekly values) for reporting; numeric net-increase limits are 30-day averages, so individual weekly samples or undifferentiated monthly DMR scalars are not the comparison unit for limit exceedance."
+      },
+      {
+        "id": "schedule_wide_geometric_mean",
+        "text": "Every permit_limit row sharing the limit-set DMR comment must use geometric-mean aggregation for all parameters on that schedule, blocking ordinary single-period comparison for BOD, pH, E. coli, etc."
+      },
+      {
+        "id": "reporting_only_no_comparison_block",
+        "text": "The comment is a reporting instruction only and does not alter whether a reported monitoring-period value may be compared to a numeric effluent limit."
+      }
+    ],
+    "retained_snippets": [
+      {
+        "source_id": "sources/permit_limits.csv",
+        "location": "row limit_value_id=3610673282 (representative of 40 rows on schedule 3600891019)",
+        "text": "DMR_COMMENT_TEXT=TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.; PARAMETER_CODE=00310 (BOD); LIMIT_FREQ_OF_ANALYSIS_CODE=05/WK",
+        "why_retained": "Shows the geometric-mean comment is replicated at limit-set schedule level across non-TDS parameters even though the text names only TDS."
+      },
+      {
+        "source_id": "sources/permit_limits.csv",
+        "location": "rows limit_value_id=3610673300, 3610838803 (TDS net increase, monitoring_location_code=2)",
+        "text": "PARAMETER_CODE=70295; LIMIT_VALUE_NMBR=497 then 449; STATISTICAL_BASE_TYPE_CODE=AVG; LIMIT_FREQ_OF_ANALYSIS_CODE=01/07; DMR_COMMENT_TEXT contains REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES",
+        "why_retained": "Links TDS numeric net-increase limits to weekly monitoring frequency and the geometric-mean reporting comment."
+      },
+      {
+        "source_id": "documents/farmington/final_permit.txt",
+        "location": "Part I footnotes *6\u2013*8 (lines 121\u2013124)",
+        "text": "*6      Total dissolved solids measured at Outfall 001. Report the geometric mean value of weekly values.\n*7      Total dissolved solids flow weighted average measured at intake of the two drinking water treatment plants. Report the geometric mean value of weekly values.\n*8      Net total dissolved solids calculated by taking the difference between Outfall 001 discharge and flow weighted average1 influent of the two drinking water treatment plants.",
+        "why_retained": "Authoritative permit definition: geometric-mean reporting applies to TDS discharge and intake weekly values; net TDS is a derived difference."
+      },
+      {
+        "source_id": "documents/farmington/final_permit.txt",
+        "location": "Part I TDS effluent table (lines 80\u2013103)",
+        "text": "Total Dissolved Solids, Discharge (*6) ... Report ... 1/Week\nTotal Dissolved Solids, Water Plants Intake (*7) ... Report ... 1/Week\nTotal Dissolved Solids, Net Increase (*8) ... 497 mg/L ... 449 mg/L ... 1/Week",
+        "why_retained": "TDS discharge and intake rows carry Report-only limits; net increase carries numeric 30-day-average concentration limits."
+      },
+      {
+        "source_id": "documents/farmington/final_permit.txt",
+        "location": "footnote *5 (lines 117\u2013120)",
+        "text": "The effluent limitation for TRC is the instantaneous maximum grab sample taken during periods of chlorine use and cannot be averaged for reporting purposes.",
+        "why_retained": "Contrast: permit explicitly forbids averaging for TRC, while TDS footnotes explicitly require geometric-mean aggregation."
+      },
+      {
+        "source_id": "documents/farmington/final_permit.txt",
+        "location": "Part I.C items 3\u20134 (lines 216\u2013223)",
+        "text": "If any 30 day average, monthly average, 7 day average, weekly average, or daily maximum value exceeds the effluent limitations specified in Part I.A, the permittee shall report the excursion...\nAny 30 day average, monthly average, 7 day average, weekly average, or daily maximum value reported in the required Discharge Monitoring Report which is in excess of the effluent limitation specified in Part I.A shall constitute evidence of violation",
+        "why_retained": "Violation evidence is tied to named aggregate statistics in the DMR, not to raw individual samples by default."
+      },
+      {
+        "source_id": "documents/farmington/statement_of_basis.txt",
+        "location": "TDS discussion (lines 521\u2013548)",
+        "text": "temporary 30-day average TDS net incremental increase limit of 497 mg/L... EPA proposes a revision... to 449 mg/L... reporting results monthly.",
+        "why_retained": "Basis document frames enforceable TDS net-increase limit as a 30-day average, consistent with aggregated comparison rather than single-sample comparison."
+      },
+      {
+        "source_id": "sources/dmr_measurements.csv",
+        "location": "row dmr_form_value_id=3832994550 (representative TDS net increase monthly report)",
+        "text": "PARAMETER_CODE=70295; MONITORING_PERIOD_END_DATE=11/30/2024; LIMIT_VALUE_ID=3610673300; DMR_VALUE_NMBR=347; LIMIT_VALUE_NMBR=497; STATISTICAL_BASE_TYPE_CODE=AVG",
+        "why_retained": "Shows monthly DMR grain stores one scalar per period for TDS net limit; workspace lacks weekly sub-period values to verify that scalar is the geometric mean."
+      }
+    ],
+    "contradictory_evidence": [
+      {
+        "source_id": "sources/permit_limits.csv",
+        "location": "24 non-TDS rows on schedule 3600891019 (e.g., limit_value_id=3610673282 BOD, 3610673290 pH)",
+        "text": "Same DMR_COMMENT_TEXT names TDS geometric-mean reporting, but PARAMETER_CODE is not 70295 and limits are ordinary numeric concentration/mass limits with 05/WK frequency.",
+        "why_contradictory": "Refutes schedule-wide geometric-mean comparison for every row bearing the comment; comment text is TDS-specific while attached broadly."
+      }
+    ],
+    "known_limitations": [
+      "Workspace contains no weekly sub-period measurement rows; cannot verify whether monthly DMR values equal geometric means of weekly samples.",
+      "Permit does not state an explicit formula mapping weekly geometric means to the 30-day average net-increase limit used for enforcement.",
+      "Structured CSV attaches the same DMR_COMMENT_TEXT to 24 non-TDS parameters; permit footnotes *6\u2013*7 name only TDS, so parameter-specific applicability must be resolved by refinement."
+    ],
+    "allowed_dispositions": [
+      "SUPPORTED_RESOLUTION",
+      "SUPPORTED_NEGATIVE",
+      "UNRESOLVED"
+    ]
+  },
+  "judgment": {
+    "disposition": "SUPPORTED_RESOLUTION",
+    "grounding": [
+      {
+        "source_id": "documents/farmington/final_permit.txt",
+        "location": "Part I footnotes *6\u2013*8 (lines 121\u2013124)",
+        "supports": "Permit-authoritative TDS reporting: discharge and intake weekly values must be reported as geometric means; net TDS is a derived difference (*8), not a raw single-sample scalar."
+      },
+      {
+        "source_id": "documents/farmington/final_permit.txt",
+        "location": "Part I TDS effluent table (lines 80\u2013103)",
+        "supports": "TDS discharge/intake rows are report-only; TDS net-increase rows carry numeric concentration limits enforceable separately from weekly grab semantics."
+      },
+      {
+        "source_id": "documents/farmington/final_permit.txt",
+        "location": "Part I.C items 3\u20134 (lines 216\u2013223)",
+        "supports": "Excursion/violation evidence is tied to named aggregate statistics reported on the DMR (30-day average, monthly average, weekly average, etc.), not to undifferentiated individual monitoring samples by default."
+      },
+      {
+        "source_id": "documents/farmington/statement_of_basis.txt",
+        "location": "TDS discussion (lines 521\u2013548)",
+        "supports": "Enforceable TDS net-incremental increase limit is framed as a 30-day average, consistent with aggregated comparison rather than single-sample comparison."
+      },
+      {
+        "source_id": "sources/permit_limits.csv",
+        "location": "rows limit_value_id=3610673300, 3610838803 (TDS net increase, monitoring_location_code=2)",
+        "supports": "Structured limit rows for parameter 70295 link geometric-mean reporting comment to AVG statistical-base numeric limits at weekly monitoring frequency."
+      },
+      {
+        "source_id": "sources/permit_limits.csv",
+        "location": "24 non-TDS rows on schedule 3600891019 (contradictory_evidence)",
+        "supports": "Negative: the same schedule-level DMR comment text does not establish schedule-wide geometric-mean comparison blocking for BOD, pH, and other non-TDS parameters."
+      }
+    ],
+    "interpretation": "tds_aggregated_reporting (scoped): For TDS limits governed by footnotes *6\u2013*8, weekly measurements must be aggregated (geometric mean of weekly values) for reporting; the enforceable TDS net-increase numeric limit is a 30-day average, so individual weekly samples are not the comparison unit for limit exceedance. The geometric-mean comment does not impose schedule-wide comparison blocking on non-TDS parameters sharing the schedule-level comment text.",
+    "epistemic_basis": "SOURCE_ESTABLISHED",
+    "scope": "ONE_RELATION_OR_VOCABULARY",
+    "remaining_uncertainty": "The workspace lacks weekly sub-period DMR rows, so it cannot verify that monthly reported scalars equal geometric means of weekly samples or the permit's unstated formula linking weekly geometric means to the 30-day-average net-increase limit used for enforcement.",
+    "failure_mode_if_unresolved": null
+  },
+  "proposal": {
+    "interpretation": "Apply footnote *6\u2013*8 TDS semantics only where the permit and structured fields identify TDS net-increase limits (parameter_code 70295 with geometric-mean comment): aggregated reporting is required and ordinary single-period numeric comparison is blocked. For all other rows bearing the same schedule-level geometric-mean comment text, treat the comment as TDS-specific reporting language that does not alter single-period numeric comparison.",
+    "scope": "ONE_RELATION_OR_VOCABULARY",
+    "epistemic_basis": "SOURCE_ESTABLISHED",
+    "exact_grounding": [
+      "documents/farmington/final_permit.txt Part I footnotes *6\u2013*8 (lines 121\u2013124)",
+      "documents/farmington/final_permit.txt Part I TDS effluent table (lines 80\u2013103)",
+      "documents/farmington/final_permit.txt Part I.C items 3\u20134 (lines 216\u2013223)",
+      "documents/farmington/statement_of_basis.txt TDS discussion (lines 521\u2013548)",
+      "sources/permit_limits.csv rows limit_value_id=3610673300, 3610838803 (parameter 70295, AVG, geometric-mean comment)",
+      "sources/permit_limits.csv contradictory_evidence: 24 non-TDS rows on schedule 3600891019"
+    ],
+    "semantic_delta": "Replace blanket geometric-mean unresolved holes with a reusable parameter-code rule: exclude parameter 70295 rows whose dmr_comment_text contains GEOMETRIC MEAN from numeric_comparison_candidate (aggregated reporting is not ordinary single-period comparison); do not emit aggregated_reporting_requirement unresolved holes for non-70295 rows because permit footnotes name TDS only.",
+    "affected_obligations": [
+      "aggregated_reporting_requirement",
+      "numeric_comparison_candidate"
+    ],
+    "affected_occurrence_count": 40,
+    "remaining_uncertainty": "Weekly-to-monthly aggregation mechanics for TDS net increase remain unverified in structured DMR data; discharge/intake TDS report-only rows (*6, *7) are not separately keyed in the proposed parameter-code filter.",
+    "admit": "ADMIT_DISPOSABLE"
+  },
+  "refinement": {
+    "parent": "geometric_mean",
+    "children": [
+      {
+        "id": "geometric_mean_tds_reporting",
+        "exact_semantic_question": "For TDS permit limits linked to footnotes *6\u2013*8, what does the geometric-mean-of-weekly-values reporting requirement establish about comparison of individual monitoring-period values to effluent limits?",
+        "relation_contract": "TDS reporting uses geometric mean of weekly values; enforceable net-increase limits are 30-day averages\u2014individual weekly samples are not the comparison unit",
+        "supported_disposition": "SUPPORTED_RESOLUTION"
+      },
+      {
+        "id": "geometric_mean_comment_on_non_tds_limits",
+        "exact_semantic_question": "For non-TDS parameters on limit set schedule 3600891019 that share a DMR comment naming TDS geometric-mean reporting, does that comment block ordinary single-period numeric comparison?",
+        "relation_contract": "schedule-level comment artifact does not impose geometric-mean comparison on parameters not named in the comment or permit footnotes",
+        "supported_disposition": "SUPPORTED_NEGATIVE"
+      }
+    ],
+    "why_necessary": "Retrieved evidence shows one DMR_COMMENT_TEXT string on 40 permit_limit rows spanning 10 parameters, but permit footnotes *6\u2013*7 and the comment text itself name only TDS. Non-TDS rows (BOD, pH, TSS, E. coli, etc.) retain ordinary numeric limits and 5/week monitoring without geometric-mean footnotes. Treating all 40 rows under a single comparison rule would conflate TDS aggregated-reporting semantics with unrelated parameters.",
+    "occurrence_partition": {
+      "geometric_mean_tds_reporting": {
+        "parameter_code": "70295",
+        "count": 16,
+        "representative_limit_value_ids": [
+          "3610673275",
+          "3610673300",
+          "3610838803"
+        ]
+      },
+      "geometric_mean_comment_on_non_tds_limits": {
+        "parameter_codes": [
+          "00310",
+          "00400",
+          "00530",
+          "00720",
+          "50050",
+          "50060",
+          "51040",
+          "81010",
+          "81011"
+        ],
+        "count": 24,
+        "representative_limit_value_ids": [
+          "3610673282",
+          "3610673290",
+          "3610673269"
+        ]
+      }
+    },
+    "mechanically_computable": true
+  },
+  "mutated_before_evidence": false,
+  "dry_run": {
+    "public": {
+      "ok": true,
+      "errors": [],
+      "n_hole_groups": 7,
+      "n_hole_instances": 495,
+      "relation_row_counts": {
+        "dmr_measurement": 824,
+        "permit_limit": 105,
+        "permit_document": 12,
+        "fy2025_measurement": 824,
+        "measurement_limit_pair": 824,
+        "numeric_comparison_candidate": 318,
+        "no_numeric_result_case": 186,
+        "monitoring_requirement_fy2025": 105
+      },
+      "requirement_names": [
+        "fy2025_measurements_materializable",
+        "measurement_limit_pairs_materializable",
+        "unique_applicable_limit_per_measurement",
+        "numeric_comparison_candidates_materializable",
+        "limit_value_for_comparison",
+        "reported_value_for_comparison",
+        "limit_comparison_operator",
+        "reported_value_qualifier",
+        "optional_monitoring_flag_for_limit_applicability",
+        "limit_type_code_for_enforceability",
+        "statistical_base_for_limit_comparison",
+        "monitoring_requirements_materializable",
+        "monitoring_frequency_code",
+        "limit_sample_type_code",
+        "optional_monitoring_flag_for_obligation",
+        "permit_limit_comment_text",
+        "limit_set_designator_for_schedule",
+        "no_numeric_result_cases_materializable",
+        "nodi_code_semantics",
+        "optional_monitoring_flag_for_missing_evidence",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "permit_document_text_not_available"
+      ],
+      "hole_groups": [
+        {
+          "group_id": "g000",
+          "requirement": "conditional_discharge_dependent_monitoring",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 17,
+          "purpose": [
+            "B",
+            "C"
+          ],
+          "sample_subjects": [
+            {
+              "limit_value_id": "3610840344",
+              "limit_set_schedule_id": "3600904607"
+            },
+            {
+              "limit_value_id": "3610840345",
+              "limit_set_schedule_id": "3600904607"
+            },
+            {
+              "limit_value_id": "3610840341",
+              "limit_set_schedule_id": "3600904607"
+            },
+            {
+              "limit_value_id": "3610840343",
+              "limit_set_schedule_id": "3600904607"
+            },
+            {
+              "limit_value_id": "3610840342",
+              "limit_set_schedule_id": "3600904607"
+            },
+            {
+              "limit_value_id": "3610840340",
+              "limit_set_schedule_id": "3600904607"
+            },
+            {
+              "limit_value_id": "3610840349",
+              "limit_set_schedule_id": "3600904607"
+            },
+            {
+              "limit_value_id": "3610840350",
+              "limit_set_schedule_id": "3600904607"
+            },
+            {
+              "limit_value_id": "3610840348",
+              "limit_set_schedule_id": "3600904607"
+            },
+            {
+              "limit_value_id": "3610840339",
+              "limit_set_schedule_id": "3600904606"
+            },
+            {
+              "limit_value_id": "3610840337",
+              "limit_set_schedule_id": "3600904606"
+            },
+            {
+              "limit_value_id": "3610840338",
+              "limit_set_schedule_id": "3600904606"
+            }
+          ],
+          "expected": "purpose-computable interpretation"
+        },
+        {
+          "group_id": "g001",
+          "requirement": "limit_sample_type_code",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 105,
+          "purpose": [
+            "B"
+          ],
+          "sample_subjects": [
+            {
+              "limit_sample_type_code": "12",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673284"
+            },
+            {
+              "limit_sample_type_code": "12",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673282"
+            },
+            {
+              "limit_sample_type_code": "12",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673283"
+            },
+            {
+              "limit_sample_type_code": "12",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673281"
+            },
+            {
+              "limit_sample_type_code": "GR",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129864"
+            },
+            {
+              "limit_sample_type_code": "GR",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833505|limit_value_id=3610129864"
+            },
+            {
+              "limit_sample_type_code": "GR",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833505|limit_value_id=3610129865"
+            },
+            {
+              "limit_sample_type_code": "GR",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129865"
+            },
+            {
+              "limit_sample_type_code": "GR",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673290"
+            },
+            {
+              "limit_sample_type_code": "GR",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673289"
+            },
+            {
+              "limit_sample_type_code": "GR",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840344"
+            },
+            {
+              "limit_sample_type_code": "GR",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840345"
+            }
+          ],
+          "expected": "limit_sample_type_code in known ['']"
+        },
+        {
+          "group_id": "g002",
+          "requirement": "monitoring_frequency_code",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 105,
+          "purpose": [
+            "B"
+          ],
+          "sample_subjects": [
+            {
+              "limit_freq_of_analysis_code": "05/WK",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673284"
+            },
+            {
+              "limit_freq_of_analysis_code": "05/WK",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673282"
+            },
+            {
+              "limit_freq_of_analysis_code": "05/WK",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673283"
+            },
+            {
+              "limit_freq_of_analysis_code": "05/WK",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673281"
+            },
+            {
+              "limit_freq_of_analysis_code": "01/01",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129864"
+            },
+            {
+              "limit_freq_of_analysis_code": "01/01",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833505|limit_value_id=3610129864"
+            },
+            {
+              "limit_freq_of_analysis_code": "01/01",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833505|limit_value_id=3610129865"
+            },
+            {
+              "limit_freq_of_analysis_code": "01/01",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129865"
+            },
+            {
+              "limit_freq_of_analysis_code": "05/WK",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673290"
+            },
+            {
+              "limit_freq_of_analysis_code": "05/WK",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673289"
+            },
+            {
+              "limit_freq_of_analysis_code": "01/07",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840344"
+            },
+            {
+              "limit_freq_of_analysis_code": "01/07",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840345"
+            }
+          ],
+          "expected": "limit_freq_of_analysis_code in known ['']"
+        },
+        {
+          "group_id": "g003",
+          "requirement": "nodi_code_semantics",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "no_numeric_result_case",
+          "n_instances": 186,
+          "purpose": [
+            "C"
+          ],
+          "sample_subjects": [
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662047"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662059"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662071"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662083"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662048"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662060"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662072"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662084"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662049"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662061"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662073"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662085"
+            }
+          ],
+          "expected": "nodi_code in known ['']"
+        },
+        {
+          "group_id": "g004",
+          "requirement": "pass_fail_reporting_semantics",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "measurement_limit_pair",
+          "n_instances": 12,
+          "purpose": [
+            "A",
+            "B",
+            "C"
+          ],
+          "sample_subjects": [
+            {
+              "limit_value_id": "3610839676",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839677",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839678",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839679",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839680",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839681",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839682",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839683",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839684",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839685",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839686",
+              "limit_set_schedule_id": "3600904539"
+            },
+            {
+              "limit_value_id": "3610839687",
+              "limit_set_schedule_id": "3600904539"
+            }
+          ],
+          "expected": "purpose-computable interpretation"
+        },
+        {
+          "group_id": "g005",
+          "requirement": "permit_document_text_not_available",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "permit_document",
+          "n_instances": 1,
+          "purpose": [
+            "B",
+            "C"
+          ],
+          "sample_subjects": [
+            {
+              "source": "document_inventory.json"
+            }
+          ],
+          "expected": "purpose-computable interpretation"
+        },
+        {
+          "group_id": "g006",
+          "requirement": "permit_limit_comment_text",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "permit_limit",
+          "n_instances": 69,
+          "purpose": [
+            "B",
+            "C"
+          ],
+          "sample_subjects": [
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673284"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673282"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673283"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673281"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673290"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673289"
+            },
+            {
+              "dmr_comment_text": "WHEN DISCHARGING.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840344"
+            },
+            {
+              "dmr_comment_text": "WHEN DISCHARGING.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840345"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673278"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673277"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673280"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673279"
+            }
+          ],
+          "expected": "dmr_comment_text in known ['']"
+        }
+      ]
+    },
+    "delta": {
+      "relation_count_changes": {
+        "numeric_comparison_candidate": {
+          "baseline": 342,
+          "proposed": 318
+        }
+      },
+      "requirements_added": [],
+      "requirements_removed": [
+        "aggregated_reporting_requirement"
+      ],
+      "requirements_changed": [],
+      "relation_mode_changes": {},
+      "n_hole_groups": {
+        "baseline": 8,
+        "proposed": 7
+      },
+      "n_hole_instances": {
+        "baseline": 535,
+        "proposed": 495
+      },
+      "hole_requirements_added": [],
+      "hole_requirements_removed": [
+        "aggregated_reporting_requirement"
+      ],
+      "WORLD_semantics_changed": true,
+      "PURPOSE_semantics_changed": true,
+      "ok": {
+        "baseline": true,
+        "proposed": true
+      }
+    }
+  },
+  "finished_at": "2026-09-05T14:34:08.768690+00:00"
+}

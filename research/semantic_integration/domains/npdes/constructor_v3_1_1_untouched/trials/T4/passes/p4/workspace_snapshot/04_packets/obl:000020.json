@@ -1,0 +1,39 @@
+{
+  "obligation_id": "obl:000020",
+  "selected_observations": [
+    {
+      "source_path": "sources/structured/dmr_measurements.csv",
+      "location": "row 195, DMR_VALUE_ID=3831416449",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0020583; PERM_FEATURE_NMBR=001; PARAMETER_CODE=51040; PARAMETER_DESC=E. coli; MONITORING_PERIOD_END_DATE=10/31/2024; DMR_VALUE_ID=3831416449; DMR_VALUE_NMBR=2; DMR_UNIT_CODE=3Z; DMR_VALUE_QUALIFIER_CODE==; LIMIT_VALUE_ID=3610673269; LIMIT_TYPE_CODE=ENF; OPTIONAL_MONITORING_FLAG=N"
+    },
+    {
+      "source_path": "sources/structured/permit_limits.csv",
+      "location": "row 69, LIMIT_VALUE_ID=3610673269",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0020583; PERM_FEATURE_NMBR=001; PARAMETER_CODE=51040; PARAMETER_DESC=E. coli; LIMIT_VALUE_ID=3610673269; LIMIT_VALUE_NMBR=126; LIMIT_UNIT_CODE=3Z; STATISTICAL_BASE_CODE=3H; LIMIT_VALUE_QUALIFIER_CODE=<=; LIMIT_TYPE_CODE=ENF; OPTIONAL_MONITORING_FLAG=N; LIMIT_FREQ_OF_ANALYSIS_CODE=05/WK; LIMIT_BEGIN_DATE=12/01/2021; LIMIT_END_DATE=11/30/2026; DMR_COMMENT_TEXT=TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES."
+    },
+    {
+      "source_path": "world.sqlite/dmr_reported_value_kind",
+      "location": "measurement_id=measurement:3831416449",
+      "excerpt": "value_kind=numeric; dmr_value_nmbr=2.0; dmr_unit_code=3Z"
+    },
+    {
+      "source_path": "world.sqlite/limit_value_attributes",
+      "location": "limit_row_id=limit_row:3610673269",
+      "excerpt": "has_numeric_value=1; limit_value_nmbr=126.0; limit_unit_code=3Z; statistical_base_code=3H"
+    },
+    {
+      "source_path": "world.sqlite/limit_source_flags",
+      "location": "limit_row_id=limit_row:3610673269",
+      "excerpt": "limit_type_code=ENF; optional_monitoring_flag=N; limit_freq_of_analysis_code=05/WK"
+    },
+    {
+      "source_path": "world.sqlite/limit_effective_during_period",
+      "location": "limit_row_id=limit_row:3610673269, period_id=period:NM0020583:2024-10-31",
+      "excerpt": "overlaps=1"
+    }
+  ],
+  "selection_rationale": "Selected paired DMR and permit-limit source rows plus compiled world attributes needed to decide enforceability and numeric applicability. Blocking factors: enforceability_threshold_policy_not_yet_applied.",
+  "known_missing_information": [
+    "Purpose A enforceability policy not yet applied to classify limit as enforceable_numeric vs report_only."
+  ]
+}

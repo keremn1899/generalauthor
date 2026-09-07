@@ -1,0 +1,29 @@
+{
+  "interpretation": "Treat LIMIT_UNIT_DESC or DMR_UNIT_DESC matching pass=0;fail=1 as a categorical WET pass/fail outcome vocabulary: reported 0 means pass and reported 1 means fail per permit narrative, not a numeric concentration subject to ordinary limit comparison.",
+  "scope": "ONE_RELATION_OR_VOCABULARY",
+  "epistemic_basis": "SOURCE_ESTABLISHED",
+  "exact_grounding": [
+    {
+      "source_id": "sources/permit_limits.csv",
+      "location": "LIMIT_UNIT_DESC=pass=0;fail=1 on TEM3D and retest rows",
+      "field": "LIMIT_UNIT_DESC"
+    },
+    {
+      "source_id": "documents/farmington/final_permit.txt",
+      "location": "Part II Section 3.c, lines 512-520",
+      "field": "narrative pass/fail entry rule"
+    },
+    {
+      "source_id": "sources/dmr_measurements.csv",
+      "location": "DMR_UNIT_DESC=pass=0;fail=1 with DMR_VALUE_NMBR in {0,1}",
+      "field": "DMR_UNIT_DESC"
+    }
+  ],
+  "semantic_delta": "Add reusable detection of pass=0;fail=1 unit descriptions, derive a pass_fail_outcome_reporting relation for matching measurement-limit pairs, register interpreted outcome values {0: pass, 1: fail}, and stop emitting pass_fail_reporting_semantics unresolved obligations for rows that match the established unit-and-comment pattern.",
+  "affected_obligations": [
+    "pass_fail_reporting_semantics"
+  ],
+  "affected_occurrence_count": 12,
+  "remaining_uncertainty": "Critical dilution threshold remains unencoded in structured sources. Optional retest parameters may have no FY2025 measurements. Mapping is established for this permit's WET vocabulary only.",
+  "admit": "ADMIT_DISPOSABLE"
+}

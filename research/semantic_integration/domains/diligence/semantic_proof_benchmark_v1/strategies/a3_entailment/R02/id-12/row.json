@@ -1,0 +1,111 @@
+{
+  "strategy": "a3_entailment",
+  "trial": "R02",
+  "obligation_id": "id-12",
+  "candidate": {
+    "left": "crm:MER-55",
+    "right": "billing:Meridian Energy Partners LLC"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row MER-55"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Meridian Energy Partners LLC"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "The packet links MER-55 to Meridian Energy Partners and billing to Meridian Energy Partners LLC but provides no evidence that establishes they are the same legal counterparty or that they are distinct.",
+  "proof_size": 5,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "claims": [
+    {
+      "claim": "CRM record MER-55 is labeled Meridian Energy Partners.",
+      "status": "ESTABLISHED",
+      "burden": "other",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/crm.csv",
+          "location": "row MER-55"
+        }
+      ]
+    },
+    {
+      "claim": "The billing record billed_name Meridian Energy Partners LLC is Meridian Energy Partners LLC.",
+      "status": "ESTABLISHED",
+      "burden": "other",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Meridian Energy Partners LLC"
+        }
+      ]
+    },
+    {
+      "claim": "Meridian Energy Partners invoices are the advisory retainer under MSA-MER-2024.",
+      "status": "ESTABLISHED",
+      "burden": "other",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    },
+    {
+      "claim": "CRM record MER-55 denotes the same legal counterparty as billing billed_name Meridian Energy Partners LLC.",
+      "status": "NOT_ESTABLISHED",
+      "burden": "identity",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/crm.csv",
+          "location": "row MER-55"
+        },
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Meridian Energy Partners LLC"
+        },
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    },
+    {
+      "claim": "CRM record MER-55 and billing billed_name Meridian Energy Partners LLC denote distinct legal counterparties.",
+      "status": "NOT_ESTABLISHED",
+      "burden": "distinctness",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/crm.csv",
+          "location": "row MER-55"
+        },
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Meridian Energy Partners LLC"
+        }
+      ]
+    }
+  ],
+  "admit": {
+    "rule": "proposed_unresolved"
+  },
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

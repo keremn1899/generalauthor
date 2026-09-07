@@ -1,0 +1,33 @@
+{
+  "obligation_id": "obl:000953",
+  "selected_observations": [
+    {
+      "source_path": "sources/structured/dmr_measurements.csv",
+      "location": "row 544; key=3847407849",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0020583; PERM_FEATURE_NMBR=TX1; PARAMETER_CODE=51443; PARAMETER_DESC=Whole Effluent Toxicity - Retest #3; MONITORING_PERIOD_END_DATE=05/31/2025; DMR_VALUE_ID=3847407849; STATISTICAL_BASE_CODE=VA; NODI_CODE=9; LIMIT_VALUE_ID=3610839680; VALUE_RECEIVED_DATE=06/16/2025"
+    },
+    {
+      "source_path": "02_mechanical_world/world.sqlite",
+      "location": "reported_measurement_stated[measurement:3847407849]",
+      "excerpt": "period_end=2025-05-31; nodi_code=9; value_number=empty/sentinel"
+    },
+    {
+      "source_path": "sources/structured/dmr_measurements.csv",
+      "location": "NODI_CODE=9 for period_end=2025-05-31",
+      "excerpt": "DMR row carries NODI_CODE=9 without separate documented_no_discharge_notation tuple beyond compiled notation."
+    },
+    {
+      "source_path": "02_mechanical_world/world.sqlite",
+      "location": "monitoring_requirement_stated[requirement:3606351399]",
+      "excerpt": "frequency_code=09/99; limit_set_name=QUARTERLY 48-HR. ACUTE NOEC FRESHWATER TOXICITY; dmr_comment=(PASS = 0  FAIL = 1) REPORT PASS AS '0' OR REPORT FAIL AS '1' IN CONCENTRATION MAX. ABOVE.  IF ALL TESTS PASS FOR THE FIRST YEAR OF THE PERMIT, THE FREQUENCY WILL BE REDUCED FOR YEARS 2-5 TO:  1/6 MONTHS FOR DAPHNIA PULEX & 1/YR FOR PIMEPHALES PROMELAS (SEE FOOTNOTE 9, PAGE 3 OF PART I OF PERMIT)."
+    }
+  ],
+  "selection_rationale": "Packet gathers the absent-numeric DMR row, any documented no-discharge/NODI notation, and related monitoring schedule context for expectation expectation:dmr:3847407849 (2025-05-31) to support Purpose C taxonomy classification.",
+  "known_missing_information": [
+    "Permit PDF files referenced in sources/source_manifest.json are absent from workspace; permit_condition_language_stated and limit narrative grounding rely on CSV comments only.",
+    "P2 materialized C1 base relations only; C4 derivations (fy2025_in_scope_measurement, candidate_limit_for_measurement, fy2025_candidate_monitoring_requirement, monitoring_expectation_without_numeric_result) are not registered in world.sqlite.",
+    "Purpose B monitoring_obligation_judgment for the related requirement is unresolved.",
+    "Permit-defined semantics for NODI codes and no-discharge reporting are not available from absent PDFs.",
+    "missing_evidence_judgment established_state is not yet ACCEPT-grounded."
+  ]
+}

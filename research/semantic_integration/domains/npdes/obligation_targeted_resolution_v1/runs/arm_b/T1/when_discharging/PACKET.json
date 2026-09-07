@@ -1,0 +1,92 @@
+{
+  "obligation_id": "when_discharging",
+  "exact_semantic_question": "What does the permit-limit comment 'WHEN DISCHARGING' do to monitoring/limit applicability?",
+  "purpose": [
+    "B",
+    "C"
+  ],
+  "relation_contract": "comment conditions monitoring; discharge occurrence in a period is a separate factual question",
+  "candidate_interpretations": [
+    {
+      "id": "monitoring_conditional_on_discharge",
+      "statement": "The comment qualifies monitoring-frequency obligations: the stated frequency applies only on days/periods when the outfall is discharging.",
+      "evidence_status": "supported"
+    },
+    {
+      "id": "limits_apply_when_discharge_occurs",
+      "statement": "Numeric effluent limits remain applicable to effluent when a discharge occurs; the comment does not suspend or waive limit values.",
+      "evidence_status": "supported"
+    },
+    {
+      "id": "no_discharge_exempts_monitoring",
+      "statement": "When no discharge occurs during a sampling month, monitoring for (*1)-marked parameters is not required; the permittee reports no discharge instead.",
+      "evidence_status": "supported"
+    },
+    {
+      "id": "optional_monitoring_flag_semantics",
+      "statement": "WHEN DISCHARGING is encoded by OPTIONAL_MONITORING_FLAG=Y making the requirement optional.",
+      "evidence_status": "refuted_by_structured_data"
+    },
+    {
+      "id": "structured_discharge_occurrence",
+      "statement": "Structured CSV fields alone establish whether discharge occurred in each monitoring period.",
+      "evidence_status": "not_established"
+    }
+  ],
+  "retained_snippets": [
+    {
+      "source_id": "documents/aztec/final_permit.txt",
+      "location": "Part I.A, lines 72-80 (monitoring table); footnotes lines 92-93",
+      "text": "pH 00400 MINIMUM 6.6 MAXIMUM 9.0 MEASUREMENT FREQUENCY 1/Week (*1) Grab\nFlow Report MGD Report MGD MEASUREMENT FREQUENCY 2/Week (*1) Estimate (*2)\nTotal Suspended Solids MEASUREMENT FREQUENCY 1/Week (*1) Grab\nTotal Residual Chlorine MEASUREMENT FREQUENCY 1/Day (*1) Grab\nCyanide, Total Recoverable MEASUREMENT FREQUENCY 1/Quarter (*1) Grab\nTotal Dissolved Solids MEASUREMENT FREQUENCY 1/Quarter (*1) Grab\nFootnotes:\n*1 When discharging.",
+      "why_retained": "Establishes that footnote *1 (source of DMR_COMMENT_TEXT 'WHEN DISCHARGING.') attaches to MEASUREMENT FREQUENCY column entries, not to effluent limit values."
+    },
+    {
+      "source_id": "documents/aztec/final_permit.txt",
+      "location": "Part I.A.1, lines 56-66",
+      "text": "1. FINAL Effluent Limits – Outfall 001 – Intermittent Flow\n\nDuring the period beginning the effective date of the permit and lasting to the permit expiration date (unless otherwise noted), the permittee is authorized to discharge backwash water to the lower Animas Ditch... Such discharges shall be limited and monitored by the permittee as specified below.",
+      "why_retained": "Contextualizes WHEN DISCHARGING as an intermittent-flow outfall where discharge is episodic but limits and monitoring schedules still govern authorized discharges."
+    },
+    {
+      "source_id": "documents/aztec/final_permit.txt",
+      "location": "Part I.C.5, lines 150-153",
+      "text": "5. NO DISCHARGE REPORTING\n\nIf there is no discharge from any outfall during the sampling month, place an \"X\" in the NO DISCHARGE box located in the upper right corner of the Discharge Monitoring Report.",
+      "why_retained": "Establishes permit procedure when discharge does not occur — monitoring for discharge-conditioned parameters is replaced by no-discharge reporting for that month."
+    },
+    {
+      "source_id": "documents/aztec/statement_of_basis.txt",
+      "location": "Section 5 'Monitoring Frequency for Limited Parameters', lines 506-511",
+      "text": "Flow shall be estimated daily when discharging. Estimated flow measurements are not subject to the accuracy provisions established at Part III.C.6 of the permit. The pollutant TRC shall be monitored daily when discharging by instantaneous grab which according to Part 136 is defined as analysis within 15 minutes of collection. pH shall continue to be monitored weekly when discharging. TDS and Cyanide total recoverable shall be monitored once per quarter by grab sample.",
+      "why_retained": "Authoritative narrative confirming the comment's operative meaning: monitoring frequencies are tied to discharge occurrence, parameter by parameter."
+    },
+    {
+      "source_id": "documents/aztec/statement_of_basis.txt",
+      "location": "Section II, lines 146-147",
+      "text": "Filter backwash using potable water occurs from once per day to once every three to four days depending on the plant and the time of year.",
+      "why_retained": "Explains why discharge-conditioned monitoring is necessary — backwash discharge is episodic, not continuous."
+    },
+    {
+      "source_id": "documents/aztec/statement_of_basis.txt",
+      "location": "Section VIII, lines 615-616",
+      "text": "Effluent discharges flows are intermittent and are not directly discharged to Animas River.",
+      "why_retained": "Confirms intermittent discharge characterization consistent with discharge-conditioned monitoring."
+    },
+    {
+      "source_id": "sources/permit_limits.csv",
+      "location": "row for LIMIT_VALUE_ID 3610840344 (representative of 17 rows)",
+      "text": "EXTERNAL_PERMIT_NMBR=NM0028762, LIMIT_SET_NAME=DISCHARGE BACKWASH WATER, DMR_COMMENT_TEXT=WHEN DISCHARGING., PARAMETER_CODE=00400, PARAMETER_DESC=pH, OPTIONAL_MONITORING_FLAG=N, LIMIT_FREQ_OF_ANALYSIS_CODE=01/07, LIMIT_TYPE_CODE=ENF",
+      "why_retained": "Shows structured encoding of the comment on enforced limit rows where OPTIONAL_MONITORING_FLAG remains N — discharge-conditioning is not optional-monitoring semantics."
+    }
+  ],
+  "contradictory_evidence": [],
+  "known_limitations": [
+    "All 17 structured occurrences belong to permit NM0028762 (Aztec); resolution is grounded in that permit package only.",
+    "Structured sources do not record whether discharge occurred in any FY2025 monitoring period; DMR rows for these limits show reported numeric values but do not distinguish discharge days within a month.",
+    "No NODI_CODE values appear in dmr_measurements.csv for NM0028762 rows, so structured data alone cannot demonstrate how no-discharge months were reported.",
+    "The permit does not define a machine-readable rule for aggregating monthly/quarterly statistics across partial discharge within a period (e.g., how many discharge days trigger weekly monitoring compliance)."
+  ],
+  "allowed_dispositions": [
+    "SUPPORTED_RESOLUTION",
+    "SUPPORTED_NEGATIVE",
+    "UNRESOLVED"
+  ]
+}

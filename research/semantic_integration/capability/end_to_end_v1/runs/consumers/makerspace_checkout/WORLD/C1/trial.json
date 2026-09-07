@@ -1,0 +1,54 @@
+{
+  "domain": "makerspace_checkout",
+  "kind": "WORLD",
+  "trial": "C1",
+  "status": "ANSWERED",
+  "reported_model": "Composer 2.5",
+  "tools": {
+    "tool_calls_started": 13,
+    "shell_calls": 3,
+    "read_calls": 7,
+    "write_calls": 0,
+    "python_executions_guess": 3,
+    "mentioned_paths": [
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f/CONSUMER.md",
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f/purpose.txt",
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f/QUESTIONS.md",
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f/inspect_world.py",
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f",
+      "inspect_world.py",
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f",
+      "/",
+      "/",
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f/world/world.purpose.json",
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f",
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f",
+      "sqlite3.connect('world/world.sqlite')",
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f/world/world.admission.json",
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f/world/world.sqlite.origins.json",
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f/answers.json"
+    ]
+  },
+  "exploration": {
+    "reads": [
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f/CONSUMER.md",
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f/purpose.txt",
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f/QUESTIONS.md",
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f/inspect_world.py",
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f/world/world.purpose.json",
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f/world/world.admission.json",
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f/world/world.sqlite.origins.json"
+    ],
+    "writes": [],
+    "shells": [
+      "cd /tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f && python3 inspect_world.py",
+      "cd /tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f && python3 << 'PY'\nimport json\nimport sys\nfrom pathlib import Path\n\nROOT = Path('.').resolve()\nsys.path.insert(0, str(ROOT))\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\n\ndb = ROOT / \"world\" / \"world.sqlite\"\nworld = ConstructionWorld.open(db)\n\nqueries = {\n    \"checkout_record\": \"SELECT * FROM checkout_record ORDER BY checkout_id\",\n    \"checkout_authorization\": \"SELECT * FROM chec",
+      "cd /tmp/world-experiment/e2e-semantic-compilation-v1/b17b17af86ac0c63d729453d2684278f && python3 << 'PY'\nimport sqlite3\nconn = sqlite3.connect('world/world.sqlite')\ncur = conn.cursor()\ncur.execute(\"SELECT name FROM sqlite_master WHERE type='table' ORDER BY name\")\nprint(\"Tables:\", [r[0] for r in cur.fetchall()])\nfor t in cur.execute(\"SELECT name FROM sqlite_master WHERE type='table'\").fetchall():\n    tname = t[0]\n    if tname.startswith('sqlite_'):\n        continue\n    print(f\"\\n--- {tname} schem"
+    ],
+    "n_reads": 7,
+    "n_writes": 0,
+    "n_shells": 3
+  },
+  "n_sql_hint": 4,
+  "finished_at": "2026-09-06T08:32:35.068484+00:00"
+}

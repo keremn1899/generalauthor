@@ -1,0 +1,38 @@
+{
+  "obligation_id": "obl:a:limit_kind:89ba526ef18a",
+  "selected_observations": [
+    {
+      "source_path": "sources/structured/dmr_measurements.csv",
+      "location": "row 376, DMR_VALUE_ID=3847407839",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0020583; PERM_FEATURE_NMBR=TX1; PARAMETER_CODE=TQM6C; PARAMETER_DESC=Coef Of Var Static Renewal 48Hr Acute Pimephales promelas; MONITORING_PERIOD_END_DATE=05/31/2025; DMR_VALUE_ID=3847407839; DMR_VALUE_NMBR=0; DMR_UNIT_CODE=23; DMR_VALUE_QUALIFIER_CODE==; LIMIT_TYPE_CODE=ENF; LIMIT_VALUE_ID=3610839687; STATISTICAL_BASE_CODE=VA; VALUE_RECEIVED_DATE=06/16/2025"
+    },
+    {
+      "source_path": "02_mechanical_world/world.sqlite",
+      "location": "compiled_dmr_measurement/dmr:3847407839",
+      "excerpt": "measurement_id=dmr:3847407839; permit=NM0020583; feature=TX1; parameter_code=TQM6C; period_end=2025-05-31; dmr_value_id=3847407839; reported_value_number=0.0; reported_unit_code=23; value_qualifier==; nodi_code=; linked_limit_value_id=3610839687"
+    },
+    {
+      "source_path": "02_mechanical_world/world.sqlite",
+      "location": "compiled_limit_value/limit_val:3610839687:3600904539",
+      "excerpt": "limit_value_ref_id=limit_val:3610839687:3600904539; limit_value_id=3610839687; limit_type_code=ENF; optional_monitoring_flag=N; limit_value_number=0.0; limit_unit_code=23; statistical_base_code=VA; limit_value_qualifier=; limit_set_designator=Q; all_months_active=1; frequency_code=01/90; effective=2021-12-01..2026-11-30"
+    },
+    {
+      "source_path": "sources/structured/permit_limits.csv",
+      "location": "row 106, LIMIT_VALUE_ID=3610839687",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0020583; PERM_FEATURE_NMBR=TX1; PARAMETER_CODE=TQM6C; PARAMETER_DESC=Coef Of Var Static Renewal 48Hr Acute Pimephales promelas; LIMIT_VALUE_ID=3610839687; LIMIT_SET_SCHEDULE_ID=3600904539; LIMIT_TYPE_CODE=ENF; LIMIT_UNIT_CODE=23; STATISTICAL_BASE_CODE=VA; OPTIONAL_MONITORING_FLAG=N; LIMIT_BEGIN_DATE=12/01/2021; LIMIT_END_DATE=11/30/2026; LIMIT_SET_DESIGNATOR=Q; LIMIT_FREQ_OF_ANALYSIS_CODE=01/90; DMR_COMMENT_TEXT=(PASS = 0  FAIL = 1) REPORT PASS AS '0' OR REPORT FAIL AS '1' IN CONCENTRATION MAX. ABOVE.  IF ALL TESTS PASS FOR THE FIRST YEAR OF THE PERMIT, THE FREQUENCY WILL BE REDUCED FOR YEARS 2-5 TO:  1/6 MONTHS FOR DAPHNIA PULEX & 1/YR FOR PIMEPHALES PROMELAS (SEE FOOTNOTE 9, PAGE 3 OF PART I OF PERMIT).; ALL_MONTHS_LIMIT=JAN--FEB--MAR--APR--MAY--JUN--JUL--AUG--SEP--OCT--NOV--DEC"
+    },
+    {
+      "source_path": "02_mechanical_world/world.sqlite",
+      "location": "compiled_limit_value/limit_val:3610839687:3600904539/dmr_comment_text",
+      "excerpt": "(PASS = 0  FAIL = 1) REPORT PASS AS '0' OR REPORT FAIL AS '1' IN CONCENTRATION MAX. ABOVE.  IF ALL TESTS PASS FOR THE FIRST YEAR OF THE PERMIT, THE FREQUENCY WILL BE REDUCED FOR YEARS 2-5 TO:  1/6 MONTHS FOR DAPHNIA PULEX & 1/YR FOR PIMEPHALES PROMELAS (SEE FOOTNOTE 9, PAGE 3 OF PART I OF PERMIT)."
+    }
+  ],
+  "selection_rationale": "Packet grounds limit_kind_resolution for candidate pair (dmr:3847407839, limit_val:3610839687:3600904539): DMR reported form and limit schedule typing (LIMIT_TYPE_CODE, OPTIONAL_MONITORING_FLAG, numeric threshold, units, statistical base).",
+  "known_missing_information": [
+    "P2 compiled BASE relations only; DERIVED universes (period_in_fy2025, dmr_in_fy2025_scope, measurement_limit_candidate_pair, monitoring_requirement_in_fy2025, missing_evidence_case_universe) computed inline per 01_vocabulary.json C4 rules, not persisted in world.sqlite.",
+    "Purpose C absent-submission cases are not enumerable: frequency-code interpretation rules are not compiled as world facts.",
+    "Blank LIMIT_VALUE_NMBR and DMR_VALUE_NMBR stored as 0.0 (TaskView REAL NOT NULL); ordinary-numeric detection treats bare 0.0 as non-ordinary.",
+    "Per-month seasonal activation not modeled; only all_months_active boolean available for limit schedule disambiguation.",
+    "Permit PDF text extraction deferred; condition_anchor_text limited to DMR_COMMENT_TEXT from permit_limits.csv."
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "steps": [
+    {
+      "fact": "The left referent billing:Northbridge Analytics Inc. corresponds to the billed_name Northbridge Analytics Inc. on billing invoices.",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Northbridge Analytics Inc."
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "The right referent contract:MSA-NBA-2021 is the Master Services Agreement whose header lists counterparty Northbridge Analytics, Inc.",
+      "grounding": {
+        "source_path": "sources/contracts/MSA-NBA-2021.md",
+        "location": "header"
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "Commercial notes state that billing and the MSA both use the name Northbridge Analytics Inc., but legal has not determined which registry entity is the contracting party and instructs treating the registry link as unresolved.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "A 2024 credit check returned a Wyoming LLC named Northbridge Analytics LLC as an additional registry candidate; the packet does not establish whether that LLC is or is not the billing or contract counterparty.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Shared naming between billing and the MSA counterparty does not satisfy the relation contract burden for SAME_ENTITY, which requires establishing evidence of identity rather than compatibility or name similarity.",
+      "grounding": {
+        "source_path": "relation_contract.json",
+        "location": "grounding_contract"
+      },
+      "mechanical": false
+    }
+  ],
+  "disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "Although billing and the MSA share the name Northbridge Analytics Inc., the packet explicitly states legal has not determined the contracting registry entity and treats identity as unresolved, with no legal-identifier evidence to establish SAME_ENTITY or DISTINCT."
+}

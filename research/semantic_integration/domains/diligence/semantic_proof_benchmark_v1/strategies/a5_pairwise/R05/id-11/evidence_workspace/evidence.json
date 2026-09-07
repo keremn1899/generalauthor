@@ -1,0 +1,40 @@
+{
+  "propositions": [
+    {
+      "proposition": "Company number 09338441 is registered under the name VELLUM PRINT CO LTD in England and Wales with status dissolved.",
+      "source_grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 09338441"
+      },
+      "establishes": "other",
+      "relevance": "Characterizes the registry referent (registry:09338441) as a dissolved company with registered name VELLUM PRINT CO LTD."
+    },
+    {
+      "proposition": "Billing records identify the counterparty as Vellum Print Co Ltd under billed_name.",
+      "source_grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      },
+      "establishes": "other",
+      "relevance": "Characterizes the billing referent (billing:Vellum Print Co Ltd) by its invoiced name only, without a company number or other identifier."
+    },
+    {
+      "proposition": "The billed name Vellum Print Co Ltd is a case-variant textual match to the registered name VELLUM PRINT CO LTD associated with company number 09338441.",
+      "source_grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 09338441"
+      },
+      "establishes": "unresolved_preservation",
+      "relevance": "Nominal compatibility between the two referents is present, but name similarity alone does not meet the burden for establishing identity between billing:Vellum Print Co Ltd and registry:09338441."
+    },
+    {
+      "proposition": "The billing observation names Vellum Print Co Ltd without citing company number 09338441 or any other registry identifier.",
+      "source_grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      },
+      "establishes": "unresolved_preservation",
+      "relevance": "No direct identifier link from the billing referent to the registry company number is provided in the packet, leaving identity unestablished."
+    }
+  ]
+}

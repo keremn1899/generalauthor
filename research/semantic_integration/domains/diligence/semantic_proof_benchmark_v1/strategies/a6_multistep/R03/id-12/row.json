@@ -1,0 +1,88 @@
+{
+  "strategy": "a6_multistep",
+  "trial": "R03",
+  "obligation_id": "id-12",
+  "candidate": {
+    "left": "crm:MER-55",
+    "right": "billing:Meridian Energy Partners LLC"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row MER-55"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Meridian Energy Partners LLC"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "The packet shows related but non-identical names for each referent and no shared legal identifier or explicit cross-system identity link, so neither same-entity nor distinctness is established.",
+  "proof_size": 7,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "steps": [
+    {
+      "fact": "Candidate left referent is crm:MER-55 and right referent is billing:Meridian Energy Partners LLC.",
+      "grounding": null,
+      "mechanical": true
+    },
+    {
+      "fact": "CRM row MER-55 lists the account name Meridian Energy Partners.",
+      "grounding": {
+        "source_path": "sources/crm.csv",
+        "location": "row MER-55"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Billing invoices use the billed name Meridian Energy Partners LLC.",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Meridian Energy Partners LLC"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Commercial notes state that Meridian Energy Partners invoices are the advisory retainer under MSA-MER-2024, but do not link MER-55 to that billing name or assert a shared legal identifier.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "No packet excerpt supplies a shared legal identifier, an explicit MER-55-to-billing mapping, or a uniqueness claim licensing identifier-based identity between the two referents.",
+      "grounding": null,
+      "mechanical": false
+    },
+    {
+      "fact": "Name similarity between Meridian Energy Partners and Meridian Energy Partners LLC is insufficient to establish SAME_ENTITY under the relation contract.",
+      "grounding": null,
+      "mechanical": false
+    },
+    {
+      "fact": "No packet excerpt establishes that crm:MER-55 and billing:Meridian Energy Partners LLC are distinct entities.",
+      "grounding": null,
+      "mechanical": false
+    }
+  ],
+  "admit": {
+    "rule": "unresolved"
+  },
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

@@ -1,0 +1,57 @@
+{
+  "strategy": "a4_proof_obligation",
+  "trial": "R02",
+  "obligation_id": "id-05",
+  "candidate": {
+    "left": "billing:Northbridge Analytics Inc.",
+    "right": "contract:MSA-NBA-2021"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "Billing and the MSA share a compatible counterparty name, but the packet states legal has not determined which registry entity is the contracting party and treats the registry link as unresolved, so neither identity nor distinctness is established.",
+  "proof_size": 2,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "proof_obligations": [
+    {
+      "obligation": "Establish that billing:Northbridge Analytics Inc. and the counterparty named in contract:MSA-NBA-2021 denote the same legal/registry entity.",
+      "required_for": "SAME_ENTITY",
+      "satisfied": false,
+      "evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    },
+    {
+      "obligation": "Establish that billing:Northbridge Analytics Inc. and the counterparty named in contract:MSA-NBA-2021 denote distinct legal/registry entities.",
+      "required_for": "DISTINCT",
+      "satisfied": false,
+      "evidence": []
+    }
+  ],
+  "admit": {
+    "rule": "unresolved"
+  },
+  "unsatisfied": [
+    "Establish that billing:Northbridge Analytics Inc. and the counterparty named in contract:MSA-NBA-2021 denote the same legal/registry entity.",
+    "Establish that billing:Northbridge Analytics Inc. and the counterparty named in contract:MSA-NBA-2021 denote distinct legal/registry entities."
+  ],
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

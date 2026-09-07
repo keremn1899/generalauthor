@@ -1,0 +1,30 @@
+{
+  "obligation_id": "obl:c:missing_evidence:dmr:3842360846",
+  "selected_observations": [
+    {
+      "source_path": "sources/structured/dmr_measurements.csv",
+      "location": "row 632, DMR_VALUE_ID=3842360846",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0000116; PERM_FEATURE_NMBR=001; PARAMETER_CODE=01042; PARAMETER_DESC=Copper, total [as Cu]; MONITORING_PERIOD_END_DATE=03/31/2025; DMR_VALUE_ID=3842360846; NODI_CODE=C; LIMIT_TYPE_CODE=ENF; LIMIT_VALUE_ID=3610129903; STATISTICAL_BASE_CODE=3C; VALUE_RECEIVED_DATE=04/28/2025"
+    },
+    {
+      "source_path": "02_mechanical_world/world.sqlite",
+      "location": "compiled_dmr_measurement/dmr:3842360846",
+      "excerpt": "measurement_id=dmr:3842360846; permit=NM0000116; feature=001; parameter_code=01042; period_end=2025-03-31; dmr_value_id=3842360846; reported_value_number=0.0; reported_unit_code=; value_qualifier=; nodi_code=C; linked_limit_value_id=3610129903"
+    },
+    {
+      "source_path": "02_mechanical_world/world.sqlite",
+      "location": "monitoring_requirement_schedule/req:e10cc568dbb7d3e5",
+      "excerpt": "frequency_code=01/07; optional_monitoring_flag=N; condition_anchor_text="
+    }
+  ],
+  "selection_rationale": "Packet grounds missing_evidence_resolution for case:missing_evidence:dmr:3842360846: non-ordinary DMR form (nodi:C) for period period:NM0000116:2025-03-31 at facility:NM0000116/feature:3600545262/param:01042.",
+  "known_missing_information": [
+    "NODI code semantics require parameter-context interpretation not compiled as world facts",
+    "Defer when linked monitoring_obligation_resolution remains unresolved.",
+    "P2 compiled BASE relations only; DERIVED universes (period_in_fy2025, dmr_in_fy2025_scope, measurement_limit_candidate_pair, monitoring_requirement_in_fy2025, missing_evidence_case_universe) computed inline per 01_vocabulary.json C4 rules, not persisted in world.sqlite.",
+    "Purpose C absent-submission cases are not enumerable: frequency-code interpretation rules are not compiled as world facts.",
+    "Blank LIMIT_VALUE_NMBR and DMR_VALUE_NMBR stored as 0.0 (TaskView REAL NOT NULL); ordinary-numeric detection treats bare 0.0 as non-ordinary.",
+    "Per-month seasonal activation not modeled; only all_months_active boolean available for limit schedule disambiguation.",
+    "Permit PDF text extraction deferred; condition_anchor_text limited to DMR_COMMENT_TEXT from permit_limits.csv."
+  ]
+}

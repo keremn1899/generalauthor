@@ -1,0 +1,21 @@
+{
+  "obligation_id": "obl:permit_stated_condition:1cf2e9a0c7977867",
+  "selected_observations": [
+    {
+      "source_path": "sources/structured/permit_limits.csv",
+      "location": "line 100; DMR_COMMENT_TEXT on limit:3606239983:3610673292",
+      "excerpt": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES."
+    },
+    {
+      "source_path": "sources/structured/permit_limits.csv",
+      "location": "line 100; limit:3606239983:3610673292",
+      "excerpt": "LIMIT_ID=3606239983; LIMIT_VALUE_ID=3610673292; LIMIT_VALUE_NMBR=85; LIMIT_UNIT_CODE=23; STATISTICAL_BASE_CODE=MJ; LIMIT_VALUE_TYPE_CODE=C1; LIMIT_TYPE_CODE=ENF; OPTIONAL_MONITORING_FLAG=N; LIMIT_FREQ_OF_ANALYSIS_CODE=01/07; LIMIT_BEGIN_DATE=12/01/2021; LIMIT_END_DATE=11/30/2026"
+    }
+  ],
+  "selection_rationale": "Quotes structured DMR_COMMENT_TEXT candidate for whether language states a conditional monitoring trigger.",
+  "known_missing_information": [
+    "02_mechanical_world/world.sqlite not present in workspace; evidence selected directly from structured CSV sources using P2 join rules.",
+    "Permit PDF sources listed in sources/source_manifest.json were not ingested; permit_stated_condition packets use structured DMR_COMMENT_TEXT only.",
+    "Permit PDF excerpts not available; candidate from structured DMR_COMMENT_TEXT only."
+  ]
+}

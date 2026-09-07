@@ -1,0 +1,3370 @@
+[
+  {
+    "strategy": "a1_single",
+    "trial": "R01",
+    "obligation_id": "id-01",
+    "candidate": {
+      "left": "crm:HEL-441",
+      "right": "billing:Helion Robotics Limited"
+    },
+    "proposed_disposition": "SAME_ENTITY",
+    "final_disposition": "SAME_ENTITY",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/crm.csv",
+        "location": "row HEL-441"
+      },
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      }
+    ],
+    "support_claim": "CRM row HEL-441 names Helion Robotics Ltd, and commercial notes state that the CRM operating name Helion Robotics Ltd and the invoice legal name Helion Robotics Limited are the same legal entity.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity contract, SAME_ENTITY is licensed because the packet provides establishing evidence: the CRM observation ties left referent crm:HEL-441 to Helion Robotics Ltd, and the commercial notes observation explicitly asserts that Helion Robotics Ltd (CRM) and Helion Robotics Limited (invoices) denote the same legal entity, which matches right referent billing:Helion Robotics Limited; no observation preserves multiple live candidates or states that identity cannot be established.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R01",
+    "obligation_id": "id-02",
+    "candidate": {
+      "left": "billing:Helion Robotics Limited",
+      "right": "registry:11847201"
+    },
+    "proposed_disposition": "SAME_ENTITY",
+    "final_disposition": "SAME_ENTITY",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847201"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Helion Robotics Limited"
+      }
+    ],
+    "support_claim": "Commercial notes state that invoice and Companies House naming refer to the same legal entity, the registry row identifies company number 11847201 as HELION ROBOTICS LIMITED, and billing records bill Helion Robotics Limited.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity contract, SAME_ENTITY is licensed because the packet provides affirmative bridging evidence\u2014not merely compatible names\u2014that ties the billing referent to the registry entry: the notes explicitly equate invoice and Companies House naming as one legal entity, the registry observation anchors 11847201 to HELION ROBOTICS LIMITED, and the invoice observation anchors billing to Helion Robotics Limited, with no competing candidates or missing-information flags in the packet.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R01",
+    "obligation_id": "id-03",
+    "candidate": {
+      "left": "billing:Helion Robotics Limited",
+      "right": "contract:MSA-HELION-2019"
+    },
+    "proposed_disposition": "SAME_ENTITY",
+    "final_disposition": "SAME_ENTITY",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/contracts/MSA-HELION-2019.md",
+        "location": "header"
+      },
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Helion Robotics Limited"
+      }
+    ],
+    "support_claim": "MSA-HELION-2019 names Helion Robotics Ltd as counterparty, commercial notes state Helion Robotics Ltd and Helion Robotics Limited are the same legal entity, and billing records bill Helion Robotics Limited.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity contract, SAME_ENTITY is licensed because the packet provides establishing evidence\u2014not mere compatibility\u2014that links the two referents to one legal counterparty: the contract header identifies the MSA counterparty as Helion Robotics Ltd., the notes explicitly assert that Helion Robotics Ltd and Helion Robotics Limited are the same legal entity, and invoices confirm the billing referent name; no observation preserves multiple live candidates or states that identity cannot be established, and there is no evidence establishing distinctness.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R01",
+    "obligation_id": "id-04",
+    "candidate": {
+      "left": "crm:NBA-102",
+      "right": "billing:Northbridge Analytics Inc."
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      }
+    ],
+    "support_claim": "Legal has not determined which registry entity is the contracting party, and the packet instructs that the registry link be treated as unresolved despite naming overlap between sales and billing labels.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires establishing identity evidence and DISTINCT requires establishing distinctness; name compatibility between CRM NBA-102 (\"Northbridge Analytics\") and billing (\"Northbridge Analytics Inc.\") is insufficient, and the packet explicitly preserves multiple live registry candidates (including a Wyoming LLC) without resolving which entity contracts, so neither positive nor negative disposition is licensed.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R01",
+    "obligation_id": "id-05",
+    "candidate": {
+      "left": "billing:Northbridge Analytics Inc.",
+      "right": "contract:MSA-NBA-2021"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      }
+    ],
+    "support_claim": "Legal has not determined which registry entity is the contracting party, and a 2024 credit check also returned a Wyoming LLC named Northbridge Analytics LLC while billing and the MSA use Northbridge Analytics Inc.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires establishing identity evidence and DISTINCT requires establishing distinctness; the packet records name compatibility between billing and the MSA counterparty but explicitly treats the registry link as unresolved with multiple live candidates, so neither disposition is licensed.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R01",
+    "obligation_id": "id-06",
+    "candidate": {
+      "left": "crm:OAK-77",
+      "right": "billing:Oakfield Logistik GmbH"
+    },
+    "proposed_disposition": "SAME_ENTITY",
+    "final_disposition": "SAME_ENTITY",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/crm.csv",
+        "location": "row OAK-77"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Oakfield Logistik GmbH"
+      }
+    ],
+    "support_claim": "Commercial notes record that Oakfield Logistics GmbH rebranded to Oakfield Logistik GmbH under unchanged HRB 88421 while CRM retained the old English-facing name, CRM row OAK-77 is named Oakfield Logistics, and billing invoices bill Oakfield Logistik GmbH.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "The packet links crm:OAK-77 to the pre-rebrand English-facing CRM name and documents that this legal counterparty is now Oakfield Logistik GmbH with the same registry number; billing:Oakfield Logistik GmbH matches that current legal name, establishing identity rather than mere name compatibility.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R01",
+    "obligation_id": "id-07",
+    "candidate": {
+      "left": "billing:Oakfield Logistik GmbH",
+      "right": "contract:MSA-OAK-2018"
+    },
+    "proposed_disposition": "SAME_ENTITY",
+    "final_disposition": "SAME_ENTITY",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/contracts/MSA-OAK-2018.md",
+        "location": "header"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Oakfield Logistik GmbH"
+      }
+    ],
+    "support_claim": "Commercial notes record that Oakfield Logistics GmbH rebranded to Oakfield Logistik GmbH with Handelsregister number HRB 88421 unchanged, linking the MSA-OAK-2018 counterparty name to the billed entity name.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity_judgment contract, SAME_ENTITY is licensed because the packet supplies establishing evidence\u2014not mere name compatibility\u2014that the counterparty named in contract MSA-OAK-2018 (Oakfield Logistics GmbH) and the entity billed as Oakfield Logistik GmbH are the same legal counterparty following a documented rebrand with unchanged registration number; the packet does not preserve competing candidates or state that identity cannot be established.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R01",
+    "obligation_id": "id-08",
+    "candidate": {
+      "left": "billing:Oakfield Logistik GmbH",
+      "right": "registry:HRB 88421"
+    },
+    "proposed_disposition": "SAME_ENTITY",
+    "final_disposition": "SAME_ENTITY",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row HRB 88421"
+      },
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      }
+    ],
+    "support_claim": "Registry row HRB 88421 lists Oakfield Logistik GmbH as the registered company name, and commercial notes state that Oakfield Logistik GmbH retains Handelsregister number HRB 88421.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity contract, SAME_ENTITY is licensed because the packet ties registry:HRB 88421 to the legal name Oakfield Logistik GmbH and explicitly associates that name with HRB 88421, matching the billing referent billing:Oakfield Logistik GmbH; this is establishing identity evidence, not mere name compatibility.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R01",
+    "obligation_id": "id-09",
+    "candidate": {
+      "left": "crm:VEL-19",
+      "right": "billing:Vellum Print Co Ltd"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/crm.csv",
+        "location": "row VEL-19"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      }
+    ],
+    "support_claim": "The CRM row for VEL-19 lists the vendor as \"Vellum Print Co\" while billing records a billed name of \"Vellum Print Co Ltd\", but no observation links the CRM identifier to that billing name or otherwise establishes identity or distinctness.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires establishing evidence of identity and DISTINCT requires establishing evidence of distinctness; the packet provides only parallel name mentions without a cross-reference, shared identifier, or explicit statement of sameness or difference, so neither burden is met and UNRESOLVED is licensed.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R01",
+    "obligation_id": "id-10",
+    "candidate": {
+      "left": "billing:Vellum Print Co Ltd",
+      "right": "contract:SOW-VEL-2022"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      },
+      {
+        "source_path": "sources/contracts/SOW-VEL-2022.md",
+        "location": "header"
+      }
+    ],
+    "support_claim": "The billing record names Vellum Print Co Ltd and SOW-VEL-2022 lists Vellum Print Co Ltd as counterparty, but neither observation establishes identity between the billing referent and the contract referent.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity_judgment contract, SAME_ENTITY requires evidence that establishes identity and DISTINCT requires evidence that establishes distinctness; the packet only shows the same name appearing in billing and in the SOW header, which is name compatibility rather than identity-establishing evidence, and no observation demonstrates that billing:Vellum Print Co Ltd and contract:SOW-VEL-2022 are distinct legal counterparties.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R01",
+    "obligation_id": "id-11",
+    "candidate": {
+      "left": "billing:Vellum Print Co Ltd",
+      "right": "registry:09338441"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 09338441"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      }
+    ],
+    "support_claim": "The registry row for 09338441 names VELLUM PRINT CO LTD and the billing records name Vellum Print Co Ltd, but no observation links the billing referent to that company number.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires establishing evidence of identity and name similarity is insufficient; the packet preserves two referents mentioned in separate sources without an observation that the billed entity is company 09338441, so neither SAME_ENTITY nor DISTINCT is licensed.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R01",
+    "obligation_id": "id-12",
+    "candidate": {
+      "left": "crm:MER-55",
+      "right": "billing:Meridian Energy Partners LLC"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/crm.csv",
+        "location": "row MER-55"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Meridian Energy Partners LLC"
+      }
+    ],
+    "support_claim": "CRM row MER-55 records the name Meridian Energy Partners while billing records Meridian Energy Partners LLC, but no observation links the CRM identifier to the billing legal name.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires establishing evidence of identity and name similarity or compatibility is insufficient; the packet associates crm:MER-55 with Meridian Energy Partners and billing:Meridian Energy Partners LLC with Meridian Energy Partners LLC without any observation that ties MER-55 to that billed legal entity, and no observation establishes that they are distinct counterparties.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R01",
+    "obligation_id": "id-13",
+    "candidate": {
+      "left": "billing:Meridian Energy Partners LLC",
+      "right": "contract:MSA-MER-2024"
+    },
+    "proposed_disposition": "SAME_ENTITY",
+    "final_disposition": "SAME_ENTITY",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/contracts/MSA-MER-2024.md",
+        "location": "header"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Meridian Energy Partners LLC"
+      },
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      }
+    ],
+    "support_claim": "Contract MSA-MER-2024 names Meridian Energy Partners LLC as counterparty, billing records bill that same legal name, and commercial notes state Meridian Energy Partners invoices are the advisory retainer under that contract.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity_judgment contract, SAME_ENTITY is licensed because the packet provides establishing evidence\u2014not mere compatibility\u2014that the billing referent and the contract referent resolve to the same legal counterparty: the contract header explicitly designates Meridian Energy Partners LLC as counterparty, invoices.json records that billed_name, and commercial_notes links Meridian Energy Partners invoicing to MSA-MER-2024; no observation supports distinctness and the packet does not preserve multiple live candidates or state that identity cannot be established.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R01",
+    "obligation_id": "id-14",
+    "candidate": {
+      "left": "billing:Meridian Energy Partners LLC",
+      "right": "registry:4721193"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 4721193"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Meridian Energy Partners LLC"
+      }
+    ],
+    "support_claim": "The registry row associates ID 4721193 with MERIDIAN ENERGY PARTNERS LLC and billing records list Meridian Energy Partners LLC, but no observation links the billing referent to that registry identifier.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity_judgment contract, SAME_ENTITY requires evidence establishing that both referents denote the same legal counterparty; name correspondence across separate sources is insufficient. DISTINCT requires evidence of distinctness, which the packet does not provide. With neither burden met, UNRESOLVED is the licensed disposition.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R01",
+    "obligation_id": "id-15",
+    "candidate": {
+      "left": "crm:HEL-441",
+      "right": "registry:11847299"
+    },
+    "proposed_disposition": "DISTINCT",
+    "final_disposition": "DISTINCT",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/crm.csv",
+        "location": "row HEL-441"
+      },
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847299"
+      },
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      }
+    ],
+    "support_claim": "CRM HEL-441 is Helion Robotics Ltd, registry 11847299 is HELION INDUSTRIAL SYSTEMS LTD, and the commercial notes state that Helion Industrial Systems Ltd is a different company from Helion Robotics.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity_judgment contract, DISTINCT requires establishing evidence of distinctness. The packet links crm:HEL-441 to Helion Robotics Ltd and registry:11847299 to HELION INDUSTRIAL SYSTEMS LTD via their respective source rows, and commercial_notes.md explicitly states that Helion Industrial Systems Ltd is a different company from Helion Robotics, licensing a DISTINCT disposition.",
+    "oracle": "DISTINCT",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R01",
+    "obligation_id": "id-16",
+    "candidate": {
+      "left": "registry:11847201",
+      "right": "registry:11847299"
+    },
+    "proposed_disposition": "DISTINCT",
+    "final_disposition": "DISTINCT",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847201"
+      },
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847299"
+      }
+    ],
+    "support_claim": "Commercial notes state that Helion Industrial Systems Ltd is a different company from Helion Robotics, and the registry rows show registry:11847201 (HELION ROBOTICS LIMITED) and registry:11847299 (HELION INDUSTRIAL SYSTEMS LTD) as separate active companies with distinct numbers and legal names.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity_judgment contract, DISTINCT requires establishing evidence of distinctness, not merely the absence of identity proof. The packet's commercial notes explicitly characterize Helion Industrial Systems Ltd as a different company in direct contrast to Helion Robotics Limited, and the paired registry rows confirm two separate registered legal entities for the left and right referents. No observation links the two registry IDs as the same counterparty, so DISTINCT is licensed and SAME_ENTITY is not.",
+    "oracle": "DISTINCT",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R01",
+    "obligation_id": "id-17",
+    "candidate": {
+      "left": "billing:Northbridge Analytics Inc.",
+      "right": "registry:3840192"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      }
+    ],
+    "support_claim": "Legal has not determined which registry entity is the contracting party, and the packet instructs treating the registry link as unresolved while noting a separate Wyoming LLC candidate.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires establishing identity beyond name similarity and DISTINCT requires establishing distinctness; the commercial notes preserve multiple live registry candidates and explicitly state that identity cannot be established, so neither burden is met and UNRESOLVED is the licensed disposition.",
+    "oracle": "UNRESOLVED",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R01",
+    "obligation_id": "id-18",
+    "candidate": {
+      "left": "billing:Northbridge Analytics Inc.",
+      "right": "registry:2019-0008841"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 2019-0008841"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Northbridge Analytics Inc."
+      }
+    ],
+    "support_claim": "Commercial notes state that legal has not determined which registry entity is the contracting party and instruct to treat the registry link as unresolved, while billing uses \"Northbridge Analytics Inc.\" and registry row 2019-0008841 lists \"NORTHBRIDGE ANALYTICS LLC\" without any bridging identity evidence.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires establishing evidence of identity and DISTINCT requires establishing evidence of distinctness; name similarity and compatible industry context are insufficient. The packet preserves multiple live candidates (billing Inc. versus registry LLC, with an additional Wyoming LLC noted in credit checks) and explicitly records that identity cannot be established, so neither positive nor negative disposition is licensed and UNRESOLVED is the correct outcome.",
+    "oracle": "UNRESOLVED",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R02",
+    "obligation_id": "id-01",
+    "candidate": {
+      "left": "crm:HEL-441",
+      "right": "billing:Helion Robotics Limited"
+    },
+    "proposed_disposition": "SAME_ENTITY",
+    "final_disposition": "SAME_ENTITY",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/crm.csv",
+        "location": "row HEL-441"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Helion Robotics Limited"
+      }
+    ],
+    "support_claim": "Commercial notes explicitly state that Helion Robotics Ltd (the CRM operating name tied to HEL-441) and Helion Robotics Limited (the billing name) are the same legal entity.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity_judgment contract, SAME_ENTITY requires establishing evidence of identity rather than mere compatibility. The packet links crm:HEL-441 to Helion Robotics Ltd via the CRM row and billing:Helion Robotics Limited via invoices, and commercial_notes paragraph 1 directly asserts that those names refer to the same legal entity; no observation preserves alternate live candidates or states that identity cannot be established.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R02",
+    "obligation_id": "id-02",
+    "candidate": {
+      "left": "billing:Helion Robotics Limited",
+      "right": "registry:11847201"
+    },
+    "proposed_disposition": "SAME_ENTITY",
+    "final_disposition": "SAME_ENTITY",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847201"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Helion Robotics Limited"
+      },
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      }
+    ],
+    "support_claim": "Registry number 11847201 is HELION ROBOTICS LIMITED, billing records bill Helion Robotics Limited, and commercial notes state that invoice and Companies House naming for Helion Robotics Limited refer to the same legal entity.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity_judgment contract, SAME_ENTITY requires establishing evidence of identity rather than mere compatibility. The registry row ties registry:11847201 to HELION ROBOTICS LIMITED, invoices tie billing:Helion Robotics Limited to that name, and commercial_notes.md explicitly asserts that Companies House and invoice usage denote the same legal entity, licensing SAME_ENTITY for the left and right referents.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R02",
+    "obligation_id": "id-03",
+    "candidate": {
+      "left": "billing:Helion Robotics Limited",
+      "right": "contract:MSA-HELION-2019"
+    },
+    "proposed_disposition": "SAME_ENTITY",
+    "final_disposition": "SAME_ENTITY",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/contracts/MSA-HELION-2019.md",
+        "location": "header"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Helion Robotics Limited"
+      }
+    ],
+    "support_claim": "Commercial notes explicitly state that Helion Robotics Ltd and Helion Robotics Limited are the same legal entity, the MSA-HELION-2019 contract names Helion Robotics Ltd as counterparty, and billing records bill Helion Robotics Limited.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity contract, SAME_ENTITY is licensed because the packet provides establishing evidence\u2014not mere name compatibility\u2014that links both referents to one legal counterparty: the contract header identifies MSA-HELION-2019's counterparty as Helion Robotics Ltd, invoices identify the billed party as Helion Robotics Limited, and commercial notes affirm those names denote the same legal entity.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R02",
+    "obligation_id": "id-04",
+    "candidate": {
+      "left": "crm:NBA-102",
+      "right": "billing:Northbridge Analytics Inc."
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/crm.csv",
+        "location": "row NBA-102"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Northbridge Analytics Inc."
+      }
+    ],
+    "support_claim": "CRM account NBA-102 is recorded as \"Northbridge Analytics\" while billing uses \"Northbridge Analytics Inc.\", and commercial notes state that legal has not determined which registry entity is the contracting party and that the registry link should be treated as unresolved.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires establishing evidence of identity and DISTINCT requires establishing evidence of distinctness; the packet only shows compatible name variants across CRM and billing and explicitly records that legal identity cannot be established, so neither positive nor negative disposition is licensed.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R02",
+    "obligation_id": "id-05",
+    "candidate": {
+      "left": "billing:Northbridge Analytics Inc.",
+      "right": "contract:MSA-NBA-2021"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      }
+    ],
+    "support_claim": "Legal has not determined which registry entity is the contracting party, and the packet directs that the registry link be treated as unresolved.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Billing and the MSA share a similar counterparty name, but the relation contract requires establishing evidence for SAME_ENTITY, not name compatibility alone. The commercial notes preserve multiple live registry candidates (including a Wyoming LLC) and explicitly state that legal has not determined the contracting party. No observation establishes distinctness between the billing referent and the contract counterparty, so DISTINCT is likewise unsupported. Under the grounding contract and the packet's preserved uncertainty, UNRESOLVED is the licensed disposition.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R02",
+    "obligation_id": "id-06",
+    "candidate": {
+      "left": "crm:OAK-77",
+      "right": "billing:Oakfield Logistik GmbH"
+    },
+    "proposed_disposition": "SAME_ENTITY",
+    "final_disposition": "SAME_ENTITY",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/crm.csv",
+        "location": "row OAK-77"
+      },
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row HRB 88421"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Oakfield Logistik GmbH"
+      }
+    ],
+    "support_claim": "CRM record OAK-77 names Oakfield Logistics, commercial notes state that entity rebranded to Oakfield Logistik GmbH with unchanged HRB 88421 while CRM retains the old English-facing name, the registry lists Oakfield Logistik GmbH at HRB 88421, and billing invoices use that same legal name.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity contract, SAME_ENTITY is licensed because the packet supplies establishing evidence of legal continuity (unchanged HRB 88421 through rebrand), an explicit CRM-to-legal-entity linkage (CRM still shows the pre-rebrand English-facing name), and matching registry and billing names for the post-rebrand legal counterparty\u2014not merely compatible or similar names.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R02",
+    "obligation_id": "id-07",
+    "candidate": {
+      "left": "billing:Oakfield Logistik GmbH",
+      "right": "contract:MSA-OAK-2018"
+    },
+    "proposed_disposition": "SAME_ENTITY",
+    "final_disposition": "SAME_ENTITY",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/contracts/MSA-OAK-2018.md",
+        "location": "header"
+      }
+    ],
+    "support_claim": "Commercial notes record that Oakfield Logistics GmbH rebranded to Oakfield Logistik GmbH with unchanged registration HRB 88421, and MSA-OAK-2018 names Oakfield Logistics GmbH as counterparty.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity contract, SAME_ENTITY is licensed because the packet ties the contract counterparty name to the billing entity via an explicit rebrand with unchanged legal registration, not merely name similarity or compatibility; no evidence establishes distinctness, and the packet does not preserve competing candidates or flag identity as unestablishable.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R02",
+    "obligation_id": "id-08",
+    "candidate": {
+      "left": "billing:Oakfield Logistik GmbH",
+      "right": "registry:HRB 88421"
+    },
+    "proposed_disposition": "SAME_ENTITY",
+    "final_disposition": "SAME_ENTITY",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row HRB 88421"
+      },
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Oakfield Logistik GmbH"
+      }
+    ],
+    "support_claim": "Registry row HRB 88421 lists Oakfield Logistik GmbH as the registered company, commercial notes state that HRB 88421 is the unchanged Handelsregister number for Oakfield Logistik GmbH after its 2023 rebrand, and billing invoices bill Oakfield Logistik GmbH under that same name.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity contract, SAME_ENTITY is licensed because the packet provides establishing evidence\u2014not mere compatibility\u2014that billing:Oakfield Logistik GmbH and registry:HRB 88421 denote the same legal counterparty: the registry row directly associates HRB 88421 with Oakfield Logistik GmbH, the commercial notes explicitly tie the rebrand to the unchanged HRB 88421, and billing records use that same legal name. No observation preserves multiple live candidates or states that identity cannot be established.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R02",
+    "obligation_id": "id-09",
+    "candidate": {
+      "left": "crm:VEL-19",
+      "right": "billing:Vellum Print Co Ltd"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/crm.csv",
+        "location": "row VEL-19"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      }
+    ],
+    "support_claim": "CRM row VEL-19 names the account as Vellum Print Co and billing records a billed name of Vellum Print Co Ltd, but no observation explicitly links these referents as the same or as distinct legal counterparties.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires establishing evidence of identity and DISTINCT requires establishing evidence of distinctness; name similarity between Vellum Print Co and Vellum Print Co Ltd is insufficient for SAME_ENTITY, and the packet provides no positive evidence that the CRM account and billing name denote different legal counterparties, so neither burden is met.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R02",
+    "obligation_id": "id-10",
+    "candidate": {
+      "left": "billing:Vellum Print Co Ltd",
+      "right": "contract:SOW-VEL-2022"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      },
+      {
+        "source_path": "sources/contracts/SOW-VEL-2022.md",
+        "location": "header"
+      }
+    ],
+    "support_claim": "The billing record and SOW-VEL-2022 each name 'Vellum Print Co Ltd', but the packet provides no evidence beyond this shared name to establish that the billing referent and the contract referent denote the same legal counterparty.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires establishing identity and name similarity alone is insufficient; the packet cites matching names in billing and as the SOW counterparty but offers no further linkage (e.g., registration identifier, explicit cross-reference). DISTINCT likewise requires evidence of distinctness, which is absent, so neither burden is met and UNRESOLVED is licensed.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R02",
+    "obligation_id": "id-11",
+    "candidate": {
+      "left": "billing:Vellum Print Co Ltd",
+      "right": "registry:09338441"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 09338441"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      }
+    ],
+    "support_claim": "The registry row associates company number 09338441 with the name VELLUM PRINT CO LTD, and billing records use the name Vellum Print Co Ltd, but no observation links the billing counterparty to that company number.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires establishing evidence of identity and name similarity is insufficient; the packet provides no shared identifier or cross-reference tying billing:Vellum Print Co Ltd to registry:09338441. DISTINCT likewise requires evidence of distinctness, which is absent. Neither burden is met, so UNRESOLVED is licensed.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R02",
+    "obligation_id": "id-12",
+    "candidate": {
+      "left": "crm:MER-55",
+      "right": "billing:Meridian Energy Partners LLC"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/crm.csv",
+        "location": "row MER-55"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Meridian Energy Partners LLC"
+      },
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      }
+    ],
+    "support_claim": "The packet shows CRM MER-55 labeled Meridian Energy Partners, billing billed_name Meridian Energy Partners LLC, and notes referencing Meridian Energy Partners invoices, but no observation links MER-55 to that billing legal name as the same counterparty.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity_judgment contract, SAME_ENTITY requires establishing identity evidence, and name similarity or compatible references are insufficient; DISTINCT requires evidence of distinctness, which the packet does not provide. Neither burden is met, so UNRESOLVED is the licensed disposition.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R02",
+    "obligation_id": "id-13",
+    "candidate": {
+      "left": "billing:Meridian Energy Partners LLC",
+      "right": "contract:MSA-MER-2024"
+    },
+    "proposed_disposition": "SAME_ENTITY",
+    "final_disposition": "SAME_ENTITY",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/contracts/MSA-MER-2024.md",
+        "location": "header"
+      }
+    ],
+    "support_claim": "Commercial notes state Meridian Energy Partners invoices are the advisory retainer under MSA-MER-2024, and the contract header names Meridian Energy Partners LLC as its counterparty.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity_judgment contract, SAME_ENTITY requires establishing evidence rather than mere compatibility. The packet links the billing referent's invoicing activity directly to MSA-MER-2024 and identifies Meridian Energy Partners LLC as that contract's named counterparty, establishing that both referents denote the same legal counterparty. No evidence establishes distinctness, and known_missing_information is empty.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R02",
+    "obligation_id": "id-14",
+    "candidate": {
+      "left": "billing:Meridian Energy Partners LLC",
+      "right": "registry:4721193"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 4721193"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Meridian Energy Partners LLC"
+      }
+    ],
+    "support_claim": "Registry row 4721193 lists MERIDIAN ENERGY PARTNERS LLC and billing records use Meridian Energy Partners LLC, but the packet provides only name correspondence between the billing referent and the registry identifier, not evidence that establishes they are the same legal counterparty.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires establishing identity and name similarity is insufficient; the packet offers no linkage beyond matching names and no evidence of distinctness, so neither SAME_ENTITY nor DISTINCT is licensed.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R02",
+    "obligation_id": "id-15",
+    "candidate": {
+      "left": "crm:HEL-441",
+      "right": "registry:11847299"
+    },
+    "proposed_disposition": "DISTINCT",
+    "final_disposition": "DISTINCT",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/crm.csv",
+        "location": "row HEL-441"
+      },
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847299"
+      }
+    ],
+    "support_claim": "The commercial notes state that Helion Industrial Systems Ltd is a different company from Helion Robotics Ltd, which is the name on CRM record HEL-441, while registry row 11847299 names HELION INDUSTRIAL SYSTEMS LTD.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity contract, DISTINCT is licensed because the packet provides establishing evidence\u2014not mere name similarity or lack of contradiction\u2014that the left referent (Helion Robotics Ltd via HEL-441) and the right referent (HELION INDUSTRIAL SYSTEMS LTD via 11847299) are separate legal counterparties.",
+    "oracle": "DISTINCT",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R02",
+    "obligation_id": "id-16",
+    "candidate": {
+      "left": "registry:11847201",
+      "right": "registry:11847299"
+    },
+    "proposed_disposition": "DISTINCT",
+    "final_disposition": "DISTINCT",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847201"
+      },
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847299"
+      },
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      }
+    ],
+    "support_claim": "Registry rows assign registry:11847201 to HELION ROBOTICS LIMITED and registry:11847299 to HELION INDUSTRIAL SYSTEMS LTD, and commercial notes state that Helion Industrial Systems Ltd is a different company from Helion Robotics Limited.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity_judgment contract, DISTINCT requires establishing evidence of distinctness. The packet provides two separate active registry records with different company numbers and legal names for the left and right referents, and commercial notes explicitly characterize Helion Industrial Systems Ltd as a different company from the Helion Robotics entity, satisfying the burden to treat them as distinct legal counterparties.",
+    "oracle": "DISTINCT",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R02",
+    "obligation_id": "id-17",
+    "candidate": {
+      "left": "billing:Northbridge Analytics Inc.",
+      "right": "registry:3840192"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      }
+    ],
+    "support_claim": "Legal has not determined which registry entity is the contracting party, and the packet instructs that the registry link be treated as unresolved.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity_judgment contract, SAME_ENTITY requires establishing evidence of identity, not name compatibility; the packet preserves multiple live registry candidates (including a Wyoming LLC) and explicitly states the billing-to-registry link cannot be established, so neither SAME_ENTITY nor DISTINCT is licensed.",
+    "oracle": "UNRESOLVED",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R02",
+    "obligation_id": "id-18",
+    "candidate": {
+      "left": "billing:Northbridge Analytics Inc.",
+      "right": "registry:2019-0008841"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 2019-0008841"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Northbridge Analytics Inc."
+      }
+    ],
+    "support_claim": "Commercial notes state that legal has not determined which registry entity is the contracting party and instruct that the registry link be treated as unresolved, while the registry row names NORTHBRIDGE ANALYTICS LLC and billing records use Northbridge Analytics Inc. without an identity link between them.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires establishing evidence of identity and DISTINCT requires establishing evidence of distinctness; name similarity and compatible naming are insufficient, and absence of identity proof does not license DISTINCT. The packet preserves multiple live candidates (Inc. billing name versus Wyoming LLC registry entries) and explicitly marks the registry link unresolved, so neither positive nor negative disposition burden is met.",
+    "oracle": "UNRESOLVED",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R03",
+    "obligation_id": "id-01",
+    "candidate": {
+      "left": "crm:HEL-441",
+      "right": "billing:Helion Robotics Limited"
+    },
+    "proposed_disposition": "SAME_ENTITY",
+    "final_disposition": "SAME_ENTITY",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/crm.csv",
+        "location": "row HEL-441"
+      }
+    ],
+    "support_claim": "Commercial notes state that Helion Robotics Ltd (the CRM operating name) and Helion Robotics Limited (used on invoices) are the same legal entity, and the CRM row for HEL-441 names Helion Robotics Ltd.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity_judgment contract, SAME_ENTITY requires establishing evidence of identity rather than mere compatibility. The packet's commercial notes explicitly assert that the CRM operating name and the invoiced legal name are one legal entity, and the CRM observation ties left referent crm:HEL-441 to that operating name, licensing SAME_ENTITY for crm:HEL-441 and billing:Helion Robotics Limited.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R03",
+    "obligation_id": "id-02",
+    "candidate": {
+      "left": "billing:Helion Robotics Limited",
+      "right": "registry:11847201"
+    },
+    "proposed_disposition": "SAME_ENTITY",
+    "final_disposition": "SAME_ENTITY",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847201"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Helion Robotics Limited"
+      }
+    ],
+    "support_claim": "Commercial notes state that the invoice name Helion Robotics Limited and the Companies House name are the same legal entity, registry row 11847201 records HELION ROBOTICS LIMITED, and billing records bill Helion Robotics Limited.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity_judgment contract, SAME_ENTITY is licensed because the packet provides establishing evidence\u2014not mere name compatibility: commercial_notes explicitly assert that the invoiced name and the Companies House name denote the same legal entity, company_registry.csv ties registry:11847201 to HELION ROBOTICS LIMITED, and invoices.json confirms billing:Helion Robotics Limited as the billed counterparty, jointly identifying both referents as one legal counterparty.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R03",
+    "obligation_id": "id-03",
+    "candidate": {
+      "left": "billing:Helion Robotics Limited",
+      "right": "contract:MSA-HELION-2019"
+    },
+    "proposed_disposition": "SAME_ENTITY",
+    "final_disposition": "SAME_ENTITY",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/contracts/MSA-HELION-2019.md",
+        "location": "header"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Helion Robotics Limited"
+      }
+    ],
+    "support_claim": "Commercial notes state that Helion Robotics Ltd and Helion Robotics Limited are the same legal entity, while the MSA-HELION-2019 header names Helion Robotics Ltd as counterparty and billing invoices use billed_name Helion Robotics Limited.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity_judgment contract, SAME_ENTITY requires establishing evidence of identity rather than mere name compatibility. The packet links billing:Helion Robotics Limited to billed_name Helion Robotics Limited, links contract:MSA-HELION-2019 to counterparty Helion Robotics Ltd, and commercial_notes explicitly records that those two names denote the same legal entity, satisfying the positive disposition burden.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R03",
+    "obligation_id": "id-04",
+    "candidate": {
+      "left": "crm:NBA-102",
+      "right": "billing:Northbridge Analytics Inc."
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/crm.csv",
+        "location": "row NBA-102"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Northbridge Analytics Inc."
+      }
+    ],
+    "support_claim": "The packet associates CRM NBA-102 with the short name \"Northbridge Analytics\" and billing with \"Northbridge Analytics Inc.\", while noting an additional Wyoming LLC candidate and stating that legal has not determined which registry entity is the contracting party.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires evidence establishing legal identity and DISTINCT requires evidence establishing distinctness; the packet provides only compatible naming variants and an explicit instruction to treat the registry link as unresolved, which does not meet either burden.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R03",
+    "obligation_id": "id-05",
+    "candidate": {
+      "left": "billing:Northbridge Analytics Inc.",
+      "right": "contract:MSA-NBA-2021"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      }
+    ],
+    "support_claim": "Legal has not determined which registry entity is the contracting party, and the notes instruct treating the registry link as unresolved despite shared naming between billing and the MSA.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "The packet preserves multiple live registry candidates (including a Wyoming LLC) and explicitly states that legal has not determined the contracting party; although billing and the MSA counterparty share the name Northbridge Analytics Inc., name alignment alone does not establish identity under the relation contract, and no observation establishes that the billing referent and the MSA counterparty are distinct entities.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R03",
+    "obligation_id": "id-06",
+    "candidate": {
+      "left": "crm:OAK-77",
+      "right": "billing:Oakfield Logistik GmbH"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/crm.csv",
+        "location": "row OAK-77"
+      },
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row HRB 88421"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Oakfield Logistik GmbH"
+      }
+    ],
+    "support_claim": "The observations document a 2023 rebrand from Oakfield Logistics GmbH to Oakfield Logistik GmbH with unchanged HRB 88421, a CRM record OAK-77 labeled Oakfield Logistics, registry and billing names Oakfield Logistik GmbH, and a note that CRM still shows the old English-facing name, but no observation explicitly links OAK-77 to HRB 88421 or to the rebranded legal entity.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity contract, SAME_ENTITY requires establishing evidence of identity, not name compatibility or a coherent rebrand narrative. The commercial note establishes legal continuity between Oakfield Logistics GmbH and Oakfield Logistik GmbH via unchanged HRB 88421, and billing matches the registry legal name, but the packet never states that crm:OAK-77 is the CRM record for that HRB or that its label Oakfield Logistics denotes that counterparty rather than another similarly named account. Without an explicit cross-system identifier or identity assertion tying OAK-77 to billing:Oakfield Logistik GmbH, the positive burden is not met; DISTINCT is likewise unsupported because no observation shows they are separate legal counterparties.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R03",
+    "obligation_id": "id-07",
+    "candidate": {
+      "left": "billing:Oakfield Logistik GmbH",
+      "right": "contract:MSA-OAK-2018"
+    },
+    "proposed_disposition": "SAME_ENTITY",
+    "final_disposition": "SAME_ENTITY",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/contracts/MSA-OAK-2018.md",
+        "location": "header"
+      }
+    ],
+    "support_claim": "Commercial notes record that Oakfield rebranded from Oakfield Logistics GmbH to Oakfield Logistik GmbH without changing Handelsregister number HRB 88421, and the MSA-OAK-2018 header names Oakfield Logistics GmbH as counterparty.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity_judgment contract, SAME_ENTITY requires establishing evidence of identity rather than mere compatibility. The packet cites an explicit rebrand continuity statement tied to a stable registry identifier, linking the contract counterparty name to the billing referent as one legal entity; the distinctness burden is not met and no missing-information flag blocks closure.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R03",
+    "obligation_id": "id-08",
+    "candidate": {
+      "left": "billing:Oakfield Logistik GmbH",
+      "right": "registry:HRB 88421"
+    },
+    "proposed_disposition": "SAME_ENTITY",
+    "final_disposition": "SAME_ENTITY",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row HRB 88421"
+      },
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      }
+    ],
+    "support_claim": "The registry row for HRB 88421 lists Oakfield Logistik GmbH as the registered name, and commercial notes state that HRB 88421 is the Handelsregister number that remained unchanged when the company rebranded to Oakfield Logistik GmbH.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity_judgment contract, SAME_ENTITY requires establishing evidence of identity. The packet provides a direct registry association between HRB 88421 and Oakfield Logistik GmbH, corroborated by notes that the same Handelsregister number persisted through the rebrand to the billing name. This is positive identity evidence, not mere name compatibility, and the packet does not preserve multiple live candidates or state that identity cannot be established.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R03",
+    "obligation_id": "id-09",
+    "candidate": {
+      "left": "crm:VEL-19",
+      "right": "billing:Vellum Print Co Ltd"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/crm.csv",
+        "location": "row VEL-19"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      },
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      }
+    ],
+    "support_claim": "The packet associates crm:VEL-19 with the name 'Vellum Print Co' and billing with 'Vellum Print Co Ltd', but no observation provides an explicit identity link or proof of distinctness between these referents.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires establishing identity and DISTINCT requires establishing distinctness; name similarity between 'Vellum Print Co' and 'Vellum Print Co Ltd' is insufficient for identity, and no observation positively establishes that the CRM record and billing name denote separate legal counterparties, so neither burden is met.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R03",
+    "obligation_id": "id-10",
+    "candidate": {
+      "left": "billing:Vellum Print Co Ltd",
+      "right": "contract:SOW-VEL-2022"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      },
+      {
+        "source_path": "sources/contracts/SOW-VEL-2022.md",
+        "location": "header"
+      }
+    ],
+    "support_claim": "The billing record names Vellum Print Co Ltd as billed party and the SOW-VEL-2022 header names Vellum Print Co Ltd as counterparty, but neither observation provides establishing identity evidence beyond shared naming.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires evidence that establishes identity and name similarity is explicitly insufficient; the packet cites only matching names across billing and contract sources with no registration, cross-reference, or other identity anchor, and no evidence establishes distinctness, so neither burden is met.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R03",
+    "obligation_id": "id-11",
+    "candidate": {
+      "left": "billing:Vellum Print Co Ltd",
+      "right": "registry:09338441"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 09338441"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      }
+    ],
+    "support_claim": "The registry row associates company number 09338441 with the name VELLUM PRINT CO LTD, and the billing record names Vellum Print Co Ltd, but no observation links the billing referent to that company number.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires evidence establishing identity and name similarity is explicitly insufficient; the packet provides separate observations for each referent without a bridging identifier or linkage. DISTINCT requires evidence of distinctness, which is also absent. Neither epistemic burden is met, so UNRESOLVED is the licensed disposition.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R03",
+    "obligation_id": "id-12",
+    "candidate": {
+      "left": "crm:MER-55",
+      "right": "billing:Meridian Energy Partners LLC"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/crm.csv",
+        "location": "row MER-55"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Meridian Energy Partners LLC"
+      }
+    ],
+    "support_claim": "The CRM row associates MER-55 with Meridian Energy Partners while billing records use Meridian Energy Partners LLC, with no observation explicitly linking the CRM identifier to the billed legal entity.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires evidence establishing identity, not name similarity or compatibility; the packet names MER-55 as Meridian Energy Partners and billing as Meridian Energy Partners LLC without asserting they are the same legal counterparty. DISTINCT requires evidence of distinctness, which the packet does not provide. Neither epistemic burden is met, so UNRESOLVED is licensed.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R03",
+    "obligation_id": "id-13",
+    "candidate": {
+      "left": "billing:Meridian Energy Partners LLC",
+      "right": "contract:MSA-MER-2024"
+    },
+    "proposed_disposition": "SAME_ENTITY",
+    "final_disposition": "SAME_ENTITY",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/contracts/MSA-MER-2024.md",
+        "location": "header"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Meridian Energy Partners LLC"
+      },
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      }
+    ],
+    "support_claim": "The contract MSA-MER-2024 names Meridian Energy Partners LLC as counterparty, invoices bill Meridian Energy Partners LLC, and commercial notes state that Meridian Energy Partners invoices are the advisory retainer under MSA-MER-2024.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity_judgment contract, SAME_ENTITY is licensed because the packet links the billing referent and the contract referent through operational evidence beyond name overlap: the contract header identifies Meridian Energy Partners LLC as counterparty, billing records bill that same name, and commercial notes tie those invoices to the advisory retainer governed by MSA-MER-2024, establishing that both referents ground to the same legal counterparty.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R03",
+    "obligation_id": "id-14",
+    "candidate": {
+      "left": "billing:Meridian Energy Partners LLC",
+      "right": "registry:4721193"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 4721193"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Meridian Energy Partners LLC"
+      }
+    ],
+    "support_claim": "The registry row identifies 4721193 as MERIDIAN ENERGY PARTNERS LLC and the billing record names Meridian Energy Partners LLC, but no observation links the billing referent to that registry identifier.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires establishing identity and DISTINCT requires establishing distinctness; the packet grounds each referent independently via name-matching excerpts without evidence that affirms or denies they denote the same legal counterparty.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R03",
+    "obligation_id": "id-15",
+    "candidate": {
+      "left": "crm:HEL-441",
+      "right": "registry:11847299"
+    },
+    "proposed_disposition": "DISTINCT",
+    "final_disposition": "DISTINCT",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/crm.csv",
+        "location": "row HEL-441"
+      },
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847299"
+      }
+    ],
+    "support_claim": "CRM record HEL-441 names Helion Robotics Ltd, registry row 11847299 names HELION INDUSTRIAL SYSTEMS LTD, and the commercial notes state that Helion Industrial Systems Ltd is a different company from Helion Robotics.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity_judgment contract, DISTINCT is licensed because the packet provides establishing evidence of distinctness: the candidate referents resolve to differently named companies and the notes explicitly characterize Helion Industrial Systems Ltd as a different company from Helion Robotics, satisfying the burden that DISTINCT requires positive evidence rather than mere absence of identity proof.",
+    "oracle": "DISTINCT",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R03",
+    "obligation_id": "id-16",
+    "candidate": {
+      "left": "registry:11847201",
+      "right": "registry:11847299"
+    },
+    "proposed_disposition": "DISTINCT",
+    "final_disposition": "DISTINCT",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847201"
+      },
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847299"
+      }
+    ],
+    "support_claim": "The commercial notes state that Helion Industrial Systems Ltd is a different company from Helion Robotics Limited, and the registry rows map registry:11847201 to HELION ROBOTICS LIMITED and registry:11847299 to HELION INDUSTRIAL SYSTEMS LTD.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity_judgment contract, DISTINCT requires establishing evidence of distinctness rather than mere incompatibility or absence of identity proof; the notes explicitly characterize Helion Industrial Systems Ltd as a different company from the Helion Robotics entity, and the registry excerpts tie each candidate referent to those respective registered legal names.",
+    "oracle": "DISTINCT",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R03",
+    "obligation_id": "id-17",
+    "candidate": {
+      "left": "billing:Northbridge Analytics Inc.",
+      "right": "registry:3840192"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      }
+    ],
+    "support_claim": "Legal has not determined which registry entity is the contracting party, and the packet instructs treating the registry link as unresolved.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires establishing evidence of identity and DISTINCT requires establishing evidence of distinctness; name alignment between billing and registry row 3840192 is compatibility only. The packet preserves multiple live registry candidates (including a Wyoming LLC) and explicitly states the registry link cannot be established, so neither disposition burden is met.",
+    "oracle": "UNRESOLVED",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R03",
+    "obligation_id": "id-18",
+    "candidate": {
+      "left": "billing:Northbridge Analytics Inc.",
+      "right": "registry:2019-0008841"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      }
+    ],
+    "support_claim": "Legal has not determined which registry entity is the contracting party, and the packet instructs that the registry link be treated as unresolved.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires establishing identity and DISTINCT requires establishing distinctness; the packet preserves multiple live registry candidates (including a Wyoming LLC from a 2024 credit check) and explicitly states that identity between the billing name and registry:2019-0008841 cannot be established, so neither positive nor negative disposition is licensed.",
+    "oracle": "UNRESOLVED",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R04",
+    "obligation_id": "id-01",
+    "candidate": {
+      "left": "crm:HEL-441",
+      "right": "billing:Helion Robotics Limited"
+    },
+    "proposed_disposition": "SAME_ENTITY",
+    "final_disposition": "SAME_ENTITY",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/crm.csv",
+        "location": "row HEL-441"
+      },
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Helion Robotics Limited"
+      }
+    ],
+    "support_claim": "CRM record HEL-441 names Helion Robotics Ltd, commercial notes state that Helion Robotics Ltd and Helion Robotics Limited are the same legal entity, and billing invoices use Helion Robotics Limited as the billed name.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity_judgment contract, SAME_ENTITY is licensed because the packet provides establishing evidence\u2014not mere compatibility\u2014linking crm:HEL-441 to Helion Robotics Ltd and explicitly asserting that Helion Robotics Ltd and Helion Robotics Limited are the same legal entity, with the billing referent matching the invoice billed name; the packet does not preserve multiple live candidates or state that identity cannot be established.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R04",
+    "obligation_id": "id-02",
+    "candidate": {
+      "left": "billing:Helion Robotics Limited",
+      "right": "registry:11847201"
+    },
+    "proposed_disposition": "SAME_ENTITY",
+    "final_disposition": "SAME_ENTITY",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847201"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Helion Robotics Limited"
+      }
+    ],
+    "support_claim": "Invoices bill Helion Robotics Limited, Companies House registry row 11847201 is HELION ROBOTICS LIMITED, and the notes state that invoice and Companies House naming refers to the same legal entity.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "The packet provides establishing identity evidence, not mere name compatibility: billing/invoices.json fixes the billed counterparty as Helion Robotics Limited; company_registry.csv row 11847201 fixes registry:11847201 as HELION ROBOTICS LIMITED; and commercial_notes.md paragraph 1 explicitly states that invoices and Companies House use Helion Robotics Limited as the same legal entity, linking the billing referent to the registry referent for this pair.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R04",
+    "obligation_id": "id-03",
+    "candidate": {
+      "left": "billing:Helion Robotics Limited",
+      "right": "contract:MSA-HELION-2019"
+    },
+    "proposed_disposition": "SAME_ENTITY",
+    "final_disposition": "SAME_ENTITY",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/contracts/MSA-HELION-2019.md",
+        "location": "header"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Helion Robotics Limited"
+      }
+    ],
+    "support_claim": "Commercial notes state that Helion Robotics Ltd and Helion Robotics Limited are the same legal entity, the MSA-HELION-2019 header names Helion Robotics Ltd as counterparty, and invoices bill Helion Robotics Limited.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity_judgment contract, SAME_ENTITY is licensed because the packet provides establishing evidence\u2014not mere name similarity\u2014that the billing referent Helion Robotics Limited and the counterparty named in contract MSA-HELION-2019 (Helion Robotics Ltd.) denote one legal counterparty; the packet does not preserve competing candidates or report that identity cannot be established.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R04",
+    "obligation_id": "id-04",
+    "candidate": {
+      "left": "crm:NBA-102",
+      "right": "billing:Northbridge Analytics Inc."
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/crm.csv",
+        "location": "row NBA-102"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Northbridge Analytics Inc."
+      }
+    ],
+    "support_claim": "The notes state legal has not determined which registry entity is the contracting party and instruct treating that registry link as unresolved, while CRM NBA-102 names \"Northbridge Analytics\" and billing invoices name \"Northbridge Analytics Inc.\" without an identity bridge.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity contract, SAME_ENTITY requires establishing evidence of identity and DISTINCT requires establishing evidence of distinctness; name compatibility between CRM and billing labels is insufficient, and the packet explicitly preserves multiple live registry candidates (Inc. vs. LLC) and says identity cannot be established, so neither positive nor negative disposition is licensed.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R04",
+    "obligation_id": "id-05",
+    "candidate": {
+      "left": "billing:Northbridge Analytics Inc.",
+      "right": "contract:MSA-NBA-2021"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      }
+    ],
+    "support_claim": "Legal has not determined which registry entity is the contracting party, and the packet directs that the registry link be treated as unresolved despite compatible billing and MSA naming.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires establishing evidence of identity and DISTINCT requires establishing evidence of distinctness; compatible names across billing and the MSA counterparty are insufficient for SAME_ENTITY, no observation establishes distinctness between these referents, and the packet explicitly preserves unresolved registry identity rather than closing either disposition.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R04",
+    "obligation_id": "id-06",
+    "candidate": {
+      "left": "crm:OAK-77",
+      "right": "billing:Oakfield Logistik GmbH"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/crm.csv",
+        "location": "row OAK-77"
+      },
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Oakfield Logistik GmbH"
+      }
+    ],
+    "support_claim": "The packet shows CRM record OAK-77 labeled \"Oakfield Logistics\", billing under \"Oakfield Logistik GmbH\", and a note that Oakfield Logistics GmbH rebranded to Oakfield Logistik GmbH with unchanged HRB 88421 while CRM retains an old English-facing name, but no observation explicitly links OAK-77 to that legal entity or to the billed name.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires establishing evidence of identity between crm:OAK-77 and billing:Oakfield Logistik GmbH; the CRM row, rebranding note, and billing name are compatible but do not cite a shared registration identifier or an explicit statement that OAK-77 denotes the same counterparty as Oakfield Logistik GmbH, and name overlap without such linkage is insufficient to close identity or distinctness.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R04",
+    "obligation_id": "id-07",
+    "candidate": {
+      "left": "billing:Oakfield Logistik GmbH",
+      "right": "contract:MSA-OAK-2018"
+    },
+    "proposed_disposition": "SAME_ENTITY",
+    "final_disposition": "SAME_ENTITY",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/contracts/MSA-OAK-2018.md",
+        "location": "header"
+      },
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row HRB 88421"
+      }
+    ],
+    "support_claim": "Commercial notes record that Oakfield Logistics GmbH rebranded to Oakfield Logistik GmbH while Handelsregister number HRB 88421 remained unchanged, linking the MSA counterparty name to the billing and registry legal entity.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "The packet supplies identity-establishing evidence\u2014not mere name compatibility\u2014by documenting a legal-entity continuity rebrand with an unchanged registration number between the contract counterparty (Oakfield Logistics GmbH) and the billing referent (Oakfield Logistik GmbH), confirmed by the active registry row for HRB 88421.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R04",
+    "obligation_id": "id-08",
+    "candidate": {
+      "left": "billing:Oakfield Logistik GmbH",
+      "right": "registry:HRB 88421"
+    },
+    "proposed_disposition": "SAME_ENTITY",
+    "final_disposition": "SAME_ENTITY",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row HRB 88421"
+      },
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Oakfield Logistik GmbH"
+      }
+    ],
+    "support_claim": "The registry row for HRB 88421 lists Oakfield Logistik GmbH as the registered legal name, commercial notes state that name was retained under the same Handelsregister number after the 2023 rebrand, and billing records bill under that same legal name.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity_judgment contract, SAME_ENTITY is licensed because the packet provides establishing evidence\u2014not mere compatibility\u2014that billing:Oakfield Logistik GmbH and registry:HRB 88421 refer to one legal counterparty: the registry explicitly pairs HRB 88421 with Oakfield Logistik GmbH, the notes tie the current legal name to that unchanged register number, and invoices bill the identical name.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R04",
+    "obligation_id": "id-09",
+    "candidate": {
+      "left": "crm:VEL-19",
+      "right": "billing:Vellum Print Co Ltd"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/crm.csv",
+        "location": "row VEL-19"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      }
+    ],
+    "support_claim": "CRM row VEL-19 lists the counterparty as 'Vellum Print Co' while billing records the billed name as 'Vellum Print Co Ltd', with no packet observation tying these labels to the same legal entity or proving they are different entities.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity_judgment contract, SAME_ENTITY and DISTINCT each require establishing evidence, not name compatibility; the packet preserves two referents with similar but non-identical names and no identifier or explicit linkage, so neither the identity nor the distinctness burden is met.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R04",
+    "obligation_id": "id-10",
+    "candidate": {
+      "left": "billing:Vellum Print Co Ltd",
+      "right": "contract:SOW-VEL-2022"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      },
+      {
+        "source_path": "sources/contracts/SOW-VEL-2022.md",
+        "location": "header"
+      }
+    ],
+    "support_claim": "The billing record names Vellum Print Co Ltd as billed_name, and SOW-VEL-2022 lists Vellum Print Co Ltd as Counterparty, but no observation links the billing referent to the contract counterparty as the same legal entity.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires establishing identity evidence, not name compatibility alone; the packet provides only matching names across billing and contract sources without an identity link. DISTINCT requires evidence of distinctness, which the packet does not contain. With neither burden met, UNRESOLVED is the licensed disposition.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R04",
+    "obligation_id": "id-11",
+    "candidate": {
+      "left": "billing:Vellum Print Co Ltd",
+      "right": "registry:09338441"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 09338441"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      }
+    ],
+    "support_claim": "The registry row associates company number 09338441 with the registered name VELLUM PRINT CO LTD, and billing records use the name Vellum Print Co Ltd, but no observation directly links the billing referent to that company number.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires establishing evidence of identity, not name compatibility alone; the packet provides only separate mentions of a registry number with its registered name and a billing name that resemble each other, which does not meet the burden for SAME_ENTITY or for DISTINCT.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R04",
+    "obligation_id": "id-12",
+    "candidate": {
+      "left": "crm:MER-55",
+      "right": "billing:Meridian Energy Partners LLC"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/crm.csv",
+        "location": "row MER-55"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Meridian Energy Partners LLC"
+      }
+    ],
+    "support_claim": "The CRM row for MER-55 lists Meridian Energy Partners and billing records list Meridian Energy Partners LLC, but no observation links the CRM identifier MER-55 to the billed legal entity.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires establishing identity evidence and name similarity is explicitly insufficient; the packet provides no shared identifier, explicit mapping, or other proof that crm:MER-55 and billing:Meridian Energy Partners LLC denote the same legal counterparty. DISTINCT likewise requires evidence of distinctness, which is absent, so neither burden is met and UNRESOLVED is the licensed disposition.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R04",
+    "obligation_id": "id-13",
+    "candidate": {
+      "left": "billing:Meridian Energy Partners LLC",
+      "right": "contract:MSA-MER-2024"
+    },
+    "proposed_disposition": "SAME_ENTITY",
+    "final_disposition": "SAME_ENTITY",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/contracts/MSA-MER-2024.md",
+        "location": "header"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Meridian Energy Partners LLC"
+      },
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      }
+    ],
+    "support_claim": "The contract names Meridian Energy Partners LLC as counterparty, billing records bill Meridian Energy Partners LLC, and commercial notes tie Meridian invoices to the advisory retainer under MSA-MER-2024.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity_judgment contract, SAME_ENTITY is licensed because documentary evidence\u2014not mere name compatibility\u2014links the billing referent billing:Meridian Energy Partners LLC to the counterparty denoted by contract:MSA-MER-2024: the contract header identifies that legal counterparty, invoices bill that same name, and commercial notes connect those invoices to services under that contract.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R04",
+    "obligation_id": "id-14",
+    "candidate": {
+      "left": "billing:Meridian Energy Partners LLC",
+      "right": "registry:4721193"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 4721193"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Meridian Energy Partners LLC"
+      }
+    ],
+    "support_claim": "Registry row 4721193 names MERIDIAN ENERGY PARTNERS LLC and billing records use Meridian Energy Partners LLC, but no observation links the billing referent to that registry identifier.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "SAME_ENTITY requires evidence establishing identity, and name similarity between the billing name and the registry entity name is insufficient under the relation contract; DISTINCT requires evidence establishing distinctness, which is also absent, so neither burden is met.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R04",
+    "obligation_id": "id-15",
+    "candidate": {
+      "left": "crm:HEL-441",
+      "right": "registry:11847299"
+    },
+    "proposed_disposition": "DISTINCT",
+    "final_disposition": "DISTINCT",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/crm.csv",
+        "location": "row HEL-441"
+      },
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847299"
+      }
+    ],
+    "support_claim": "The CRM row for HEL-441 names Helion Robotics Ltd, registry row 11847299 names HELION INDUSTRIAL SYSTEMS LTD, and the commercial notes state that Helion Industrial Systems Ltd is a different company from Helion Robotics.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity contract, DISTINCT requires establishing evidence of distinctness. The packet associates crm:HEL-441 with Helion Robotics Ltd and registry:11847299 with HELION INDUSTRIAL SYSTEMS LTD, and commercial_notes.md explicitly states Helion Industrial Systems Ltd is a different company from the Helion Robotics entity used in CRM, which licenses DISTINCT.",
+    "oracle": "DISTINCT",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R04",
+    "obligation_id": "id-16",
+    "candidate": {
+      "left": "registry:11847201",
+      "right": "registry:11847299"
+    },
+    "proposed_disposition": "DISTINCT",
+    "final_disposition": "DISTINCT",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847201"
+      },
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847299"
+      },
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      }
+    ],
+    "support_claim": "Registry row 11847201 names HELION ROBOTICS LIMITED, registry row 11847299 names HELION INDUSTRIAL SYSTEMS LTD, and commercial notes state that Helion Industrial Systems Ltd is a different company from Helion Robotics.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, DISTINCT requires establishing evidence of distinctness. The packet maps registry:11847201 to HELION ROBOTICS LIMITED and registry:11847299 to HELION INDUSTRIAL SYSTEMS LTD, and paragraph 1 of commercial_notes.md explicitly states Helion Industrial Systems Ltd is a different company in the context of Helion Robotics; this satisfies the burden for DISTINCT without relying on name similarity or absence of identity evidence alone.",
+    "oracle": "DISTINCT",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R04",
+    "obligation_id": "id-17",
+    "candidate": {
+      "left": "billing:Northbridge Analytics Inc.",
+      "right": "registry:3840192"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      }
+    ],
+    "support_claim": "Commercial notes state that legal has not determined which registry entity is the contracting party and direct that the registry link be treated as unresolved.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "The packet preserves multiple live registry candidates (including a Wyoming LLC) and explicitly withholds identity between the billing referent and registry:3840192; under the relation contract, name alignment between billing:Northbridge Analytics Inc. and the Delaware registry row is compatibility, not establishing evidence, and no observation establishes distinctness.",
+    "oracle": "UNRESOLVED",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R04",
+    "obligation_id": "id-18",
+    "candidate": {
+      "left": "billing:Northbridge Analytics Inc.",
+      "right": "registry:2019-0008841"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 2019-0008841"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Northbridge Analytics Inc."
+      }
+    ],
+    "support_claim": "Commercial notes state that legal has not determined which registry entity is the contracting party and instruct treating the registry link as unresolved, while billing uses \"Northbridge Analytics Inc.\" and registry row 2019-0008841 lists \"NORTHBRIDGE ANALYTICS LLC\" without any observation linking them as the same legal counterparty.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires establishing identity and DISTINCT requires establishing distinctness; name similarity between the billed Inc. name and the registry LLC name is insufficient for identity, and no observation affirmatively separates them as distinct entities. The packet preserves live ambiguity\u2014including an additional Wyoming LLC from a credit check\u2014and explicitly records that the registry link cannot be closed, so UNRESOLVED is the licensed disposition.",
+    "oracle": "UNRESOLVED",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R05",
+    "obligation_id": "id-01",
+    "candidate": {
+      "left": "crm:HEL-441",
+      "right": "billing:Helion Robotics Limited"
+    },
+    "proposed_disposition": "SAME_ENTITY",
+    "final_disposition": "SAME_ENTITY",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/crm.csv",
+        "location": "row HEL-441"
+      },
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Helion Robotics Limited"
+      }
+    ],
+    "support_claim": "CRM row HEL-441 names Helion Robotics Ltd, commercial notes explicitly state that Helion Robotics Ltd (CRM) and Helion Robotics Limited (invoices) are the same legal entity, and billing records bill Helion Robotics Limited.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity_judgment contract, SAME_ENTITY is licensed because the packet supplies establishing evidence\u2014not mere name compatibility\u2014linking the left referent (crm:HEL-441) to Helion Robotics Ltd and asserting that operating name is the same legal entity as the right referent (billing:Helion Robotics Limited); no competing live candidate or unresolved-identity caveat appears in the packet.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R05",
+    "obligation_id": "id-02",
+    "candidate": {
+      "left": "billing:Helion Robotics Limited",
+      "right": "registry:11847201"
+    },
+    "proposed_disposition": "SAME_ENTITY",
+    "final_disposition": "SAME_ENTITY",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847201"
+      },
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Helion Robotics Limited"
+      }
+    ],
+    "support_claim": "The registry row identifies company number 11847201 as HELION ROBOTICS LIMITED, invoices bill Helion Robotics Limited, and commercial notes state that invoice and Companies House naming refers to the same legal entity.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity_judgment contract, SAME_ENTITY is licensed because the packet supplies establishing evidence\u2014not mere name compatibility\u2014linking the billing referent to the registry number: invoices confirm the billed legal name, the registry row ties 11847201 to that name, and the notes explicitly assert that invoice and Companies House records denote the same legal entity; no packet observation preserves a live alternative candidate or states that identity cannot be established.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R05",
+    "obligation_id": "id-03",
+    "candidate": {
+      "left": "billing:Helion Robotics Limited",
+      "right": "contract:MSA-HELION-2019"
+    },
+    "proposed_disposition": "SAME_ENTITY",
+    "final_disposition": "SAME_ENTITY",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Helion Robotics Limited"
+      },
+      {
+        "source_path": "sources/contracts/MSA-HELION-2019.md",
+        "location": "header"
+      }
+    ],
+    "support_claim": "Commercial notes state that Helion Robotics Ltd and Helion Robotics Limited are the same legal entity, invoices bill Helion Robotics Limited, and MSA-HELION-2019 names Helion Robotics Ltd. as counterparty.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity contract, SAME_ENTITY is licensed because the packet ties billing:Helion Robotics Limited to the invoiced name Helion Robotics Limited, ties contract:MSA-HELION-2019 to counterparty Helion Robotics Ltd., and provides explicit establishing evidence that those names denote one legal entity rather than mere compatibility or name similarity.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R05",
+    "obligation_id": "id-04",
+    "candidate": {
+      "left": "crm:NBA-102",
+      "right": "billing:Northbridge Analytics Inc."
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      }
+    ],
+    "support_claim": "The commercial notes record that legal has not determined which registry entity is the contracting party and instruct that the registry link be treated as unresolved, despite naming overlap between sales and billing forms.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY and DISTINCT each require establishing evidence, not mere name compatibility; the packet preserves an unresolved registry identity and an additional Wyoming LLC candidate, so neither the positive nor negative identity burden is met for crm:NBA-102 and billing:Northbridge Analytics Inc.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R05",
+    "obligation_id": "id-05",
+    "candidate": {
+      "left": "billing:Northbridge Analytics Inc.",
+      "right": "contract:MSA-NBA-2021"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      }
+    ],
+    "support_claim": "Legal has not determined which registry entity is the contracting party, and the packet instructs treating that registry link as unresolved despite billing and the MSA sharing the Inc. name.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires establishing identity and DISTINCT requires establishing distinctness; shared naming between billing and the MSA counterparty is compatibility, not identity proof, and the notes preserve multiple live registry candidates (Inc. vs. Wyoming LLC) without resolving which is the contracting party. Neither positive nor negative burden is met, so UNRESOLVED is the licensed disposition.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R05",
+    "obligation_id": "id-06",
+    "candidate": {
+      "left": "crm:OAK-77",
+      "right": "billing:Oakfield Logistik GmbH"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/crm.csv",
+        "location": "row OAK-77"
+      },
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Oakfield Logistik GmbH"
+      }
+    ],
+    "support_claim": "CRM row OAK-77 records the name Oakfield Logistics, commercial notes describe a rebrand between Oakfield Logistics GmbH and Oakfield Logistik GmbH with unchanged HRB 88421, and billing uses Oakfield Logistik GmbH, but no observation directly links crm:OAK-77 to billing:Oakfield Logistik GmbH.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity_judgment contract, SAME_ENTITY requires establishing evidence of sameness and DISTINCT requires establishing evidence of distinctness; the packet documents a rebrand and parallel CRM and billing names but never ties the CRM identifier OAK-77 to the billing referent, so neither positive nor negative burden is met.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R05",
+    "obligation_id": "id-07",
+    "candidate": {
+      "left": "billing:Oakfield Logistik GmbH",
+      "right": "contract:MSA-OAK-2018"
+    },
+    "proposed_disposition": "SAME_ENTITY",
+    "final_disposition": "SAME_ENTITY",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      {
+        "source_path": "sources/contracts/MSA-OAK-2018.md",
+        "location": "header"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Oakfield Logistik GmbH"
+      }
+    ],
+    "support_claim": "Commercial notes record that Oakfield Logistik GmbH is the 2023 rebrand of Oakfield Logistics GmbH with unchanged Handelsregister HRB 88421, the contract MSA-OAK-2018 names Oakfield Logistics GmbH as counterparty, and billing records bill Oakfield Logistik GmbH.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity contract, SAME_ENTITY is licensed because the packet provides establishing evidence\u2014not mere name similarity\u2014that the billing referent and the counterparty named in contract MSA-OAK-2018 are one legal entity: the rebrand note ties the two names to the same unchanged registry number, the contract header identifies the counterparty as the prior legal name, and billing invoices use the current legal name.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R05",
+    "obligation_id": "id-08",
+    "candidate": {
+      "left": "billing:Oakfield Logistik GmbH",
+      "right": "registry:HRB 88421"
+    },
+    "proposed_disposition": "SAME_ENTITY",
+    "final_disposition": "SAME_ENTITY",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row HRB 88421"
+      },
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      }
+    ],
+    "support_claim": "The registry row assigns HRB 88421 to Oakfield Logistik GmbH, and the commercial notes state that HRB 88421 remained unchanged when the company adopted the Oakfield Logistik GmbH name, establishing that the billing referent and the registry number denote the same legal counterparty.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity_judgment contract, SAME_ENTITY requires establishing evidence of identity rather than mere compatibility. The packet provides a direct registry mapping from HRB 88421 to Oakfield Logistik GmbH and an explicit note that this register number persisted through the rebrand to Oakfield Logistik GmbH, corroborated by billing records using that same legal name; no competing candidates or unresolved identity caveats are preserved in the packet.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R05",
+    "obligation_id": "id-09",
+    "candidate": {
+      "left": "crm:VEL-19",
+      "right": "billing:Vellum Print Co Ltd"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/crm.csv",
+        "location": "row VEL-19"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      }
+    ],
+    "support_claim": "The CRM row for VEL-19 lists the counterparty as 'Vellum Print Co' while billing records the billed name as 'Vellum Print Co Ltd', with no observation explicitly linking these two referents.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires establishing evidence of identity and DISTINCT requires establishing evidence of distinctness; the packet provides only name-adjacent labels across systems without an identifier bridge or explicit identity assertion, so neither burden is met.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R05",
+    "obligation_id": "id-10",
+    "candidate": {
+      "left": "billing:Vellum Print Co Ltd",
+      "right": "contract:SOW-VEL-2022"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      },
+      {
+        "source_path": "sources/contracts/SOW-VEL-2022.md",
+        "location": "header"
+      }
+    ],
+    "support_claim": "The billing record and the SOW header both name 'Vellum Print Co Ltd', but no observation provides establishing evidence of legal-entity identity or distinctness between the billing referent and the contract counterparty.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires establishing identity evidence and DISTINCT requires establishing distinctness; shared naming without corroborating identity proof is insufficient for SAME_ENTITY, and the packet contains no evidence that the referents are distinct legal counterparties, so UNRESOLVED is the licensed disposition.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R05",
+    "obligation_id": "id-11",
+    "candidate": {
+      "left": "billing:Vellum Print Co Ltd",
+      "right": "registry:09338441"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 09338441"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      }
+    ],
+    "support_claim": "The registry row associates company number 09338441 with the name VELLUM PRINT CO LTD, and billing records use the name Vellum Print Co Ltd, but no observation links the billing referent to that company number.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires evidence establishing identity and DISTINCT requires evidence establishing distinctness; the packet provides only nominal correspondence between the registry-listed name and the billed name, which is insufficient for either positive disposition, and no observation refutes identity or ties the billing counterparty to registration 09338441.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R05",
+    "obligation_id": "id-12",
+    "candidate": {
+      "left": "crm:MER-55",
+      "right": "billing:Meridian Energy Partners LLC"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/crm.csv",
+        "location": "row MER-55"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Meridian Energy Partners LLC"
+      },
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      }
+    ],
+    "support_claim": "The packet links MER-55 to the name Meridian Energy Partners and billing to Meridian Energy Partners LLC, but no observation explicitly establishes that these referents denote the same legal counterparty.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires establishing identity and DISTINCT requires establishing distinctness; name similarity and contextual association without a direct identity link are insufficient, and the packet provides no observation that confirms or denies that crm:MER-55 and billing:Meridian Energy Partners LLC are the same entity.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R05",
+    "obligation_id": "id-13",
+    "candidate": {
+      "left": "billing:Meridian Energy Partners LLC",
+      "right": "contract:MSA-MER-2024"
+    },
+    "proposed_disposition": "SAME_ENTITY",
+    "final_disposition": "SAME_ENTITY",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/contracts/MSA-MER-2024.md",
+        "location": "header"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Meridian Energy Partners LLC"
+      },
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      }
+    ],
+    "support_claim": "MSA-MER-2024 names Meridian Energy Partners LLC as its counterparty, billing records bill Meridian Energy Partners LLC, and commercial notes state that Meridian Energy Partners invoices are the advisory retainer under MSA-MER-2024.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity_judgment contract, SAME_ENTITY is licensed because the packet provides direct documentary linkage\u2014not mere name compatibility\u2014establishing that billing:Meridian Energy Partners LLC and the counterparty denoted by contract:MSA-MER-2024 are the same legal counterparty; the packet does not preserve alternate candidates or flag missing identity information.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R05",
+    "obligation_id": "id-14",
+    "candidate": {
+      "left": "billing:Meridian Energy Partners LLC",
+      "right": "registry:4721193"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 4721193"
+      },
+      {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Meridian Energy Partners LLC"
+      }
+    ],
+    "support_claim": "Registry row 4721193 lists MERIDIAN ENERGY PARTNERS LLC and billing records use Meridian Energy Partners LLC, but no observation links the billing referent to that registry identifier.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires establishing identity evidence, and name similarity alone is insufficient; the packet provides no cross-source identifier tying billing:Meridian Energy Partners LLC to registry:4721193, and no evidence establishes distinctness, so UNRESOLVED is the licensed disposition.",
+    "oracle": "SAME_ENTITY",
+    "in_oracle": true,
+    "exact": false,
+    "unsupported_closure": false,
+    "under_closure": true,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": true
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R05",
+    "obligation_id": "id-15",
+    "candidate": {
+      "left": "crm:HEL-441",
+      "right": "registry:11847299"
+    },
+    "proposed_disposition": "DISTINCT",
+    "final_disposition": "DISTINCT",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      }
+    ],
+    "support_claim": "The commercial notes state that Helion Industrial Systems Ltd is a different company from Helion Robotics Ltd, which is the CRM operating name associated with HEL-441.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "The packet associates crm:HEL-441 with Helion Robotics Ltd and registry:11847299 with HELION INDUSTRIAL SYSTEMS LTD; the notes explicitly establish these as distinct legal entities, satisfying the DISTINCT burden under the relation contract.",
+    "oracle": "DISTINCT",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R05",
+    "obligation_id": "id-16",
+    "candidate": {
+      "left": "registry:11847201",
+      "right": "registry:11847299"
+    },
+    "proposed_disposition": "DISTINCT",
+    "final_disposition": "DISTINCT",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847201"
+      },
+      {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847299"
+      },
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      }
+    ],
+    "support_claim": "Registry rows 11847201 and 11847299 register HELION ROBOTICS LIMITED and HELION INDUSTRIAL SYSTEMS LTD as separate active companies, and commercial notes explicitly state that Helion Industrial Systems Ltd is a different company from the Helion Robotics entity.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the identity_judgment contract, DISTINCT is licensed because the packet provides positive evidence of distinctness: the registry assigns each referent a unique company number and legal name, and the commercial notes directly contrast Helion Industrial Systems Ltd as a different company from Helion Robotics, establishing that registry:11847201 and registry:11847299 denote distinct legal counterparties.",
+    "oracle": "DISTINCT",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R05",
+    "obligation_id": "id-17",
+    "candidate": {
+      "left": "billing:Northbridge Analytics Inc.",
+      "right": "registry:3840192"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      }
+    ],
+    "support_claim": "Legal has not determined which registry entity is the contracting party, and the packet explicitly instructs treating the registry link as unresolved.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires establishing evidence of identity and DISTINCT requires establishing evidence of distinctness; although billing records and registry row 3840192 share a similar name, name similarity is insufficient for identity, and the packet preserves multiple live candidates (including a Wyoming LLC) while stating the registry link cannot be established.",
+    "oracle": "UNRESOLVED",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  },
+  {
+    "strategy": "a1_single",
+    "trial": "R05",
+    "obligation_id": "id-18",
+    "candidate": {
+      "left": "billing:Northbridge Analytics Inc.",
+      "right": "registry:2019-0008841"
+    },
+    "proposed_disposition": "UNRESOLVED",
+    "final_disposition": "UNRESOLVED",
+    "supporting_evidence": [
+      {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      }
+    ],
+    "support_claim": "Legal has not determined which registry entity is the contracting party, and the packet instructs that the registry link be treated as unresolved.",
+    "proof_size": 1,
+    "proof_valid": true,
+    "isolation_leaks": [],
+    "justification": "Under the relation contract, SAME_ENTITY requires establishing identity and DISTINCT requires establishing distinctness; the packet provides name overlap between billing (Northbridge Analytics Inc.) and registry row 2019-0008841 (NORTHBRIDGE ANALYTICS LLC) but explicitly records that legal has not determined which registry entity is the contracting party and directs treating the registry link as unresolved, so neither positive nor negative identity burden is met.",
+    "oracle": "UNRESOLVED",
+    "in_oracle": true,
+    "exact": true,
+    "unsupported_closure": false,
+    "under_closure": false,
+    "polarity": false,
+    "grounding_valid": true,
+    "proposed_wrong_caught": false,
+    "correct_downgraded": false,
+    "correct_same_never_proposed": false
+  }
+]

@@ -1,0 +1,93 @@
+{
+  "claims": [
+    {
+      "claim": "The billing referent is recorded as \"Northbridge Analytics Inc.\" on invoices.",
+      "status": "ESTABLISHED",
+      "burden": "other",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Northbridge Analytics Inc."
+        }
+      ]
+    },
+    {
+      "claim": "Registry ID 3840192 corresponds to the Delaware active entity named \"NORTHBRIDGE ANALYTICS INC\".",
+      "status": "ESTABLISHED",
+      "burden": "other",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/company_registry.csv",
+          "location": "row 3840192"
+        }
+      ]
+    },
+    {
+      "claim": "A 2024 credit check returned a separate Wyoming LLC named \"Northbridge Analytics LLC\".",
+      "status": "ESTABLISHED",
+      "burden": "other",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    },
+    {
+      "claim": "The billing name \"Northbridge Analytics Inc.\" and registry 3840192's registered name \"NORTHBRIDGE ANALYTICS INC\" are lexically similar.",
+      "status": "ESTABLISHED",
+      "burden": "other",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Northbridge Analytics Inc."
+        },
+        {
+          "source_path": "sources/company_registry.csv",
+          "location": "row 3840192"
+        }
+      ]
+    },
+    {
+      "claim": "billing:Northbridge Analytics Inc. and registry:3840192 denote the same legal counterparty.",
+      "status": "NOT_ESTABLISHED",
+      "burden": "identity",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    },
+    {
+      "claim": "billing:Northbridge Analytics Inc. and registry:3840192 denote distinct legal counterparties.",
+      "status": "NOT_ESTABLISHED",
+      "burden": "distinctness",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    },
+    {
+      "claim": "The identity link between the billing referent and registry 3840192 is preserved as unresolved.",
+      "status": "ESTABLISHED",
+      "burden": "unresolved_preservation",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    }
+  ],
+  "disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "Legal has not determined which registry entity is the contracting party, and the packet explicitly instructs treating the registry link as unresolved despite lexical name similarity."
+}

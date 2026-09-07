@@ -1,0 +1,50 @@
+{
+  "steps": [
+    {
+      "fact": "The left referent billing:Vellum Print Co Ltd is associated with billed_name Vellum Print Co Ltd in billing records.",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "The contract document SOW-VEL-2022 lists Counterparty: Vellum Print Co Ltd in its header.",
+      "grounding": {
+        "source_path": "sources/contracts/SOW-VEL-2022.md",
+        "location": "header"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Neither observation provides a legal identifier, mapping, or uniqueness assertion linking the billing referent to the SOW counterparty.",
+      "grounding": null,
+      "mechanical": true
+    },
+    {
+      "fact": "The relation contract requires establishing evidence for SAME_ENTITY; name similarity, compatibility, or lack of contradiction is insufficient.",
+      "grounding": {
+        "source_path": "relation_contract.json",
+        "location": "grounding_contract"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "No evidence establishes that the two referents are distinct legal counterparties.",
+      "grounding": null,
+      "mechanical": true
+    }
+  ],
+  "disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Vellum Print Co Ltd"
+    },
+    {
+      "source_path": "sources/contracts/SOW-VEL-2022.md",
+      "location": "header"
+    }
+  ],
+  "support_claim": "Both sources mention the name Vellum Print Co Ltd, but the packet supplies no legal identifier or other establishing evidence of counterparty identity, so neither the SAME_ENTITY nor the DISTINCT burden is met."
+}

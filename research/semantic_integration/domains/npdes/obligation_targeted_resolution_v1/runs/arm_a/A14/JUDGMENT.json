@@ -1,0 +1,39 @@
+{
+  "occurrence_id": "3610129901|3600833510",
+  "semantic_question_used": "For this permit limit row with an empty LIMIT_VALUE_NMBR, does the row represent report-only monitoring with no enforceable numeric discharge limit (rather than a missing or erroneous numeric limit value) for Purpose A compliance comparison?",
+  "disposition": "SUPPORTED_RESOLUTION",
+  "interpretation": "The empty LIMIT_VALUE_NMBR on limit value 3610129901 (TSS, statistical base 3C/AVG, schedule 3600833510) classifies this row as report-only monitoring. The authorized permit requires reporting of 30-day average TSS at Outfall 001 but does not impose a numeric mg/L limit on that average. Numeric compliance comparison against this row is not applicable; the separate daily-maximum row (limit value 3610129867, 50 mg/L) carries the enforceable numeric TSS limit.",
+  "grounding": "Structured permit_limits.csv shows LIMIT_VALUE_NMBR blank, STATISTICAL_BASE_TYPE_CODE AVG (3C), LIMIT_VALUE_TYPE_CODE C2, and unit mg/L for parameter 00530 under permit NM0000116. The final permit Part I discharge-limitations table for Total Suspended Solids lists the mg/L 30-Day Avg column as \"Report\" while the mg/L Daily Max column is 50. The fact sheet states the permittee is to report 30-day average TSS without establishing a numeric average limit.",
+  "documents_opened": [
+    "documents/gcc/final_permit.txt",
+    "documents/gcc/fact_sheet.txt",
+    "documents/gcc/minor_modification.txt",
+    "sources/permit_limits.csv",
+    "OCCURRENCE.md",
+    "purposes/visible_a.md",
+    "construction.py"
+  ],
+  "snippets": [
+    {
+      "source_id": "documents/gcc/final_permit.txt",
+      "text": "Total Suspended          N/A               N/A               Report            50                 1/Week               Grab\nSolids"
+    },
+    {
+      "source_id": "documents/gcc/final_permit.txt",
+      "text": "POLLUTANT       30-Day Avg      Daily Max       30-Day Avg   Daily Max                            MEASUREMENT SAMPLE TYPE"
+    },
+    {
+      "source_id": "documents/gcc/fact_sheet.txt",
+      "text": "As a result, it is\nproposed in the draft permit that the permittee report 30-day average for TSS."
+    },
+    {
+      "source_id": "sources/permit_limits.csv",
+      "text": "3610129901,C2,,19,mg/L,19,mg/L,,3C,AVG,,,ENF,N,GR,01/07"
+    },
+    {
+      "source_id": "sources/permit_limits.csv",
+      "text": "3610129867,C3,50,19,mg/L,19,mg/L,50,DD,MAX,<=,,ENF,N,GR,01/07"
+    }
+  ],
+  "remaining_uncertainty": "Structured LIMIT_TYPE_CODE=ENF on this row does not encode report-only status; classification depends on permit narrative text. Whether a given FY2025 measurement should be compared against the sibling daily-maximum limit (3610129867) rather than this row is a separate applicability question not resolved here."
+}

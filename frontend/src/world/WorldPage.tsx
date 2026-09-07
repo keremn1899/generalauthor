@@ -63,8 +63,8 @@ import { FrontierTable, type Obligation } from "./FrontierTable";
 import { MARK_DEFAULTS, type MarkParams } from "./marks";
 import { RelationTable } from "./RelationTable";
 import { SchemaCanvas } from "./SchemaCanvas";
-import { fieldGraph } from "./hops";
 import { readField, writeField } from "./fieldMemory";
+import { createLabSandboxSet } from "./mockWorldData";
 import { chipKind } from "./schemaGraph";
 import type { TableChrome } from "./tableChrome";
 import { WorldTable } from "./WorldTable";
@@ -75,6 +75,7 @@ import {
   type MaterialTuning,
   type SelectionTreatment,
 } from "./WorldCanvas";
+import type { DriftTuning } from "./drift";
 import type { CameraInsets } from "./canvasFocus";
 import {
   arrange,
@@ -674,6 +675,10 @@ export type WorldPageTuning = {
   material?: Partial<MaterialTuning>;
   selectionTreatment?: SelectionTreatment;
   light?: Partial<LightField>;
+  /** The lab's live field. See `drift.ts`; off on the product surface. */
+  drift?: boolean;
+  /** Live-field parameters exposed by World Lab. */
+  driftTuning?: Partial<DriftTuning>;
 };
 
 export type WorldPageProps = {
@@ -724,6 +729,17 @@ export function WorldPage({
   const [hoveredRelation, setHoveredRelation] = useState<string | null>(null);
   const [focusedRelation, setFocusedRelation] = useState<string | null>(null);
   const [namedAtRest, setNamedAtRest] = useState(false);
+  /**
+   * Whether a selected mark spreads its strokes apart — see `spread.ts`.
+   *
+   * On, because selecting a mark is what reveals every name it carries at
+   * once, and at rest those names are all stationed the same distance out from
+   * the same rim: two neighbours a few degrees apart hand the reader one plate
+   * on top of another. Offered as a setting because it is the one place this
+   * canvas draws a filament off the line between its two ends, and that is a
+   * reader's call to make.
+   */
+  const [spreadOnSelect, setSpreadOnSelect] = useState(true);
   const [show, setShow] = useState<ShowState>(SHOW_DEFAULT);
   const [readerOpen, setReaderOpen] = useState(false);
   const [readerWidth, setReaderWidth] = useState(() =>
@@ -829,8 +845,13 @@ export function WorldPage({
     if (!overview || restored.current) return;
     restored.current = true;
     const stored = readField(overview.world_id, overview.revision);
-    if (stored) setSet((current) => (fieldSize(current) ? current : stored));
-  }, [overview]);
+    setSet((current) => {
+      if (fieldSize(current)) return current;
+      if (stored && fieldSize(stored)) return stored;
+      if (lab) return createLabSandboxSet();
+      return current;
+    });
+  }, [lab, overview]);
 
   /** Keep the stored field level with the one on screen. */
   useEffect(() => {
@@ -1299,15 +1320,9 @@ export function WorldPage({
     [set],
   );
 
-  const fieldNeighbours = useMemo(() => fieldGraph(set), [set]);
-  const canGather = useCallback(
-    (id: string) => Boolean(fieldNeighbours.get(id)?.size),
-    [fieldNeighbours],
-  );
-  const onGather = useCallback(
-    (id: string) => applyArrange({ kind: "gather", subject: id }, "gather"),
-    [applyArrange],
-  );
+  // No `gather` here while the reader withholds it. The arrangement itself is
+  // intact in `workingSet`, so restoring the control is restoring these three
+  // lines and the button, not rebuilding a behaviour.
   const onSeparate = useCallback(
     () => applyArrange({ kind: "separate" }, "separate"),
     [applyArrange],
@@ -1342,11 +1357,11 @@ export function WorldPage({
     expansionGeneration.current += 1;
     expansionsInFlight.current.clear();
     dispatchExpansion({ type: "reset" });
-    setSet(emptySet());
+    setSet(lab ? createLabSandboxSet() : emptySet());
     setSelection(null);
     setHovered(null);
     setReaderOpen(false);
-  }, []);
+  }, [lab]);
 
   const enterVocabulary = useCallback(() => {
     setVocabularyFocus(true);
@@ -1631,7 +1646,10 @@ export function WorldPage({
                           motion={motion}
                           material={tuning?.material}
                           selectionTreatment={tuning?.selectionTreatment}
+                          spreadOnSelect={spreadOnSelect}
                           light={tuning?.light}
+                          drift={tuning?.drift ?? false}
+                          driftTuning={tuning?.driftTuning}
                           onHover={setHovered}
                           onSelect={chooseFieldMark}
                           onPositions={onPositions}
@@ -1765,11 +1783,13 @@ export function WorldPage({
                         })
                       }
                       onDrop={onRemove}
-                      onGather={
-                        selection && canGather(selection.id)
-                          ? () => onGather(selection.id)
-                          : null
-                      }
+                      // Withheld for now. `separate` stays: it answers a
+                      // question a reader actually has — two marks are sitting
+                      // on top of each other — where gather re-places matter
+                      // nobody asked about. The arrangement itself is kept
+                      // whole in `workingSet`, so this is a surface decision
+                      // and not a deletion.
+                      onGather={null}
                       onClose={() => setReaderOpen(false)}
                     />
                   ) : relation ? (
@@ -1885,6 +1905,14 @@ export function WorldPage({
             names={
               !onField || focusDrawn
                 ? { on: namedAtRest, onToggle: () => setNamedAtRest((on) => !on) }
+                : undefined
+            }
+            spread={
+              onField && !focusDrawn
+                ? {
+                    on: spreadOnSelect,
+                    onToggle: () => setSpreadOnSelect((on) => !on),
+                  }
                 : undefined
             }
           />

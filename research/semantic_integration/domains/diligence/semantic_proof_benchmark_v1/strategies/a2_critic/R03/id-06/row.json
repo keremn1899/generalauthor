@@ -1,0 +1,44 @@
+{
+  "strategy": "a2_critic",
+  "trial": "R03",
+  "obligation_id": "id-06",
+  "candidate": {
+    "left": "crm:OAK-77",
+    "right": "billing:Oakfield Logistik GmbH"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row OAK-77"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Oakfield Logistik GmbH"
+    }
+  ],
+  "support_claim": "The packet documents a rebrand from Oakfield Logistics GmbH to Oakfield Logistik GmbH and shows CRM record OAK-77 labeled Oakfield Logistics alongside billing under Oakfield Logistik GmbH, but no observation directly links OAK-77 to the rebranded legal counterparty, so identity is not established.",
+  "proof_size": 2,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "critic": {
+    "decision": "CONFIRM",
+    "reason": "The cited observations describe a rebrand and mismatched CRM versus billing names but provide no direct identifier or explicit mapping linking crm:OAK-77 to billing:Oakfield Logistik GmbH, so establishing evidence for identity is absent and UNRESOLVED is warranted."
+  },
+  "critic_reason": "cannot_upgrade",
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

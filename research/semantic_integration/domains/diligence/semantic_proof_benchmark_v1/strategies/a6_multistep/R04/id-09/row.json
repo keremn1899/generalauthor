@@ -1,0 +1,83 @@
+{
+  "strategy": "a6_multistep",
+  "trial": "R04",
+  "obligation_id": "id-09",
+  "candidate": {
+    "left": "crm:VEL-19",
+    "right": "billing:Vellum Print Co Ltd"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row VEL-19"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Vellum Print Co Ltd"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "The packet links VEL-19 to Vellum Print Co and billing to Vellum Print Co Ltd but provides no establishing identity or distinctness evidence beyond similar names, so the relation remains unresolved.",
+  "proof_size": 6,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "steps": [
+    {
+      "fact": "Candidate left referent is crm:VEL-19 and right referent is billing:Vellum Print Co Ltd.",
+      "grounding": null,
+      "mechanical": true
+    },
+    {
+      "fact": "CRM row VEL-19 lists the account name as Vellum Print Co (not Vellum Print Co Ltd).",
+      "grounding": {
+        "source_path": "sources/crm.csv",
+        "location": "row VEL-19"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Billing record billed_name is Vellum Print Co Ltd.",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "The packet provides no shared legal identifier, explicit identity mapping, or statement of identifier uniqueness linking crm:VEL-19 to billing:Vellum Print Co Ltd.",
+      "grounding": null,
+      "mechanical": true
+    },
+    {
+      "fact": "Commercial notes mention Vellum Print Co dissolved but do not link that referent to VEL-19 or to the billing name Vellum Print Co Ltd.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Name similarity between Vellum Print Co and Vellum Print Co Ltd does not satisfy the SAME_ENTITY burden, and no evidence establishes that the two referents are distinct.",
+      "grounding": null,
+      "mechanical": true
+    }
+  ],
+  "admit": {
+    "rule": "unresolved"
+  },
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

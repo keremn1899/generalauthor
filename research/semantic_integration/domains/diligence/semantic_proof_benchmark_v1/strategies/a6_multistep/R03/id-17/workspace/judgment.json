@@ -1,0 +1,57 @@
+{
+  "steps": [
+    {
+      "fact": "Billing invoices bill under the name \"Northbridge Analytics Inc.\"",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Northbridge Analytics Inc."
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Registry record 3840192 lists the entity name \"NORTHBRIDGE ANALYTICS INC\" (Delaware, active).",
+      "grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 3840192"
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "Commercial notes state that billing and the MSA use \"Northbridge Analytics Inc.\", but legal has not determined which registry entity is the contracting party.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Commercial notes identify an additional candidate entity, \"Northbridge Analytics LLC\" (Wyoming LLC), and instruct that the registry link be treated as unresolved.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "No packet excerpt links billing:Northbridge Analytics Inc. to registry:3840192 via a shared legal identifier or an established mapping; name correspondence alone is insufficient under the relation contract.",
+      "grounding": null,
+      "mechanical": false
+    }
+  ],
+  "disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 3840192"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Northbridge Analytics Inc."
+    }
+  ],
+  "support_claim": "Although the billing name aligns with the registry name for 3840192, the packet explicitly preserves multiple live registry candidates and states that legal has not determined which registry entity is the contracting party, so identity is not established."
+}

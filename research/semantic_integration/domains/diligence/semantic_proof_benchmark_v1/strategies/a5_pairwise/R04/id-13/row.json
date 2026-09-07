@@ -1,0 +1,71 @@
+{
+  "strategy": "a5_pairwise",
+  "trial": "R04",
+  "obligation_id": "id-13",
+  "candidate": {
+    "left": "billing:Meridian Energy Partners LLC",
+    "right": "contract:MSA-MER-2024"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Meridian Energy Partners LLC"
+    },
+    {
+      "source_path": "sources/contracts/MSA-MER-2024.md",
+      "location": "header"
+    }
+  ],
+  "support_claim": "Evidence links the billing referent and contract referent through shared name and retainer activity, but every proposition establishes only ancillary facts and none establishes referent identity or distinctness.",
+  "proof_size": 3,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "propositions": [
+    {
+      "proposition": "Meridian Energy Partners invoices are the advisory retainer under MSA-MER-2024.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "other",
+      "relevance": "Links Meridian Energy Partners billing activity to the MSA-MER-2024 contract referenced by the right referent, but does not by itself establish that the two referents denote the same legal counterparty."
+    },
+    {
+      "proposition": "The billed name on invoices is Meridian Energy Partners LLC.",
+      "source_grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Meridian Energy Partners LLC"
+      },
+      "establishes": "other",
+      "relevance": "Grounds the left billing referent in invoice billing records as the entity billed under that name."
+    },
+    {
+      "proposition": "MSA-MER-2024 is an advisory retainer agreement with counterparty Meridian Energy Partners LLC.",
+      "source_grounding": {
+        "source_path": "sources/contracts/MSA-MER-2024.md",
+        "location": "header"
+      },
+      "establishes": "other",
+      "relevance": "Identifies the counterparty named on the contract document referenced by the right referent; name correspondence with billing alone is insufficient to establish referent identity."
+    }
+  ],
+  "admit": {
+    "rule": "proposed_unresolved"
+  },
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

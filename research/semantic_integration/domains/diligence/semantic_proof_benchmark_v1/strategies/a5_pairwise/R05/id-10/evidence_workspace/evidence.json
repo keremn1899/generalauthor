@@ -1,0 +1,40 @@
+{
+  "propositions": [
+    {
+      "proposition": "The billing record lists billed_name as Vellum Print Co Ltd.",
+      "source_grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      },
+      "establishes": "other",
+      "relevance": "Identifies the legal counterparty name associated with the left referent (billing:Vellum Print Co Ltd) but does not link that billing referent to the contract referent."
+    },
+    {
+      "proposition": "SOW-VEL-2022 lists Counterparty as Vellum Print Co Ltd.",
+      "source_grounding": {
+        "source_path": "sources/contracts/SOW-VEL-2022.md",
+        "location": "header"
+      },
+      "establishes": "other",
+      "relevance": "Identifies the legal counterparty name associated with the right referent (contract:SOW-VEL-2022) but name correspondence alone does not establish identity between the two referents."
+    },
+    {
+      "proposition": "SOW-VEL-2022 was effective 18 January 2022 and expired 31 December 2023 without renewal.",
+      "source_grounding": {
+        "source_path": "sources/contracts/SOW-VEL-2022.md",
+        "location": "header"
+      },
+      "establishes": "other",
+      "relevance": "Provides temporal and status context for the contract referent; does not establish whether the billing and contract referents denote the same legal counterparty."
+    },
+    {
+      "proposition": "SOW-VEL-2022 contains no change-of-control clause and assignment is unrestricted.",
+      "source_grounding": {
+        "source_path": "sources/contracts/SOW-VEL-2022.md",
+        "location": "header"
+      },
+      "establishes": "other",
+      "relevance": "Describes contractual assignment terms for the contract referent; does not establish identity or distinctness between the billing and contract referents."
+    }
+  ]
+}

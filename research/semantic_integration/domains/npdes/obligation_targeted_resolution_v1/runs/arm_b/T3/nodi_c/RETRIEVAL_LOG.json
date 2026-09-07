@@ -1,0 +1,38 @@
+{
+  "structured_inspected": [
+    "OBLIGATION.md",
+    "construction.py (nodi_code_semantics requirement and no_numeric_result_case derivation)",
+    "sources/dmr_measurements.csv (NODI_CODE distribution, representative C rows, FY2025 no-result filter)",
+    "sources/permit_limits.csv (NM0000116 limit context for C-row parameters)",
+    "sources/document_inventory.json (permit-to-document mapping for NM0000116)"
+  ],
+  "documents_opened": [
+    "documents/gcc/final_permit.txt",
+    "documents/gcc/fact_sheet.txt",
+    "documents/gcc/minor_modification.txt",
+    "documents/aztec/final_permit.txt"
+  ],
+  "sections_inspected": [
+    "documents/gcc/final_permit.txt — Part II.B Reporting of Monitoring Results",
+    "documents/gcc/final_permit.txt — Part II.B Authorized Discharges and BMP discharge restrictions",
+    "documents/gcc/fact_sheet.txt — document abbreviations and reporting overview",
+    "documents/gcc/minor_modification.txt — Outfall 001 authorized discharge table",
+    "documents/aztec/final_permit.txt — Part I item 5 NO DISCHARGE REPORTING (contrast permit)"
+  ],
+  "snippets_inspected": [
+    "OBLIGATION.md obligation definition and known_structured_evidence",
+    "construction.py require_interpreted(nodi_code_semantics, known=[''])",
+    "sources/dmr_measurements.csv header and row dmr_form_value_id=3896611092",
+    "documents/gcc/final_permit.txt reporting section without NODI or NO DISCHARGE box language",
+    "documents/gcc/final_permit.txt BMP restricted storm-runoff discharge language",
+    "documents/aztec/final_permit.txt NO DISCHARGE box instructions for NM0028762"
+  ],
+  "queries_or_actions": [
+    "rg -i 'NODI|nodi|No Data Indicator|no data indicator' across workspace",
+    "rg -i 'NO DISCHARGE|Discharge Monitoring|DMR' under documents/gcc/",
+    "python profile of FY2025 no-result rows by NODI_CODE, permit, OPTIONAL_MONITORING_FLAG",
+    "read representative C-row CSV records and NM0000116 permit document sections"
+  ],
+  "n_documents_opened": 4,
+  "approx_chars_inspected": 18500
+}

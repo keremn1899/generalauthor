@@ -1,0 +1,49 @@
+{
+  "steps": [
+    {
+      "fact": "The left referent billing:Helion Robotics Limited is grounded in billing records with billed_name Helion Robotics Limited.",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Helion Robotics Limited"
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "The right referent contract:MSA-HELION-2019 names Helion Robotics Ltd. as its counterparty.",
+      "grounding": {
+        "source_path": "sources/contracts/MSA-HELION-2019.md",
+        "location": "header"
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "Helion Robotics Ltd (CRM operating name) and Helion Robotics Limited (invoices and Companies House) are explicitly stated to be the same legal entity.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Because the billing referent denotes Helion Robotics Limited and the contract counterparty is Helion Robotics Ltd., and the packet establishes those names as one legal entity, billing:Helion Robotics Limited and contract:MSA-HELION-2019 denote the same legal counterparty.",
+      "grounding": null,
+      "mechanical": false
+    }
+  ],
+  "disposition": "SAME_ENTITY",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Helion Robotics Limited"
+    },
+    {
+      "source_path": "sources/contracts/MSA-HELION-2019.md",
+      "location": "header"
+    }
+  ],
+  "support_claim": "Commercial notes explicitly establish that Helion Robotics Ltd (the MSA counterparty) and Helion Robotics Limited (the billed name) are the same legal entity, linking the two referents."
+}

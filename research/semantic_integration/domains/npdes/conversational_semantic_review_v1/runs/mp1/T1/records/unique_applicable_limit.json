@@ -1,0 +1,34 @@
+{
+  "current_interpretation": "Each FY2025 measurement is paired with exactly one applicable numeric limit. The draft joins each DMR measurement to a permit limit row by matching LIMIT_VALUE_ID and LIMIT_SET_SCHEDULE_ID from the measurement row, after filtering to monitoring periods that fall within Federal FY2025 (2024-10-01 through 2025-09-30). The measurement's own LIMIT_BEGIN_DATE and LIMIT_END_DATE are carried on the DMR row; period_in_limit_interval is computed but the measurement_limit_pair join keys on limit value and schedule identity rather than re-evaluating all overlapping limit intervals. On this fixture the join yields one pair per measurement and the unique_applicable_limit_per_measurement requirement is satisfied.",
+  "status": "requirement authored; currently satisfied on this fixture",
+  "why_it_matters": "Purpose A needs a single enforceable numeric limit per reported measurement before comparing reported values to limits. If multiple limits could govern the same measurement, exceedance determinations would depend on an unstated tie-break rule.",
+  "supporting_evidence_used": [
+    "ISSUES.md (unique_applicable_limit section)",
+    "construction.py (measurement_limit_pair derivation and unique_applicable_limit_per_measurement requirement)",
+    "purposes/visible_a.md",
+    "Structured fields named in ISSUES.md: permit_limits.csv LIMIT_BEGIN_DATE, LIMIT_END_DATE, LIMIT_VALUE_ID, LIMIT_SET_SCHEDULE_ID; dmr_measurements.csv MONITORING_PERIOD_END_DATE, PARAMETER_CODE, PERM_FEATURE_NMBR"
+  ],
+  "evidence_snippets_used": [
+    "FY2025 window 2024-10-01 through 2025-09-30",
+    "824 FY2025 measurement–limit pairs; uniqueness currently SATISFIED (no cardinality hole)",
+    "Join produced one pair per measurement"
+  ],
+  "contracts_involved": [
+    "unique_applicable_limit_per_measurement (UNIQUE, per measurement, candidates measurement_limit_pair, cardinality ONE)",
+    "measurement_limit_pairs_materializable",
+    "fy2025_measurements_materializable",
+    "numeric_comparison_candidates_materializable"
+  ],
+  "alternatives_considered": [
+    "Treat overlapping or staged limit interval rows as separate governing identities rather than collapsing to one limit per measurement",
+    "Treat catalog restatements of the same limit (duplicate LIMIT_VALUE_ID / schedule rows) as multiple applicable limits requiring explicit disambiguation",
+    "Re-match limits by permit, outfall, parameter, and monitoring-period intersection with limit begin/end dates instead of joining on the measurement row's embedded limit value and schedule keys"
+  ],
+  "affected_computations": [
+    "fy2025_measurement (824 rows)",
+    "measurement_limit_pair (824 rows)",
+    "numeric_comparison_candidate (342 rows)",
+    "unique_applicable_limit_per_measurement cardinality check"
+  ],
+  "remaining_uncertainty": "Whether overlapping or staged interval rows should remain separate identities rather than being forced to a single governing limit; whether catalog restatements of the same limit should count as multiples."
+}

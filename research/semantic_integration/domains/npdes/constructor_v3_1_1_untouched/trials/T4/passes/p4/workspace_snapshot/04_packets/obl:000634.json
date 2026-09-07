@@ -1,0 +1,39 @@
+{
+  "obligation_id": "obl:000634",
+  "selected_observations": [
+    {
+      "source_path": "sources/structured/dmr_measurements.csv",
+      "location": "row 339, DMR_VALUE_ID=3851430850",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0020583; PERM_FEATURE_NMBR=001; PARAMETER_CODE=50060; PARAMETER_DESC=Chlorine, total residual; MONITORING_PERIOD_END_DATE=07/31/2025; DMR_VALUE_ID=3851430850; NODI_CODE=9; LIMIT_VALUE_ID=3610673291; LIMIT_TYPE_CODE=ENF; OPTIONAL_MONITORING_FLAG=N"
+    },
+    {
+      "source_path": "sources/structured/permit_limits.csv",
+      "location": "row 67, LIMIT_VALUE_ID=3610673291",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0020583; PERM_FEATURE_NMBR=001; PARAMETER_CODE=50060; PARAMETER_DESC=Chlorine, total residual; LIMIT_VALUE_ID=3610673291; LIMIT_VALUE_NMBR=19; LIMIT_UNIT_CODE=28; STATISTICAL_BASE_CODE=IA; LIMIT_VALUE_QUALIFIER_CODE=<=; LIMIT_TYPE_CODE=ENF; OPTIONAL_MONITORING_FLAG=N; LIMIT_FREQ_OF_ANALYSIS_CODE=01/01; LIMIT_BEGIN_DATE=12/01/2021; LIMIT_END_DATE=11/30/2026; DMR_COMMENT_TEXT=TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES."
+    },
+    {
+      "source_path": "world.sqlite/dmr_reported_value_kind",
+      "location": "measurement_id=measurement:3851430850",
+      "excerpt": "value_kind=nodi; dmr_value_nmbr=0.0; nodi_code=9"
+    },
+    {
+      "source_path": "world.sqlite/limit_value_attributes",
+      "location": "limit_row_id=limit_row:3610673291",
+      "excerpt": "has_numeric_value=1; limit_value_nmbr=19.0; limit_unit_code=28; statistical_base_code=IA"
+    },
+    {
+      "source_path": "world.sqlite/limit_source_flags",
+      "location": "limit_row_id=limit_row:3610673291",
+      "excerpt": "limit_type_code=ENF; optional_monitoring_flag=N; limit_freq_of_analysis_code=01/01"
+    },
+    {
+      "source_path": "world.sqlite/limit_effective_during_period",
+      "location": "limit_row_id=limit_row:3610673291, period_id=period:NM0020583:2025-07-31",
+      "excerpt": "overlaps=1"
+    }
+  ],
+  "selection_rationale": "Selected paired DMR and permit-limit source rows plus compiled world attributes needed to decide enforceability and numeric applicability. Blocking factors: measurement_non_numeric_limits_Purpose_A_comparison.",
+  "known_missing_information": [
+    "DMR row is non-numeric (NODI/qualifier-only), blocking numeric exceedance comparison."
+  ]
+}

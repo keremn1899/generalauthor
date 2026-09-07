@@ -1,0 +1,38 @@
+{
+  "current_interpretation": "Permit package documents are inventoried in permit_document from document_inventory.json with filename, document_kind, byte size, and sha256 hash. No narrative body text is loaded into structured relations. The draft declares permit_document_text_not_available as EXPLICIT_UNRESOLVED rather than inferring permit conditions or ranking document authority from filename kinds alone.",
+  "status": "EXPLICIT_UNRESOLVED",
+  "why_it_matters": "Purposes B and C may depend on narrative permit conditions—discharge-dependent requirements, special studies, seasonal language—that are not represented in permit_limits.csv or dmr_measurements.csv. Without document text, the draft cannot establish what those conditions say or which document would govern if text were available.",
+  "supporting_evidence_used": [
+    "ISSUES.md issue document_authority",
+    "purposes/visible_b.md",
+    "purposes/visible_c.md",
+    "construction.py permit_document mapping and permit_document_text_not_available unresolved declaration",
+    "ISSUES.md structured evidence: document_inventory.json fields filename, document_kind, bytes, sha256 — no body text",
+    "sources/document_inventory.json (12 inventoried documents across three permits)"
+  ],
+  "evidence_snippets_used": [
+    "document_kind=final_permit",
+    "document_kind=fact_sheet",
+    "document_kind=statement_of_basis",
+    "document_kind=reasonable_potential",
+    "document_kind=minor_modification",
+    "12 inventoried documents; 1 explicit unresolved (narrative text not in structured sources)"
+  ],
+  "contracts_involved": [
+    "permit_document_text_not_available (UNRESOLVED, relation=permit_document, purpose=[B,C])",
+    "permit_document relation (permit, document, document_kind, filename, bytes)"
+  ],
+  "alternatives_considered": [
+    "Treat final_permit document_kind as authoritative over fact_sheet, statement_of_basis, reasonable_potential, and minor_modification based on filename taxonomy alone",
+    "Use document_kind hierarchy to resolve conflicts between structured limit rows and narrative conditions (not attempted—no text available)",
+    "Ignore inventoried documents entirely for purposes B/C (draft inventories them but does not read text)",
+    "Extract text from PDFs in sources/ and attach as structured evidence (outside current construction scope)"
+  ],
+  "affected_computations": [
+    "permit_document inventory (12 rows)",
+    "Purpose B monitoring obligations that may depend on narrative conditions",
+    "Purpose C missing-evidence semantics where narrative explains no-discharge or conditional requirements",
+    "Any attempt to resolve conditional_discharge_dependent_monitoring or other comment/document gaps from permit prose"
+  ],
+  "remaining_uncertainty": "Which document would be authoritative if text were present; whether filename kinds imply hierarchy."
+}

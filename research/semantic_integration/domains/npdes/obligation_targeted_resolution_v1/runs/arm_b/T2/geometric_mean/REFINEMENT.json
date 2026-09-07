@@ -1,0 +1,23 @@
+{
+  "parent": "geometric_mean",
+  "children": [
+    {
+      "id": "tds_weekly_geometric_mean_aggregation",
+      "exact_semantic_question": "For TDS limits (parameter 70295) under NM0020583 footnote *6, must effluent-limit comparison use the geometric mean of weekly values rather than an individual monitoring-period DMR value?",
+      "recommended_disposition": "SUPPORTED_RESOLUTION",
+      "resolution_summary": "Permit footnote *6 requires reporting the geometric mean of weekly TDS values at Outfall 001. Net TDS limits (*8) are computed from aggregated discharge and influent values. Compliance comparison therefore operates on aggregated weekly geometric means (or net values derived from them), not on treating a single DMR monitoring-period cell as an ordinary single-sample numeric comparison."
+    },
+    {
+      "id": "non_tds_misattached_geometric_mean_comment",
+      "exact_semantic_question": "For permit_limit rows whose DMR_COMMENT_TEXT contains 'GEOMETRIC MEAN' but whose PARAMETER_CODE is not TDS (70295), does the comment impose geometric-mean aggregation before limit comparison?",
+      "recommended_disposition": "SUPPORTED_NEGATIVE",
+      "resolution_summary": "The shared DMR comment text is TDS-specific (matches footnote *6 only). Final permit limit tables assign non-TDS pollutants different footnotes and sampling bases (e.g., BOD *1 five-day sampling, E. coli *2/*3 CFU limits). No permit text requires geometric-mean reporting for those parameters. The comment on their structured rows is a limit-set propagation artifact and does not block ordinary single-period numeric comparison for those parameters."
+    }
+  ],
+  "why_necessary": "All 40 structured occurrences share one identical TDS-focused DMR_COMMENT_TEXT attached at the limit-set level, but permit narrative establishes geometric-mean-of-weekly-values reporting only for total dissolved solids (footnote *6). Applying one aggregation rule to all 10 affected parameter codes would contradict permit Part I tables for BOD, E. coli, pH, cyanide, flow, and other pollutants.",
+  "occurrence_partition": {
+    "tds_weekly_geometric_mean_aggregation": "DMR_COMMENT_TEXT contains 'GEOMETRIC MEAN' (case-insensitive) AND PARAMETER_CODE = '70295'",
+    "non_tds_misattached_geometric_mean_comment": "DMR_COMMENT_TEXT contains 'GEOMETRIC MEAN' (case-insensitive) AND PARAMETER_CODE != '70295'"
+  },
+  "mechanically_computable": true
+}

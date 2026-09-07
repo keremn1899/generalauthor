@@ -1,0 +1,84 @@
+{
+  "retained_snippets": [
+    {
+      "source_id": "sources/permit_limits.csv",
+      "location": "aggregate over 105 rows; 57 with empty LIMIT_VALUE_NMBR",
+      "text": "57/105 rows have empty LIMIT_VALUE_NMBR; all LIMIT_TYPE_CODE=ENF; all empty LIMIT_VALUE_QUALIFIER_CODE; zero nonempty LIMIT_VALUE_STANDARD_UNITS when LIMIT_VALUE_NMBR empty. Partitions by DMR_COMMENT_TEXT: blank 18, WHEN DISCHARGING 12, PASS=0/FAIL=1 12, geometric mean 15.",
+      "why_retained": "Mechanically establishes complete heterogeneous partition of the obligation population."
+    },
+    {
+      "source_id": "sources/permit_limits.csv",
+      "location": "LIMIT_VALUE_ID=3610129901|LIMIT_SET_SCHEDULE_ID=3600833510 with sibling 3610129867|3600833510",
+      "text": "3610129867: Solids total suspended, MAX, LIMIT_VALUE_NMBR=50, qualifier <=. 3610129901: same pollutant/limit, AVG, LIMIT_VALUE_NMBR empty, qualifier empty.",
+      "why_retained": "Representative blank-comment partition: AVG cell empty while MAX sibling carries numeric limit."
+    },
+    {
+      "source_id": "documents/gcc/final_permit.txt",
+      "location": "Part I effluent table lines 68-74",
+      "text": "Total Suspended Solids: N/A, N/A, Report, 50 (monthly avg/daily max columns). Dissolved Copper/Cadmium/Hardness: Report in cells without numeric effluent limits.",
+      "why_retained": "Permit text maps blank structured AVG/Report cells to monitoring-only while adjacent cells carry numeric limits."
+    },
+    {
+      "source_id": "sources/permit_limits.csv",
+      "location": "LIMIT_VALUE_ID=3610840340|LIMIT_SET_SCHEDULE_ID=3600904607 and siblings on LIMIT_ID=3606351871",
+      "text": "3610840340: TSS AVG, LIMIT_VALUE_NMBR empty, unit lb/d, DMR_COMMENT_TEXT=WHEN DISCHARGING. Siblings 3610840342/3610840343 carry mg/L concentration limits 20/30.",
+      "why_retained": "Representative when-discharging partition with numeric concentration siblings."
+    },
+    {
+      "source_id": "documents/aztec/final_permit.txt",
+      "location": "Part I table line 79 and footnote line 93",
+      "text": "Total Suspended Solids: N/A mass-load columns, 20/30 mg/L concentration columns. Footnote *1: When discharging.",
+      "why_retained": "Permit N/A mass-load columns plus footnote ground the when-discharging partition."
+    },
+    {
+      "source_id": "sources/permit_limits.csv",
+      "location": "LIMIT_VALUE_ID=3610839676|LIMIT_SET_SCHEDULE_ID=3600904539",
+      "text": "WET retest #1: LIMIT_VALUE_NMBR empty, LIMIT_UNIT_DESC=pass=0;fail=1, DMR_COMMENT_TEXT includes (PASS = 0  FAIL = 1) REPORT PASS AS '0' OR REPORT FAIL AS '1' IN CONCENTRATION MAX.",
+      "why_retained": "Representative pass/fail WET partition with explicit non-numeric encoding in structured comment."
+    },
+    {
+      "source_id": "documents/farmington/final_permit.txt",
+      "location": "Part I table lines 87-92",
+      "text": "Cadmium, 2,3,7,8-TCDD Dioxin, Pentachlorophenol, Aldrin, Chlordane, Toxaphene: all N/A limit columns, Report in final monitoring column.",
+      "why_retained": "Permit Report cells for pollutants matching blank-comment empty-limit rows (NM0020583)."
+    },
+    {
+      "source_id": "sources/permit_limits.csv",
+      "location": "15 rows with geometric-mean comment on NM0020583",
+      "text": "DMR_COMMENT_TEXT: TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001. REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+      "why_retained": "Single structured comment pattern defining the geometric-mean partition."
+    },
+    {
+      "source_id": "documents/farmington/final_permit.txt",
+      "location": "Part I TDS table lines 97-98 and footnote line 121",
+      "text": "Total Dissolved Solids, Net: 27,664 lbs/day Report N/A 497 mg/L Report N/A. Footnote *6: Report the geometric mean value of weekly values.",
+      "why_retained": "Permit footnote grounds geometric-mean aggregated reporting without per-period numeric limit in matching cells."
+    }
+  ],
+  "candidate_interpretations": [
+    {
+      "label": "parent_too_coarse",
+      "statement": "Empty LIMIT_VALUE_NMBR rows are not one class; four mechanically distinct partitions supersede the parent trichotomy."
+    },
+    {
+      "label": "blank_comment_report_only",
+      "statement": "Empty LIMIT_VALUE_NMBR with blank DMR_COMMENT_TEXT denotes report-only monitoring for that statistical-base cell per permit 'Report' cells."
+    },
+    {
+      "label": "when_discharging_non_applicable",
+      "statement": "Empty LIMIT_VALUE_NMBR with WHEN DISCHARGING comment marks a non-applicable limit-table column (mass load or conditional base) rather than a missing numeric concentration limit."
+    },
+    {
+      "label": "pass_fail_wet_encoding",
+      "statement": "Empty LIMIT_VALUE_NMBR with PASS=0/FAIL=1 comment marks pass/fail WET reporting encoded in concentration-max field, not an ordinary numeric effluent limit."
+    },
+    {
+      "label": "geometric_mean_aggregated_reporting",
+      "statement": "Empty LIMIT_VALUE_NMBR with geometric-mean comment marks aggregated weekly reporting without a per-period numeric effluent limit in that cell."
+    },
+    {
+      "label": "numeric_limit_via_enf",
+      "statement": "LIMIT_TYPE_CODE=ENF on all empty rows implies enforceable numeric limits recoverable elsewhere."
+    }
+  ]
+}

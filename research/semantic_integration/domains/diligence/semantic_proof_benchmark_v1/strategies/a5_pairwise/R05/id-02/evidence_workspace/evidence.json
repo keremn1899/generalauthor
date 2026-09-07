@@ -1,0 +1,49 @@
+{
+  "propositions": [
+    {
+      "proposition": "Billing records use the billed name \"Helion Robotics Limited\".",
+      "source_grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Helion Robotics Limited"
+      },
+      "establishes": "other",
+      "relevance": "Grounds the left referent billing:Helion Robotics Limited to the invoice-side name observed in the packet."
+    },
+    {
+      "proposition": "A second billing observation also records the billed name \"Helion Robotics Limited\".",
+      "source_grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Helion Robotics Limited"
+      },
+      "establishes": "other",
+      "relevance": "Corroborates the billing-side name associated with the left referent."
+    },
+    {
+      "proposition": "Registry row 11847201 lists the registered company name HELION ROBOTICS LIMITED in England and Wales with status active.",
+      "source_grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847201"
+      },
+      "establishes": "other",
+      "relevance": "Grounds the right referent registry:11847201 to the registered legal name HELION ROBOTICS LIMITED."
+    },
+    {
+      "proposition": "Commercial notes state that invoices and Companies House both use \"Helion Robotics Limited\" and that this denotes the same legal entity as the CRM operating name \"Helion Robotics Ltd\".",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "identity",
+      "relevance": "Explicitly links the invoice/billing naming convention to the Companies House/registry naming convention as the same legal entity, bearing on whether billing:Helion Robotics Limited and registry:11847201 denote one counterparty."
+    },
+    {
+      "proposition": "Commercial notes state that Helion Industrial Systems Ltd is a different company from the Helion Robotics entities discussed.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "distinctness",
+      "relevance": "Establishes that a similarly named Helion entity is distinct, but does not directly establish distinctness between billing:Helion Robotics Limited and registry:11847201."
+    }
+  ]
+}

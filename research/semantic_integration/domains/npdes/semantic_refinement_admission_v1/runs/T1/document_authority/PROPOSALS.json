@@ -1,0 +1,91 @@
+[
+  {
+    "id": "issued_permit_self_defined_corpus",
+    "interpretation": "Each issued final_permit document self-defines its governing corpus as cover-page Parts I–III/IV 'hereof' plus internally cross-referenced appendices.",
+    "scope": "document_kind=final_permit in document_inventory.json (3 documents)",
+    "epistemic_basis": "SOURCE_ESTABLISHED",
+    "exact_grounding": [
+      "documents/gcc/final_permit.txt lines 19-21",
+      "documents/farmington/final_permit.txt lines 24-25",
+      "documents/aztec/final_permit.txt lines 32-33"
+    ],
+    "semantic_delta": "Map document_kind=final_permit rows with document_authority_role=issued_authorizing_permit and governing_corpus_self_defined=true; admit issued-permit text as authoritative for binding conditions within named parts.",
+    "admit": true,
+    "remaining_uncertainty": "Individual narrative conditions within parts still require text extraction for specific Purposes B and C obligations (e.g., conditional monitoring)."
+  },
+  {
+    "id": "supporting_docs_defer_to_permit",
+    "interpretation": "fact_sheet and statement_of_basis documents do not independently establish binding effluent limitations; they frame draft/proposed rationale and defer limitations to the permit.",
+    "scope": "document_kind in {fact_sheet, statement_of_basis} (3 documents)",
+    "epistemic_basis": "SOURCE_ESTABLISHED",
+    "exact_grounding": [
+      "documents/gcc/fact_sheet.txt line 191",
+      "documents/aztec/statement_of_basis.txt lines 556-558",
+      "documents/farmington/statement_of_basis.txt lines 1-3"
+    ],
+    "semantic_delta": "Map supporting-rationale partition with limits_binding_authority=false.",
+    "admit": true,
+    "remaining_uncertainty": "Supporting documents may still contain condition-relevant facts that must be cross-read against issued-permit parts."
+  },
+  {
+    "id": "reasonable_potential_subordinate_appendix",
+    "interpretation": "reasonable_potential documents are calculation appendices subordinate to fact sheets, not standalone authorization.",
+    "scope": "document_kind=reasonable_potential (2 documents)",
+    "epistemic_basis": "SOURCE_ESTABLISHED",
+    "exact_grounding": [
+      "documents/aztec/reasonable_potential.txt lines 12-14"
+    ],
+    "semantic_delta": "Map reasonable_potential partition with document_authority_role=calculation_appendix and limits_binding_authority=false.",
+    "admit": true,
+    "remaining_uncertainty": "GCC reasonable_potential lacks the explicit 'APPENDIX A of FACT SHEET' header seen in Aztec; subordination is inferred from workbook structure and shared permit-package role."
+  },
+  {
+    "id": "appendix_incorporation_by_cross_reference",
+    "interpretation": "part_ii_appendix and part_iv files are part of the governing corpus when the issued final_permit cross-references them.",
+    "scope": "document_kind in {part_ii_appendix, part_iv} for the same permit (3 documents)",
+    "epistemic_basis": "SOURCE_ESTABLISHED",
+    "exact_grounding": [
+      "documents/gcc/final_permit.txt lines 149-150",
+      "documents/farmington/final_permit.txt line 213",
+      "documents/aztec/final_permit.txt line 193"
+    ],
+    "semantic_delta": "Map incorporated-appendix partition with incorporated_by_issued_permit=true when document_kind in {part_ii_appendix, part_iv}.",
+    "admit": true,
+    "remaining_uncertainty": "Mechanical rule keys on document_kind and same-permit pairing; it does not parse every in-body cross-reference variant."
+  },
+  {
+    "id": "filename_kind_not_hierarchy",
+    "interpretation": "document_inventory.json document_kind labels do not establish authority ranking or conflict precedence.",
+    "scope": "all 12 inventoried documents",
+    "epistemic_basis": "SOURCE_ESTABLISHED",
+    "exact_grounding": [
+      "documents/farmington/statement_of_basis.txt lines 1-3",
+      "sources/document_inventory.json"
+    ],
+    "semantic_delta": "Do not derive precedence from document_kind ordering; use document text self-description and cross-references instead.",
+    "admit": true,
+    "remaining_uncertainty": "None for the hierarchy-refutation proposition itself."
+  },
+  {
+    "id": "global_final_permit_wins_on_conflict",
+    "interpretation": "Across all permit-package document kinds, the issued final_permit always prevails on any textual disagreement with any other inventoried file.",
+    "scope": "WORLD — all NPDES permit packages",
+    "epistemic_basis": "MODEL_GENERALIZATION",
+    "exact_grounding": [],
+    "semantic_delta": "Encode a global precedence rule: final_permit > all other package document kinds.",
+    "admit": false,
+    "remaining_uncertainty": "Corpus establishes functional precedence for examined files but does not license a world-scope rule; minor_modification authority is unresolved."
+  },
+  {
+    "id": "minor_modification_supersedes_final_permit",
+    "interpretation": "documents/gcc/minor_modification.txt supersedes documents/gcc/final_permit.txt for NM0000116.",
+    "scope": "document_kind=minor_modification for permit NM0000116",
+    "epistemic_basis": "UNRESOLVED",
+    "exact_grounding": [
+      "documents/gcc/minor_modification.txt lines 1-26"
+    ],
+    "semantic_delta": "Treat minor_modification as governing authorization on conflict with final_permit.",
+    "admit": false,
+    "remaining_uncertainty": "No incorporation, supersession, or effective-date linkage to final_permit was found in workspace text."
+  }
+]

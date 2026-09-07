@@ -1,0 +1,21 @@
+{
+  "obligation_id": "obl:exceedance_determination:d8c6f2a5e9345eea",
+  "selected_observations": [
+    {
+      "source_path": "sources/structured/dmr_measurements.csv",
+      "location": "line 413; DMR_EVENT_ID=3621391572; DMR_VALUE_ID=3847188385",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0020583; PERM_FEATURE_NMBR=001; PARAMETER_CODE=81011; PARAMETER_DESC=Solids, suspended percent removal; MONITORING_PERIOD_END_DATE=05/31/2025; DMR_EVENT_ID=3621391572; DMR_VALUE_ID=3847188385; DMR_VALUE_NMBR=98; DMR_UNIT_CODE=23; DMR_VALUE_QUALIFIER_CODE==; STATISTICAL_BASE_CODE=MJ"
+    },
+    {
+      "source_path": "sources/structured/permit_limits.csv",
+      "location": "line 100; limit:3606239983:3610673292",
+      "excerpt": "LIMIT_ID=3606239983; LIMIT_VALUE_ID=3610673292; LIMIT_VALUE_NMBR=85; LIMIT_UNIT_CODE=23; STATISTICAL_BASE_CODE=MJ; LIMIT_VALUE_TYPE_CODE=C1; LIMIT_TYPE_CODE=ENF; OPTIONAL_MONITORING_FLAG=N; LIMIT_FREQ_OF_ANALYSIS_CODE=01/07"
+    }
+  ],
+  "selection_rationale": "Pairs reported measurement value/unit/statistical base with joined limit row metadata needed for comparability and exceedance threshold checks.",
+  "known_missing_information": [
+    "02_mechanical_world/world.sqlite not present in workspace; evidence selected directly from structured CSV sources using P2 join rules.",
+    "Permit PDF sources listed in sources/source_manifest.json were not ingested; permit_stated_condition packets use structured DMR_COMMENT_TEXT only.",
+    "Exceedance comparison blocked pending applicable_limit_selection and limit_numeric_comparison_applicability."
+  ]
+}

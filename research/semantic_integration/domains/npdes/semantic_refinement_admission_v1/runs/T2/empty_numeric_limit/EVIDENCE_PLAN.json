@@ -1,0 +1,25 @@
+{
+  "proposition": "When LIMIT_VALUE_NMBR is empty, is the row a numeric limit, report-only monitoring, or something else?",
+  "would_establish": [
+    "Permit-package effluent limit tables mapping empty structured cells to 'Report' or 'N/A' while sibling cells carry numeric limits would establish report-only or non-applicable classifications for matching partitions.",
+    "Structured DMR_COMMENT_TEXT patterns (WHEN DISCHARGING, PASS=0/FAIL=1, geometric mean) that mechanically partition all 57 empty-limit rows would establish distinct non-numeric-limit classes without a single parent answer.",
+    "Sibling rows on the same LIMIT_ID with populated LIMIT_VALUE_NMBR would refute treating emptiness alone as proof of report-only status."
+  ],
+  "would_refute": [
+    "A field legend or codebook defining empty LIMIT_VALUE_NMBR as a recoverable numeric limit would refute blanket report-only classification.",
+    "Uniform LIMIT_TYPE_CODE=ENF across all empty rows could be read as enforceable numeric limits, refuting a single report-only reading if no partition rule exists.",
+    "Evidence that empty-limit rows enter FY2025 numeric comparison with recoverable standard-unit values would refute exclusion from Purpose A comparison."
+  ],
+  "documents_plausibly_relevant": [
+    "sources/permit_limits.csv",
+    "documents/gcc/final_permit.txt",
+    "documents/farmington/final_permit.txt",
+    "documents/aztec/final_permit.txt"
+  ],
+  "insufficient_alone": [
+    "LIMIT_TYPE_CODE=ENF on all 57 empty rows does not identify numeric vs report-only without permit-table or comment context.",
+    "Empty LIMIT_VALUE_NMBR without LIMIT_VALUE_STANDARD_UNITS shows no comparison value but does not name the obligation type.",
+    "Sibling numeric limits on the same LIMIT_ID show heterogeneity within a limit set but do not classify individual empty rows.",
+    "PRIOR_PACKET.json is bounded prior retrieval, not authoritative disposition."
+  ]
+}

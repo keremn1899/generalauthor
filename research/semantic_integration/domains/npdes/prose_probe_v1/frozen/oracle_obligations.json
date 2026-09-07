@@ -1,0 +1,223 @@
+[
+  {
+    "gold_id": "S-FARM-TDS-STAGE",
+    "obligation_id": "oracle:S-FARM-TDS-STAGE",
+    "relation": "limit_regime_applies",
+    "oracle_intervention": true,
+    "question": "Which TDS net-increase numeric limit regime governs permit NM0020583 / Outfall 001 / parameter TDS net increase during each FY2025 monitoring period \u2014 the regime that begins on the effective date and lasts through 3 years from the effective date, or the regime that begins 3 years from the effective date and lasts through expiration?",
+    "values": {
+      "permit": "NM0020583",
+      "outfall": "001",
+      "parameter": "TDS net increase",
+      "period_universe": "FY2025 monthly monitoring periods"
+    },
+    "allowed_dispositions": [
+      "ACCEPT",
+      "REJECT",
+      "UNRESOLVED"
+    ],
+    "relation_meaning": "A named numeric limit regime applies to a permit/outfall/parameter during a dated interval. ACCEPT means the stated regime-interval pairing is established by the packet. Do not be told which regime is correct for FY2025.",
+    "p1_gap_note": "Original trials declare applicable_limit_selection and permit_limit_schedule_row with begin/end dates, but not a dedicated staged-regime relation. VOCABULARY_GAP relative to an explicit time-staged regime name; representable via dated limit rows."
+  },
+  {
+    "gold_id": "S-FARM-CN-SCHEDULE",
+    "obligation_id": "oracle:S-FARM-CN-SCHEDULE",
+    "relation": "final_limit_schedule_applies",
+    "oracle_intervention": true,
+    "question": "Do the final Cyanide effluent limitations for NM0020583 Outfall 001 apply during FY2025 given the Part I schedule to achieve final limitations 12 months after the permit effective date?",
+    "values": {
+      "permit": "NM0020583",
+      "parameter": "Cyanide",
+      "period": "FY2025"
+    },
+    "allowed_dispositions": [
+      "ACCEPT",
+      "REJECT",
+      "UNRESOLVED"
+    ],
+    "relation_meaning": "Final numeric cyanide limits apply in a period if the compliance-schedule completion date has passed."
+  },
+  {
+    "gold_id": "S-FARM-TRC-CONDITIONAL",
+    "obligation_id": "oracle:S-FARM-TRC-CONDITIONAL",
+    "relation": "conditional_monitoring_applies",
+    "oracle_intervention": true,
+    "question": "Is TRC monitoring for NM0020583 required as routine UV-plant effluent monitoring, or only when chlorine is used in the treatment plant, for FY2025 periods?",
+    "values": {
+      "permit": "NM0020583",
+      "parameter": "TRC"
+    },
+    "allowed_dispositions": [
+      "ACCEPT",
+      "REJECT",
+      "UNRESOLVED"
+    ],
+    "relation_meaning": "ACCEPT a proposition only if the packet establishes it. If chlorine-use occurrence in a month is not evidenced, UNRESOLVED is allowed for that month's required/not-required status."
+  },
+  {
+    "gold_id": "S-FARM-REPORT-ONLY",
+    "obligation_id": "oracle:S-FARM-REPORT-ONLY",
+    "relation": "numeric_comparison_applicable",
+    "oracle_intervention": true,
+    "question": "For Farmington Flow, TDS discharge, TDS intake, named Report toxics, and WET, is numeric effluent-limit exceedance comparison applicable?",
+    "values": {
+      "permit": "NM0020583",
+      "parameters": [
+        "Flow",
+        "TDS discharge",
+        "TDS intake",
+        "WET",
+        "named Report toxics"
+      ]
+    },
+    "allowed_dispositions": [
+      "ACCEPT",
+      "REJECT",
+      "UNRESOLVED"
+    ],
+    "relation_meaning": "ACCEPT means numeric comparison applies; REJECT means it does not (report-only / N/A)."
+  },
+  {
+    "gold_id": "S-AZTEC-WHEN-DISCHARGING",
+    "obligation_id": "oracle:S-AZTEC-WHEN-DISCHARGING",
+    "relation": "conditional_monitoring_applies",
+    "oracle_intervention": true,
+    "question": "Do Aztec Outfall 001 monitoring frequencies marked *1 apply in a period only when discharging, such that no-discharge periods do not by themselves establish missing-required-monitoring?",
+    "values": {
+      "permit": "NM0028762",
+      "outfall": "001"
+    },
+    "allowed_dispositions": [
+      "ACCEPT",
+      "REJECT",
+      "UNRESOLVED"
+    ],
+    "relation_meaning": "ACCEPT the when-discharging condition as the applicability rule if the packet establishes it."
+  },
+  {
+    "gold_id": "S-AZTEC-REPORT-ONLY",
+    "obligation_id": "oracle:S-AZTEC-REPORT-ONLY",
+    "relation": "numeric_comparison_applicable",
+    "oracle_intervention": true,
+    "question": "Are Aztec Flow, Cyanide Total Recoverable, and TDS Report values numeric effluent-limit exceedance findings?",
+    "values": {
+      "permit": "NM0028762",
+      "parameters": [
+        "Flow",
+        "Cyanide Total Recoverable",
+        "TDS"
+      ]
+    },
+    "allowed_dispositions": [
+      "ACCEPT",
+      "REJECT",
+      "UNRESOLVED"
+    ],
+    "relation_meaning": "REJECT means numeric exceedance comparison is not applicable (report-only)."
+  },
+  {
+    "gold_id": "S-AZTEC-WET-SEASONAL",
+    "obligation_id": "oracle:S-AZTEC-WET-SEASONAL",
+    "relation": "special_monitoring_window_applies",
+    "oracle_intervention": true,
+    "question": "Is FY2025 automatically a required Aztec WET monitoring year, given once-per-term testing during the first springtime after the effective date during irrigation season?",
+    "values": {
+      "permit": "NM0028762",
+      "parameter": "WET"
+    },
+    "allowed_dispositions": [
+      "ACCEPT",
+      "REJECT",
+      "UNRESOLVED"
+    ],
+    "relation_meaning": "ACCEPT = FY2025 is established as a required WET year. REJECT = established as not required. UNRESOLVED if the packet does not establish whether the once-per-term test remains outstanding."
+  },
+  {
+    "gold_id": "S-AZTEC-DELTA-BHC",
+    "obligation_id": "oracle:S-AZTEC-DELTA-BHC",
+    "relation": "special_study_not_numeric_limit",
+    "oracle_intervention": true,
+    "question": "Is the Delta-BHC source-water-intake study a special-study / compliance-schedule obligation rather than a routine FY2025 DMR numeric discharge limit, such that DMR absence of Delta-BHC is not by itself a discharge-limit exceedance?",
+    "values": {
+      "permit": "NM0028762",
+      "parameter": "Delta-BHC"
+    },
+    "allowed_dispositions": [
+      "ACCEPT",
+      "REJECT",
+      "UNRESOLVED"
+    ],
+    "relation_meaning": "ACCEPT the special-study characterization if established by the packet."
+  },
+  {
+    "gold_id": "S-GCC-EVENT-DISCHARGE",
+    "obligation_id": "oracle:S-GCC-EVENT-DISCHARGE",
+    "relation": "conditional_monitoring_applies",
+    "oracle_intervention": true,
+    "question": "Is GCC Outfall 001 monitoring required continuously every month, or when the authorized event-type discharges (storm runoff, once-through cooling, cleaning water, Artesian well water) occur?",
+    "values": {
+      "permit": "NM0000116",
+      "outfall": "001"
+    },
+    "allowed_dispositions": [
+      "ACCEPT",
+      "REJECT",
+      "UNRESOLVED"
+    ],
+    "relation_meaning": "Judge the applicability rule. Do not invent NODI-code legends absent from the packet."
+  },
+  {
+    "gold_id": "S-GCC-REPORT-ONLY",
+    "obligation_id": "oracle:S-GCC-REPORT-ONLY",
+    "relation": "numeric_comparison_applicable",
+    "oracle_intervention": true,
+    "question": "For GCC Outfall 001, which of Flow, dissolved copper, dissolved cadmium, hardness, TSS monthly average, TSS daily maximum, total aluminum, and total copper are numeric exceedance comparisons versus Report-only?",
+    "values": {
+      "permit": "NM0000116",
+      "outfall": "001"
+    },
+    "allowed_dispositions": [
+      "ACCEPT",
+      "REJECT",
+      "UNRESOLVED"
+    ],
+    "relation_meaning": "Per-parameter numeric-comparison applicability. Mixed answers may be expressed in rationale with per-parameter REJECT/ACCEPT."
+  },
+  {
+    "gold_id": "S-GCC-WET-FIRST-DISCHARGE",
+    "obligation_id": "oracle:S-GCC-WET-FIRST-DISCHARGE",
+    "relation": "event_triggered_monitoring",
+    "oracle_intervention": true,
+    "question": "Is GCC WET a monthly DMR numeric limit, or event-triggered special monitoring at first discharge and Once/5 years?",
+    "values": {
+      "permit": "NM0000116",
+      "parameter": "WET"
+    },
+    "allowed_dispositions": [
+      "ACCEPT",
+      "REJECT",
+      "UNRESOLVED"
+    ],
+    "relation_meaning": "ACCEPT the event-triggered special-monitoring characterization if established."
+  },
+  {
+    "gold_id": "S-SOURCE-AUTHORITY",
+    "obligation_id": "oracle:S-SOURCE-AUTHORITY",
+    "relation": "operative_source_class",
+    "oracle_intervention": true,
+    "question": "Are FY2025 enforceable effluent limitations and monitoring requirements set forth in the permit Parts, with fact sheets/statements of basis as supporting rationale for the draft permit, rather than as independent effluent limits?",
+    "values": {
+      "facilities": [
+        "NM0020583",
+        "NM0028762",
+        "NM0000116"
+      ]
+    },
+    "allowed_dispositions": [
+      "ACCEPT",
+      "REJECT",
+      "UNRESOLVED"
+    ],
+    "relation_meaning": "ACCEPT the operative-Parts vs rationale-fact-sheet/SOB distinction if the packet establishes it."
+  }
+]

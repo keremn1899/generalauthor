@@ -1,0 +1,43 @@
+{
+  "answers": [
+    {
+      "id": "T1",
+      "status": "ANSWERED",
+      "value": 240,
+      "rationale": "The effective_rate relation establishes job:J1 at 240/hr (TOW service code per service_conditions §1)."
+    },
+    {
+      "id": "T2",
+      "status": "ANSWERED",
+      "value": 2280,
+      "rationale": "The job_charge relation establishes 2280 for job:J2 (8h at 240/hr plus 1h overtime at 1.5× under service_conditions §2)."
+    },
+    {
+      "id": "T3",
+      "status": "ANSWERED",
+      "value": [
+        {"job": "J2", "berth": "B4"},
+        {"job": "J5", "berth": "B12"}
+      ],
+      "rationale": "tow_job rows for vessel_id V-BAY list job:J2 at berth B4 and job:J5 at berth B12."
+    },
+    {
+      "id": "T4",
+      "status": "ANSWERED",
+      "value": 3,
+      "rationale": "Three jobs (J5, J6, J7) have no billable_hours tuple; only J1–J4 have established billable quantities."
+    },
+    {
+      "id": "T5",
+      "status": "ANSWERED",
+      "value": false,
+      "rationale": "billing_outcome for job:J7 is insufficient_evidence with reason citing B12 after-hours towing without emergency documentation; an explicit purpose_requirement_failure (berth_b12_after_hours) records no emergency authorization for J7."
+    },
+    {
+      "id": "T6",
+      "status": "ANSWERED",
+      "value": 3240,
+      "rationale": "Established job_charge amounts at berth B4 are 960 (job:J1) and 2280 (job:J2); job:J6 has no charge. Sum = 3240."
+    }
+  ]
+}

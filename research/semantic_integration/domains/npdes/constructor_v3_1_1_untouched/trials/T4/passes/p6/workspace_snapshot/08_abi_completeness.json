@@ -1,0 +1,342 @@
+{
+  "required_semantic_fields": [
+    "applicability_unresolved",
+    "conditional_monitoring_relief_grounded_in_permit_or_operational_evidence",
+    "conditional_trigger_language_present",
+    "correspondence_among_facility_outfall_parameter_limit_set_and_dmr_event",
+    "discharge_occurrence_or_no_discharge_documentation_in_evidence",
+    "discharge_point",
+    "dmr_row_exists_with_nodi_code_or_non_numeric_qualifier",
+    "documented_no_data_reason_codes_or_narrative_in_source",
+    "documented_no_discharge_period",
+    "enforceable_numeric_limit_applicable_to_this_measurement_context",
+    "facility",
+    "limit_has_numeric_value_and_unit",
+    "limit_record_exists_in_permit_limit_extract",
+    "limit_type_category_flags_from_source_e_g_enforceable_vs_optional_monitoring",
+    "measurement_exceeds_applicable_enforceable_numeric_limit",
+    "measurement_has_numeric_reported_value_vs_qualifier_only_vs_nodi",
+    "measurement_record_exists_in_dmr_extract",
+    "monitoring_expectation",
+    "monitoring_period",
+    "monitoring_required_for_the_evaluated_period_context",
+    "monitoring_requirement_text_schedule_exists_in_permit_or_limit_extract",
+    "no_dmr_row_present_for_an_expected_period",
+    "parameter",
+    "permit_or_submission_documents_no_discharge",
+    "seasonal_month_flags_or_permit_year_boundaries",
+    "special_study_or_event_driven_requirement_references",
+    "temporal_overlap_between_limit_effective_dates_and_monitoring_period"
+  ],
+  "fields": {
+    "applicability_unresolved": {
+      "status": "UNSATISFIED",
+      "reason": "NOT_MATERIALIZABLE",
+      "locations": [
+        "applicable_limit_assessment.applicability_status"
+      ]
+    },
+    "conditional_monitoring_relief_grounded_in_permit_or_operational_evidence": {
+      "status": "UNSATISFIED",
+      "reason": "NOT_MATERIALIZABLE",
+      "locations": [
+        "conditional_monitoring_relief_evidence.relief_established"
+      ]
+    },
+    "conditional_trigger_language_present": {
+      "status": "SATISFIED",
+      "reason": null,
+      "locations": [
+        "conditional_trigger_language.trigger_text",
+        "monitoring_obligation_applicability.condition_basis"
+      ]
+    },
+    "correspondence_among_facility_outfall_parameter_limit_set_and_dmr_event": {
+      "status": "SATISFIED",
+      "reason": null,
+      "locations": [
+        "dmr_limit_correspondence.correspondence_basis"
+      ]
+    },
+    "discharge_occurrence_or_no_discharge_documentation_in_evidence": {
+      "status": "UNSATISFIED",
+      "reason": "NOT_MATERIALIZABLE",
+      "locations": [
+        "discharge_occurrence_evidence.evidence_kind"
+      ]
+    },
+    "discharge_point": {
+      "status": "SATISFIED",
+      "reason": null,
+      "locations": [
+        "permit_feature.feature",
+        "permit_limit_extract_row.feature",
+        "dmr_measurement_extract_row.feature",
+        "monitoring_requirement_candidate.feature",
+        "measurement_limit_evaluation_pair.feature"
+      ]
+    },
+    "dmr_row_exists_with_nodi_code_or_non_numeric_qualifier": {
+      "status": "SATISFIED",
+      "reason": null,
+      "locations": [
+        "dmr_reported_value_kind.nodi_code",
+        "documented_nodata_reason.measurement"
+      ]
+    },
+    "documented_no_data_reason_codes_or_narrative_in_source": {
+      "status": "AMBIGUOUS",
+      "reason": "AMBIGUOUS",
+      "locations": [
+        "documented_nodata_reason.reason_code",
+        "documented_nodata_reason.reason_established"
+      ]
+    },
+    "documented_no_discharge_period": {
+      "status": "UNSATISFIED",
+      "reason": "NOT_MATERIALIZABLE",
+      "locations": [
+        "missing_evidence_classification.established_state"
+      ]
+    },
+    "enforceable_numeric_limit_applicable_to_this_measurement_context": {
+      "status": "UNSATISFIED",
+      "reason": "NOT_MATERIALIZABLE",
+      "locations": [
+        "applicable_limit_assessment.limit_category"
+      ]
+    },
+    "facility": {
+      "status": "SATISFIED",
+      "reason": null,
+      "locations": [
+        "facility.facility",
+        "permit_feature.facility",
+        "monitoring_period.facility",
+        "permit_limit_extract_row.facility",
+        "dmr_measurement_extract_row.facility",
+        "monitoring_requirement_candidate.facility",
+        "special_study_or_event_reference.facility",
+        "source_permit_document.facility",
+        "discharge_occurrence_evidence.facility",
+        "permit_no_discharge_statement.facility",
+        "expected_monitoring_without_dmr_row.facility",
+        "measurement_limit_evaluation_pair.facility",
+        "monitoring_obligation_applicability.facility",
+        "missing_evidence_classification.facility"
+      ]
+    },
+    "limit_has_numeric_value_and_unit": {
+      "status": "SATISFIED",
+      "reason": null,
+      "locations": [
+        "limit_value_attributes.has_numeric_value"
+      ]
+    },
+    "limit_record_exists_in_permit_limit_extract": {
+      "status": "SATISFIED",
+      "reason": null,
+      "locations": [
+        "permit_limit_extract_row.limit_row",
+        "limit_value_attributes.limit_row",
+        "limit_source_flags.limit_row",
+        "limit_season_month_active.limit_row",
+        "conditional_trigger_language.limit_row",
+        "dmr_limit_correspondence.limit_row",
+        "limit_effective_during_period.limit_row",
+        "monitoring_requirement_candidate.limit_row",
+        "measurement_limit_evaluation_pair.limit_row",
+        "applicable_limit_assessment.limit_row",
+        "numeric_exceedance_assessment.limit_row"
+      ]
+    },
+    "limit_type_category_flags_from_source_e_g_enforceable_vs_optional_monitoring": {
+      "status": "AMBIGUOUS",
+      "reason": "AMBIGUOUS",
+      "locations": [
+        "limit_source_flags.limit_type_code",
+        "limit_source_flags.optional_monitoring_flag"
+      ]
+    },
+    "measurement_exceeds_applicable_enforceable_numeric_limit": {
+      "status": "UNSATISFIED",
+      "reason": "NOT_MATERIALIZABLE",
+      "locations": [
+        "numeric_exceedance_assessment.comparison_outcome"
+      ]
+    },
+    "measurement_has_numeric_reported_value_vs_qualifier_only_vs_nodi": {
+      "status": "SATISFIED",
+      "reason": null,
+      "locations": [
+        "dmr_reported_value_kind.value_kind"
+      ]
+    },
+    "measurement_record_exists_in_dmr_extract": {
+      "status": "SATISFIED",
+      "reason": null,
+      "locations": [
+        "dmr_measurement_extract_row.measurement",
+        "dmr_reported_value_kind.measurement",
+        "dmr_limit_correspondence.measurement",
+        "fy2025_in_scope_measurement.measurement",
+        "measurement_limit_evaluation_pair.measurement",
+        "applicable_limit_assessment.measurement",
+        "numeric_exceedance_assessment.measurement"
+      ]
+    },
+    "monitoring_expectation": {
+      "status": "SATISFIED",
+      "reason": null,
+      "locations": [
+        "expected_monitoring_without_dmr_row.expectation",
+        "missing_evidence_classification.expectation"
+      ]
+    },
+    "monitoring_period": {
+      "status": "SATISFIED",
+      "reason": null,
+      "locations": [
+        "monitoring_period.period",
+        "dmr_measurement_extract_row.period",
+        "limit_effective_during_period.period",
+        "discharge_occurrence_evidence.period",
+        "permit_no_discharge_statement.period",
+        "conditional_monitoring_relief_evidence.period",
+        "expected_monitoring_without_dmr_row.period",
+        "measurement_limit_evaluation_pair.period",
+        "monitoring_obligation_applicability.period",
+        "missing_evidence_classification.period"
+      ]
+    },
+    "monitoring_required_for_the_evaluated_period_context": {
+      "status": "UNSATISFIED",
+      "reason": "NOT_MATERIALIZABLE",
+      "locations": [
+        "monitoring_obligation_applicability.applicability_verdict"
+      ]
+    },
+    "monitoring_requirement_text_schedule_exists_in_permit_or_limit_extract": {
+      "status": "SATISFIED",
+      "reason": null,
+      "locations": [
+        "limit_source_flags.limit_freq_of_analysis_code",
+        "monitoring_requirement_candidate.requirement",
+        "conditional_monitoring_relief_evidence.requirement",
+        "expected_monitoring_without_dmr_row.requirement",
+        "monitoring_obligation_applicability.requirement"
+      ]
+    },
+    "no_dmr_row_present_for_an_expected_period": {
+      "status": "SATISFIED",
+      "reason": null,
+      "locations": [
+        "expected_monitoring_without_dmr_row.dmr_row_absent"
+      ]
+    },
+    "parameter": {
+      "status": "SATISFIED",
+      "reason": null,
+      "locations": [
+        "parameter.parameter",
+        "permit_limit_extract_row.parameter",
+        "dmr_measurement_extract_row.parameter",
+        "monitoring_requirement_candidate.parameter",
+        "measurement_limit_evaluation_pair.parameter"
+      ]
+    },
+    "permit_or_submission_documents_no_discharge": {
+      "status": "UNSATISFIED",
+      "reason": "NOT_MATERIALIZABLE",
+      "locations": [
+        "permit_no_discharge_statement.statement_supported"
+      ]
+    },
+    "seasonal_month_flags_or_permit_year_boundaries": {
+      "status": "SATISFIED",
+      "reason": null,
+      "locations": [
+        "limit_season_month_active.active_in_month"
+      ]
+    },
+    "special_study_or_event_driven_requirement_references": {
+      "status": "SATISFIED",
+      "reason": null,
+      "locations": [
+        "special_study_or_event_reference.reference"
+      ]
+    },
+    "temporal_overlap_between_limit_effective_dates_and_monitoring_period": {
+      "status": "SATISFIED",
+      "reason": null,
+      "locations": [
+        "limit_effective_during_period.overlaps"
+      ]
+    }
+  },
+  "satisfied": [
+    "conditional_trigger_language_present",
+    "correspondence_among_facility_outfall_parameter_limit_set_and_dmr_event",
+    "discharge_point",
+    "dmr_row_exists_with_nodi_code_or_non_numeric_qualifier",
+    "facility",
+    "limit_has_numeric_value_and_unit",
+    "limit_record_exists_in_permit_limit_extract",
+    "measurement_has_numeric_reported_value_vs_qualifier_only_vs_nodi",
+    "measurement_record_exists_in_dmr_extract",
+    "monitoring_expectation",
+    "monitoring_period",
+    "monitoring_requirement_text_schedule_exists_in_permit_or_limit_extract",
+    "no_dmr_row_present_for_an_expected_period",
+    "parameter",
+    "seasonal_month_flags_or_permit_year_boundaries",
+    "special_study_or_event_driven_requirement_references",
+    "temporal_overlap_between_limit_effective_dates_and_monitoring_period"
+  ],
+  "unsatisfied": [
+    "applicability_unresolved",
+    "conditional_monitoring_relief_grounded_in_permit_or_operational_evidence",
+    "discharge_occurrence_or_no_discharge_documentation_in_evidence",
+    "documented_no_discharge_period",
+    "enforceable_numeric_limit_applicable_to_this_measurement_context",
+    "measurement_exceeds_applicable_enforceable_numeric_limit",
+    "monitoring_required_for_the_evaluated_period_context",
+    "permit_or_submission_documents_no_discharge"
+  ],
+  "ambiguous": [
+    "documented_no_data_reason_codes_or_narrative_in_source",
+    "limit_type_category_flags_from_source_e_g_enforceable_vs_optional_monitoring"
+  ],
+  "unsatisfied_reasons": {
+    "applicability_unresolved": "NOT_MATERIALIZABLE",
+    "conditional_monitoring_relief_grounded_in_permit_or_operational_evidence": "NOT_MATERIALIZABLE",
+    "discharge_occurrence_or_no_discharge_documentation_in_evidence": "NOT_MATERIALIZABLE",
+    "documented_no_data_reason_codes_or_narrative_in_source": "AMBIGUOUS",
+    "documented_no_discharge_period": "NOT_MATERIALIZABLE",
+    "enforceable_numeric_limit_applicable_to_this_measurement_context": "NOT_MATERIALIZABLE",
+    "limit_type_category_flags_from_source_e_g_enforceable_vs_optional_monitoring": "AMBIGUOUS",
+    "measurement_exceeds_applicable_enforceable_numeric_limit": "NOT_MATERIALIZABLE",
+    "monitoring_required_for_the_evaluated_period_context": "NOT_MATERIALIZABLE",
+    "permit_or_submission_documents_no_discharge": "NOT_MATERIALIZABLE"
+  },
+  "ambiguity_details": [
+    {
+      "relation": "limit_source_flags",
+      "semantic_identity": "limit_type_category_flags_from_source_e_g_enforceable_vs_optional_monitoring",
+      "roles": [
+        "limit_type_code",
+        "optional_monitoring_flag"
+      ]
+    },
+    {
+      "relation": "documented_nodata_reason",
+      "semantic_identity": "documented_no_data_reason_codes_or_narrative_in_source",
+      "roles": [
+        "reason_code",
+        "reason_established"
+      ]
+    }
+  ],
+  "materialization_checked": true,
+  "ok": false
+}

@@ -1,0 +1,26 @@
+{
+  "obligation_id": "obl:invoice_governing_contract:005",
+  "selected_observations": [
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "invoice INV-3001",
+      "excerpt": "{\"invoice_id\":\"INV-3001\",\"billed_name\":\"Oakfield Logistik GmbH\",\"amount\":61000,\"currency\":\"EUR\",\"period\":\"2024-Q4\",\"status\":\"paid\"}"
+    },
+    {
+      "source_path": "sources/contracts/MSA-OAK-2018.md",
+      "location": "header",
+      "excerpt": "Counterparty: Oakfield Logistics GmbH\nEffective: 1 September 2018\nTerm: rolling 12-month periods."
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "Oakfield paragraph",
+      "excerpt": "Oakfield rebranded in 2023 from Oakfield Logistics GmbH to Oakfield Logistik GmbH. Companies House / Handelsregister number HRB 88421 did not change. CRM still shows the old English-facing name."
+    }
+  ],
+  "selection_rationale": "Governing-contract judgment for INV-3001 and MSA-OAK-2018 uses the invoice billed_name, the named contract counterparty, and any explicit commercial-notes statement tying invoices to that agreement.",
+  "known_missing_information": [
+    "world.sqlite is not present in workspace; compiled identity_judgment tuples from prior passes cannot be queried via TaskView.",
+    "No invoice-level contract reference field in billing source; governing contract must be inferred from counterparty name chain or commercial notes.",
+    "Oakfield contract header uses 'Logistics' while invoices use 'Logistik'; rebrand note is required to bridge names."
+  ]
+}

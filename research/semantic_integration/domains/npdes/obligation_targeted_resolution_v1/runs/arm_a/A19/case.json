@@ -1,0 +1,98 @@
+{
+  "case_id": "A19",
+  "obligation_id": "monitoring_frequency",
+  "occurrence_id": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129867",
+  "question": "What monitoring frequencies do opaque LIMIT_FREQ_OF_ANALYSIS_CODE values (e.g. 05/WK, 01/07, 01/01) establish?",
+  "purpose": [
+    "B"
+  ],
+  "requirement_schema": "monitoring_frequency_code",
+  "source_field_value": "LIMIT_FREQ_OF_ANALYSIS_CODE nonempty",
+  "local_structured_context": {
+    "table": "permit_limits.csv",
+    "row": {
+      "EXTERNAL_PERMIT_NMBR": "NM0000116",
+      "PARAMETER_CODE": "00530",
+      "PARAMETER_DESC": "Solids, total suspended",
+      "LIMIT_VALUE_ID": "3610129867",
+      "LIMIT_SET_SCHEDULE_ID": "3600833510",
+      "LIMIT_VALUE_NMBR": "50",
+      "LIMIT_FREQ_OF_ANALYSIS_CODE": "01/07",
+      "LIMIT_SAMPLE_TYPE_CODE": "GR",
+      "DMR_COMMENT_TEXT": "",
+      "LIMIT_UNIT_DESC": "mg/L",
+      "STATISTICAL_BASE_CODE": "DD"
+    }
+  },
+  "reported_model": "Composer 2.5",
+  "retrieval": {
+    "n_tool_paths": 31,
+    "structured_paths": [
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/8b699d88881008c61527c6e8b8989163/sources/document_inventory.json",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/8b699d88881008c61527c6e8b8989163/sources/permit_limits.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/8b699d88881008c61527c6e8b8989163/sources/dmr_measurements.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/8b699d88881008c61527c6e8b8989163/sources/dmr_measurements.csv"
+    ],
+    "document_paths": [
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/8b699d88881008c61527c6e8b8989163/documents/INDEX.md",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/8b699d88881008c61527c6e8b8989163/documents/gcc",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/8b699d88881008c61527c6e8b8989163/documents/gcc/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/8b699d88881008c61527c6e8b8989163/documents/gcc",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/8b699d88881008c61527c6e8b8989163/documents/gcc/part_ii_appendix.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/8b699d88881008c61527c6e8b8989163/documents/gcc",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/8b699d88881008c61527c6e8b8989163/documents/gcc/fact_sheet.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/8b699d88881008c61527c6e8b8989163/documents/gcc/fact_sheet.txt"
+    ],
+    "n_documents_touched": 5,
+    "queries": [
+      "NM0000116|3600833510|3610129867|00530|01/07",
+      "monitoring_frequency|01/07|frequency",
+      "01/07|frequency|quarter|monitor|TSS|00530|total suspended|storm runoff",
+      "01/07|1/Week|weekly|frequency code|FREQ",
+      "01/07|JUDGMENT|semantic_question",
+      "3610129867|3600833510|NM0000116.*00530",
+      "3610129867",
+      "storm|discharge|when|infrequent|occurrence",
+      "01/01|01/07|frequency code|FREQ_OF",
+      "01/07|1/Week|05/WK|weekly",
+      "SUPPORTED_RESOLUTION|semantic_question_used",
+      "JUDGMENT|monitoring_frequency|01/07"
+    ],
+    "n_queries": 12
+  },
+  "judgment": {
+    "occurrence_id": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129867",
+    "semantic_question_used": "What monitoring frequency does limit_freq_of_analysis_code 01/07 require for this permit limit row (total suspended solids daily maximum 50 mg/L at Outfall 001 under permit NM0000116)?",
+    "disposition": "SUPPORTED_RESOLUTION",
+    "interpretation": "Monitoring is required once per week (1/Week), using grab samples, for the total suspended solids daily maximum limit of 50 mg/L at Outfall 001.",
+    "grounding": "The structured permit_limits row for limit_value_id 3610129867 carries LIMIT_FREQ_OF_ANALYSIS_CODE 01/07 for parameter 00530 (Solids, total suspended), daily maximum (statistical base DD) of 50 mg/L, grab sample type GR, on permit NM0000116 Outfall 001. Part I Section A of the final permit for NM0000116 lists the matching Total Suspended Solids row\u2014Daily Max 50 mg/L\u2014with measurement frequency 1/Week and sample type Grab. The fact sheet for the same permit states that, based on facility discharge frequency, all limited parameters other than pH have weekly monitoring frequency requirements.",
+    "documents_opened": [
+      "OCCURRENCE.md",
+      "PASS_TASK.md",
+      "documents/INDEX.md",
+      "purposes/visible_b.md",
+      "construction.py",
+      "sources/permit_limits.csv",
+      "sources/document_inventory.json",
+      "documents/gcc/final_permit.txt",
+      "documents/gcc/fact_sheet.txt",
+      "documents/gcc/minor_modification.txt"
+    ],
+    "snippets": [
+      {
+        "source_id": "sources/permit_limits.csv",
+        "text": "3602720951,NM0000116,...,00530,\"Solids, total suspended\",...,3610129867,C3,50,19,mg/L,19,mg/L,50,DD,MAX,<=,,ENF,N,GR,01/07,..."
+      },
+      {
+        "source_id": "documents/gcc/final_permit.txt",
+        "text": "Total Suspended          N/A               N/A               Report            50                 1/Week               Grab\nSolids"
+      },
+      {
+        "source_id": "documents/gcc/fact_sheet.txt",
+        "text": "Based on the discharge frequency of the facility, the NMIP requires that pH has daily monitoring frequency and all other limited parameters have weekly monitoring frequency requirements."
+      }
+    ],
+    "remaining_uncertainty": "The workspace contains no general ICIS code legend defining 01/07; the weekly frequency is established from permit narrative text matched to this specific limit row (parameter, statistical base, limit value, and sample type), not from a reusable code table. Whether weekly sampling is triggered only when a discharge occurs is a separate discharge-occurrence condition not resolved by the frequency code alone."
+  },
+  "finished_at": "2026-09-05T13:41:02.449859+00:00"
+}

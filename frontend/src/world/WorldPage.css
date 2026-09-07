@@ -127,6 +127,33 @@
   content: "ab";
 }
 
+/* Two strokes leaving one mark on different angles — the fan itself, which is
+   the whole of what the control does. Geometry, like every other key here. */
+.world-show__filter[data-layer="spread"] .world-show__key {
+  height: 8px;
+  border: 0;
+}
+
+.world-show__filter[data-layer="spread"] .world-show__key::before,
+.world-show__filter[data-layer="spread"] .world-show__key::after {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  content: "";
+  transform-origin: left center;
+}
+
+.world-show__filter[data-layer="spread"] .world-show__key::before {
+  transform: rotate(-16deg);
+}
+
+.world-show__filter[data-layer="spread"] .world-show__key::after {
+  transform: rotate(16deg);
+}
+
 .world-show__filter[aria-pressed="false"] .world-show__key {
   opacity: 0.28;
   transform: scale(0.86);

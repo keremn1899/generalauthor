@@ -1,0 +1,17 @@
+{
+  "obligation_id": "obl:missing_evidence_classification:d9a027eb0b86bd50",
+  "selected_observations": [
+    {
+      "source_path": "sources/structured/dmr_measurements.csv",
+      "location": "line 257; DMR_EVENT_ID=3619518338; DMR_VALUE_ID=3842360843",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0000116; PERM_FEATURE_NMBR=001; PARAMETER_CODE=50050; PARAMETER_DESC=Flow, in conduit or thru treatment plant; MONITORING_PERIOD_END_DATE=03/31/2025; DMR_EVENT_ID=3619518338; DMR_VALUE_ID=3842360843; NODI_CODE=C"
+    }
+  ],
+  "selection_rationale": "Centers on NODI-coded or absent numeric DMR reporting plus any structured permit comment tied to the parameter schedule.",
+  "known_missing_information": [
+    "02_mechanical_world/world.sqlite not present in workspace; evidence selected directly from structured CSV sources using P2 join rules.",
+    "Permit PDF sources listed in sources/source_manifest.json were not ingested; permit_stated_condition packets use structured DMR_COMMENT_TEXT only.",
+    "Classification may depend on documented_no_discharge_assertion adjudication and Purpose B obligation context.",
+    "NODI code semantics require permit/DMR documentary interpretation beyond the coded value alone."
+  ]
+}

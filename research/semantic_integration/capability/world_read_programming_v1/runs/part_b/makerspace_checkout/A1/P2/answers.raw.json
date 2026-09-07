@@ -1,0 +1,128 @@
+{
+  "tasks": [
+    {
+      "id": "P1",
+      "status": "ANSWERED",
+      "result": {
+        "fee_sums_by_current_tool_identity": [
+          {
+            "tool_id": "tool:CNC-1",
+            "tool_name": "CNC mill",
+            "total_authorized_fees": 108.0,
+            "contributing_checkouts": [
+              "checkout:C2",
+              "checkout:C5"
+            ]
+          },
+          {
+            "tool_id": "tool:LASER-A",
+            "tool_name": "Laser cutter",
+            "total_authorized_fees": 54.0,
+            "contributing_checkouts": [
+              "checkout:C1",
+              "checkout:C6",
+              "checkout:C7"
+            ]
+          },
+          {
+            "tool_id": "tool:SAW-1",
+            "tool_name": "Table saw",
+            "total_authorized_fees": 4.0,
+            "contributing_checkouts": [
+              "checkout:C3"
+            ]
+          }
+        ]
+      },
+      "code": "-- P1: sum established fees of authorized checkouts per current tool identity\nSELECT\n  f.resolved_tool_id AS tool_id,\n  t.name AS tool_name,\n  SUM(CAST(f.total_fee AS REAL)) AS total_authorized_fees,\n  GROUP_CONCAT(f.checkout_id) AS checkout_ids\nFROM checkout_fee f\nJOIN checkout_authorization a ON a.checkout_id = f.checkout_id\nJOIN tool_record t ON t.tool_id = f.resolved_tool_id\nWHERE a.status = 'authorized'\nGROUP BY f.resolved_tool_id, t.name\nORDER BY f.resolved_tool_id;\n\n-- Historical alias L1 -> tool:LASER-A is already reflected in checkout_fee.resolved_tool_id\n-- Unauthorized checkout C4 (tool:LASER-A, fee 18.0) excluded by authorization filter",
+      "unresolved_handling": "All current tool identities have established authorized fee totals; no unresolved quantities for P1."
+    },
+    {
+      "id": "P2",
+      "status": "ANSWERED",
+      "result": {
+        "member_id": "member:M-17",
+        "checkouts": [
+          {
+            "checkout_id": "checkout:C1",
+            "raw_tool_id": "LASER-A",
+            "resolved_tool_id": "tool:LASER-A",
+            "out_time": "2024-07-01 18:00",
+            "in_time": "2024-07-01 20:00",
+            "note": "",
+            "hours_marked": "2"
+          },
+          {
+            "checkout_id": "checkout:C3",
+            "raw_tool_id": "SAW-1",
+            "resolved_tool_id": "tool:SAW-1",
+            "out_time": "2024-07-02 09:00",
+            "in_time": "2024-07-02 10:00",
+            "note": "HOLD",
+            "hours_marked": "1"
+          },
+          {
+            "checkout_id": "checkout:C6",
+            "raw_tool_id": "L1",
+            "resolved_tool_id": "tool:LASER-A",
+            "out_time": "2024-07-03 15:00",
+            "in_time": "2024-07-03 16:00",
+            "note": "",
+            "hours_marked": "1"
+          },
+          {
+            "checkout_id": "checkout:C7",
+            "raw_tool_id": "LASER-A",
+            "resolved_tool_id": "tool:LASER-A",
+            "out_time": "2024-07-04 21:15",
+            "in_time": "2024-07-04 22:15",
+            "note": "",
+            "hours_marked": "1"
+          }
+        ],
+        "resolved_tool_identities": [
+          "tool:LASER-A",
+          "tool:SAW-1"
+        ]
+      },
+      "code": "-- P2: checkouts by member M-17\nSELECT checkout_id, tool_id AS raw_tool_id, out_time, in_time, note, hours_marked\nFROM checkout_record\nWHERE member_id = 'member:M-17'\nORDER BY checkout_id;\n\n-- Resolve historical tool identifiers via tool_identity_remap + tool_record\nSELECT from_tool_id, to_tool_id FROM tool_identity_remap;\n-- L1 -> tool:LASER-A\n\nSELECT tool_id, name FROM tool_record;\n-- Short ids CNC-1, LASER-A, SAW-1 map to tool:CNC-1, tool:LASER-A, tool:SAW-1",
+      "unresolved_handling": "Checkout C3 note 'HOLD' has no established meaning in purpose_requirement_failure; reported as recorded without inferring meaning."
+    },
+    {
+      "id": "P3",
+      "status": "ANSWERED",
+      "result": {
+        "tool_id": "tool:CNC-1",
+        "checkouts": [
+          {
+            "checkout_id": "checkout:C2",
+            "member_id": "member:M-18",
+            "member_name": "Sam Ortiz",
+            "authorization_status": "authorized",
+            "total_fee": 54.0,
+            "note": ""
+          },
+          {
+            "checkout_id": "checkout:C5",
+            "member_id": "member:M-18",
+            "member_name": "Sam Ortiz",
+            "authorization_status": "authorized",
+            "total_fee": 54.0,
+            "note": "PENDING"
+          }
+        ],
+        "sum_established_authorized_fees": 108.0,
+        "checkouts_with_unresolved_note_meaning": [
+          {
+            "checkout_id": "checkout:C5",
+            "note": "PENDING",
+            "failure_kind": "EXPLICIT_UNRESOLVED",
+            "reason": "shop_rules.txt does not define PENDING"
+          }
+        ]
+      },
+      "code": "-- P3: all checkouts, filter to CNC-1 chain (raw tool_id CNC-1 -> tool:CNC-1)\nSELECT c.checkout_id, c.member_id, m.name, c.tool_id, c.note,\n       a.status, f.total_fee\nFROM checkout_record c\nJOIN member_record m ON m.member_id = c.member_id\nLEFT JOIN checkout_authorization a ON a.checkout_id = c.checkout_id\nLEFT JOIN checkout_fee f ON f.checkout_id = c.checkout_id\nWHERE c.tool_id = 'CNC-1'\nORDER BY c.checkout_id;\n\n-- Sum authorized fees on CNC-1 chain\nSELECT SUM(CAST(f.total_fee AS REAL))\nFROM checkout_fee f\nJOIN checkout_authorization a ON a.checkout_id = f.checkout_id\nWHERE f.resolved_tool_id = 'tool:CNC-1' AND a.status = 'authorized';\n\n-- Unresolved note meaning from PURPOSE-scoped failure record\nSELECT requirement_id, failure_kind, subject_json\nFROM purpose_requirement_failure\nWHERE requirement_id = 'checkout_note_meaning';",
+      "unresolved_handling": "Checkout C5 note 'PENDING' is EXPLICIT_UNRESOLVED per purpose_requirement_failure; reported separately, not treated as false or zero. Empty notes are not unresolved."
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "obligation_id": "obl:invoice_governing_contract:004",
+  "selected_observations": [
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "invoice INV-2002",
+      "excerpt": "{\"invoice_id\":\"INV-2002\",\"billed_name\":\"Northbridge Analytics Inc.\",\"amount\":96000,\"currency\":\"USD\",\"period\":\"2025-Q1\",\"status\":\"open\"}"
+    },
+    {
+      "source_path": "sources/contracts/MSA-NBA-2021.md",
+      "location": "header",
+      "excerpt": "Counterparty: Northbridge Analytics, Inc.\nEffective: 4 June 2021\nTerm: 24 months. The agreement auto-renews for successive 12-month periods unless either party gives 90 days' written notice before the then-current term ends."
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "Northbridge paragraph",
+      "excerpt": "Northbridge: sales uses the short name \"Northbridge Analytics\". Billing and the MSA use \"Northbridge Analytics Inc.\" A 2024 credit check also returned a Wyoming LLC, \"Northbridge Analytics LLC\". Legal has not determined which registry entity is the contracting party. Treat that registry link as unresolved."
+    }
+  ],
+  "selection_rationale": "Governing-contract judgment for INV-2002 and MSA-NBA-2021 uses the invoice billed_name, the named contract counterparty, and any explicit commercial-notes statement tying invoices to that agreement.",
+  "known_missing_information": [
+    "world.sqlite is not present in workspace; compiled identity_judgment tuples from prior passes cannot be queried via TaskView.",
+    "No invoice-level contract reference field in billing source; governing contract must be inferred from counterparty name chain or commercial notes.",
+    "Northbridge registry entity ambiguity may block confident contract linkage if identity to MSA counterparty is unresolved."
+  ]
+}

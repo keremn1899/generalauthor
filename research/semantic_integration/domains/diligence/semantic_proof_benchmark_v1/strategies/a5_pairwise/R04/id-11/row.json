@@ -1,0 +1,58 @@
+{
+  "strategy": "a5_pairwise",
+  "trial": "R04",
+  "obligation_id": "id-11",
+  "candidate": {
+    "left": "billing:Vellum Print Co Ltd",
+    "right": "registry:09338441"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 09338441"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Vellum Print Co Ltd"
+    }
+  ],
+  "support_claim": "Each proposition identifies the name tied to one referent, but neither establishes identity or distinctness between billing:Vellum Print Co Ltd and registry:09338441.",
+  "proof_size": 2,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "propositions": [
+    {
+      "proposition": "Company number 09338441 is registered under the name VELLUM PRINT CO LTD in England and Wales with status dissolved.",
+      "source_grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 09338441"
+      },
+      "establishes": "other",
+      "relevance": "Identifies the registered legal name, jurisdiction, and status associated with the right referent registry:09338441."
+    },
+    {
+      "proposition": "Billing records use Vellum Print Co Ltd as the billed_name.",
+      "source_grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      },
+      "establishes": "other",
+      "relevance": "Identifies the counterparty name associated with the left referent billing:Vellum Print Co Ltd."
+    }
+  ],
+  "admit": {
+    "rule": "proposed_unresolved"
+  },
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

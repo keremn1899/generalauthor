@@ -1,0 +1,88 @@
+{
+  "strategy": "a6_multistep",
+  "trial": "R04",
+  "obligation_id": "id-13",
+  "candidate": {
+    "left": "billing:Meridian Energy Partners LLC",
+    "right": "contract:MSA-MER-2024"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/contracts/MSA-MER-2024.md",
+      "location": "header"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Meridian Energy Partners LLC"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "The packet associates the same trade name with billing and with contract MSA-MER-2024, but provides no establishing identity evidence such as a shared legal identifier or an explicit referent mapping, so the identity burden for SAME_ENTITY is not met and no distinctness evidence supports DISTINCT.",
+  "proof_size": 7,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "steps": [
+    {
+      "fact": "The left referent is billing:Meridian Energy Partners LLC.",
+      "grounding": null,
+      "mechanical": true
+    },
+    {
+      "fact": "The right referent is contract:MSA-MER-2024.",
+      "grounding": null,
+      "mechanical": true
+    },
+    {
+      "fact": "Contract MSA-MER-2024 names Meridian Energy Partners LLC as its Counterparty.",
+      "grounding": {
+        "source_path": "sources/contracts/MSA-MER-2024.md",
+        "location": "header"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Billing records show billed_name Meridian Energy Partners LLC.",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Meridian Energy Partners LLC"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Commercial notes state that Meridian Energy Partners invoices are the advisory retainer under MSA-MER-2024.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "The packet provides no legal identifier shared across both referents, no explicit identity mapping between billing:Meridian Energy Partners LLC and contract:MSA-MER-2024, and no statement licensing identifier or name uniqueness.",
+      "grounding": null,
+      "mechanical": true
+    },
+    {
+      "fact": "Shared naming and operational association are compatibility evidence only; they do not meet the burden to establish identity between the two referents.",
+      "grounding": null,
+      "mechanical": false
+    }
+  ],
+  "admit": {
+    "rule": "unresolved"
+  },
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

@@ -1,0 +1,38 @@
+{
+  "parent": "geometric_mean",
+  "children": [
+    {
+      "obligation_id": "tds_weekly_geometric_mean_reporting",
+      "exact_semantic_question": "For TDS limits (parameter 70295) under footnote *6, does geometric-mean-of-weekly-values reporting block ordinary single-period numeric comparison of individual DMR monitoring-period values?",
+      "relation_contract": "TDS aggregated weekly geometric-mean reporting is not an ordinary single-period numeric comparison"
+    },
+    {
+      "obligation_id": "limit_set_tds_comment_carryover",
+      "exact_semantic_question": "For non-TDS parameters that inherit the TDS-specific geometric-mean DMR comment via limit-set propagation, does that comment establish any non-ordinary comparison rule for individual monitoring-period values?",
+      "relation_contract": "limit-set-propagated TDS geometric-mean comment does not alter non-TDS single-period comparison semantics"
+    }
+  ],
+  "why_necessary": "All 40 occurrences share one identical DMR_COMMENT_TEXT that explicitly names TDS at Outfall 001, but structured data attaches it to 10 parameters (BOD, pH, TSS, cyanide, flow, chlorine, E. coli, TDS, percent removals). Permit footnote *6 authoritatively applies only to TDS discharge reporting. TDS net-increase limits use 30-day average enforcement language in the statement of basis, while footnote *6 requires geometric mean of weekly values — a materially different question than whether BOD monthly values should skip ordinary comparison because of a TDS comment copied at limit-set level.",
+  "occurrence_partition": {
+    "tds_weekly_geometric_mean_reporting": {
+      "count": 16,
+      "rule": "DMR_COMMENT_TEXT contains 'GEOMETRIC MEAN' AND PARAMETER_CODE = '70295'",
+      "representative_examples": [
+        "3610673300|3600891019",
+        "3610673275|3600891019",
+        "3610673287|3600891019"
+      ]
+    },
+    "limit_set_tds_comment_carryover": {
+      "count": 24,
+      "rule": "DMR_COMMENT_TEXT contains 'GEOMETRIC MEAN' AND PARAMETER_CODE != '70295'",
+      "representative_examples": [
+        "3610673284|3600891019",
+        "3610673282|3600891019",
+        "3610673283|3600891019",
+        "3610673281|3600891019"
+      ]
+    }
+  },
+  "mechanically_computable": true
+}

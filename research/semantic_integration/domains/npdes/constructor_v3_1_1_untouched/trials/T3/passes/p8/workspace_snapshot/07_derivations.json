@@ -1,0 +1,216 @@
+{
+  "pass": "P7",
+  "view_id": "diligence-world",
+  "world_db": "06_world/world.sqlite",
+  "derivation_compiler": "construction/derivations/derive_purposes.py",
+  "purpose_outputs": {
+    "a": "purpose_ir/a/output.json",
+    "b": "purpose_ir/b/output.json",
+    "c": "purpose_ir/c/output.json"
+  },
+  "derivations": [
+    {
+      "output_relation": "period_in_fy2025",
+      "required_input_relations": ["monitoring_period"],
+      "optional_enrichment_relations": [],
+      "epistemic_behavior": "Deterministic calendar classification over compiled period end dates; no purpose policy.",
+      "completeness_assumptions": "COMPLETE over monitoring_period; every compiled period receives an in_fy2025 boolean.",
+      "deterministic_computation": true,
+      "required_premise": "00_intention_contract.json Federal FY2025 bounds (2024-10-01 through 2025-09-30 inclusive).",
+      "optional_enrichment": "None.",
+      "blocking_unresolved_state": [],
+      "non_blocking_unresolved_state": []
+    },
+    {
+      "output_relation": "dmr_in_fy2025_scope",
+      "required_input_relations": ["compiled_dmr_measurement", "monitoring_period"],
+      "optional_enrichment_relations": ["period_in_fy2025"],
+      "epistemic_behavior": "Mechanical FY2025 scope filter; membership is independent of analytical purpose.",
+      "completeness_assumptions": "COMPLETE over compiled_dmr_measurement joined to FY2025 periods.",
+      "deterministic_computation": true,
+      "required_premise": "Monitoring period end date within FY2025 window.",
+      "optional_enrichment": "period_in_fy2025 may be used equivalently to inline date predicate.",
+      "blocking_unresolved_state": [],
+      "non_blocking_unresolved_state": []
+    },
+    {
+      "output_relation": "measurement_has_ordinary_numeric_result",
+      "required_input_relations": ["compiled_dmr_measurement"],
+      "optional_enrichment_relations": [],
+      "epistemic_behavior": "Deterministic form classifier for Purpose A routing; treats blank numeric storage (0.0) and NODI-coded rows as non-ordinary per P2 limitation.",
+      "completeness_assumptions": "COMPLETE over compiled_dmr_measurement.",
+      "deterministic_computation": true,
+      "required_premise": "Ordinary numeric when nodi_code is empty, reported_value_number is non-zero, and reported_unit_code is present.",
+      "optional_enrichment": "None.",
+      "blocking_unresolved_state": [],
+      "non_blocking_unresolved_state": [
+        "non-ordinary measurement form routes tuple to Purpose C rather than Purpose A exceedance path"
+      ]
+    },
+    {
+      "output_relation": "limit_active_in_period",
+      "required_input_relations": ["compiled_limit_value", "monitoring_period"],
+      "optional_enrichment_relations": [],
+      "epistemic_behavior": "Date-overlap join on shared facility; inclusive effective-window test against period end date.",
+      "completeness_assumptions": "COMPLETE over compiled_limit_value cross monitoring_period on facility.",
+      "deterministic_computation": true,
+      "required_premise": "period_end_date between limit_begin_date and limit_end_date inclusive.",
+      "optional_enrichment": "None.",
+      "blocking_unresolved_state": [],
+      "non_blocking_unresolved_state": [
+        "per-month seasonal activation is not modeled; all_months_active is not consulted in this derivation"
+      ]
+    },
+    {
+      "output_relation": "measurement_limit_candidate_pair",
+      "required_input_relations": [
+        "compiled_dmr_measurement",
+        "compiled_limit_value",
+        "monitoring_period"
+      ],
+      "optional_enrichment_relations": ["dmr_in_fy2025_scope", "limit_active_in_period"],
+      "epistemic_behavior": "Exhaustive mechanical pairing of in-scope measurements with schedule limits sharing facility, feature, parameter, and period overlap.",
+      "completeness_assumptions": "COMPLETE over dmr_in_fy2025_scope cross limit_active_in_period on shared keys.",
+      "deterministic_computation": true,
+      "required_premise": "FY2025 measurement and period-overlapping limit on matching facility/feature/parameter.",
+      "optional_enrichment": "dmr_in_fy2025_scope and limit_active_in_period provide equivalent pre-filtered inputs.",
+      "blocking_unresolved_state": [],
+      "non_blocking_unresolved_state": [
+        "multiple candidates are expected and resolved downstream by limit_applicability_resolution"
+      ]
+    },
+    {
+      "output_relation": "monitoring_requirement_in_fy2025",
+      "required_input_relations": ["monitoring_requirement_schedule"],
+      "optional_enrichment_relations": [],
+      "epistemic_behavior": "Schedule effective-window overlap with FY2025; no conditional activation evaluation.",
+      "completeness_assumptions": "COMPLETE over monitoring_requirement_schedule rows whose effective dates intersect FY2025.",
+      "deterministic_computation": true,
+      "required_premise": "limit_begin_date <= 2025-09-30 and limit_end_date >= 2024-10-01.",
+      "optional_enrichment": "None.",
+      "blocking_unresolved_state": [],
+      "non_blocking_unresolved_state": [
+        "conditional permit-text triggers are not evaluated here; deferred to monitoring_obligation_resolution"
+      ]
+    },
+    {
+      "output_relation": "missing_evidence_case_universe",
+      "required_input_relations": [
+        "compiled_dmr_measurement",
+        "monitoring_period",
+        "monitoring_requirement_schedule"
+      ],
+      "optional_enrichment_relations": [
+        "dmr_in_fy2025_scope",
+        "measurement_has_ordinary_numeric_result"
+      ],
+      "epistemic_behavior": "Pairs FY2025 non-ordinary DMR submissions with overlapping schedule requirements; excludes ordinary-numeric tuples routed to Purpose A.",
+      "completeness_assumptions": "INCOMPLETE: absent-submission cases are not enumerable because frequency-code interpretation rules are not compiled as world facts (01_vocabulary.json limitation).",
+      "deterministic_computation": true,
+      "required_premise": "FY2025 DMR row with nodi_code present or reported_value_number = 0.0, joined to overlapping monitoring_requirement_schedule tuple.",
+      "optional_enrichment": "measurement_has_ordinary_numeric_result = false provides equivalent non-ordinary filter.",
+      "blocking_unresolved_state": [],
+      "non_blocking_unresolved_state": [
+        "absent expected submissions without a located DMR row are omitted from the universe"
+      ]
+    },
+    {
+      "output_relation": "purpose_a_output_row",
+      "required_input_relations": [
+        "dmr_in_fy2025_scope",
+        "measurement_has_ordinary_numeric_result",
+        "compiled_dmr_measurement",
+        "compiled_limit_value",
+        "workspace_facility",
+        "permit_discharge_feature",
+        "monitored_parameter",
+        "monitoring_period"
+      ],
+      "optional_enrichment_relations": [
+        "measurement_limit_candidate_pair",
+        "limit_active_in_period"
+      ],
+      "epistemic_behavior": "Projects Purpose A rows for FY2025 ordinary-numeric measurements with admitted limit_applicability_resolution and limit_kind_resolution from 05_dispositions.json; computes exceedance inline because exceedance_resolution was not adjudicated.",
+      "completeness_assumptions": "Rows cover all dmr_in_fy2025_scope measurements with has_ordinary_numeric = true; each appears in rows or unresolved. Non-ordinary measurements are out of scope for Purpose A.",
+      "deterministic_computation": true,
+      "required_premise": "Admitted limit_applicability_resolution disposition per in-scope measurement; when ACCEPT, admitted limit_kind_resolution for the selected limit; compiled numeric measurement and limit threshold for exceedance when limit_category is enforceable_numeric.",
+      "optional_enrichment": "measurement_limit_candidate_pair supports grounding receipts; source CSV paths cited in disposition grounding packets.",
+      "blocking_unresolved_state": [
+        "limit_applicability_resolution UNRESOLVED blocks a definitive applicability verdict and routes the measurement to purpose_ir/a/output.json unresolved",
+        "limit_kind_resolution UNRESOLVED on the selected limit blocks enforceable-numeric classification and exceedance determination"
+      ],
+      "non_blocking_unresolved_state": [
+        "limit_kind_resolution REJECT as report_only or no_numeric_comparison still emits a row with limit_applicability_status no_enforceable_numeric_limit_applies and exceedance comparison_not_applicable",
+        "exceedance unresolved on an otherwise established enforceable limit still emits a row with exceedance = unresolved"
+      ]
+    },
+    {
+      "output_relation": "purpose_b_output_row",
+      "required_input_relations": [
+        "monitoring_requirement_in_fy2025",
+        "monitoring_requirement_schedule",
+        "workspace_facility",
+        "permit_discharge_feature",
+        "monitored_parameter"
+      ],
+      "optional_enrichment_relations": ["source_document_anchor"],
+      "epistemic_behavior": "Projects Purpose B rows from admitted monitoring_obligation_resolution dispositions; verdict required/not_required/unresolved is taken from C3 packets, not inferred from missing DMR rows.",
+      "completeness_assumptions": "Every monitoring_requirement_in_fy2025 referent is evaluated exactly once for applicability_context FY2025 overlap 2024-10-01 to 2025-09-30.",
+      "deterministic_computation": true,
+      "required_premise": "Admitted monitoring_obligation_resolution per (requirement, applicability_context) pair.",
+      "optional_enrichment": "source_document_anchor and permit PDF text are not required for unconditional schedule rows; condition_anchor_text from schedule enriches condition_dependencies labeling only.",
+      "blocking_unresolved_state": [
+        "monitoring_obligation_resolution UNRESOLVED blocks a required/not_required verdict and routes the requirement to purpose_ir/b/output.json unresolved"
+      ],
+      "non_blocking_unresolved_state": [
+        "permit-text condition evaluation gaps are recorded as unresolved without defaulting to not_required"
+      ]
+    },
+    {
+      "output_relation": "purpose_c_output_row",
+      "required_input_relations": [
+        "missing_evidence_case_universe",
+        "compiled_dmr_measurement",
+        "monitoring_requirement_schedule",
+        "workspace_facility",
+        "permit_discharge_feature",
+        "monitored_parameter",
+        "monitoring_period"
+      ],
+      "optional_enrichment_relations": [
+        "monitoring_obligation_resolution",
+        "dmr_in_fy2025_scope",
+        "measurement_has_ordinary_numeric_result"
+      ],
+      "epistemic_behavior": "Projects Purpose C semantic classification from admitted missing_evidence_resolution; defers when linked monitoring_obligation_resolution remains unresolved.",
+      "completeness_assumptions": "INCOMPLETE universe: only located non-ordinary FY2025 DMR cases in missing_evidence_case_universe; absent-submission expectations omitted.",
+      "deterministic_computation": true,
+      "required_premise": "Admitted missing_evidence_resolution per case in missing_evidence_case_universe.",
+      "optional_enrichment": "Cross-reference to monitoring_obligation_resolution verdict when obligation status gates classification; NODI and qualifier fields from compiled_dmr_measurement for observed_result_form.",
+      "blocking_unresolved_state": [
+        "missing_evidence_resolution UNRESOLVED routes case to purpose_ir/c/output.json unresolved",
+        "linked monitoring_obligation_resolution UNRESOLVED blocks positive established_state classification per Purpose C deferral policy"
+      ],
+      "non_blocking_unresolved_state": [
+        "mere absence of numeric result alone never yields a compliance or violation classification"
+      ]
+    }
+  ],
+  "semantic_inputs_not_in_world": {
+    "source": "05_dispositions.json",
+    "relations": [
+      "limit_applicability_resolution",
+      "limit_kind_resolution",
+      "monitoring_obligation_resolution",
+      "missing_evidence_resolution"
+    ],
+    "note": "Admitted PURPOSE resolutions are consumed by derive_purposes.py but not materialized in world.sqlite per 06_admission.json."
+  },
+  "limitations": [
+    "exceedance_resolution was not adjudicated in 05_dispositions.json; exceedance is computed inline in derive_purposes.py only when limit_kind is enforceable_numeric.",
+    "missing_evidence_case_universe is INCOMPLETE for absent-submission cases.",
+    "Per-month seasonal activation for limits is not modeled; limit_applicability UNRESOLVED may reflect schedule underdetermination.",
+    "Permit PDF text extraction is deferred; monitoring_obligation_resolution with condition_anchor_text often remains UNRESOLVED.",
+    "All 209 admitted missing_evidence_resolution dispositions are UNRESOLVED in the current workspace; purpose_ir/c/output.json rows is empty."
+  ]
+}

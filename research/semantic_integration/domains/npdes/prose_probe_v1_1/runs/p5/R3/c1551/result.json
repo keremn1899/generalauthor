@@ -1,0 +1,36 @@
+{
+  "payload": [
+    {
+      "obligation_id": "R3/c1551",
+      "relation": "probe_obligation",
+      "values": [
+        "Whole Effluent Toxicity Testing table on page 4 (Pimephales promelas row: VALUE, MEASUREMENT FREQUENCY, SAMPLE TYPE columns)",
+        "Footnotes (2) and (3) on page 4",
+        "Part II WET testing requirements and additional WET monitoring and reporting conditions referenced in footnote (3)"
+      ],
+      "disposition": "UNRESOLVED",
+      "grounding": [
+        {
+          "packet": "04_packets/R3_c1551.json",
+          "location": "selected_observations[0]",
+          "source_path": "gcc/final_permit.pdf",
+          "detail": "page 4, section part_i, WET table, Pimephales promelas row, VALUE column",
+          "excerpt": "Report"
+        },
+        {
+          "packet": "04_packets/R3_c1551.json",
+          "location": "selected_observations[1]",
+          "source_path": "gcc/final_permit.pdf",
+          "detail": "page 4, WET table footnotes",
+          "excerpt": "(2) Perform WET testing at first discharge.\n(3) See Part II of the permit for WET testing requirements and additional WET monitoring and reporting conditions."
+        },
+        {
+          "packet": "04_packets/R3_c1551.json",
+          "location": "known_missing_information",
+          "detail": "Part II WET testing requirements and additional monitoring/reporting conditions referenced in footnote (3) are not included in the packet"
+        }
+      ],
+      "rationale": "The packet shows that the Pimephales promelas row VALUE column in Part I reads 'Report' rather than a numeric limit, which is consistent with report-only monitoring but does not by itself establish that no enforceable numeric discharge limitation applies in Part I. Footnote (3) explicitly directs the reader to Part II for WET testing requirements and additional WET monitoring and reporting conditions, so Part I alone is not presented as the complete source for WET obligations. However, Part II text is absent from the packet, so the adjudicator cannot ground whether Part II imposes enforceable numeric limits, only procedural testing/monitoring conditions, or report-only treatment. Neither ACCEPT (that 'Report' alone establishes no numeric Part I limit without consulting Part II) nor REJECT (that 'Report' must be read with Part II to determine numeric-limit applicability) can be grounded from the available evidence without closed-world inference from absence. UNRESOLVED is the correct disposition."
+    }
+  ]
+}

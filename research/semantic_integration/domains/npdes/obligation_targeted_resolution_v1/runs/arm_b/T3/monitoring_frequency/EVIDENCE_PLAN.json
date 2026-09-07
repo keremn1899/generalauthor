@@ -1,0 +1,31 @@
+{
+  "proposition": "Each distinct LIMIT_FREQ_OF_ANALYSIS_CODE value (e.g. 05/WK, 01/07, 01/01, 01/90, 02/30, 02/07, 09/99, 99/99) establishes a specific, reusable monitoring-frequency obligation that can be interpreted for Purpose B without per-row permit narrative lookup.",
+  "would_establish": [
+    "A workspace codebook, legend, or definitional passage that maps LIMIT_FREQ_OF_ANALYSIS_CODE tokens to monitoring frequencies in plain language or a formal schedule grammar.",
+    "Permit-package text that explicitly names the opaque codes (05/WK, 01/07, etc.) and states the frequency each code denotes.",
+    "Consistent, document-grounded pairing of each code value with a single human-readable frequency across all permits and parameters in the workspace, together with text explaining the NN/XX code format."
+  ],
+  "would_refute": [
+    "Authoritative workspace text stating that LIMIT_FREQ_OF_ANALYSIS_CODE values are placeholders, internal-only, or not intended to denote monitoring frequency.",
+    "Demonstration that the same code value maps to materially different document-stated frequencies across permits without any reconciling definition.",
+    "Evidence that retest or continuous-monitoring rows use frequency codes that denote event-driven or non-calendar obligations, undermining a single calendar-frequency reading for all codes."
+  ],
+  "likely_authoritative_source_types": [
+    "sources/permit_limits.csv LIMIT_FREQ_OF_ANALYSIS_CODE field values and co-occurring permit/parameter identifiers",
+    "documents/*/final_permit.txt Part I monitoring-requirement tables and footnotes",
+    "documents/*/statement_of_basis.txt sections on monitoring frequency for limited parameters",
+    "documents/farmington/final_permit.txt Part II WET reporting tables referencing retest parameter codes"
+  ],
+  "insufficient_alone": [
+    "Observing that a code string resembles a count/period pattern (e.g. 05/WK looks like five per week) without workspace definitional text.",
+    "CSV co-occurrence of a code with a permit number and parameter code without opening the matching permit document frequency column.",
+    "DMR_FREQ_OF_ANALYSIS_CODE values in dmr_measurements.csv, which reflect reported events rather than limit-schedule code definitions.",
+    "Training-data knowledge of ICIS-NPDES or EPA code dictionaries not present in the workspace."
+  ],
+  "unknowable_from_structured_data_alone": [
+    "The semantic mapping from opaque LIMIT_FREQ_OF_ANALYSIS_CODE tokens to calendar monitoring frequencies; structured CSVs contain the codes but no legend table.",
+    "Whether 09/99 denotes a calendar schedule versus event-driven retest reporting obligations.",
+    "Whether 99/99 denotes continuous metering versus another special schedule class.",
+    "The precise meaning of the denominator in codes like 01/90 (90-day period vs calendar quarter) without definitional text."
+  ]
+}

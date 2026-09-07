@@ -1,0 +1,101 @@
+{
+  "strategy": "a4_proof_obligation",
+  "trial": "R01",
+  "obligation_id": "id-06",
+  "candidate": {
+    "left": "crm:OAK-77",
+    "right": "billing:Oakfield Logistik GmbH"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row OAK-77"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row HRB 88421"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Oakfield Logistik GmbH"
+    }
+  ],
+  "support_claim": "The packet links OAK-77 to the name Oakfield Logistics and Oakfield Logistik GmbH to HRB 88421 via rebranding notes, but no observation explicitly ties crm:OAK-77 to Oakfield Logistik GmbH or HRB 88421, so neither identity nor distinctness is established.",
+  "proof_size": 3,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "proof_obligations": [
+    {
+      "obligation": "Establish that crm:OAK-77 and billing:Oakfield Logistik GmbH denote the same legal counterparty via an explicit shared identifier or direct linkage in the packet",
+      "required_for": "SAME_ENTITY",
+      "satisfied": false,
+      "evidence": [
+        {
+          "source_path": "sources/crm.csv",
+          "location": "row OAK-77"
+        },
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        },
+        {
+          "source_path": "sources/company_registry.csv",
+          "location": "row HRB 88421"
+        },
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Oakfield Logistik GmbH"
+        }
+      ]
+    },
+    {
+      "obligation": "Establish that crm:OAK-77 denotes Oakfield Logistik GmbH or the legal entity registered as HRB 88421",
+      "required_for": "SAME_ENTITY",
+      "satisfied": false,
+      "evidence": [
+        {
+          "source_path": "sources/crm.csv",
+          "location": "row OAK-77"
+        },
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        },
+        {
+          "source_path": "sources/company_registry.csv",
+          "location": "row HRB 88421"
+        }
+      ]
+    },
+    {
+      "obligation": "Establish that crm:OAK-77 and billing:Oakfield Logistik GmbH denote different legal counterparties",
+      "required_for": "DISTINCT",
+      "satisfied": false,
+      "evidence": []
+    }
+  ],
+  "admit": {
+    "rule": "unresolved"
+  },
+  "unsatisfied": [
+    "Establish that crm:OAK-77 and billing:Oakfield Logistik GmbH denote the same legal counterparty via an explicit shared identifier or direct linkage in the packet",
+    "Establish that crm:OAK-77 denotes Oakfield Logistik GmbH or the legal entity registered as HRB 88421",
+    "Establish that crm:OAK-77 and billing:Oakfield Logistik GmbH denote different legal counterparties"
+  ],
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

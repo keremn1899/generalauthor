@@ -1,0 +1,83 @@
+{
+  "strategy": "a6_multistep",
+  "trial": "R01",
+  "obligation_id": "id-02",
+  "candidate": {
+    "left": "billing:Helion Robotics Limited",
+    "right": "registry:11847201"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Helion Robotics Limited"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 11847201"
+    }
+  ],
+  "support_claim": "The packet links invoice billing under Helion Robotics Limited to a Companies House entity described by that name, but it does not establish that registry company number 11847201 is that entity rather than a name-correspondence inference.",
+  "proof_size": 6,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "steps": [
+    {
+      "fact": "The left referent is billing:Helion Robotics Limited.",
+      "grounding": null,
+      "mechanical": true
+    },
+    {
+      "fact": "Invoices record the billed name as Helion Robotics Limited.",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Helion Robotics Limited"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "The right referent is registry:11847201.",
+      "grounding": null,
+      "mechanical": true
+    },
+    {
+      "fact": "Company registry row 11847201 lists company number 11847201 registered as HELION ROBOTICS LIMITED.",
+      "grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847201"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Commercial notes state that invoices and Companies House use Helion Robotics Limited and that this is the same legal entity, but do not cite company number 11847201.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "No observation supplies a shared legal identifier on both sides, and the packet does not license treating company number 11847201 as uniquely identifying the billing referent without an explicit link.",
+      "grounding": null,
+      "mechanical": false
+    }
+  ],
+  "admit": {
+    "rule": "unresolved"
+  },
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

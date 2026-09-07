@@ -1,0 +1,76 @@
+{
+  "answers": [
+    {
+      "id": "harbor_towing.Q3",
+      "status": "ANSWERED",
+      "value": 3,
+      "rationale": "The billable_hours relation establishes hours for J1–J4 only. Three jobs (J5, J6, J7) have no entry in billable_hours and therefore lack an established billed_hours quantity."
+    },
+    {
+      "id": "harbor_towing.Q6",
+      "status": "ANSWERED",
+      "value": false,
+      "rationale": "J7 is a TOW at berth B12 starting at 20:00. billing_outcome marks it insufficient_evidence because B12 after-hours towing lacks emergency documentation, and purpose_requirement_failure records no emergency log attached."
+    },
+    {
+      "id": "harbor_towing.Q1",
+      "status": "ANSWERED",
+      "value": 240,
+      "rationale": "The effective_rate relation for job J1 establishes rate_per_hour of 240.0 for service code TOW under service conditions §1."
+    },
+    {
+      "id": "harbor_towing.Q5",
+      "status": "UNRESOLVED",
+      "value": null,
+      "rationale": "No relation in the harbor_towing World establishes a fuel surcharge for any job. job_charge for J3 records only a 2h at 120/hr charge of 240.0 with no surcharge component."
+    },
+    {
+      "id": "seed_grants.Q4",
+      "status": "UNRESOLVED",
+      "value": null,
+      "rationale": "A-101 is SEED-CORE with match_rate 0.20, but purpose_requirement_failure records seed_core_waiver_unknown as EXPLICIT_UNRESOLVED because waiver letters are not attached, so the required cash-match amount cannot be confidently determined."
+    },
+    {
+      "id": "seed_grants.Q1",
+      "status": "ANSWERED",
+      "value": 15000,
+      "rationale": "The award_remaining_balance relation for A-101 establishes remaining_balance of 15000 (award amount 50000 minus disbursed total 35000)."
+    },
+    {
+      "id": "seed_grants.Q5",
+      "status": "UNRESOLVED",
+      "value": null,
+      "rationale": "A-104 has status_code S, but status_legend_entry only defines A and C. purpose_requirement_failure records both UNINTERPRETED and EXPLICIT_UNRESOLVED for this code as not listed in the office legend."
+    },
+    {
+      "id": "seed_grants.Q2",
+      "status": "ANSWERED",
+      "value": 0,
+      "rationale": "The award_match_obligation relation for A-102 establishes match_required as no with match_rate 0 under the SEED-FAST program, which requires no cash match."
+    },
+    {
+      "id": "makerspace_checkout.Q1",
+      "status": "ANSWERED",
+      "value": 12.0,
+      "rationale": "The checkout_fee relation for C6 establishes total_fee of 12.0, computed from tool L1 remapped to LASER-A at 12/hr for 1 hour."
+    },
+    {
+      "id": "makerspace_checkout.Q4",
+      "status": "ANSWERED",
+      "value": 24.0,
+      "rationale": "The checkout_fee relation for C1 establishes total_fee of 24.0 (LASER-A at 12/hr for 2 hours)."
+    },
+    {
+      "id": "makerspace_checkout.Q5",
+      "status": "UNRESOLVED",
+      "value": null,
+      "rationale": "Checkout C5 has note PENDING, but purpose_requirement_failure records checkout_note_meaning as EXPLICIT_UNRESOLVED because shop rules do not define what PENDING means."
+    },
+    {
+      "id": "makerspace_checkout.Q6",
+      "status": "UNRESOLVED",
+      "value": null,
+      "rationale": "C2 involves member M-18 using CNC-1, but no relation in the makerspace_checkout World establishes insurance rider coverage for any member or checkout."
+    }
+  ]
+}

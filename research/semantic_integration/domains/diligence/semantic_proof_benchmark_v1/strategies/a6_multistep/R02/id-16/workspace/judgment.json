@@ -1,0 +1,68 @@
+{
+  "steps": [
+    {
+      "fact": "Candidate left referent registry:11847201 corresponds to company registry row 11847201 listing HELION ROBOTICS LIMITED.",
+      "grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847201"
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "Candidate right referent registry:11847299 corresponds to company registry row 11847299 listing HELION INDUSTRIAL SYSTEMS LTD.",
+      "grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847299"
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "Commercial notes identify Helion Robotics Limited as the legal entity used on invoices and Companies House, matching the same legal entity as the Helion Robotics operating name.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Commercial notes explicitly state that Helion Industrial Systems Ltd is a different company from Helion Robotics.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Registry row 11847299 names HELION INDUSTRIAL SYSTEMS LTD, the company referred to in the notes as Helion Industrial Systems Ltd.",
+      "grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847299"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Registry row 11847201 names HELION ROBOTICS LIMITED, the legal entity referred to in the notes as Helion Robotics Limited.",
+      "grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847201"
+      },
+      "mechanical": false
+    }
+  ],
+  "disposition": "DISTINCT",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 11847201"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 11847299"
+    }
+  ],
+  "support_claim": "Commercial notes explicitly state Helion Industrial Systems Ltd is a different company from Helion Robotics Limited, which correspond to registry entries 11847299 and 11847201 respectively."
+}

@@ -1,0 +1,26 @@
+{
+  "obligation_id": "obl:limit_numeric_comparison_applicability:648612622f8b26ac",
+  "selected_observations": [
+    {
+      "source_path": "sources/structured/dmr_measurements.csv",
+      "location": "line 302; DMR_EVENT_ID=3621391575; DMR_VALUE_ID=3853940564",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0020583; PERM_FEATURE_NMBR=001; PARAMETER_CODE=50050; PARAMETER_DESC=Flow, in conduit or thru treatment plant; MONITORING_PERIOD_END_DATE=08/31/2025; DMR_EVENT_ID=3621391575; DMR_VALUE_ID=3853940564; DMR_VALUE_NMBR=5.91; DMR_UNIT_CODE=03; DMR_VALUE_QUALIFIER_CODE==; STATISTICAL_BASE_CODE=7A; NODI_CODE=(absent)"
+    },
+    {
+      "source_path": "sources/structured/permit_limits.csv",
+      "location": "line 62; limit:3606239985:3610673294",
+      "excerpt": "LIMIT_ID=3606239985; LIMIT_VALUE_ID=3610673294; LIMIT_VALUE_NMBR=(absent); LIMIT_UNIT_CODE=03; STATISTICAL_BASE_CODE=3C; LIMIT_VALUE_TYPE_CODE=C1; LIMIT_TYPE_CODE=ENF; OPTIONAL_MONITORING_FLAG=N; LIMIT_FREQ_OF_ANALYSIS_CODE=99/99"
+    },
+    {
+      "source_path": "sources/structured/permit_limits.csv",
+      "location": "line 63; limit:3606239985:3610673296",
+      "excerpt": "LIMIT_ID=3606239985; LIMIT_VALUE_ID=3610673296; LIMIT_VALUE_NMBR=(absent); LIMIT_UNIT_CODE=03; STATISTICAL_BASE_CODE=DD; LIMIT_VALUE_TYPE_CODE=C3; LIMIT_TYPE_CODE=ENF; OPTIONAL_MONITORING_FLAG=N; LIMIT_FREQ_OF_ANALYSIS_CODE=99/99"
+    }
+  ],
+  "selection_rationale": "Classification depends on a selected applicable limit; blocked until applicable_limit_selection resolves. Includes LIMIT_TYPE_CODE and OPTIONAL_MONITORING_FLAG from joined limit schedule rows for enforceable-vs-report-only classification.",
+  "known_missing_information": [
+    "02_mechanical_world/world.sqlite not present in workspace; evidence selected directly from structured CSV sources using P2 join rules.",
+    "Permit PDF sources listed in sources/source_manifest.json were not ingested; permit_stated_condition packets use structured DMR_COMMENT_TEXT only.",
+    "No unique applicable limit selected yet; LIMIT_TYPE_CODE and OPTIONAL_MONITORING_FLAG interpretation is candidate-relative."
+  ]
+}

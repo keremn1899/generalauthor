@@ -1,0 +1,62 @@
+{
+  "steps": [
+    {
+      "fact": "The candidate left referent is billing:Northbridge Analytics Inc.",
+      "grounding": null,
+      "mechanical": true
+    },
+    {
+      "fact": "The candidate right referent is registry:3840192.",
+      "grounding": null,
+      "mechanical": true
+    },
+    {
+      "fact": "Registry row 3840192 lists the entity as NORTHBRIDGE ANALYTICS INC, Delaware, active.",
+      "grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 3840192"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Billing invoices bill the name Northbridge Analytics Inc.",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Northbridge Analytics Inc."
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Commercial notes state that legal has not determined which registry entity is the contracting party and instruct to treat the registry link as unresolved.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Commercial notes also record a 2024 credit check returning a Wyoming LLC named Northbridge Analytics LLC as another possible entity.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    }
+  ],
+  "disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 3840192"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Northbridge Analytics Inc."
+    }
+  ],
+  "support_claim": "Although the billing name aligns with registry 3840192 by name, the packet preserves multiple live registry candidates and explicitly states that legal has not determined the contracting party and that the registry link remains unresolved, so neither SAME_ENTITY nor DISTINCT is established."
+}

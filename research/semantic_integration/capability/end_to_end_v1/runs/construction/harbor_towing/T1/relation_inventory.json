@@ -1,0 +1,299 @@
+{
+  "relations": [
+    {
+      "name": "berth_restriction",
+      "description": "Berth operating restrictions from berth_notice.txt.",
+      "mode": "BASE",
+      "roles": [
+        {
+          "name": "berth",
+          "type": "TEXT",
+          "column": "berth"
+        },
+        {
+          "name": "restriction",
+          "type": "TEXT",
+          "column": "restriction"
+        }
+      ],
+      "relation_version": 1,
+      "row_count": 1,
+      "stale": false,
+      "completeness": null
+    },
+    {
+      "name": "billable_hours",
+      "description": "Established billable hours for a job.",
+      "mode": "BASE",
+      "roles": [
+        {
+          "name": "job",
+          "type": "REFERENT",
+          "column": "job_id"
+        },
+        {
+          "name": "hours",
+          "type": "REAL",
+          "column": "hours"
+        },
+        {
+          "name": "basis",
+          "type": "TEXT",
+          "column": "basis"
+        }
+      ],
+      "relation_version": 4,
+      "row_count": 4,
+      "stale": false,
+      "completeness": null
+    },
+    {
+      "name": "billing_outcome",
+      "description": "Whether a job is billable, not billable, or insufficiently evidenced.",
+      "mode": "BASE",
+      "roles": [
+        {
+          "name": "job",
+          "type": "REFERENT",
+          "column": "job_id"
+        },
+        {
+          "name": "status",
+          "type": "TEXT",
+          "column": "status"
+        },
+        {
+          "name": "reason",
+          "type": "TEXT",
+          "column": "reason"
+        }
+      ],
+      "relation_version": 7,
+      "row_count": 7,
+      "stale": false,
+      "completeness": null
+    },
+    {
+      "name": "effective_rate",
+      "description": "Applicable hourly rate for a job after service conditions.",
+      "mode": "BASE",
+      "roles": [
+        {
+          "name": "job",
+          "type": "REFERENT",
+          "column": "job_id"
+        },
+        {
+          "name": "rate_service_code",
+          "type": "TEXT",
+          "column": "rate_service_code"
+        },
+        {
+          "name": "rate_per_hour",
+          "type": "REAL",
+          "column": "rate_per_hour"
+        },
+        {
+          "name": "basis",
+          "type": "TEXT",
+          "column": "basis"
+        }
+      ],
+      "relation_version": 4,
+      "row_count": 4,
+      "stale": false,
+      "completeness": null
+    },
+    {
+      "name": "job_charge",
+      "description": "Computed charge when evidence supports confident billing.",
+      "mode": "BASE",
+      "roles": [
+        {
+          "name": "job",
+          "type": "REFERENT",
+          "column": "job_id"
+        },
+        {
+          "name": "charge",
+          "type": "REAL",
+          "column": "charge"
+        },
+        {
+          "name": "basis",
+          "type": "TEXT",
+          "column": "basis"
+        }
+      ],
+      "relation_version": 4,
+      "row_count": 4,
+      "stale": false,
+      "completeness": null
+    },
+    {
+      "name": "purpose_requirement_failure",
+      "description": "Purpose requirement failures. Ordinary relation, not a kernel primitive.",
+      "mode": "BASE",
+      "roles": [
+        {
+          "name": "requirement_id",
+          "type": "TEXT",
+          "column": "requirement_id"
+        },
+        {
+          "name": "affected_identity",
+          "type": "TEXT",
+          "column": "affected_identity"
+        },
+        {
+          "name": "failure_kind",
+          "type": "TEXT",
+          "column": "failure_kind"
+        },
+        {
+          "name": "relation_name",
+          "type": "TEXT",
+          "column": "relation_name"
+        },
+        {
+          "name": "subject_json",
+          "type": "TEXT",
+          "column": "subject_json"
+        },
+        {
+          "name": "grounding_ref",
+          "type": "TEXT",
+          "column": "grounding_ref"
+        }
+      ],
+      "relation_version": 6,
+      "row_count": 6,
+      "stale": false,
+      "completeness": null
+    },
+    {
+      "name": "rate_card",
+      "description": "Published hourly rates from rate_card.csv.",
+      "mode": "BASE",
+      "roles": [
+        {
+          "name": "service_code",
+          "type": "TEXT",
+          "column": "service_code"
+        },
+        {
+          "name": "name",
+          "type": "TEXT",
+          "column": "name"
+        },
+        {
+          "name": "rate_per_hour",
+          "type": "REAL",
+          "column": "rate_per_hour"
+        },
+        {
+          "name": "minimum_hours",
+          "type": "REAL",
+          "column": "minimum_hours"
+        }
+      ],
+      "relation_version": 4,
+      "row_count": 4,
+      "stale": false,
+      "completeness": null
+    },
+    {
+      "name": "tow_job",
+      "description": "Towing job records from jobs.csv.",
+      "mode": "BASE",
+      "roles": [
+        {
+          "name": "job",
+          "type": "REFERENT",
+          "column": "job_id"
+        },
+        {
+          "name": "vessel_id",
+          "type": "TEXT",
+          "column": "vessel_id"
+        },
+        {
+          "name": "berth",
+          "type": "TEXT",
+          "column": "berth"
+        },
+        {
+          "name": "start_time",
+          "type": "TEXT",
+          "column": "start_time"
+        },
+        {
+          "name": "end_time",
+          "type": "TEXT",
+          "column": "end_time"
+        },
+        {
+          "name": "service_code",
+          "type": "TEXT",
+          "column": "service_code"
+        },
+        {
+          "name": "billed_hours",
+          "type": "TEXT",
+          "column": "billed_hours"
+        },
+        {
+          "name": "comment",
+          "type": "TEXT",
+          "column": "comment"
+        }
+      ],
+      "relation_version": 7,
+      "row_count": 7,
+      "stale": false,
+      "completeness": null
+    },
+    {
+      "name": "vessel",
+      "description": "Vessel registry from vessels.csv.",
+      "mode": "BASE",
+      "roles": [
+        {
+          "name": "vessel",
+          "type": "REFERENT",
+          "column": "vessel_id"
+        },
+        {
+          "name": "vessel_class",
+          "type": "TEXT",
+          "column": "vessel_class"
+        },
+        {
+          "name": "home_port",
+          "type": "TEXT",
+          "column": "home_port"
+        },
+        {
+          "name": "display_name",
+          "type": "TEXT",
+          "column": "display_name"
+        }
+      ],
+      "relation_version": 3,
+      "row_count": 3,
+      "stale": false,
+      "completeness": null
+    }
+  ],
+  "admission": {
+    "berth_restriction": "WORLD",
+    "billable_hours": "PURPOSE",
+    "billing_outcome": "PURPOSE",
+    "effective_rate": "PURPOSE",
+    "job_charge": "PURPOSE",
+    "purpose_requirement_failure": "PURPOSE",
+    "rate_card": "WORLD",
+    "tow_job": "WORLD",
+    "vessel": "WORLD"
+  }
+}

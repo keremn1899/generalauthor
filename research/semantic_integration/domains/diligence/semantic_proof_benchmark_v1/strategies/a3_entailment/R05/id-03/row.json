@@ -1,0 +1,114 @@
+{
+  "strategy": "a3_entailment",
+  "trial": "R05",
+  "obligation_id": "id-03",
+  "candidate": {
+    "left": "billing:Helion Robotics Limited",
+    "right": "contract:MSA-HELION-2019"
+  },
+  "proposed_disposition": "SAME_ENTITY",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Helion Robotics Limited"
+    },
+    {
+      "source_path": "sources/contracts/MSA-HELION-2019.md",
+      "location": "header"
+    }
+  ],
+  "support_claim": "Commercial notes explicitly state that Helion Robotics Ltd and Helion Robotics Limited are the same legal entity, matching the contract counterparty name and the billing billed_name.",
+  "proof_size": 6,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "claims": [
+    {
+      "claim": "The billing referent billed_name is Helion Robotics Limited.",
+      "status": "ESTABLISHED",
+      "burden": "identity",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Helion Robotics Limited"
+        }
+      ]
+    },
+    {
+      "claim": "The counterparty named in contract MSA-HELION-2019 is Helion Robotics Ltd.",
+      "status": "ESTABLISHED",
+      "burden": "identity",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/contracts/MSA-HELION-2019.md",
+          "location": "header"
+        }
+      ]
+    },
+    {
+      "claim": "Helion Robotics Ltd and Helion Robotics Limited are the same legal entity.",
+      "status": "ESTABLISHED",
+      "burden": "identity",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    },
+    {
+      "claim": "billing:Helion Robotics Limited and the counterparty under contract:MSA-HELION-2019 denote the same legal counterparty.",
+      "status": "ESTABLISHED",
+      "burden": "identity",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        },
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Helion Robotics Limited"
+        },
+        {
+          "source_path": "sources/contracts/MSA-HELION-2019.md",
+          "location": "header"
+        }
+      ]
+    },
+    {
+      "claim": "Helion Industrial Systems Ltd is a different company from Helion Robotics Ltd/Limited.",
+      "status": "ESTABLISHED",
+      "burden": "distinctness",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    },
+    {
+      "claim": "The packet preserves multiple live candidates or states that identity cannot be established.",
+      "status": "NOT_ESTABLISHED",
+      "burden": "unresolved_preservation",
+      "supporting_evidence": []
+    }
+  ],
+  "admit": {
+    "rule": "claims_do_not_license_proposed_closure",
+    "proposed": "SAME_ENTITY"
+  },
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": true,
+  "correct_same_never_proposed": false
+}

@@ -1,0 +1,65 @@
+{
+  "steps": [
+    {
+      "fact": "The left referent billing:Northbridge Analytics Inc. is recorded as the billed name Northbridge Analytics Inc. in billing invoices.",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Northbridge Analytics Inc."
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "The right referent registry:3840192 maps to NORTHBRIDGE ANALYTICS INC (Delaware, active) in the company registry.",
+      "grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 3840192"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Commercial notes record a separate Wyoming LLC named Northbridge Analytics LLC from a 2024 credit check.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Commercial notes state that legal has not determined which registry entity is the contracting party and instruct treating the registry link as unresolved.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "SAME_ENTITY requires establishing evidence of identity; name similarity and compatibility are insufficient under the relation contract.",
+      "grounding": {
+        "source_path": "relation_contract.json",
+        "location": "grounding_contract"
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "No packet evidence links billing:Northbridge Analytics Inc. to registry:3840192 via a shared legal identifier or other identity-establishing fact.",
+      "grounding": null,
+      "mechanical": false
+    }
+  ],
+  "disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 3840192"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Northbridge Analytics Inc."
+    }
+  ],
+  "support_claim": "The packet preserves the billing-to-registry link as unresolved and provides no establishing evidence that billing:Northbridge Analytics Inc. and registry:3840192 denote the same legal entity or distinct entities."
+}

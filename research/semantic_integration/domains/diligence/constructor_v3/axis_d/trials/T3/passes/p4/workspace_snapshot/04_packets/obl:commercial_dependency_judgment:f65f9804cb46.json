@@ -1,0 +1,28 @@
+{
+  "obligation_id": "obl:commercial_dependency_judgment:f65f9804cb46",
+  "selected_observations": [
+    {
+      "source_path": "sources/crm.csv",
+      "location": "crm_account_id=HEL-441",
+      "excerpt": "crm_account_id,account_name,domain,country,owner,status\nHEL-441,Helion Robotics Ltd,helionrobotics.com,GB,A. Chen,active"
+    },
+    {
+      "source_path": "sources/contracts/MSA-HELION-2019.md",
+      "location": "header",
+      "excerpt": "# Master services agreement\nCounterparty: Helion Robotics Ltd.\nEffective: 12 March 2019\nTerm: 36 months, then successive 12-month periods unless either party gives 60 days' written notice."
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "invoice_id=INV-1002 status=open",
+      "excerpt": "{\n  \"invoice_id\": \"INV-1002\",\n  \"billed_name\": \"Helion Robotics Limited\",\n  \"vat_or_tax_id\": \"GB884210193\",\n  \"amount\": 42000,\n  \"currency\": \"GBP\",\n  \"period\": \"2025-Q1\",\n  \"status\": \"open\"\n}"
+    }
+  ],
+  "selection_rationale": "CRM account, governing contract header/term, any open invoice for the commercial relationship, and obligation-relevant clause excerpts support the Purpose C two-prong dependency test.",
+  "known_missing_information": [
+    "Prong-two obligation_kind_judgment rows are not adjudicated in P2; dependency status depends on separate ACCEPT/REJECT on exclusivity, auto_renewal, or rolling_term.",
+    "Identity joins between crm, billing, and contract identifiers remain unresolved until P3 adjudication.",
+    "P2 emitted semantic candidate tuples with empty disposition; no adjudication performed.",
+    "commercial_dependency_judgment candidates omit crm:VEL-19 / contract:SOW-VEL-2022 pair.",
+    "open_invoices_by_contract derivation is registered but never run; depends on resolved identity and association judgments."
+  ]
+}

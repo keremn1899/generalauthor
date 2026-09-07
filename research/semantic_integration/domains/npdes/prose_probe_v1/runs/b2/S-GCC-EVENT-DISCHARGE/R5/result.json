@@ -1,0 +1,38 @@
+{
+  "payload": [
+    {
+      "obligation_id": "oracle:S-GCC-EVENT-DISCHARGE",
+      "relation": "conditional_monitoring_applies",
+      "values": {
+        "permit": "NM0000116",
+        "outfall": "001"
+      },
+      "disposition": "UNRESOLVED",
+      "grounding": [
+        {
+          "source_path": "gcc/final_permit.pdf",
+          "location": "page 3 section part_i",
+          "excerpt": "discharge storm runoffs from storage and production areas, once-through cooling water, cleaning water, and Artesian well water from",
+          "role": "packet selected_observations[0]; states authorized discharge types only, not monitoring frequency or applicability rule for outfall 001"
+        },
+        {
+          "source_path": "gcc/final_permit.pdf",
+          "location": "cover page",
+          "excerpt": "This permit shall become effective on June 1, 2021. This permit and the authorization to discharge shall expire at midnight, May 31, 2026.",
+          "role": "packet selected_observations[1]; establishes permit term, not monitoring schedule"
+        },
+        {
+          "source_path": "purposes/visible_a.md",
+          "location": "purpose A period",
+          "excerpt": "Federal FY2025 (2024-10-01 through 2025-09-30 inclusive)",
+          "role": "packet selected_observations[2]; fixes evaluation window, not monitoring applicability"
+        },
+        {
+          "packet_field": "known_missing_information[0]",
+          "excerpt": "NODI code legends are not in this packet."
+        }
+      ],
+      "rationale": "The obligation asks whether monitoring for GCC Outfall 001 under permit NM0000116 is required continuously every month or only when authorized event-type discharges occur. The evidence packet lists the authorized discharge categories (storm runoff, once-through cooling water, cleaning water, Artesian well water) but contains no monitoring schedule, frequency requirement, or applicability rule tied to outfall 001. Permit cover dates and the FY2025 window do not resolve the monitoring-applicability question. The packet explicitly notes that NODI code legends are absent, and the oracle relation contract instructs not to invent them. ACCEPT would require grounded evidence that conditional (event-triggered) monitoring applies; REJECT would require grounded evidence that continuous monthly monitoring applies instead. Neither burden is met from the supplied spans, so unsupported uncertainty is preferred over unsupported semantic closure."
+    }
+  ]
+}

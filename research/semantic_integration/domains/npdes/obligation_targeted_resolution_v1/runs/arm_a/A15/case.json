@@ -1,0 +1,89 @@
+{
+  "case_id": "A15",
+  "obligation_id": "empty_numeric_limit",
+  "occurrence_id": "3610129901|3600833505",
+  "question": "When LIMIT_VALUE_NMBR is empty, is the row a numeric limit, report-only monitoring, or something else?",
+  "purpose": [
+    "A"
+  ],
+  "requirement_schema": "empty_numeric_limit_classification",
+  "source_field_value": "LIMIT_VALUE_NMBR empty",
+  "local_structured_context": {
+    "table": "permit_limits.csv",
+    "row": {
+      "EXTERNAL_PERMIT_NMBR": "NM0000116",
+      "PARAMETER_CODE": "00530",
+      "PARAMETER_DESC": "Solids, total suspended",
+      "LIMIT_VALUE_ID": "3610129901",
+      "LIMIT_SET_SCHEDULE_ID": "3600833505",
+      "LIMIT_VALUE_NMBR": "",
+      "LIMIT_FREQ_OF_ANALYSIS_CODE": "01/07",
+      "LIMIT_SAMPLE_TYPE_CODE": "GR",
+      "DMR_COMMENT_TEXT": "",
+      "LIMIT_UNIT_DESC": "mg/L",
+      "STATISTICAL_BASE_CODE": "3C"
+    }
+  },
+  "reported_model": "Composer 2.5",
+  "retrieval": {
+    "n_tool_paths": 23,
+    "structured_paths": [
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/b9253edd63adfc4e9668915005ff83c0/sources/document_inventory.json",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/b9253edd63adfc4e9668915005ff83c0/sources/permit_limits.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/b9253edd63adfc4e9668915005ff83c0/sources/dmr_measurements.csv"
+    ],
+    "document_paths": [
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/b9253edd63adfc4e9668915005ff83c0/documents/INDEX.md",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/b9253edd63adfc4e9668915005ff83c0/documents/gcc",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/b9253edd63adfc4e9668915005ff83c0/documents/gcc/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/b9253edd63adfc4e9668915005ff83c0/documents/gcc/fact_sheet.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/b9253edd63adfc4e9668915005ff83c0/documents/gcc/minor_modification.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/b9253edd63adfc4e9668915005ff83c0/documents/gcc"
+    ],
+    "n_documents_touched": 5,
+    "queries": [
+      "3610129901|3600833505|NM0000116|00530|empty_numeric",
+      "empty_numeric_limit",
+      "3610129901|3600833505",
+      "00530|3610129901|total suspended|TSS|Solids",
+      "empty_numeric|report.?only|Report",
+      "semantic_question|empty_numeric|SUPPORTED_",
+      "30-day|30-Day|Report",
+      "JUDGMENT|semantic_question_used|empty_numeric_limit"
+    ],
+    "n_queries": 8
+  },
+  "judgment": {
+    "occurrence_id": "3610129901|3600833505",
+    "semantic_question_used": "For permit limit row 3610129901|3600833505 (total suspended solids, 30-day average in mg/L, LIMIT_TYPE_CODE ENF, empty LIMIT_VALUE_NMBR), is numeric compliance comparison applicable or is this report-only monitoring without an enforceable numeric discharge limit?",
+    "disposition": "SUPPORTED_RESOLUTION",
+    "interpretation": "The empty LIMIT_VALUE_NMBR on this 30-day average (STATISTICAL_BASE_TYPE_CODE AVG) total suspended solids limit row denotes report-only monitoring. The permit requires reporting of 30-day average TSS in mg/L but does not impose a numeric effluent limitation for that statistical base; numeric compliance comparison is not applicable to this row.",
+    "grounding": "Permit NM0000116 Part I discharge limitations table lists Total Suspended Solids 30-Day Avg (mg/l) as 'Report' while Daily Max (mg/l) is 50. The structured row matches the average/reporting row: PARAMETER_CODE 00530, STATISTICAL_BASE_CODE 3C (AVG), units mg/L, empty LIMIT_VALUE_NMBR and LIMIT_VALUE_QUALIFIER_CODE, LIMIT_FREQ_OF_ANALYSIS_CODE 01/07 and LIMIT_SAMPLE_TYPE_CODE GR consistent with 1/Week Grab monitoring in the permit table.",
+    "documents_opened": [
+      "sources/permit_limits.csv",
+      "documents/gcc/final_permit.txt",
+      "documents/gcc/minor_modification.txt",
+      "documents/gcc/fact_sheet.txt"
+    ],
+    "snippets": [
+      {
+        "source_id": "sources/permit_limits.csv",
+        "text": "3610129901,C2,,19,mg/L,19,mg/L,,3C,AVG,,,ENF,N,GR,01/07"
+      },
+      {
+        "source_id": "documents/gcc/final_permit.txt",
+        "text": "POLLUTANT       30-Day Avg      Daily Max       30-Day Avg   Daily Max\n...\nTotal Suspended          N/A               N/A               Report            50                 1/Week               Grab\nSolids"
+      },
+      {
+        "source_id": "documents/gcc/minor_modification.txt",
+        "text": "Total Suspended          N/A               N/A               Report            50                 1/Week               Grab\nSolids"
+      },
+      {
+        "source_id": "documents/gcc/fact_sheet.txt",
+        "text": "TSS reported maximum daily discharge did exceed the daily max limit of 50 mg/l. As a result, it is proposed in the draft permit that the permittee report 30-day average for TSS."
+      }
+    ],
+    "remaining_uncertainty": ""
+  },
+  "finished_at": "2026-09-05T13:37:00.637509+00:00"
+}

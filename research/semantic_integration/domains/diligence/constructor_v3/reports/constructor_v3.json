@@ -1,0 +1,2569 @@
+{
+  "matrix": {
+    "T1": {
+      "p0": {
+        "pass": true,
+        "missing_purposes": [],
+        "field_gaps": [],
+        "checks": {
+          "a_active_contracts": true,
+          "a_acquisition_policy": true,
+          "b_unresolved": true,
+          "c_obligation_kinds": true,
+          "policy_field_present": true
+        }
+      },
+      "p1": {
+        "pass": true,
+        "n_relations": 10,
+        "n_world": 7,
+        "n_purpose": 3,
+        "n_semantic": 4,
+        "world_purpose_leakage": [],
+        "unrepresentable_claimed": false,
+        "semantic_identity_bindings": [
+          "invoice_record.invoice->invoice",
+          "invoice_record.invoice_id->invoice_id",
+          "invoice_record.billed_name->billed_name",
+          "invoice_record.amount->amount",
+          "invoice_record.currency->currency",
+          "invoice_record.period->period",
+          "invoice_record.status->status",
+          "contract_record.contract->contract",
+          "contract_record.contract_id->contract_id",
+          "contract_record.party->counterparty_text",
+          "contract_record.active->active",
+          "crm_account_record.account->account",
+          "crm_account_record.account_name->account_name",
+          "crm_account_record.active->active",
+          "registry_entity_record.entity->entity",
+          "registry_entity_record.company_number->company_number",
+          "registry_entity_record.legal_name->legal_name",
+          "registry_entity_record.active->active",
+          "contract_clause_kind.contract->contract",
+          "contract_clause_kind.clause_kind->clause_kind",
+          "identity_judgment.left->left",
+          "identity_judgment.right->right",
+          "identity_judgment.disposition->disposition",
+          "legal_name_form_variant.left->left",
+          "legal_name_form_variant.right->right",
+          "invoice_contract_association.invoice->invoice",
+          "invoice_contract_association.contract->contract",
+          "invoice_contract_association.disposition->disposition",
+          "acquisition_relevant_clause.contract->contract",
+          "acquisition_relevant_clause.clause_kind->clause_kind",
+          "commercial_dependency_status.contract->contract",
+          "commercial_dependency_status.contract_id->contract_id",
+          "commercial_dependency_status.status->status"
+        ],
+        "counterparty_without_consumer_bind": [
+          "commercial_dependency_status"
+        ]
+      },
+      "p2": {
+        "pass": true,
+        "grounding": {
+          "sqlite": true,
+          "base_assertions": 79,
+          "grounded": 79,
+          "ungrounded": 0,
+          "rate": 1.0
+        },
+        "missing_mechanical_tokens": [],
+        "early_identity_closures": [],
+        "mechanical_delegated_to_semantics": false
+      },
+      "p3": {
+        "pass": true,
+        "n_obligations": 100,
+        "required": 18,
+        "required_hit": 18,
+        "required_missed": [],
+        "recall": 1.0,
+        "precision_vs_oracle_pairs": 0.47368421052631576,
+        "unnecessary": 20,
+        "duplicate_obligations": 62,
+        "invalid_obligations": 0
+      },
+      "p4": {
+        "pass": true,
+        "n_packets": 100,
+        "required_with_packet": 18,
+        "sufficient_required": 18,
+        "packets_mentioning_notes": 18
+      },
+      "p5": {
+        "pass": false,
+        "compared": 18,
+        "correct": 4,
+        "accuracy": 0.2222222222222222,
+        "incorrect_semantic_closure": 1,
+        "incorrect_under_closure": 13,
+        "incorrect_polarity": 0,
+        "incorrect_rejection": 1,
+        "same_recall": 0.07142857142857142,
+        "distinct_recall": 1.0,
+        "coverage": 0.1875,
+        "unresolved_preservation": 1,
+        "delaware_inc_disposition": "UNRESOLVED",
+        "delaware_should_be": "UNRESOLVED",
+        "structural_changed": 0,
+        "verifier_changed": 0,
+        "audit_n": 61
+      },
+      "p6": {
+        "pass": true,
+        "sqlite": true,
+        "purpose_output_promoted_world": [],
+        "admission_mentions_world": true
+      },
+      "p7": {
+        "pass": true,
+        "checks": {
+          "required_premise": true,
+          "blocking_unresolved": true,
+          "derive_script": true
+        }
+      },
+      "p8": {
+        "pass": false,
+        "A": {
+          "pass": false,
+          "missing": [
+            [
+              "INV-1001",
+              "MSA-HELION-2019",
+              "asserted"
+            ],
+            [
+              "INV-1002",
+              "MSA-HELION-2019",
+              "asserted"
+            ],
+            [
+              "INV-2001",
+              "MSA-NBA-2021",
+              "asserted"
+            ],
+            [
+              "INV-2002",
+              "MSA-NBA-2021",
+              "asserted"
+            ],
+            [
+              "INV-3001",
+              "MSA-OAK-2018",
+              "asserted"
+            ],
+            [
+              "INV-3002",
+              "MSA-OAK-2018",
+              "asserted"
+            ],
+            [
+              "INV-5001",
+              "MSA-MER-2024",
+              "asserted"
+            ]
+          ],
+          "extra": [
+            [
+              "INV-2001",
+              "MSA-NBA-2021",
+              "unresolved"
+            ],
+            [
+              "INV-2002",
+              "MSA-NBA-2021",
+              "unresolved"
+            ],
+            [
+              "INV-5001",
+              "MSA-MER-2024",
+              "unresolved"
+            ]
+          ]
+        },
+        "B": {
+          "pass": false,
+          "missing_required": [
+            [
+              "billing:Helion Robotics Limited",
+              "contract:MSA-HELION-2019",
+              "SAME_ENTITY"
+            ],
+            [
+              "billing:Helion Robotics Limited",
+              "registry:11847201",
+              "SAME_ENTITY"
+            ],
+            [
+              "billing:Meridian Energy Partners LLC",
+              "contract:MSA-MER-2024",
+              "SAME_ENTITY"
+            ],
+            [
+              "billing:Meridian Energy Partners LLC",
+              "registry:4721193",
+              "SAME_ENTITY"
+            ],
+            [
+              "billing:Northbridge Analytics Inc.",
+              "contract:MSA-NBA-2021",
+              "SAME_ENTITY"
+            ],
+            [
+              "billing:Northbridge Analytics Inc.",
+              "registry:2019-0008841",
+              "UNRESOLVED"
+            ],
+            [
+              "billing:Oakfield Logistik GmbH",
+              "contract:MSA-OAK-2018",
+              "SAME_ENTITY"
+            ],
+            [
+              "billing:Vellum Print Co Ltd",
+              "contract:SOW-VEL-2022",
+              "SAME_ENTITY"
+            ],
+            [
+              "billing:Vellum Print Co Ltd",
+              "registry:09338441",
+              "SAME_ENTITY"
+            ],
+            [
+              "crm:HEL-441",
+              "billing:Helion Robotics Limited",
+              "SAME_ENTITY"
+            ],
+            [
+              "crm:MER-55",
+              "billing:Meridian Energy Partners LLC",
+              "SAME_ENTITY"
+            ],
+            [
+              "crm:NBA-102",
+              "billing:Northbridge Analytics Inc.",
+              "SAME_ENTITY"
+            ],
+            [
+              "crm:OAK-77",
+              "billing:Oakfield Logistik GmbH",
+              "SAME_ENTITY"
+            ],
+            [
+              "crm:VEL-19",
+              "billing:Vellum Print Co Ltd",
+              "SAME_ENTITY"
+            ]
+          ],
+          "unresolved_missing": [
+            [
+              "billing:Northbridge Analytics Inc.",
+              "registry:2019-0008841"
+            ]
+          ],
+          "extra": [
+            [
+              "billing:Helion Robotics Limited",
+              "contract:MSA-HELION-2019",
+              "UNRESOLVED"
+            ],
+            [
+              "billing:Helion Robotics Limited",
+              "registry:11847201",
+              "UNRESOLVED"
+            ],
+            [
+              "billing:Helion Robotics Limited",
+              "registry:11847299",
+              "DISTINCT"
+            ],
+            [
+              "billing:Meridian Energy Partners LLC",
+              "contract:MSA-MER-2024",
+              "UNRESOLVED"
+            ],
+            [
+              "billing:Meridian Energy Partners LLC",
+              "registry:4721193",
+              "UNRESOLVED"
+            ],
+            [
+              "billing:Northbridge Analytics Inc.",
+              "contract:MSA-NBA-2021",
+              "UNRESOLVED"
+            ],
+            [
+              "billing:Northbridge Analytics Inc.",
+              "registry:2019-0008841",
+              "DISTINCT"
+            ],
+            [
+              "billing:Oakfield Logistik GmbH",
+              "contract:MSA-OAK-2018",
+              "UNRESOLVED"
+            ],
+            [
+              "billing:Vellum Print Co Ltd",
+              "contract:SOW-VEL-2022",
+              "UNRESOLVED"
+            ],
+            [
+              "billing:Vellum Print Co Ltd",
+              "registry:09338441",
+              "UNRESOLVED"
+            ],
+            [
+              "contract:MSA-HELION-2019",
+              "registry:11847201",
+              "UNRESOLVED"
+            ],
+            [
+              "contract:MSA-HELION-2019",
+              "registry:11847299",
+              "DISTINCT"
+            ],
+            [
+              "contract:MSA-MER-2024",
+              "registry:4721193",
+              "UNRESOLVED"
+            ],
+            [
+              "contract:MSA-NBA-2021",
+              "registry:2019-0008841",
+              "DISTINCT"
+            ],
+            [
+              "contract:MSA-NBA-2021",
+              "registry:3840192",
+              "UNRESOLVED"
+            ],
+            [
+              "contract:MSA-OAK-2018",
+              "registry:HRB 88421",
+              "SAME_ENTITY"
+            ],
+            [
+              "contract:SOW-VEL-2022",
+              "registry:09338441",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:HEL-441",
+              "billing:Helion Robotics Limited",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:HEL-441",
+              "contract:MSA-HELION-2019",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:HEL-441",
+              "registry:11847201",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:MER-55",
+              "billing:Meridian Energy Partners LLC",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:MER-55",
+              "contract:MSA-MER-2024",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:MER-55",
+              "registry:4721193",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:NBA-102",
+              "billing:Northbridge Analytics Inc.",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:NBA-102",
+              "contract:MSA-NBA-2021",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:NBA-102",
+              "registry:2019-0008841",
+              "DISTINCT"
+            ],
+            [
+              "crm:NBA-102",
+              "registry:3840192",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:OAK-77",
+              "billing:Oakfield Logistik GmbH",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:OAK-77",
+              "contract:MSA-OAK-2018",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:OAK-77",
+              "registry:HRB 88421",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:VEL-19",
+              "billing:Vellum Print Co Ltd",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:VEL-19",
+              "contract:SOW-VEL-2022",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:VEL-19",
+              "registry:09338441",
+              "UNRESOLVED"
+            ],
+            [
+              "registry:2019-0008841",
+              "registry:3840192",
+              "DISTINCT"
+            ]
+          ],
+          "exact": false
+        },
+        "C": {
+          "pass": false,
+          "missing": [
+            [
+              "MSA-HELION-2019",
+              "dependent",
+              [
+                "rolling_term"
+              ]
+            ],
+            [
+              "MSA-MER-2024",
+              "dependent",
+              [
+                "rolling_term"
+              ]
+            ],
+            [
+              "MSA-NBA-2021",
+              "dependent",
+              [
+                "auto_renewal"
+              ]
+            ],
+            [
+              "MSA-OAK-2018",
+              "dependent",
+              [
+                "exclusivity",
+                "rolling_term"
+              ]
+            ]
+          ],
+          "extra": [
+            [
+              "MSA-MER-2024",
+              "unresolved",
+              [
+                "rolling_term"
+              ]
+            ],
+            [
+              "MSA-NBA-2021",
+              "unresolved",
+              [
+                "auto_renewal"
+              ]
+            ]
+          ]
+        },
+        "D": {
+          "pass": false,
+          "missing": [
+            [
+              "INV-1002",
+              "MSA-HELION-2019",
+              "matches"
+            ],
+            [
+              "INV-3002",
+              "MSA-OAK-2018",
+              "matches"
+            ]
+          ],
+          "extra": []
+        },
+        "source_rereads": [],
+        "zero_source_rereads": true,
+        "axis_b": {
+          "assertions_violating_role_type": 0,
+          "assertions_using_invalid_disposition": 0,
+          "invalid_purpose_kinds": 0,
+          "algebra_consistency_violations": 0,
+          "ungrounded_assertions": 0,
+          "rejected": {
+            "world": [],
+            "kinds": []
+          },
+          "all_zero": true
+        },
+        "unresolved_candidate_loss": [],
+        "reject_to_unresolved": [],
+        "identifier_render_failures": [],
+        "normalization": {
+          "consumer_relations_required": [
+            "invoice_record",
+            "contract_record",
+            "contract_active",
+            "contract_clause_kind",
+            "identity_judgment",
+            "crm_record",
+            "registry_record"
+          ],
+          "consumer_relations_recovered": [
+            "invoice_record",
+            "contract_record",
+            "contract_active",
+            "contract_clause_kind",
+            "identity_judgment",
+            "crm_record",
+            "registry_record"
+          ],
+          "missing_mappings": [],
+          "false_mappings": [],
+          "role_binding_failures": [
+            {
+              "table": "commercial_dependency_status",
+              "surface_role": "counterparty",
+              "required_identity": "counterparty_text",
+              "reason": "surface role without semantic_identity"
+            }
+          ]
+        },
+        "failure_attribution": [
+          "adjudication_under_closure",
+          "contract_interface_failure",
+          "normalization_failure",
+          "semantic_fact_failure"
+        ]
+      }
+    },
+    "T2": {
+      "p0": {
+        "pass": true,
+        "missing_purposes": [],
+        "field_gaps": [],
+        "checks": {
+          "a_active_contracts": true,
+          "a_acquisition_policy": true,
+          "b_unresolved": true,
+          "c_obligation_kinds": true,
+          "policy_field_present": true
+        }
+      },
+      "p1": {
+        "pass": false,
+        "n_relations": 11,
+        "n_world": 11,
+        "n_purpose": 0,
+        "n_semantic": 2,
+        "world_purpose_leakage": [],
+        "unrepresentable_claimed": false,
+        "semantic_identity_bindings": [
+          "invoice_observation.invoice->invoice",
+          "invoice_observation.invoice_id->invoice_id",
+          "invoice_observation.billed_name->billed_name",
+          "invoice_observation.amount->amount",
+          "invoice_observation.currency->currency",
+          "invoice_observation.period->period",
+          "invoice_observation.status->status",
+          "crm_account_observation.account->account",
+          "crm_account_observation.account_name->account_name",
+          "registry_entity_observation.entity->entity",
+          "registry_entity_observation.company_number->company_number",
+          "registry_entity_observation.legal_name->legal_name",
+          "contract_document_observation.contract->contract",
+          "contract_document_observation.contract_id->contract_id",
+          "contract_document_observation.counterparty_text->counterparty_text",
+          "contract_document_observation.active->active",
+          "contract_clause_observation.contract->contract",
+          "contract_clause_observation.clause_kind->clause_kind",
+          "account_contract_code_correspondence.account->account",
+          "account_contract_code_correspondence.contract->contract",
+          "identity_judgment.left->left",
+          "identity_judgment.right->right",
+          "identity_judgment.disposition->disposition",
+          "invoice_contract_association.invoice->invoice",
+          "invoice_contract_association.contract->contract",
+          "invoice_contract_association.disposition->disposition",
+          "commercial_relationship_identity_candidate.left->left",
+          "commercial_relationship_identity_candidate.right->right",
+          "open_invoice.invoice->invoice",
+          "open_invoice.invoice_id->invoice_id",
+          "open_invoice.status->status"
+        ],
+        "counterparty_without_consumer_bind": []
+      },
+      "p2": {
+        "pass": true,
+        "grounding": {
+          "sqlite": true,
+          "base_assertions": 70,
+          "grounded": 70,
+          "ungrounded": 0,
+          "rate": 1.0
+        },
+        "missing_mechanical_tokens": [],
+        "early_identity_closures": [],
+        "mechanical_delegated_to_semantics": false
+      },
+      "p3": {
+        "pass": false,
+        "n_obligations": 32,
+        "required": 18,
+        "required_hit": 12,
+        "required_missed": [
+          "billing:Helion Robotics Limited_contract:MSA-HELION-2019",
+          "billing:Meridian Energy Partners LLC_contract:MSA-MER-2024",
+          "billing:Northbridge Analytics Inc._contract:MSA-NBA-2021",
+          "billing:Vellum Print Co Ltd_contract:SOW-VEL-2022",
+          "crm:HEL-441_registry:11847299",
+          "registry:11847201_registry:11847299"
+        ],
+        "recall": 0.6666666666666666,
+        "precision_vs_oracle_pairs": 0.5,
+        "unnecessary": 12,
+        "duplicate_obligations": 8,
+        "invalid_obligations": 0
+      },
+      "p4": {
+        "pass": true,
+        "n_packets": 32,
+        "required_with_packet": 12,
+        "sufficient_required": 12,
+        "packets_mentioning_notes": 9
+      },
+      "p5": {
+        "pass": true,
+        "compared": 12,
+        "correct": 6,
+        "accuracy": 0.5,
+        "incorrect_semantic_closure": 0,
+        "incorrect_under_closure": 6,
+        "incorrect_polarity": 0,
+        "incorrect_rejection": 0,
+        "same_recall": 0.4,
+        "distinct_recall": null,
+        "coverage": 0.4,
+        "unresolved_preservation": 2,
+        "delaware_inc_disposition": "UNRESOLVED",
+        "delaware_should_be": "UNRESOLVED",
+        "structural_changed": 0,
+        "verifier_changed": 0,
+        "audit_n": 26
+      },
+      "p6": {
+        "pass": true,
+        "sqlite": true,
+        "purpose_output_promoted_world": [],
+        "admission_mentions_world": true
+      },
+      "p7": {
+        "pass": true,
+        "checks": {
+          "required_premise": true,
+          "blocking_unresolved": true,
+          "derive_script": true
+        }
+      },
+      "p8": {
+        "pass": false,
+        "A": {
+          "pass": false,
+          "missing": [
+            [
+              "INV-1001",
+              "MSA-HELION-2019",
+              "asserted"
+            ],
+            [
+              "INV-1002",
+              "MSA-HELION-2019",
+              "asserted"
+            ],
+            [
+              "INV-2001",
+              "MSA-NBA-2021",
+              "asserted"
+            ],
+            [
+              "INV-2002",
+              "MSA-NBA-2021",
+              "asserted"
+            ],
+            [
+              "INV-3001",
+              "MSA-OAK-2018",
+              "asserted"
+            ],
+            [
+              "INV-3002",
+              "MSA-OAK-2018",
+              "asserted"
+            ],
+            [
+              "INV-5001",
+              "MSA-MER-2024",
+              "asserted"
+            ]
+          ],
+          "extra": []
+        },
+        "B": {
+          "pass": false,
+          "missing_required": [
+            [
+              "billing:Helion Robotics Limited",
+              "contract:MSA-HELION-2019",
+              "SAME_ENTITY"
+            ],
+            [
+              "billing:Meridian Energy Partners LLC",
+              "contract:MSA-MER-2024",
+              "SAME_ENTITY"
+            ],
+            [
+              "billing:Meridian Energy Partners LLC",
+              "registry:4721193",
+              "SAME_ENTITY"
+            ],
+            [
+              "billing:Northbridge Analytics Inc.",
+              "contract:MSA-NBA-2021",
+              "SAME_ENTITY"
+            ],
+            [
+              "billing:Oakfield Logistik GmbH",
+              "registry:HRB 88421",
+              "SAME_ENTITY"
+            ],
+            [
+              "billing:Vellum Print Co Ltd",
+              "contract:SOW-VEL-2022",
+              "SAME_ENTITY"
+            ],
+            [
+              "billing:Vellum Print Co Ltd",
+              "registry:09338441",
+              "SAME_ENTITY"
+            ],
+            [
+              "crm:HEL-441",
+              "registry:11847299",
+              "DISTINCT"
+            ],
+            [
+              "crm:MER-55",
+              "billing:Meridian Energy Partners LLC",
+              "SAME_ENTITY"
+            ],
+            [
+              "crm:NBA-102",
+              "billing:Northbridge Analytics Inc.",
+              "SAME_ENTITY"
+            ],
+            [
+              "crm:VEL-19",
+              "billing:Vellum Print Co Ltd",
+              "SAME_ENTITY"
+            ],
+            [
+              "registry:11847201",
+              "registry:11847299",
+              "DISTINCT"
+            ]
+          ],
+          "unresolved_missing": [],
+          "extra": [
+            [
+              "billing:Meridian Energy Partners LLC",
+              "registry:4721193",
+              "UNRESOLVED"
+            ],
+            [
+              "billing:Oakfield Logistik GmbH",
+              "registry:HRB 88421",
+              "UNRESOLVED"
+            ],
+            [
+              "billing:Vellum Print Co Ltd",
+              "registry:09338441",
+              "UNRESOLVED"
+            ],
+            [
+              "contract:MSA-HELION-2019",
+              "registry:11847201",
+              "UNRESOLVED"
+            ],
+            [
+              "contract:MSA-MER-2024",
+              "registry:4721193",
+              "UNRESOLVED"
+            ],
+            [
+              "contract:MSA-NBA-2021",
+              "registry:2019-0008841",
+              "UNRESOLVED"
+            ],
+            [
+              "contract:MSA-NBA-2021",
+              "registry:3840192",
+              "UNRESOLVED"
+            ],
+            [
+              "contract:MSA-OAK-2018",
+              "registry:HRB 88421",
+              "SAME_ENTITY"
+            ],
+            [
+              "contract:SOW-VEL-2022",
+              "registry:09338441",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:HEL-441",
+              "contract:MSA-HELION-2019",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:MER-55",
+              "billing:Meridian Energy Partners LLC",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:MER-55",
+              "contract:MSA-MER-2024",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:NBA-102",
+              "billing:Northbridge Analytics Inc.",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:NBA-102",
+              "contract:MSA-NBA-2021",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:NBA-102",
+              "registry:2019-0008841",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:OAK-77",
+              "contract:MSA-OAK-2018",
+              "SAME_ENTITY"
+            ],
+            [
+              "crm:VEL-19",
+              "billing:Vellum Print Co Ltd",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:VEL-19",
+              "contract:SOW-VEL-2022",
+              "UNRESOLVED"
+            ]
+          ],
+          "exact": false
+        },
+        "C": {
+          "pass": false,
+          "missing": [
+            [
+              "MSA-HELION-2019",
+              "dependent",
+              [
+                "rolling_term"
+              ]
+            ],
+            [
+              "MSA-MER-2024",
+              "dependent",
+              [
+                "rolling_term"
+              ]
+            ],
+            [
+              "MSA-NBA-2021",
+              "dependent",
+              [
+                "auto_renewal"
+              ]
+            ],
+            [
+              "MSA-OAK-2018",
+              "dependent",
+              [
+                "exclusivity",
+                "rolling_term"
+              ]
+            ]
+          ],
+          "extra": []
+        },
+        "D": {
+          "pass": false,
+          "missing": [
+            [
+              "INV-1002",
+              "MSA-HELION-2019",
+              "matches"
+            ],
+            [
+              "INV-3002",
+              "MSA-OAK-2018",
+              "matches"
+            ],
+            [
+              "INV-5001",
+              "MSA-MER-2024",
+              "matches"
+            ]
+          ],
+          "extra": []
+        },
+        "source_rereads": [],
+        "zero_source_rereads": true,
+        "axis_b": {
+          "assertions_violating_role_type": 0,
+          "assertions_using_invalid_disposition": 0,
+          "invalid_purpose_kinds": 0,
+          "algebra_consistency_violations": 0,
+          "ungrounded_assertions": 20,
+          "rejected": {
+            "world": [],
+            "kinds": []
+          },
+          "all_zero": false
+        },
+        "unresolved_candidate_loss": [],
+        "reject_to_unresolved": [],
+        "identifier_render_failures": [],
+        "normalization": {
+          "consumer_relations_required": [
+            "invoice_record",
+            "contract_record",
+            "contract_active",
+            "contract_clause_kind",
+            "identity_judgment",
+            "crm_record",
+            "registry_record"
+          ],
+          "consumer_relations_recovered": [
+            "invoice_record",
+            "contract_record",
+            "contract_active",
+            "contract_clause_kind",
+            "identity_judgment",
+            "crm_record",
+            "registry_record"
+          ],
+          "missing_mappings": [],
+          "false_mappings": [],
+          "role_binding_failures": []
+        },
+        "failure_attribution": [
+          "adjudication_under_closure",
+          "frontier_failure",
+          "semantic_fact_failure"
+        ]
+      }
+    },
+    "T3": {
+      "p0": {
+        "pass": true,
+        "missing_purposes": [],
+        "field_gaps": [],
+        "checks": {
+          "a_active_contracts": true,
+          "a_acquisition_policy": true,
+          "b_unresolved": true,
+          "c_obligation_kinds": true,
+          "policy_field_present": true
+        }
+      },
+      "p1": {
+        "pass": true,
+        "n_relations": 14,
+        "n_world": 6,
+        "n_purpose": 8,
+        "n_semantic": 6,
+        "world_purpose_leakage": [],
+        "unrepresentable_claimed": false,
+        "semantic_identity_bindings": [
+          "source_invoice.invoice->invoice",
+          "source_invoice.invoice_id->invoice_id",
+          "source_invoice.billed_name->billed_name",
+          "source_invoice.amount->amount",
+          "source_invoice.currency->currency",
+          "source_invoice.period->period",
+          "source_invoice.status->status",
+          "source_crm_account.account->account",
+          "source_crm_account.account_name->account_name",
+          "source_registry_entity.entity->entity",
+          "source_registry_entity.company_number->company_number",
+          "source_registry_entity.legal_name->legal_name",
+          "source_contract.contract->contract",
+          "source_contract.contract_id->contract_id",
+          "source_contract.counterparty->counterparty_text",
+          "source_contract_clause.contract->contract",
+          "source_contract_schedule.contract->contract",
+          "identity_judgment.left->left",
+          "identity_judgment.right->right",
+          "identity_judgment.disposition->disposition",
+          "acquisition_clause_judgment.contract->contract",
+          "acquisition_clause_judgment.clause_kind->clause_kind",
+          "acquisition_clause_judgment.disposition->disposition",
+          "contract_liveness_judgment.contract->contract",
+          "contract_liveness_judgment.disposition->disposition",
+          "invoice_contract_association.invoice->invoice",
+          "invoice_contract_association.contract->contract",
+          "invoice_contract_association.disposition->disposition",
+          "obligation_kind_judgment.contract->contract",
+          "obligation_kind_judgment.clause_kind->clause_kind",
+          "obligation_kind_judgment.disposition->disposition",
+          "commercial_dependency_judgment.contract->contract",
+          "commercial_dependency_judgment.status->status",
+          "identity_link_candidates.left->left",
+          "identity_link_candidates.right->right",
+          "open_invoices_by_contract.contract->contract",
+          "open_invoices_by_contract.invoice->invoice"
+        ],
+        "counterparty_without_consumer_bind": [
+          "commercial_dependency_judgment"
+        ]
+      },
+      "p2": {
+        "pass": true,
+        "grounding": {
+          "sqlite": true,
+          "base_assertions": 241,
+          "grounded": 241,
+          "ungrounded": 0,
+          "rate": 1.0
+        },
+        "missing_mechanical_tokens": [],
+        "early_identity_closures": [],
+        "mechanical_delegated_to_semantics": false
+      },
+      "p3": {
+        "pass": true,
+        "n_obligations": 133,
+        "required": 18,
+        "required_hit": 16,
+        "required_missed": [
+          "crm:HEL-441_registry:11847299",
+          "registry:11847201_registry:11847299"
+        ],
+        "recall": 0.8888888888888888,
+        "precision_vs_oracle_pairs": 0.3902439024390244,
+        "unnecessary": 25,
+        "duplicate_obligations": 92,
+        "invalid_obligations": 0
+      },
+      "p4": {
+        "pass": true,
+        "n_packets": 133,
+        "required_with_packet": 32,
+        "sufficient_required": 32,
+        "packets_mentioning_notes": 32
+      },
+      "p5": {
+        "pass": true,
+        "compared": 32,
+        "correct": 28,
+        "accuracy": 0.875,
+        "incorrect_semantic_closure": 0,
+        "incorrect_under_closure": 4,
+        "incorrect_polarity": 0,
+        "incorrect_rejection": 0,
+        "same_recall": 0.8571428571428571,
+        "distinct_recall": null,
+        "coverage": 0.8571428571428571,
+        "unresolved_preservation": 4,
+        "delaware_inc_disposition": "UNRESOLVED",
+        "delaware_should_be": "UNRESOLVED",
+        "structural_changed": 0,
+        "verifier_changed": 0,
+        "audit_n": 72
+      },
+      "p6": {
+        "pass": true,
+        "sqlite": true,
+        "purpose_output_promoted_world": [],
+        "admission_mentions_world": true
+      },
+      "p7": {
+        "pass": true,
+        "checks": {
+          "required_premise": true,
+          "blocking_unresolved": true,
+          "derive_script": true
+        }
+      },
+      "p8": {
+        "pass": false,
+        "A": {
+          "pass": true,
+          "missing": [],
+          "extra": []
+        },
+        "B": {
+          "pass": false,
+          "missing_required": [
+            [
+              "crm:HEL-441",
+              "registry:11847299",
+              "DISTINCT"
+            ],
+            [
+              "crm:MER-55",
+              "billing:Meridian Energy Partners LLC",
+              "SAME_ENTITY"
+            ],
+            [
+              "crm:NBA-102",
+              "billing:Northbridge Analytics Inc.",
+              "SAME_ENTITY"
+            ],
+            [
+              "registry:11847201",
+              "registry:11847299",
+              "DISTINCT"
+            ]
+          ],
+          "unresolved_missing": [],
+          "extra": [
+            [
+              "billing:INV-1001",
+              "contract:MSA-HELION-2019",
+              "UNRESOLVED"
+            ],
+            [
+              "billing:INV-1002",
+              "contract:MSA-HELION-2019",
+              "UNRESOLVED"
+            ],
+            [
+              "billing:INV-2001",
+              "contract:MSA-NBA-2021",
+              "UNRESOLVED"
+            ],
+            [
+              "billing:INV-2002",
+              "contract:MSA-NBA-2021",
+              "UNRESOLVED"
+            ],
+            [
+              "billing:INV-3001",
+              "contract:MSA-OAK-2018",
+              "UNRESOLVED"
+            ],
+            [
+              "billing:INV-3002",
+              "contract:MSA-OAK-2018",
+              "UNRESOLVED"
+            ],
+            [
+              "billing:INV-4001",
+              "contract:SOW-VEL-2022",
+              "UNRESOLVED"
+            ],
+            [
+              "billing:INV-5001",
+              "contract:MSA-MER-2024",
+              "UNRESOLVED"
+            ],
+            [
+              "contract:MSA-HELION-2019",
+              "registry:11847201",
+              "SAME_ENTITY"
+            ],
+            [
+              "contract:MSA-MER-2024",
+              "registry:4721193",
+              "SAME_ENTITY"
+            ],
+            [
+              "contract:MSA-NBA-2021",
+              "registry:2019-0008841",
+              "UNRESOLVED"
+            ],
+            [
+              "contract:MSA-NBA-2021",
+              "registry:3840192",
+              "UNRESOLVED"
+            ],
+            [
+              "contract:MSA-OAK-2018",
+              "registry:HRB 88421",
+              "SAME_ENTITY"
+            ],
+            [
+              "contract:SOW-VEL-2022",
+              "registry:09338441",
+              "SAME_ENTITY"
+            ],
+            [
+              "crm:HEL-441",
+              "contract:MSA-HELION-2019",
+              "SAME_ENTITY"
+            ],
+            [
+              "crm:HEL-441",
+              "contract:MSA-HELION-2019",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:HEL-441",
+              "registry:11847201",
+              "SAME_ENTITY"
+            ],
+            [
+              "crm:MER-55",
+              "billing:Meridian Energy Partners LLC",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:MER-55",
+              "contract:MSA-MER-2024",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:MER-55",
+              "registry:4721193",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:NBA-102",
+              "billing:Northbridge Analytics Inc.",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:NBA-102",
+              "contract:MSA-NBA-2021",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:NBA-102",
+              "registry:2019-0008841",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:NBA-102",
+              "registry:3840192",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:OAK-77",
+              "contract:MSA-OAK-2018",
+              "SAME_ENTITY"
+            ],
+            [
+              "crm:OAK-77",
+              "contract:MSA-OAK-2018",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:OAK-77",
+              "registry:HRB 88421",
+              "SAME_ENTITY"
+            ],
+            [
+              "crm:VEL-19",
+              "contract:SOW-VEL-2022",
+              "SAME_ENTITY"
+            ],
+            [
+              "crm:VEL-19",
+              "registry:09338441",
+              "SAME_ENTITY"
+            ]
+          ],
+          "exact": false
+        },
+        "C": {
+          "pass": false,
+          "missing": [
+            [
+              "MSA-HELION-2019",
+              "dependent",
+              [
+                "rolling_term"
+              ]
+            ]
+          ],
+          "extra": [
+            [
+              "MSA-HELION-2019",
+              "dependent",
+              [
+                "auto_renewal"
+              ]
+            ]
+          ]
+        },
+        "D": {
+          "pass": true,
+          "missing": [],
+          "extra": []
+        },
+        "source_rereads": [],
+        "zero_source_rereads": true,
+        "axis_b": {
+          "assertions_violating_role_type": 0,
+          "assertions_using_invalid_disposition": 0,
+          "invalid_purpose_kinds": 0,
+          "algebra_consistency_violations": 0,
+          "ungrounded_assertions": 0,
+          "rejected": {
+            "world": [],
+            "kinds": []
+          },
+          "all_zero": true
+        },
+        "unresolved_candidate_loss": [],
+        "reject_to_unresolved": [],
+        "identifier_render_failures": [],
+        "normalization": {
+          "consumer_relations_required": [
+            "invoice_record",
+            "contract_record",
+            "contract_active",
+            "contract_clause_kind",
+            "identity_judgment",
+            "crm_record",
+            "registry_record"
+          ],
+          "consumer_relations_recovered": [
+            "invoice_record",
+            "contract_record",
+            "contract_clause_kind",
+            "identity_judgment",
+            "crm_record",
+            "registry_record"
+          ],
+          "missing_mappings": [
+            "contract_active"
+          ],
+          "false_mappings": [],
+          "role_binding_failures": [
+            {
+              "table": "commercial_dependency_judgment",
+              "surface_role": "counterparty",
+              "required_identity": "counterparty_text",
+              "reason": "surface role without semantic_identity"
+            }
+          ]
+        },
+        "failure_attribution": [
+          "adjudication_under_closure",
+          "contract_interface_failure",
+          "normalization_failure"
+        ]
+      }
+    },
+    "T4": {
+      "p0": {
+        "pass": true,
+        "missing_purposes": [],
+        "field_gaps": [],
+        "checks": {
+          "a_active_contracts": true,
+          "a_acquisition_policy": true,
+          "b_unresolved": true,
+          "c_obligation_kinds": true,
+          "policy_field_present": true
+        }
+      },
+      "p1": {
+        "pass": true,
+        "n_relations": 13,
+        "n_world": 10,
+        "n_purpose": 3,
+        "n_semantic": 3,
+        "world_purpose_leakage": [],
+        "unrepresentable_claimed": false,
+        "semantic_identity_bindings": [
+          "invoice_fact.invoice->invoice",
+          "invoice_fact.invoice_id->invoice_id",
+          "invoice_fact.billed_name->billed_name",
+          "invoice_fact.amount->amount",
+          "invoice_fact.currency->currency",
+          "invoice_fact.period->period",
+          "invoice_fact.status->status",
+          "crm_account_fact.account->account",
+          "crm_account_fact.account_name->account_name",
+          "registry_entity_fact.entity->entity",
+          "registry_entity_fact.company_number->company_number",
+          "registry_entity_fact.legal_name->legal_name",
+          "contract_header_fact.contract->contract",
+          "contract_header_fact.contract_id->contract_id",
+          "contract_header_fact.counterparty_text->counterparty_text",
+          "contract_temporal_fact.contract->contract",
+          "contract_temporal_fact.active->active",
+          "open_invoice_set.invoice->invoice",
+          "open_invoice_set.invoice_id->invoice_id",
+          "open_invoice_set.status->status",
+          "identity_judgment.left->left",
+          "identity_judgment.right->right",
+          "identity_judgment.disposition->disposition",
+          "clause_kind_presence.contract->contract",
+          "clause_kind_presence.clause_kind->clause_kind",
+          "clause_kind_presence.disposition->disposition",
+          "invoice_governing_contract.invoice->invoice",
+          "invoice_governing_contract.contract->contract",
+          "invoice_governing_contract.disposition->disposition",
+          "purpose_a_invoice_association.invoice->invoice",
+          "purpose_a_invoice_association.invoice_id->invoice_id",
+          "purpose_a_invoice_association.billed_name->billed_name",
+          "purpose_a_invoice_association.amount->amount",
+          "purpose_a_invoice_association.currency->currency",
+          "purpose_a_invoice_association.period->period",
+          "purpose_a_invoice_association.status->status",
+          "purpose_a_invoice_association.contract->contract",
+          "purpose_a_invoice_association.contract_id->contract_id",
+          "purpose_a_invoice_association.disposition->disposition",
+          "purpose_b_identity_link.left->left",
+          "purpose_b_identity_link.right->right",
+          "purpose_b_identity_link.disposition->disposition",
+          "purpose_c_dependency_row.contract->contract",
+          "purpose_c_dependency_row.contract_id->contract_id",
+          "purpose_c_dependency_row.clause_kind->clause_kind",
+          "purpose_c_dependency_row.status->status"
+        ],
+        "counterparty_without_consumer_bind": [
+          "purpose_c_dependency_row"
+        ]
+      },
+      "p2": {
+        "pass": true,
+        "grounding": {
+          "sqlite": true,
+          "base_assertions": 119,
+          "grounded": 119,
+          "ungrounded": 0,
+          "rate": 1.0
+        },
+        "missing_mechanical_tokens": [],
+        "early_identity_closures": [],
+        "mechanical_delegated_to_semantics": false
+      },
+      "p3": {
+        "pass": true,
+        "n_obligations": 78,
+        "required": 18,
+        "required_hit": 15,
+        "required_missed": [
+          "billing:Oakfield Logistik GmbH_contract:MSA-OAK-2018",
+          "crm:HEL-441_registry:11847299",
+          "registry:11847201_registry:11847299"
+        ],
+        "recall": 0.8333333333333334,
+        "precision_vs_oracle_pairs": 0.4838709677419355,
+        "unnecessary": 16,
+        "duplicate_obligations": 47,
+        "invalid_obligations": 0
+      },
+      "p4": {
+        "pass": true,
+        "n_packets": 78,
+        "required_with_packet": 0,
+        "sufficient_required": 0,
+        "packets_mentioning_notes": 0
+      },
+      "p5": {
+        "pass": true,
+        "compared": 15,
+        "correct": 9,
+        "accuracy": 0.6,
+        "incorrect_semantic_closure": 0,
+        "incorrect_under_closure": 6,
+        "incorrect_polarity": 0,
+        "incorrect_rejection": 0,
+        "same_recall": 0.5384615384615384,
+        "distinct_recall": null,
+        "coverage": 0.5384615384615384,
+        "unresolved_preservation": 2,
+        "delaware_inc_disposition": "UNRESOLVED",
+        "delaware_should_be": "UNRESOLVED",
+        "structural_changed": 0,
+        "verifier_changed": 0,
+        "audit_n": 36
+      },
+      "p6": {
+        "pass": true,
+        "sqlite": true,
+        "purpose_output_promoted_world": [],
+        "admission_mentions_world": true
+      },
+      "p7": {
+        "pass": true,
+        "checks": {
+          "required_premise": true,
+          "blocking_unresolved": true,
+          "derive_script": true
+        }
+      },
+      "p8": {
+        "pass": false,
+        "A": {
+          "pass": false,
+          "missing": [
+            [
+              "INV-3001",
+              "MSA-OAK-2018",
+              "asserted"
+            ],
+            [
+              "INV-3002",
+              "MSA-OAK-2018",
+              "asserted"
+            ]
+          ],
+          "extra": []
+        },
+        "B": {
+          "pass": false,
+          "missing_required": [
+            [
+              "billing:Meridian Energy Partners LLC",
+              "registry:4721193",
+              "SAME_ENTITY"
+            ],
+            [
+              "billing:Oakfield Logistik GmbH",
+              "contract:MSA-OAK-2018",
+              "SAME_ENTITY"
+            ],
+            [
+              "billing:Vellum Print Co Ltd",
+              "contract:SOW-VEL-2022",
+              "SAME_ENTITY"
+            ],
+            [
+              "billing:Vellum Print Co Ltd",
+              "registry:09338441",
+              "SAME_ENTITY"
+            ],
+            [
+              "crm:HEL-441",
+              "registry:11847299",
+              "DISTINCT"
+            ],
+            [
+              "crm:MER-55",
+              "billing:Meridian Energy Partners LLC",
+              "SAME_ENTITY"
+            ],
+            [
+              "crm:NBA-102",
+              "billing:Northbridge Analytics Inc.",
+              "SAME_ENTITY"
+            ],
+            [
+              "crm:VEL-19",
+              "billing:Vellum Print Co Ltd",
+              "SAME_ENTITY"
+            ],
+            [
+              "registry:11847201",
+              "registry:11847299",
+              "DISTINCT"
+            ]
+          ],
+          "unresolved_missing": [],
+          "extra": [
+            [
+              "billing:Meridian Energy Partners LLC",
+              "registry:4721193",
+              "UNRESOLVED"
+            ],
+            [
+              "billing:Vellum Print Co Ltd",
+              "contract:SOW-VEL-2022",
+              "UNRESOLVED"
+            ],
+            [
+              "billing:Vellum Print Co Ltd",
+              "registry:09338441",
+              "UNRESOLVED"
+            ],
+            [
+              "contract:MSA-HELION-2019",
+              "registry:11847201",
+              "SAME_ENTITY"
+            ],
+            [
+              "contract:MSA-MER-2024",
+              "registry:4721193",
+              "UNRESOLVED"
+            ],
+            [
+              "contract:MSA-NBA-2021",
+              "registry:2019-0008841",
+              "UNRESOLVED"
+            ],
+            [
+              "contract:MSA-NBA-2021",
+              "registry:3840192",
+              "UNRESOLVED"
+            ],
+            [
+              "contract:SOW-VEL-2022",
+              "registry:09338441",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:HEL-441",
+              "contract:MSA-HELION-2019",
+              "SAME_ENTITY"
+            ],
+            [
+              "crm:HEL-441",
+              "registry:11847201",
+              "SAME_ENTITY"
+            ],
+            [
+              "crm:MER-55",
+              "billing:Meridian Energy Partners LLC",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:MER-55",
+              "contract:MSA-MER-2024",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:MER-55",
+              "registry:4721193",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:NBA-102",
+              "billing:Northbridge Analytics Inc.",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:NBA-102",
+              "contract:MSA-NBA-2021",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:NBA-102",
+              "registry:2019-0008841",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:NBA-102",
+              "registry:3840192",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:OAK-77",
+              "contract:MSA-OAK-2018",
+              "SAME_ENTITY"
+            ],
+            [
+              "crm:VEL-19",
+              "billing:Vellum Print Co Ltd",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:VEL-19",
+              "contract:SOW-VEL-2022",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:VEL-19",
+              "registry:09338441",
+              "UNRESOLVED"
+            ],
+            [
+              "registry:2019-0008841",
+              "registry:3840192",
+              "UNRESOLVED"
+            ]
+          ],
+          "exact": false
+        },
+        "C": {
+          "pass": false,
+          "missing": [
+            [
+              "MSA-HELION-2019",
+              "dependent",
+              [
+                "rolling_term"
+              ]
+            ],
+            [
+              "MSA-MER-2024",
+              "dependent",
+              [
+                "rolling_term"
+              ]
+            ],
+            [
+              "MSA-NBA-2021",
+              "dependent",
+              [
+                "auto_renewal"
+              ]
+            ],
+            [
+              "MSA-OAK-2018",
+              "dependent",
+              [
+                "exclusivity",
+                "rolling_term"
+              ]
+            ]
+          ],
+          "extra": [
+            [
+              "MSA-HELION-2019",
+              "dependent",
+              [
+                "auto_renewal",
+                "exclusivity",
+                "rolling_term"
+              ]
+            ],
+            [
+              "MSA-MER-2024",
+              "dependent",
+              [
+                "auto_renewal",
+                "exclusivity",
+                "rolling_term"
+              ]
+            ],
+            [
+              "MSA-NBA-2021",
+              "dependent",
+              [
+                "auto_renewal",
+                "exclusivity",
+                "rolling_term"
+              ]
+            ]
+          ]
+        },
+        "D": {
+          "pass": false,
+          "missing": [
+            [
+              "INV-3002",
+              "MSA-OAK-2018",
+              "matches"
+            ]
+          ],
+          "extra": [
+            [
+              "INV-2002",
+              "MSA-NBA-2021",
+              "matches"
+            ]
+          ]
+        },
+        "source_rereads": [],
+        "zero_source_rereads": true,
+        "axis_b": {
+          "assertions_violating_role_type": 0,
+          "assertions_using_invalid_disposition": 0,
+          "invalid_purpose_kinds": 0,
+          "algebra_consistency_violations": 0,
+          "ungrounded_assertions": 0,
+          "rejected": {
+            "world": [],
+            "kinds": []
+          },
+          "all_zero": true
+        },
+        "unresolved_candidate_loss": [],
+        "reject_to_unresolved": [],
+        "identifier_render_failures": [],
+        "normalization": {
+          "consumer_relations_required": [
+            "invoice_record",
+            "contract_record",
+            "contract_active",
+            "contract_clause_kind",
+            "identity_judgment",
+            "crm_record",
+            "registry_record"
+          ],
+          "consumer_relations_recovered": [
+            "invoice_record",
+            "contract_record",
+            "contract_active",
+            "contract_clause_kind",
+            "identity_judgment",
+            "crm_record",
+            "registry_record"
+          ],
+          "missing_mappings": [],
+          "false_mappings": [],
+          "role_binding_failures": []
+        },
+        "failure_attribution": [
+          "adjudication_under_closure",
+          "semantic_fact_failure"
+        ]
+      }
+    },
+    "T5": {
+      "p0": {
+        "pass": true,
+        "missing_purposes": [],
+        "field_gaps": [],
+        "checks": {
+          "a_active_contracts": true,
+          "a_acquisition_policy": true,
+          "b_unresolved": true,
+          "c_obligation_kinds": true,
+          "policy_field_present": true
+        }
+      },
+      "p1": {
+        "pass": true,
+        "n_relations": 16,
+        "n_world": 10,
+        "n_purpose": 6,
+        "n_semantic": 3,
+        "world_purpose_leakage": [],
+        "unrepresentable_claimed": false,
+        "semantic_identity_bindings": [
+          "invoice_record.invoice->invoice",
+          "invoice_record.invoice_id->invoice_id",
+          "invoice_record.billed_name->billed_name",
+          "invoice_record.amount->amount",
+          "invoice_record.currency->currency",
+          "invoice_record.period->period",
+          "invoice_record.status->status",
+          "crm_account_record.account->account",
+          "crm_account_record.account_name->account_name",
+          "registry_entity_record.entity->entity",
+          "registry_entity_record.company_number->company_number",
+          "registry_entity_record.legal_name->legal_name",
+          "contract_record.contract->contract",
+          "contract_record.contract_id->contract_id",
+          "contract_record.counterparty->counterparty_text",
+          "contract_clause_excerpt.contract->contract",
+          "identity_judgment.left->left",
+          "identity_judgment.right->right",
+          "identity_judgment.disposition->disposition",
+          "obligation_clause_presence.contract->contract",
+          "obligation_clause_presence.clause_kind->clause_kind",
+          "obligation_clause_presence.disposition->disposition",
+          "acquisition_clause_presence.contract->contract",
+          "acquisition_clause_presence.clause_kind->clause_kind",
+          "acquisition_clause_presence.disposition->disposition",
+          "legal_name_variant_pair.left->left",
+          "legal_name_variant_pair.right->right",
+          "open_invoice.invoice->invoice",
+          "open_invoice.invoice_id->invoice_id",
+          "open_invoice.status->status",
+          "purpose_a_active_contract.contract->contract",
+          "purpose_a_active_contract.contract_id->contract_id",
+          "purpose_a_active_contract.active->active",
+          "purpose_c_active_contract.contract->contract",
+          "purpose_c_active_contract.contract_id->contract_id",
+          "purpose_c_active_contract.active->active",
+          "purpose_a_exposure_invoice.invoice->invoice",
+          "purpose_a_exposure_invoice.invoice_id->invoice_id",
+          "purpose_a_exposure_invoice.billed_name->billed_name",
+          "purpose_a_exposure_invoice.amount->amount",
+          "purpose_a_exposure_invoice.currency->currency",
+          "purpose_a_exposure_invoice.period->period",
+          "purpose_a_exposure_invoice.status->status",
+          "purpose_a_exposure_invoice.contract->contract",
+          "purpose_a_exposure_invoice.contract_id->contract_id",
+          "purpose_a_exposure_invoice.association->disposition",
+          "purpose_b_identity_link.left->left",
+          "purpose_b_identity_link.right->right",
+          "purpose_b_identity_link.epistemic->disposition",
+          "purpose_c_dependency_row.contract->contract",
+          "purpose_c_dependency_row.contract_id->contract_id",
+          "purpose_c_dependency_row.obligation_kinds->clause_kind",
+          "purpose_c_dependency_row.status->status"
+        ],
+        "counterparty_without_consumer_bind": [
+          "purpose_c_dependency_row"
+        ]
+      },
+      "p2": {
+        "pass": true,
+        "grounding": {
+          "sqlite": true,
+          "base_assertions": 128,
+          "grounded": 128,
+          "ungrounded": 0,
+          "rate": 1.0
+        },
+        "missing_mechanical_tokens": [],
+        "early_identity_closures": [],
+        "mechanical_delegated_to_semantics": false
+      },
+      "p3": {
+        "pass": true,
+        "n_obligations": 86,
+        "required": 18,
+        "required_hit": 17,
+        "required_missed": [
+          "registry:11847201_registry:11847299"
+        ],
+        "recall": 0.9444444444444444,
+        "precision_vs_oracle_pairs": 0.4722222222222222,
+        "unnecessary": 19,
+        "duplicate_obligations": 50,
+        "invalid_obligations": 0
+      },
+      "p4": {
+        "pass": true,
+        "n_packets": 86,
+        "required_with_packet": 17,
+        "sufficient_required": 17,
+        "packets_mentioning_notes": 17
+      },
+      "p5": {
+        "pass": true,
+        "compared": 17,
+        "correct": 9,
+        "accuracy": 0.5294117647058824,
+        "incorrect_semantic_closure": 0,
+        "incorrect_under_closure": 8,
+        "incorrect_polarity": 0,
+        "incorrect_rejection": 0,
+        "same_recall": 0.42857142857142855,
+        "distinct_recall": 1.0,
+        "coverage": 0.4666666666666667,
+        "unresolved_preservation": 2,
+        "delaware_inc_disposition": "UNRESOLVED",
+        "delaware_should_be": "UNRESOLVED",
+        "structural_changed": 0,
+        "verifier_changed": 0,
+        "audit_n": 68
+      },
+      "p6": {
+        "pass": true,
+        "sqlite": true,
+        "purpose_output_promoted_world": [],
+        "admission_mentions_world": true
+      },
+      "p7": {
+        "pass": true,
+        "checks": {
+          "required_premise": true,
+          "blocking_unresolved": true,
+          "derive_script": true
+        }
+      },
+      "p8": {
+        "pass": false,
+        "A": {
+          "pass": false,
+          "missing": [
+            [
+              "INV-1001",
+              "MSA-HELION-2019",
+              "asserted"
+            ],
+            [
+              "INV-1002",
+              "MSA-HELION-2019",
+              "asserted"
+            ],
+            [
+              "INV-2001",
+              "MSA-NBA-2021",
+              "asserted"
+            ],
+            [
+              "INV-2002",
+              "MSA-NBA-2021",
+              "asserted"
+            ],
+            [
+              "INV-3001",
+              "MSA-OAK-2018",
+              "asserted"
+            ],
+            [
+              "INV-3002",
+              "MSA-OAK-2018",
+              "asserted"
+            ],
+            [
+              "INV-5001",
+              "MSA-MER-2024",
+              "asserted"
+            ]
+          ],
+          "extra": []
+        },
+        "B": {
+          "pass": false,
+          "missing_required": [
+            [
+              "billing:Meridian Energy Partners LLC",
+              "contract:MSA-MER-2024",
+              "SAME_ENTITY"
+            ],
+            [
+              "billing:Meridian Energy Partners LLC",
+              "registry:4721193",
+              "SAME_ENTITY"
+            ],
+            [
+              "billing:Northbridge Analytics Inc.",
+              "contract:MSA-NBA-2021",
+              "SAME_ENTITY"
+            ],
+            [
+              "billing:Vellum Print Co Ltd",
+              "contract:SOW-VEL-2022",
+              "SAME_ENTITY"
+            ],
+            [
+              "billing:Vellum Print Co Ltd",
+              "registry:09338441",
+              "SAME_ENTITY"
+            ],
+            [
+              "crm:MER-55",
+              "billing:Meridian Energy Partners LLC",
+              "SAME_ENTITY"
+            ],
+            [
+              "crm:NBA-102",
+              "billing:Northbridge Analytics Inc.",
+              "SAME_ENTITY"
+            ],
+            [
+              "crm:VEL-19",
+              "billing:Vellum Print Co Ltd",
+              "SAME_ENTITY"
+            ],
+            [
+              "registry:11847201",
+              "registry:11847299",
+              "DISTINCT"
+            ]
+          ],
+          "unresolved_missing": [],
+          "extra": [
+            [
+              "billing:Helion Robotics Limited",
+              "registry:11847299",
+              "DISTINCT"
+            ],
+            [
+              "billing:Meridian Energy Partners LLC",
+              "contract:MSA-MER-2024",
+              "UNRESOLVED"
+            ],
+            [
+              "billing:Meridian Energy Partners LLC",
+              "registry:4721193",
+              "UNRESOLVED"
+            ],
+            [
+              "billing:Northbridge Analytics Inc.",
+              "contract:MSA-NBA-2021",
+              "UNRESOLVED"
+            ],
+            [
+              "billing:Vellum Print Co Ltd",
+              "contract:SOW-VEL-2022",
+              "UNRESOLVED"
+            ],
+            [
+              "billing:Vellum Print Co Ltd",
+              "registry:09338441",
+              "UNRESOLVED"
+            ],
+            [
+              "contract:MSA-HELION-2019",
+              "registry:11847201",
+              "SAME_ENTITY"
+            ],
+            [
+              "contract:MSA-HELION-2019",
+              "registry:11847299",
+              "DISTINCT"
+            ],
+            [
+              "contract:MSA-MER-2024",
+              "registry:4721193",
+              "UNRESOLVED"
+            ],
+            [
+              "contract:MSA-NBA-2021",
+              "registry:2019-0008841",
+              "UNRESOLVED"
+            ],
+            [
+              "contract:MSA-NBA-2021",
+              "registry:3840192",
+              "UNRESOLVED"
+            ],
+            [
+              "contract:MSA-OAK-2018",
+              "registry:HRB 88421",
+              "SAME_ENTITY"
+            ],
+            [
+              "contract:SOW-VEL-2022",
+              "registry:09338441",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:HEL-441",
+              "contract:MSA-HELION-2019",
+              "SAME_ENTITY"
+            ],
+            [
+              "crm:HEL-441",
+              "registry:11847201",
+              "SAME_ENTITY"
+            ],
+            [
+              "crm:MER-55",
+              "billing:Meridian Energy Partners LLC",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:MER-55",
+              "contract:MSA-MER-2024",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:MER-55",
+              "registry:4721193",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:NBA-102",
+              "billing:Northbridge Analytics Inc.",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:NBA-102",
+              "contract:MSA-NBA-2021",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:NBA-102",
+              "registry:2019-0008841",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:NBA-102",
+              "registry:3840192",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:OAK-77",
+              "contract:MSA-OAK-2018",
+              "SAME_ENTITY"
+            ],
+            [
+              "crm:OAK-77",
+              "registry:HRB 88421",
+              "SAME_ENTITY"
+            ],
+            [
+              "crm:VEL-19",
+              "billing:Vellum Print Co Ltd",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:VEL-19",
+              "contract:SOW-VEL-2022",
+              "UNRESOLVED"
+            ],
+            [
+              "crm:VEL-19",
+              "registry:09338441",
+              "UNRESOLVED"
+            ]
+          ],
+          "exact": false
+        },
+        "C": {
+          "pass": false,
+          "missing": [
+            [
+              "MSA-HELION-2019",
+              "dependent",
+              [
+                "rolling_term"
+              ]
+            ],
+            [
+              "MSA-MER-2024",
+              "dependent",
+              [
+                "rolling_term"
+              ]
+            ],
+            [
+              "MSA-NBA-2021",
+              "dependent",
+              [
+                "auto_renewal"
+              ]
+            ]
+          ],
+          "extra": [
+            [
+              "MSA-HELION-2019",
+              "dependent",
+              [
+                "auto_renewal"
+              ]
+            ],
+            [
+              "MSA-MER-2024",
+              "unresolved",
+              [
+                "rolling_term"
+              ]
+            ],
+            [
+              "MSA-NBA-2021",
+              "unresolved",
+              [
+                "auto_renewal"
+              ]
+            ]
+          ]
+        },
+        "D": {
+          "pass": false,
+          "missing": [
+            [
+              "INV-1002",
+              "MSA-HELION-2019",
+              "matches"
+            ],
+            [
+              "INV-3002",
+              "MSA-OAK-2018",
+              "matches"
+            ],
+            [
+              "INV-5001",
+              "MSA-MER-2024",
+              "matches"
+            ]
+          ],
+          "extra": []
+        },
+        "source_rereads": [],
+        "zero_source_rereads": true,
+        "axis_b": {
+          "assertions_violating_role_type": 0,
+          "assertions_using_invalid_disposition": 0,
+          "invalid_purpose_kinds": 0,
+          "algebra_consistency_violations": 0,
+          "ungrounded_assertions": 0,
+          "rejected": {
+            "world": [],
+            "kinds": []
+          },
+          "all_zero": true
+        },
+        "unresolved_candidate_loss": [],
+        "reject_to_unresolved": [],
+        "identifier_render_failures": [],
+        "normalization": {
+          "consumer_relations_required": [
+            "invoice_record",
+            "contract_record",
+            "contract_active",
+            "contract_clause_kind",
+            "identity_judgment",
+            "crm_record",
+            "registry_record"
+          ],
+          "consumer_relations_recovered": [
+            "invoice_record",
+            "contract_record",
+            "contract_clause_kind",
+            "identity_judgment",
+            "crm_record",
+            "registry_record"
+          ],
+          "missing_mappings": [
+            "contract_active"
+          ],
+          "false_mappings": [],
+          "role_binding_failures": []
+        },
+        "failure_attribution": [
+          "adjudication_under_closure",
+          "semantic_fact_failure"
+        ]
+      }
+    }
+  },
+  "certified": {
+    "certified": {
+      "world_correctness": {
+        "A": true,
+        "B": true,
+        "C": true,
+        "D": true,
+        "all_exact": true
+      },
+      "normalization": {
+        "consumer_relations_recovered": [
+          "invoice_record",
+          "contract_record",
+          "contract_active",
+          "contract_clause_kind",
+          "identity_judgment",
+          "crm_record",
+          "registry_record"
+        ],
+        "missing_mappings": [],
+        "false_mappings": [],
+        "role_binding_failures": []
+      }
+    },
+    "morphisms": {
+      "rename": {
+        "world_correctness": {
+          "A": true,
+          "B": true,
+          "C": true,
+          "D": true,
+          "all_exact": true
+        },
+        "normalization": {
+          "consumer_relations_recovered": [
+            "invoice_record",
+            "contract_record",
+            "contract_active",
+            "contract_clause_kind",
+            "identity_judgment",
+            "crm_record",
+            "registry_record"
+          ],
+          "missing_mappings": [],
+          "false_mappings": [],
+          "role_binding_failures": []
+        },
+        "behavioral_equivalence_to_certified": true
+      },
+      "role_surface": {
+        "world_correctness": {
+          "A": true,
+          "B": true,
+          "C": true,
+          "D": true,
+          "all_exact": true
+        },
+        "normalization": {
+          "consumer_relations_recovered": [
+            "invoice_record",
+            "contract_record",
+            "contract_active",
+            "contract_clause_kind",
+            "identity_judgment",
+            "crm_record",
+            "registry_record"
+          ],
+          "missing_mappings": [],
+          "false_mappings": [],
+          "role_binding_failures": []
+        },
+        "behavioral_equivalence_to_certified": true
+      },
+      "orientation": {
+        "world_correctness": {
+          "A": true,
+          "B": true,
+          "C": true,
+          "D": true,
+          "all_exact": true
+        },
+        "normalization": {
+          "consumer_relations_recovered": [
+            "invoice_record",
+            "contract_record",
+            "contract_active",
+            "contract_clause_kind",
+            "identity_judgment",
+            "crm_record",
+            "registry_record"
+          ],
+          "missing_mappings": [],
+          "false_mappings": [],
+          "role_binding_failures": []
+        },
+        "behavioral_equivalence_to_certified": true
+      },
+      "layout": {
+        "world_correctness": {
+          "A": true,
+          "B": true,
+          "C": true,
+          "D": true,
+          "all_exact": true
+        },
+        "normalization": {
+          "consumer_relations_recovered": [
+            "invoice_record",
+            "contract_record",
+            "contract_active",
+            "contract_clause_kind",
+            "identity_judgment",
+            "crm_record",
+            "registry_record"
+          ],
+          "missing_mappings": [],
+          "false_mappings": [],
+          "role_binding_failures": []
+        },
+        "behavioral_equivalence_to_certified": true
+      },
+      "epistemic": {
+        "world_correctness": {
+          "A": true,
+          "B": true,
+          "C": true,
+          "D": true,
+          "all_exact": true
+        },
+        "normalization": {
+          "consumer_relations_recovered": [
+            "invoice_record",
+            "contract_record",
+            "contract_active",
+            "contract_clause_kind",
+            "identity_judgment",
+            "crm_record",
+            "registry_record"
+          ],
+          "missing_mappings": [],
+          "false_mappings": [],
+          "role_binding_failures": []
+        },
+        "behavioral_equivalence_to_certified": true
+      },
+      "decompose": {
+        "world_correctness": {
+          "A": true,
+          "B": true,
+          "C": true,
+          "D": true,
+          "all_exact": true
+        },
+        "normalization": {
+          "consumer_relations_recovered": [
+            "invoice_record",
+            "contract_record",
+            "contract_active",
+            "contract_clause_kind",
+            "identity_judgment",
+            "crm_record",
+            "registry_record"
+          ],
+          "missing_mappings": [],
+          "false_mappings": [],
+          "role_binding_failures": []
+        },
+        "behavioral_equivalence_to_certified": true
+      },
+      "noise": {
+        "world_correctness": {
+          "A": true,
+          "B": true,
+          "C": true,
+          "D": true,
+          "all_exact": true
+        },
+        "normalization": {
+          "consumer_relations_recovered": [
+            "invoice_record",
+            "contract_record",
+            "contract_active",
+            "contract_clause_kind",
+            "identity_judgment",
+            "crm_record",
+            "registry_record"
+          ],
+          "missing_mappings": [],
+          "false_mappings": [],
+          "role_binding_failures": []
+        },
+        "behavioral_equivalence_to_certified": true
+      },
+      "counterparty_bind": {
+        "world_correctness": {
+          "A": true,
+          "B": true,
+          "C": true,
+          "D": true,
+          "all_exact": true
+        },
+        "normalization": {
+          "consumer_relations_recovered": [
+            "invoice_record",
+            "contract_record",
+            "contract_active",
+            "contract_clause_kind",
+            "identity_judgment",
+            "crm_record",
+            "registry_record"
+          ],
+          "missing_mappings": [],
+          "false_mappings": [],
+          "role_binding_failures": []
+        },
+        "behavioral_equivalence_to_certified": true
+      }
+    }
+  },
+  "import_audit": {
+    "forbidden_hits": [],
+    "ok": true
+  },
+  "kernel": {
+    "__init__.py": "sha256:3dcc6f08802891678dd6045204c7f24a0f9b13551e6a07dac39e530e28099c4a",
+    "model.py": "sha256:7221d90855bfe7e99ab65f38b49d9356a38fe8cdc0dd99753b62c23f4ba0aeff",
+    "store.py": "sha256:fb3d3bbf90e6d149921c420636860db239d96af1b8580aa7af22d0ddddc884d7",
+    "agent_surface.py": "sha256:3fad57102afa52ff659527cc4bb9fdb7753fe517338e6fe9a7f925f05909dfc9"
+  },
+  "recommendation": "NOT_READY",
+  "blocking": [
+    "P5 unsupported closures=1"
+  ]
+}

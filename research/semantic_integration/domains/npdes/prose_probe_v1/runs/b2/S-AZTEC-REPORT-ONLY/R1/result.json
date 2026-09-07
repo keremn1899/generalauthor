@@ -1,0 +1,30 @@
+{
+  "payload": [
+    {
+      "obligation_id": "oracle:S-AZTEC-REPORT-ONLY",
+      "relation": "numeric_comparison_applicable",
+      "values": {
+        "permit": "NM0028762",
+        "parameters": [
+          "Flow",
+          "Cyanide Total Recoverable",
+          "TDS"
+        ]
+      },
+      "disposition": "UNRESOLVED",
+      "grounding": [
+        {
+          "source_path": "aztec/final_permit.pdf",
+          "location": "page 3 section part_i",
+          "excerpt": "Cyanide, Total Recoverable            Report           Report     Report             Report    1/Quarter (*1)"
+        },
+        {
+          "source_path": "aztec/final_permit.pdf",
+          "location": "page 3 section part_i",
+          "excerpt": "Total Dissolved Solids                Report           Report     Report             Report    1/Quarter (*1)"
+        }
+      ],
+      "rationale": "The obligation bundles Flow, Cyanide Total Recoverable, and TDS. The packet grounds Cyanide Total Recoverable and Total Dissolved Solids (TDS) as report-only monitoring in part_i (effluent limit cells read 'Report', not a numeric limit), which would support REJECT for those parameters under the oracle contract (numeric exceedance comparison not applicable). No selected observation addresses Flow or maps the obligation label 'Flow' to a permit row, so applicability for that parameter cannot be established. ACCEPT would require grounded evidence that numeric comparison is applicable for the full parameter set; REJECT for the bundled obligation would require establishing non-applicability for all three. Neither burden is met. Per P5, unsupported uncertainty is preferred to closing on partial evidence."
+    }
+  ]
+}

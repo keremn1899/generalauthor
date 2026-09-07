@@ -1,0 +1,67 @@
+{
+  "propositions": [
+    {
+      "proposition": "Billing records list the billed name as \"Northbridge Analytics Inc.\"",
+      "source_grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Northbridge Analytics Inc."
+      },
+      "establishes": "other",
+      "relevance": "Grounds the left referent (billing:Northbridge Analytics Inc.) as an Inc.-suffixed billing entity."
+    },
+    {
+      "proposition": "Registry filing 2019-0008841 is recorded as \"NORTHBRIDGE ANALYTICS LLC\" in Wyoming with status active.",
+      "source_grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 2019-0008841"
+      },
+      "establishes": "other",
+      "relevance": "Grounds the right referent (registry:2019-0008841) to a Wyoming LLC legal name, not an Inc."
+    },
+    {
+      "proposition": "Sales uses the short name \"Northbridge Analytics\", while billing and the MSA use \"Northbridge Analytics Inc.\"",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "other",
+      "relevance": "Documents naming variation around the billing entity without linking it to registry 2019-0008841."
+    },
+    {
+      "proposition": "A 2024 credit check returned a Wyoming LLC named \"Northbridge Analytics LLC\".",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "unresolved_preservation",
+      "relevance": "Introduces an additional live Wyoming LLC candidate alongside the billing Inc. entity, preserving multiple possible registry matches."
+    },
+    {
+      "proposition": "Legal has not determined which registry entity is the contracting party.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "unresolved_preservation",
+      "relevance": "Packet explicitly states that identity between the billing referent and a registry entity cannot be established."
+    },
+    {
+      "proposition": "The packet instructs to treat the registry link as unresolved.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "unresolved_preservation",
+      "relevance": "Direct packet directive not to close identity between billing:Northbridge Analytics Inc. and registry:2019-0008841."
+    },
+    {
+      "proposition": "The legal name on registry 2019-0008841 is \"NORTHBRIDGE ANALYTICS LLC\", which differs in corporate form from the billing name \"Northbridge Analytics Inc.\"",
+      "source_grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 2019-0008841"
+      },
+      "establishes": "distinctness",
+      "relevance": "Official registry record for the right referent names an LLC, while the left referent is billed as an Inc.; different legal designators bear on whether they denote the same legal counterparty."
+    }
+  ]
+}

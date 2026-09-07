@@ -1,0 +1,39 @@
+{
+  "requirements": [
+    {
+      "kind": "UNRESOLVED",
+      "name": "checkout_note_meaning",
+      "note": "shop_rules.txt does not define PENDING",
+      "relation": "checkout_record"
+    },
+    {
+      "kind": "REQUIRE",
+      "name": "authorized_checkouts",
+      "note": "Determine which tool checkouts are authorized",
+      "relation": "checkout_authorization"
+    },
+    {
+      "kind": "REQUIRE",
+      "name": "checkout_fees",
+      "note": "Fees under shop rules including identity changes and after-hours",
+      "relation": "checkout_fee"
+    },
+    {
+      "field": "total_fee",
+      "kind": "NUMERIC",
+      "name": "fee_totals_numeric",
+      "relation": "checkout_fee"
+    },
+    {
+      "field": "status",
+      "kind": "INTERPRETED",
+      "known": [
+        "authorized",
+        "unauthorized"
+      ],
+      "name": "authorization_status",
+      "relation": "checkout_authorization"
+    }
+  ],
+  "text": "Determine which tool checkouts are authorized, what fees apply under shop rules (including identity changes and after-hours), and where notes or coverage questions remain insufficiently evidenced.\n"
+}

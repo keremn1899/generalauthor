@@ -1,0 +1,85 @@
+{
+  "steps": [
+    {
+      "fact": "The left referent crm:OAK-77 corresponds to CRM row OAK-77 with account name Oakfield Logistics.",
+      "grounding": {
+        "source_path": "sources/crm.csv",
+        "location": "row OAK-77"
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "Commercial notes state that Oakfield rebranded from Oakfield Logistics GmbH to Oakfield Logistik GmbH and that Handelsregister number HRB 88421 did not change.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Commercial notes state that CRM still shows the old English-facing name for this company.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "The selected CRM observation for left referent crm:OAK-77 is row OAK-77 with name Oakfield Logistics, which is the old English-facing CRM name described in the notes for the entity that rebranded to Oakfield Logistik GmbH.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Company registry row HRB 88421 lists the legal entity as Oakfield Logistik GmbH.",
+      "grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row HRB 88421"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Billing records use billed_name Oakfield Logistik GmbH.",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Oakfield Logistik GmbH"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Because HRB 88421 did not change across the rebrand, Oakfield Logistics GmbH and Oakfield Logistik GmbH denote the same legal entity identified by HRB 88421.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "crm:OAK-77 (CRM record showing the old English-facing name) and billing:Oakfield Logistik GmbH (current legal and billing name tied to unchanged HRB 88421) denote the same legal counterparty.",
+      "grounding": null,
+      "mechanical": false
+    }
+  ],
+  "disposition": "SAME_ENTITY",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row OAK-77"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row HRB 88421"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Oakfield Logistik GmbH"
+    }
+  ],
+  "support_claim": "CRM record OAK-77 carries the old English-facing name for the company that rebranded to Oakfield Logistik GmbH without changing legal identifier HRB 88421, which registry and billing both attach to Oakfield Logistik GmbH."
+}

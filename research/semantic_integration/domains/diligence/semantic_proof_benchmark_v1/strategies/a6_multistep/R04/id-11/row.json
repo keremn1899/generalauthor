@@ -1,0 +1,76 @@
+{
+  "strategy": "a6_multistep",
+  "trial": "R04",
+  "obligation_id": "id-11",
+  "candidate": {
+    "left": "billing:Vellum Print Co Ltd",
+    "right": "registry:09338441"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 09338441"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Vellum Print Co Ltd"
+    }
+  ],
+  "support_claim": "The registry associates 09338441 with a similarly named company, but the billing record provides only a name with no identifier bridge, so neither same-entity nor distinct-entity identity can be established.",
+  "proof_size": 6,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "steps": [
+    {
+      "fact": "Candidate left referent is billing:Vellum Print Co Ltd and right referent is registry:09338441.",
+      "grounding": null,
+      "mechanical": true
+    },
+    {
+      "fact": "Registry row 09338441 records company number 09338441 with legal name VELLUM PRINT CO LTD (England and Wales, dissolved).",
+      "grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 09338441"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Billing observation for billed_name Vellum Print Co Ltd contains only the name Vellum Print Co Ltd with no company number or other legal identifier.",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "No packet excerpt links the billing referent to company number 09338441 or states that the billed name uniquely identifies that registry record.",
+      "grounding": null,
+      "mechanical": false
+    },
+    {
+      "fact": "Name similarity between Vellum Print Co Ltd and VELLUM PRINT CO LTD does not satisfy the identity burden for SAME_ENTITY.",
+      "grounding": null,
+      "mechanical": false
+    },
+    {
+      "fact": "No evidence establishes that billing:Vellum Print Co Ltd and registry:09338441 are distinct entities.",
+      "grounding": null,
+      "mechanical": false
+    }
+  ],
+  "admit": {
+    "rule": "unresolved"
+  },
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

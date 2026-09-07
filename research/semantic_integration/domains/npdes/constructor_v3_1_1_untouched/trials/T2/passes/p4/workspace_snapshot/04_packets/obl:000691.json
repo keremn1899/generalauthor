@@ -1,0 +1,28 @@
+{
+  "obligation_id": "obl:000691",
+  "selected_observations": [
+    {
+      "source_path": "sources/structured/dmr_measurements.csv",
+      "location": "row 348; key=3848381218",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0028762; PERM_FEATURE_NMBR=001; PARAMETER_CODE=50060; PARAMETER_DESC=Chlorine, total residual; MONITORING_PERIOD_END_DATE=04/30/2025; DMR_VALUE_ID=3848381218; DMR_VALUE_NMBR=11; DMR_UNIT_DESC=ug/L; STATISTICAL_BASE_CODE=DD; DMR_VALUE_QUALIFIER_CODE==; LIMIT_VALUE_ID=3610840348; VALUE_RECEIVED_DATE=07/10/2025"
+    },
+    {
+      "source_path": "02_mechanical_world/world.sqlite",
+      "location": "reported_measurement_stated[measurement:3848381218]",
+      "excerpt": "period_end=2025-04-30; value_number=11.0; statistical_base=DD; nodi_code=(none)"
+    },
+    {
+      "source_path": "sources/structured/permit_limits.csv",
+      "location": "row 68; key=3610840348",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0028762; PERM_FEATURE_NMBR=001; PARAMETER_CODE=50060; PARAMETER_DESC=Chlorine, total residual; LIMIT_VALUE_ID=3610840348; LIMIT_VALUE_NMBR=11; LIMIT_UNIT_DESC=ug/L; STATISTICAL_BASE_CODE=DD; LIMIT_VALUE_QUALIFIER_CODE=<=; LIMIT_TYPE_CODE=ENF; OPTIONAL_MONITORING_FLAG=N; LIMIT_FREQ_OF_ANALYSIS_CODE=01/01; DMR_COMMENT_TEXT=WHEN DISCHARGING.; LIMIT_SET_NAME=DISCHARGE BACKWASH WATER; LIMIT_BEGIN_DATE=01/01/2022; LIMIT_END_DATE=12/31/2026"
+    }
+  ],
+  "selection_rationale": "Packet pairs FY2025 measurement measurement:3848381218 (NM0028762/001/50060 period_end=2025-04-30) with temporally overlapping stated limit rows sharing locational keys to support applicable-limit selection or unresolved recording.",
+  "known_missing_information": [
+    "Permit PDF files referenced in sources/source_manifest.json are absent from workspace; permit_condition_language_stated and limit narrative grounding rely on CSV comments only.",
+    "P2 materialized C1 base relations only; C4 derivations (fy2025_in_scope_measurement, candidate_limit_for_measurement, fy2025_candidate_monitoring_requirement, monitoring_expectation_without_numeric_result) are not registered in world.sqlite.",
+    "limit_source_classification judgments are unresolved for candidate limits.",
+    "candidate_limit_for_measurement derivation is not materialized; mechanical join candidates inferred from shared facility/outfall/parameter and date overlap only.",
+    "Permit condition precedence among multiple statistical bases (e.g., min/max pH pair) is not resolved from CSV extracts alone."
+  ]
+}

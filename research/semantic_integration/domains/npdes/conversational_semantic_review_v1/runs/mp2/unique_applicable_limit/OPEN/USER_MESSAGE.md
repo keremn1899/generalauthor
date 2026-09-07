@@ -1,0 +1,3 @@
+For Purpose A — figuring out which enforceable numeric discharge limit applies to each FY2025 measurement — I need to understand how you think about the relationship between a single reported measurement and the limits in the permit data.
+
+When you look at a DMR measurement (a specific permit, outfall, parameter, and monitoring period end date) and find one or more matching rows in the permit limits catalog, how do you decide how many governing numeric limits actually apply to that measurement? In particular, what do you do when the catalog shows multiple rows that could match — for example, overlapping effective date intervals, staged limits that change over time, or what look like separate catalog entries for what you would consider the same underlying limit?

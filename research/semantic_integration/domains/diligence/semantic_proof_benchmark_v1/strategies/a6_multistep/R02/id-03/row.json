@@ -1,0 +1,68 @@
+{
+  "strategy": "a6_multistep",
+  "trial": "R02",
+  "obligation_id": "id-03",
+  "candidate": {
+    "left": "billing:Helion Robotics Limited",
+    "right": "contract:MSA-HELION-2019"
+  },
+  "proposed_disposition": "SAME_ENTITY",
+  "final_disposition": "SAME_ENTITY",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Helion Robotics Limited"
+    },
+    {
+      "source_path": "sources/contracts/MSA-HELION-2019.md",
+      "location": "header"
+    }
+  ],
+  "support_claim": "Billing records name Helion Robotics Limited and the MSA names Helion Robotics Ltd. as counterparty, and commercial notes explicitly state those names denote the same legal entity.",
+  "proof_size": 3,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "steps": [
+    {
+      "fact": "The left referent billing:Helion Robotics Limited corresponds to the billed_name Helion Robotics Limited in billing records.",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Helion Robotics Limited"
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "Contract MSA-HELION-2019 names Helion Robotics Ltd. as its counterparty.",
+      "grounding": {
+        "source_path": "sources/contracts/MSA-HELION-2019.md",
+        "location": "header"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Commercial notes state that Helion Robotics Ltd (CRM operating name) and Helion Robotics Limited (invoices and Companies House) are the same legal entity.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    }
+  ],
+  "admit": {
+    "rule": "steps_grounded"
+  },
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": true,
+  "unsupported_closure": false,
+  "under_closure": false,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": false
+}

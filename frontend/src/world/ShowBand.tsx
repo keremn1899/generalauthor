@@ -21,9 +21,17 @@ export type ShowBandProps = {
    * that reports a state it cannot change is worse than no control.
    */
   names?: { on: boolean; onToggle: () => void };
+  /**
+   * The spread toggle, where the surface offers one.
+   *
+   * It sits with the filters because it is the same kind of control — a
+   * statement about what the field draws, not about what the world says — and
+   * it is omitted on a surface with no field for it to act on.
+   */
+  spread?: { on: boolean; onToggle: () => void };
 };
 
-export function ShowBand({ show, onShow, names }: ShowBandProps) {
+export function ShowBand({ show, onShow, names, spread }: ShowBandProps) {
   const [pinned, setPinned] = useState(false);
   const [hovered, setHovered] = useState(false);
   const suppressHover = useRef(false);
@@ -101,6 +109,23 @@ export function ShowBand({ show, onShow, names }: ShowBandProps) {
             >
               <span className="world-show__key" aria-hidden="true" />
               <span className="world-show__name">names</span>
+            </button>
+          ) : null}
+          {spread ? (
+            <button
+              type="button"
+              className="world-show__filter"
+              data-layer="spread"
+              aria-pressed={spread.on}
+              title={
+                spread.on
+                  ? "Keep a selected mark's filaments straight, names stacked"
+                  : "Spread a selected mark's filaments so their names clear"
+              }
+              onClick={spread.onToggle}
+            >
+              <span className="world-show__key" aria-hidden="true" />
+              <span className="world-show__name">spread</span>
             </button>
           ) : null}
         </div>

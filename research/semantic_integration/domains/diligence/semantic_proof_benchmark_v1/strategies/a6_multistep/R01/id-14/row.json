@@ -1,0 +1,79 @@
+{
+  "strategy": "a6_multistep",
+  "trial": "R01",
+  "obligation_id": "id-14",
+  "candidate": {
+    "left": "billing:Meridian Energy Partners LLC",
+    "right": "registry:4721193"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 4721193"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Meridian Energy Partners LLC"
+    }
+  ],
+  "support_claim": "Registry row 4721193 and billing records share a similar name, but the packet supplies no establishing identity evidence (shared legal identifier or licensed mapping) and no establishing distinctness evidence.",
+  "proof_size": 6,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "steps": [
+    {
+      "fact": "The right referent registry:4721193 mechanically denotes registry row 4721193.",
+      "grounding": null,
+      "mechanical": true
+    },
+    {
+      "fact": "Registry row 4721193 records entity name MERIDIAN ENERGY PARTNERS LLC (Delaware, active).",
+      "grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 4721193"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "The left referent billing:Meridian Energy Partners LLC is associated with billed name Meridian Energy Partners LLC in billing records.",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Meridian Energy Partners LLC"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "The billing observation provides only a trade name string and no legal identifier (e.g., registry number) tying it to row 4721193.",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Meridian Energy Partners LLC"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "The packet does not state identifier uniqueness for names, provide a cross-source mapping, or license identity from name correspondence alone.",
+      "grounding": null,
+      "mechanical": false
+    },
+    {
+      "fact": "No evidence in the packet establishes that the billing referent and registry:4721193 are distinct entities.",
+      "grounding": null,
+      "mechanical": false
+    }
+  ],
+  "admit": {
+    "rule": "unresolved"
+  },
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

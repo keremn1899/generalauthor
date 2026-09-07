@@ -1,0 +1,25 @@
+{
+  "obligation_id": "obl:identity_judgment:e48b07079166",
+  "selected_observations": [
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "company_number=11847201",
+      "excerpt": "company_number,legal_name,jurisdiction,status\n11847201,HELION ROBOTICS LIMITED,England and Wales,active"
+    },
+    {
+      "source_path": "sources/crm.csv",
+      "location": "crm_account_id=HEL-441",
+      "excerpt": "crm_account_id,account_name,domain,country,owner,status\nHEL-441,Helion Robotics Ltd,helionrobotics.com,GB,A. Chen,active"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph",
+      "excerpt": "Helion Robotics Ltd is the operating name used in CRM. Invoices and Companies House use Helion Robotics Limited. That is the same legal entity. Helion Industrial Systems Ltd is a different company; it sold sensors to us in 2018 and has no current MSA."
+    }
+  ],
+  "selection_rationale": "Side-by-side source rows for registry:11847201 and crm:HEL-441 plus any commercial_notes on operating-name variants, rebrands, or explicit unresolved registry links.",
+  "known_missing_information": [
+    "P2 emitted semantic candidate tuples with empty disposition; no adjudication performed.",
+    "open_invoices_by_contract derivation is registered but never run; depends on resolved identity and association judgments."
+  ]
+}

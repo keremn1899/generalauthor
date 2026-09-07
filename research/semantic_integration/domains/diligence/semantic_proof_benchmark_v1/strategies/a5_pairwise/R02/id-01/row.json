@@ -1,0 +1,84 @@
+{
+  "strategy": "a5_pairwise",
+  "trial": "R02",
+  "obligation_id": "id-01",
+  "candidate": {
+    "left": "crm:HEL-441",
+    "right": "billing:Helion Robotics Limited"
+  },
+  "proposed_disposition": "SAME_ENTITY",
+  "final_disposition": "SAME_ENTITY",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row HEL-441"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Helion Robotics Limited"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "Commercial notes explicitly identify Helion Robotics Ltd (linked to CRM record HEL-441) and Helion Robotics Limited (listed as billing billed_name) as the same legal entity.",
+  "proof_size": 4,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "propositions": [
+    {
+      "proposition": "Commercial notes state that Helion Robotics Ltd is the operating name used in CRM, that invoices and Companies House use Helion Robotics Limited, and that these are the same legal entity.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "identity",
+      "relevance": "Explicitly asserts that the CRM operating name and the billing/legal name refer to the same legal counterparty, bearing directly on whether crm:HEL-441 and billing:Helion Robotics Limited denote the same entity."
+    },
+    {
+      "proposition": "CRM record HEL-441 is associated with the company name Helion Robotics Ltd.",
+      "source_grounding": {
+        "source_path": "sources/crm.csv",
+        "location": "row HEL-441"
+      },
+      "establishes": "identity",
+      "relevance": "Grounds the left referent crm:HEL-441 to Helion Robotics Ltd, the CRM operating name that the commercial notes identify as the same legal entity as Helion Robotics Limited."
+    },
+    {
+      "proposition": "Billing records list Helion Robotics Limited as the billed_name.",
+      "source_grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Helion Robotics Limited"
+      },
+      "establishes": "identity",
+      "relevance": "Grounds the right referent billing:Helion Robotics Limited to the invoice billed name that the commercial notes identify as the same legal entity as the CRM operating name."
+    },
+    {
+      "proposition": "Commercial notes state that Helion Industrial Systems Ltd is a different company that sold sensors in 2018 and has no current MSA.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "distinctness",
+      "relevance": "Documents that a similarly named third party is explicitly distinct from the Helion Robotics entities under review; it does not establish distinctness between the two candidate referents themselves."
+    }
+  ],
+  "admit": {
+    "rule": "identity_proposition_present"
+  },
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": true,
+  "unsupported_closure": false,
+  "under_closure": false,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": false
+}

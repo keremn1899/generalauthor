@@ -1,0 +1,108 @@
+{
+  "strategy": "a3_entailment",
+  "trial": "R05",
+  "obligation_id": "id-08",
+  "candidate": {
+    "left": "billing:Oakfield Logistik GmbH",
+    "right": "registry:HRB 88421"
+  },
+  "proposed_disposition": "SAME_ENTITY",
+  "final_disposition": "SAME_ENTITY",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row HRB 88421"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Oakfield Logistik GmbH"
+    }
+  ],
+  "support_claim": "Registry HRB 88421 is explicitly registered to Oakfield Logistik GmbH, commercial notes confirm that name is the continuous legal identity behind that registry number, and billing records use that same legal name as counterparty.",
+  "proof_size": 6,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "claims": [
+    {
+      "claim": "Registry entry HRB 88421 records the legal entity named Oakfield Logistik GmbH.",
+      "status": "ESTABLISHED",
+      "burden": "identity",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/company_registry.csv",
+          "location": "row HRB 88421"
+        }
+      ]
+    },
+    {
+      "claim": "The entity that rebranded to Oakfield Logistik GmbH in 2023 retained Handelsregister number HRB 88421 without change.",
+      "status": "ESTABLISHED",
+      "burden": "identity",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    },
+    {
+      "claim": "Billing invoices list Oakfield Logistik GmbH as the billed counterparty name.",
+      "status": "ESTABLISHED",
+      "burden": "identity",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Oakfield Logistik GmbH"
+        }
+      ]
+    },
+    {
+      "claim": "The billing counterparty Oakfield Logistik GmbH and registry entry HRB 88421 denote the same legal counterparty.",
+      "status": "ESTABLISHED",
+      "burden": "identity",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/company_registry.csv",
+          "location": "row HRB 88421"
+        },
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        },
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Oakfield Logistik GmbH"
+        }
+      ]
+    },
+    {
+      "claim": "Billing counterparty Oakfield Logistik GmbH and registry entry HRB 88421 are distinct legal counterparties.",
+      "status": "NOT_ESTABLISHED",
+      "burden": "distinctness",
+      "supporting_evidence": []
+    },
+    {
+      "claim": "The packet preserves multiple live candidates or states that identity cannot be established.",
+      "status": "NOT_ESTABLISHED",
+      "burden": "unresolved_preservation",
+      "supporting_evidence": []
+    }
+  ],
+  "admit": {
+    "rule": "identity_burden_established"
+  },
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": true,
+  "unsupported_closure": false,
+  "under_closure": false,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": false
+}

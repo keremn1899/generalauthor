@@ -1,0 +1,29 @@
+{
+  "obligation_id": "obl:b:monitoring_obligation:req:31d5dd558155e3d8",
+  "selected_observations": [
+    {
+      "source_path": "02_mechanical_world/world.sqlite",
+      "location": "monitoring_requirement_schedule/req:31d5dd558155e3d8",
+      "excerpt": "requirement_id=req:31d5dd558155e3d8; permit=NM0020583; feature=TX1; parameter_code=TEM6C; frequency_code=01/90; optional_monitoring_flag=N; limit_set_designator=Q; effective=2021-12-01..2026-11-30; condition_anchor_text=(PASS = 0  FAIL = 1) REPORT PASS AS '0' OR REPORT FAIL AS '1' IN CONCENTRATION MAX. ABOVE.  IF ALL TESTS PASS FOR THE FIRST YEAR OF THE PERMIT, THE FREQUENCY WILL BE REDUCED FOR YEARS 2-5 TO:  1/6 MON..."
+    },
+    {
+      "source_path": "sources/structured/permit_limits.csv",
+      "location": "row 102, source for req:31d5dd558155e3d8",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0020583; PERM_FEATURE_NMBR=TX1; PARAMETER_CODE=TEM6C; PARAMETER_DESC=LF Pass/Fail Static Renewal 48Hr Acute Pimephales promelas; LIMIT_VALUE_ID=3610839683; LIMIT_SET_SCHEDULE_ID=3600904539; LIMIT_TYPE_CODE=ENF; LIMIT_UNIT_CODE=9A; STATISTICAL_BASE_CODE=VA; OPTIONAL_MONITORING_FLAG=N; LIMIT_BEGIN_DATE=12/01/2021; LIMIT_END_DATE=11/30/2026; LIMIT_SET_DESIGNATOR=Q; LIMIT_FREQ_OF_ANALYSIS_CODE=01/90; DMR_COMMENT_TEXT=(PASS = 0  FAIL = 1) REPORT PASS AS '0' OR REPORT FAIL AS '1' IN CONCENTRATION MAX. ABOVE.  IF ALL TESTS PASS FOR THE FIRST YEAR OF THE PERMIT, THE FREQUENCY WILL BE REDUCED FOR YEARS 2-5 TO:  1/6 MONTHS FOR DAPHNIA PULEX & 1/YR FOR PIMEPHALES PROMELAS (SEE FOOTNOTE 9, PAGE 3 OF PART I OF PERMIT).; ALL_MONTHS_LIMIT=JAN--FEB--MAR--APR--MAY--JUN--JUL--AUG--SEP--OCT--NOV--DEC"
+    },
+    {
+      "source_path": "sources/farmington/final_permit.pdf",
+      "location": "source_document_anchor",
+      "excerpt": "sha256=78c1698dee0e9516473ced89c2f49f93f2d4c353c99ed70e4bf29508bafbaa12; permit PDF available but text not extracted in P2"
+    }
+  ],
+  "selection_rationale": "Packet grounds monitoring_obligation_resolution for req:31d5dd558155e3d8 in context FY2025 overlap 2024-10-01 to 2025-09-30: schedule frequency, optional-monitoring flag, effective dates, and condition anchor text from compiled CSV.",
+  "known_missing_information": [
+    "condition_anchor_text present; permit-text condition evaluation not mechanically established",
+    "P2 compiled BASE relations only; DERIVED universes (period_in_fy2025, dmr_in_fy2025_scope, measurement_limit_candidate_pair, monitoring_requirement_in_fy2025, missing_evidence_case_universe) computed inline per 01_vocabulary.json C4 rules, not persisted in world.sqlite.",
+    "Purpose C absent-submission cases are not enumerable: frequency-code interpretation rules are not compiled as world facts.",
+    "Blank LIMIT_VALUE_NMBR and DMR_VALUE_NMBR stored as 0.0 (TaskView REAL NOT NULL); ordinary-numeric detection treats bare 0.0 as non-ordinary.",
+    "Per-month seasonal activation not modeled; only all_months_active boolean available for limit schedule disambiguation.",
+    "Permit PDF text extraction deferred; condition_anchor_text limited to DMR_COMMENT_TEXT from permit_limits.csv."
+  ]
+}

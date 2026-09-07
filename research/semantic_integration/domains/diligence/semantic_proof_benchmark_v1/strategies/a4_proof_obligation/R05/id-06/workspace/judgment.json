@@ -1,0 +1,53 @@
+{
+  "proposed_disposition": "UNRESOLVED",
+  "proof_obligations": [
+    {
+      "obligation": "Establish that crm:OAK-77 and billing:Oakfield Logistik GmbH denote the same legal counterparty",
+      "required_for": "SAME_ENTITY",
+      "satisfied": false,
+      "evidence": [
+        {
+          "source_path": "sources/crm.csv",
+          "location": "row OAK-77"
+        },
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Oakfield Logistik GmbH"
+        },
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    },
+    {
+      "obligation": "Establish that crm:OAK-77 and billing:Oakfield Logistik GmbH denote distinct legal counterparties",
+      "required_for": "DISTINCT",
+      "satisfied": false,
+      "evidence": []
+    }
+  ],
+  "unsatisfied_obligations": [
+    "Establish that crm:OAK-77 and billing:Oakfield Logistik GmbH denote the same legal counterparty",
+    "Establish that crm:OAK-77 and billing:Oakfield Logistik GmbH denote distinct legal counterparties"
+  ],
+  "supporting_evidence": [
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row OAK-77"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Oakfield Logistik GmbH"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row HRB 88421"
+    }
+  ],
+  "support_claim": "The packet documents a rebrand between related names and shows CRM OAK-77 as \"Oakfield Logistics\" and billing as \"Oakfield Logistik GmbH\", but no observation explicitly links the OAK-77 identifier to the billing or registry referent, so identity is not established."
+}

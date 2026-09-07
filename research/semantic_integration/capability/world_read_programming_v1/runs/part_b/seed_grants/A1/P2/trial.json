@@ -1,0 +1,82 @@
+{
+  "part": "B",
+  "domain": "seed_grants",
+  "arm": "A1",
+  "trial": "P2",
+  "status": "ANSWERED",
+  "reported_model": "Composer 2.5",
+  "tools": {
+    "tool_calls_started": 15,
+    "shell_calls": 4,
+    "read_calls": 8,
+    "write_calls": 0,
+    "python_executions_guess": 4,
+    "mentioned_paths": [
+      "/tmp/world-experiment/world-read-programming-v1/1a43bdc16f7133dcb21d6bc9665ebc21/CONTRACT.md",
+      "/tmp/world-experiment/world-read-programming-v1/1a43bdc16f7133dcb21d6bc9665ebc21/PROGRAMMER.md",
+      "/tmp/world-experiment/world-read-programming-v1/1a43bdc16f7133dcb21d6bc9665ebc21/PURPOSE.txt",
+      "/tmp/world-experiment/world-read-programming-v1/1a43bdc16f7133dcb21d6bc9665ebc21/TASKS.md",
+      "/tmp/world-experiment/world-read-programming-v1/1a43bdc16f7133dcb21d6bc9665ebc21",
+      "inspect_world.py",
+      "/tmp/world-experiment/world-read-programming-v1/1a43bdc16f7133dcb21d6bc9665ebc21/inspect_world.py",
+      "/tmp/world-experiment/world-read-programming-v1/1a43bdc16f7133dcb21d6bc9665ebc21/taskview/README.md",
+      "/tmp/world-experiment/world-read-programming-v1/1a43bdc16f7133dcb21d6bc9665ebc21/taskview/agent_surface.py",
+      "/tmp/world-experiment/world-read-programming-v1/1a43bdc16f7133dcb21d6bc9665ebc21",
+      "/",
+      "/",
+      "/tmp/world-experiment/world-read-programming-v1/1a43bdc16f7133dcb21d6bc9665ebc21/README.md",
+      "/tmp/world-experiment/world-read-programming-v1/1a43bdc16f7133dcb21d6bc9665ebc21",
+      "/",
+      "/",
+      "/tmp/world-experiment/world-read-programming-v1/1a43bdc16f7133dcb21d6bc9665ebc21/answers.json",
+      "/tmp/world-experiment/world-read-programming-v1/1a43bdc16f7133dcb21d6bc9665ebc21/answers.json",
+      "/dev/null"
+    ]
+  },
+  "exploration": {
+    "reads": [
+      "/tmp/world-experiment/world-read-programming-v1/1a43bdc16f7133dcb21d6bc9665ebc21/CONTRACT.md",
+      "/tmp/world-experiment/world-read-programming-v1/1a43bdc16f7133dcb21d6bc9665ebc21/PROGRAMMER.md",
+      "/tmp/world-experiment/world-read-programming-v1/1a43bdc16f7133dcb21d6bc9665ebc21/PURPOSE.txt",
+      "/tmp/world-experiment/world-read-programming-v1/1a43bdc16f7133dcb21d6bc9665ebc21/TASKS.md",
+      "/tmp/world-experiment/world-read-programming-v1/1a43bdc16f7133dcb21d6bc9665ebc21/inspect_world.py",
+      "/tmp/world-experiment/world-read-programming-v1/1a43bdc16f7133dcb21d6bc9665ebc21/taskview/README.md",
+      "/tmp/world-experiment/world-read-programming-v1/1a43bdc16f7133dcb21d6bc9665ebc21/taskview/agent_surface.py",
+      "/tmp/world-experiment/world-read-programming-v1/1a43bdc16f7133dcb21d6bc9665ebc21/README.md"
+    ],
+    "writes": [],
+    "shells": [
+      "cd /tmp/world-experiment/world-read-programming-v1/1a43bdc16f7133dcb21d6bc9665ebc21 && python3 inspect_world.py",
+      "cd /tmp/world-experiment/world-read-programming-v1/1a43bdc16f7133dcb21d6bc9665ebc21 && python3 << 'PY'\nimport json, sys\nfrom pathlib import Path\nROOT = Path('.').resolve()\nsys.path.insert(0, str(ROOT))\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\n\nworld = ConstructionWorld.open(ROOT / \"world\" / \"world.sqlite\")\ntry:\n    tables = [\n        \"organization\", \"award\", \"disbursement\", \"award_remaining_balance\",\n        \"award_status_label\", \"status_legend_entry\", \"progra",
+      "cd /tmp/world-experiment/world-read-programming-v1/1a43bdc16f7133dcb21d6bc9665ebc21 && python3 << 'PY'\nimport json, sys\nfrom pathlib import Path\nROOT = Path('.').resolve()\nsys.path.insert(0, str(ROOT))\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\n\nworld = ConstructionWorld.open(ROOT / \"world\" / \"world.sqlite\")\ntry:\n    # P1\n    p1_sql = \"\"\"\n    SELECT o.org_id, o.legal_name,\n           SUM(CAST(arb.remaining_balance AS REAL)) AS total_remaining_undisbursed\n    FRO",
+      "python3 -m json.tool /tmp/world-experiment/world-read-programming-v1/1a43bdc16f7133dcb21d6bc9665ebc21/answers.json > /dev/null && echo \"valid JSON\""
+    ],
+    "n_reads": 8,
+    "n_writes": 0,
+    "n_shells": 4
+  },
+  "surface": {
+    "n_reads": 8,
+    "n_shells": 4,
+    "n_writes": 0,
+    "catalog_calls": 1,
+    "schema_inspections": 0,
+    "select_count": 1,
+    "join_count": 0,
+    "cte_count": 0,
+    "query_semantic_count": 0,
+    "inspect_world_calls": 1,
+    "raw_source_reads": [],
+    "n_sql_hint": 1
+  },
+  "initial_context": {
+    "initial_context_bytes": 3238,
+    "contract_bytes": 1176,
+    "tasks_bytes": 755,
+    "purpose_bytes": 233
+  },
+  "world_hashes": {
+    "seed_grants": "2ebec5507f8a5ca51e06dd33843035e7ab50a072f86abf51ad53be613be64473"
+  },
+  "finished_at": "2026-09-06T09:54:42.419174+00:00"
+}

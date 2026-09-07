@@ -1,0 +1,21 @@
+{
+  "interpretation": "Empty LIMIT_VALUE_NMBR cannot be resolved to a single world-level semantic class. Evidence supports context-dependent subclasses (report-only monitoring, non-applicable limit column, pass/fail reporting, geometric-mean reporting), but the frozen packet does not establish admissible disambiguation rules complete enough to implement in construction without per-row model judgment.",
+  "scope": "ONE_SOURCE_VALUE",
+  "epistemic_basis": "SOURCE_ESTABLISHED",
+  "exact_grounding": [
+    "sources/permit_limits.csv aggregate partition of 57 empty LIMIT_VALUE_NMBR rows by DMR_COMMENT_TEXT and the zero-row count for nonempty LIMIT_VALUE_STANDARD_UNITS.",
+    "documents/gcc/final_permit.txt and documents/farmington/final_permit.txt mapping structured empty cells to permit-table 'Report' labels.",
+    "sources/permit_limits.csv sibling-row patterns (3610129901 vs 3610129867; 3610840340 vs 3610840342/3610840343) showing emptiness on one statistical base alongside numeric limits on siblings.",
+    "sources/permit_limits.csv row 3610839676 pass/fail unit and comment encoding.",
+    "documents/farmington/final_permit.txt TDS geometric-mean footnote *6."
+  ],
+  "semantic_delta": "No admissible reusable mapping. A correct Purpose A treatment would need a derived classification field (for example limit_value_role or comparison_eligibility) keyed off DMR_COMMENT_TEXT patterns, statistical_base_type_code, unit encoding, and permit-table crosswalk—not a single boolean or enum applied uniformly to every empty LIMIT_VALUE_NMBR row.",
+  "affected_obligations": [
+    "empty_numeric_limit",
+    "limit_value_for_comparison",
+    "numeric_comparison_candidates_materializable"
+  ],
+  "affected_occurrence_count": 57,
+  "remaining_uncertainty": "Without a workspace codebook or row-to-permit matches for all 57 empty rows, any construction-level classifier would require inferring semantics from incomplete permit coverage and would risk misclassifying ENF-typed rows. OPTIONAL_MONITORING_FLAG=Y on some WET schedules further blocks a single enforceability rule.",
+  "admit": "UNRESOLVED"
+}

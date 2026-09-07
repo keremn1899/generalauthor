@@ -1,0 +1,125 @@
+{
+  "case_id": "A09",
+  "obligation_id": "when_discharging",
+  "occurrence_id": "3610840341|3600904607",
+  "question": "What does the permit-limit comment 'WHEN DISCHARGING' do to monitoring/limit applicability?",
+  "purpose": [
+    "B",
+    "C"
+  ],
+  "requirement_schema": "conditional_discharge_dependent_monitoring",
+  "source_field_value": "DMR_COMMENT_TEXT contains 'WHEN DISCHARGING'",
+  "local_structured_context": {
+    "table": "permit_limits.csv",
+    "row": {
+      "EXTERNAL_PERMIT_NMBR": "NM0028762",
+      "PARAMETER_CODE": "00530",
+      "PARAMETER_DESC": "Solids, total suspended",
+      "LIMIT_VALUE_ID": "3610840341",
+      "LIMIT_SET_SCHEDULE_ID": "3600904607",
+      "LIMIT_VALUE_NMBR": "",
+      "LIMIT_FREQ_OF_ANALYSIS_CODE": "01/07",
+      "LIMIT_SAMPLE_TYPE_CODE": "GR",
+      "DMR_COMMENT_TEXT": "WHEN DISCHARGING.",
+      "LIMIT_UNIT_DESC": "lb/d",
+      "STATISTICAL_BASE_CODE": "DD"
+    }
+  },
+  "reported_model": "Composer 2.5",
+  "retrieval": {
+    "n_tool_paths": 32,
+    "structured_paths": [
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/7b9f8859360fa593d95dfa245019681a/sources/document_inventory.json",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/7b9f8859360fa593d95dfa245019681a/sources/dmr_measurements.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/7b9f8859360fa593d95dfa245019681a/sources/dmr_measurements.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/7b9f8859360fa593d95dfa245019681a/sources/dmr_measurements.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/7b9f8859360fa593d95dfa245019681a/sources/permit_limits.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/7b9f8859360fa593d95dfa245019681a/sources/dmr_measurements.csv"
+    ],
+    "document_paths": [
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/7b9f8859360fa593d95dfa245019681a/documents/INDEX.md",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/7b9f8859360fa593d95dfa245019681a/documents/aztec",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/7b9f8859360fa593d95dfa245019681a/documents/aztec/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/7b9f8859360fa593d95dfa245019681a/documents/aztec/statement_of_basis.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/7b9f8859360fa593d95dfa245019681a/documents/aztec/statement_of_basis.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/7b9f8859360fa593d95dfa245019681a/documents/aztec",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/7b9f8859360fa593d95dfa245019681a/documents/aztec/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/7b9f8859360fa593d95dfa245019681a/documents/aztec/statement_of_basis.txt"
+    ],
+    "n_documents_touched": 4,
+    "queries": [
+      "3610840341|3600904607|NM0028762|00530|WHEN DISCHARGING",
+      "conditional_discharge_dependent_monitoring",
+      "3610840341",
+      "WHEN DISCHARGING|backwash|DISCHARGE BACKWASH|3610840341|00530|total suspended",
+      "3610840341|NODI|no discharge|no-discharge|OPTIONAL",
+      "JUDGMENT|semantic_question|SUPPORTED_RESOLUTION|conditional_discharge",
+      "no discharge|not discharg|intermittent|when discharg",
+      "3600904607.*NODI|3600657420.*NODI",
+      "3600904607",
+      "JUDGMENT|semantic_question",
+      "3600657420.*,,"
+    ],
+    "n_queries": 11
+  },
+  "judgment": {
+    "occurrence_id": "3610840341|3600904607",
+    "semantic_question_used": "Whether effluent discharge occurred during Federal FY2025 such that the monitoring and reporting requirement for TSS daily maximum mass load (lb/d), conditioned on the permit limit comment 'WHEN DISCHARGING', was applicable for this permit limit row.",
+    "disposition": "SUPPORTED_RESOLUTION",
+    "interpretation": "Discharge from Outfall 001 (backwash water) occurred during Federal FY2025, so the conditional monitoring requirement was applicable. The permit authorizes intermittent backwash discharge and ties TSS monitoring frequency to discharge occurrence via footnote '*1 When discharging.' DMR data for limit value 3610840341 report numeric daily-maximum TSS mass loads in lb/d for every FY2025 monitoring month (October 2024 through September 2025), with no NODI codes and companion nonzero flow reports on the same limit-set schedule. This establishes that discharge occurred in each evaluated month and that conditional monitoring was required rather than waived by a documented no-discharge period.",
+    "grounding": {
+      "permit_number": "NM0028762",
+      "facility": "aztec",
+      "parameter_code": "00530",
+      "parameter_desc": "Solids, total suspended",
+      "limit_value_id": "3610840341",
+      "limit_set_schedule_id": "3600904607",
+      "limit_set_name": "DISCHARGE BACKWASH WATER",
+      "dmr_comment_text": "WHEN DISCHARGING.",
+      "statistical_base": "DD (daily maximum)",
+      "limit_unit": "lb/d",
+      "evaluated_period": "Federal FY2025 (2024-10-01 through 2025-09-30)",
+      "fy2025_dmr_months_with_reported_tss_lb_d": 12,
+      "nodi_codes_on_fy2025_rows": 0,
+      "companion_flow_reported_all_fy2025_months": true
+    },
+    "documents_opened": [
+      "documents/aztec/final_permit.txt",
+      "documents/aztec/statement_of_basis.txt",
+      "sources/permit_limits.csv",
+      "sources/dmr_measurements.csv"
+    ],
+    "snippets": [
+      {
+        "source_id": "sources/permit_limits.csv",
+        "text": "NM0028762,...,DISCHARGE BACKWASH WATER,WHEN DISCHARGING.,3600904607,...,00530,\"Solids, total suspended\",...,3610840341,Q2,,26,lb/d,...,DD,MAX,...,GR,01/07,..."
+      },
+      {
+        "source_id": "documents/aztec/final_permit.txt",
+        "text": "1. FINAL Effluent Limits \u2013 Outfall 001 \u2013 Intermittent Flow\n...\nTotal Suspended Solids                 N/A              N/A          20                30       1/Week (*1)         Grab\n...\nFootnotes:\n*1 When discharging."
+      },
+      {
+        "source_id": "documents/aztec/final_permit.txt",
+        "text": "5. NO DISCHARGE REPORTING\n\nIf there is no discharge from any outfall during the sampling month, place an \"X\" in the NO DISCHARGE box located in the upper right corner of the Discharge Monitoring Report."
+      },
+      {
+        "source_id": "documents/aztec/statement_of_basis.txt",
+        "text": "Filter backwash using potable water occurs from once per day to once every three to four days depending on the plant and the time of year."
+      },
+      {
+        "source_id": "documents/aztec/statement_of_basis.txt",
+        "text": "Flow shall be estimated daily when discharging."
+      },
+      {
+        "source_id": "sources/dmr_measurements.csv",
+        "text": "...,3610840341,Q2,...,DD,MAX,...,3621395405,01/31/2025,...,3920700878,Q2,...,13.82,26,lb/d,...,=,01/07/2025,"
+      },
+      {
+        "source_id": "sources/dmr_measurements.csv",
+        "text": "...,3610840349,Q1,...,MK,AVG,...,3621395405,01/31/2025,...,3920700879,Q1,...,.057,03,MGD,.057,=,04/21/2025,"
+      }
+    ],
+    "remaining_uncertainty": "The workspace does not document which specific days within each month discharge occurred, nor whether every individual weekly grab sample required by the permit was taken. Applicability is established at the monthly monitoring-period level from reported effluent flow and TSS mass-load values, not at sub-monthly event granularity."
+  },
+  "finished_at": "2026-09-05T13:18:33.585580+00:00"
+}

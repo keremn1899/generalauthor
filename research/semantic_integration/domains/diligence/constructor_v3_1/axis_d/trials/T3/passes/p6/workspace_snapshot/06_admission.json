@@ -1,0 +1,147 @@
+{
+  "pass": "P6",
+  "view_id": "diligence-world",
+  "source_world": "02_mechanical_world/world.sqlite",
+  "output_world": "06_world/world.sqlite",
+  "relations": [
+    {
+      "name": "invoice_record",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "C1 mechanical compilation of source-native records; truth conditions do not vary with analytical purpose.",
+      "purpose_independence_test": "If analytical purposes disappeared, invoice_record would still record the same source-native facts with unchanged truth conditions.",
+      "persisted_in_world": true,
+      "tuple_count": 8
+    },
+    {
+      "name": "account_record",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "C1 mechanical compilation of source-native records; truth conditions do not vary with analytical purpose.",
+      "purpose_independence_test": "If analytical purposes disappeared, account_record would still record the same source-native facts with unchanged truth conditions.",
+      "persisted_in_world": true,
+      "tuple_count": 5
+    },
+    {
+      "name": "entity_record",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "C1 mechanical compilation of source-native records; truth conditions do not vary with analytical purpose.",
+      "purpose_independence_test": "If analytical purposes disappeared, entity_record would still record the same source-native facts with unchanged truth conditions.",
+      "persisted_in_world": true,
+      "tuple_count": 7
+    },
+    {
+      "name": "contract_record",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "C1 mechanical compilation of source-native records; truth conditions do not vary with analytical purpose.",
+      "purpose_independence_test": "If analytical purposes disappeared, contract_record would still record the same source-native facts with unchanged truth conditions.",
+      "persisted_in_world": true,
+      "tuple_count": 5
+    },
+    {
+      "name": "contract_term",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "C1 mechanical compilation of source-native records; truth conditions do not vary with analytical purpose.",
+      "purpose_independence_test": "If analytical purposes disappeared, contract_term would still record the same source-native facts with unchanged truth conditions.",
+      "persisted_in_world": true,
+      "tuple_count": 5
+    },
+    {
+      "name": "contract_section",
+      "admission": "WORLD",
+      "construction_class": "MECHANICAL",
+      "reason": "C1 mechanical compilation of source-native records; truth conditions do not vary with analytical purpose.",
+      "purpose_independence_test": "If analytical purposes disappeared, contract_section would still record the same source-native facts with unchanged truth conditions.",
+      "persisted_in_world": true,
+      "tuple_count": 12
+    },
+    {
+      "name": "identity_judgment",
+      "admission": "WORLD",
+      "construction_class": "SEMANTIC",
+      "reason": "C2/C3 bounded semantic judgment with explicit grounding; proposition remains meaningful if purposes A/B/C disappear.",
+      "purpose_independence_test": "Whether two cross-system identifiers denote the same legal counterparty is a factual identity question independent of which diligence purpose asked.",
+      "persisted_in_world": true,
+      "tuple_count": 38
+    },
+    {
+      "name": "contract_lifecycle_judgment",
+      "admission": "WORLD",
+      "construction_class": "SEMANTIC",
+      "reason": "C2/C3 bounded semantic judgment with explicit grounding; proposition remains meaningful if purposes A/B/C disappear.",
+      "purpose_independence_test": "Whether a contract is in force under an explicit named policy depends on recorded term facts, not on which purpose requested the assessment.",
+      "persisted_in_world": true,
+      "tuple_count": 0
+    },
+    {
+      "name": "clause_kind_judgment",
+      "admission": "PURPOSE",
+      "construction_class": "SEMANTIC",
+      "reason": "Classification or assessment is defined relative to purpose-specific policies or decision thresholds; not promoted to World IR.",
+      "purpose_independence_test": "Classification depends on acquisition-exposure and commercial-dependency policies tied to purposes A and C; without those questions the clause-kind label has no independent truth conditions.",
+      "persisted_in_world": false,
+      "disposition_count_not_promoted": 120
+    },
+    {
+      "name": "open_invoice",
+      "admission": "WORLD",
+      "construction_class": "DERIVED",
+      "reason": "C4 deterministic derivation over admitted World relations; outputs are reusable facts independent of purpose framing.",
+      "purpose_independence_test": "Open billing status is a mechanical fact over invoice_record; it does not depend on any analytical purpose.",
+      "persisted_in_world": true,
+      "tuple_count": 4
+    },
+    {
+      "name": "reconciliation_link",
+      "admission": "WORLD",
+      "construction_class": "DERIVED",
+      "reason": "C4 deterministic derivation over admitted World relations; outputs are reusable facts independent of purpose framing.",
+      "purpose_independence_test": "Required identity-reconciliation edges are structural coverage over compiled records, not purpose-specific answers.",
+      "persisted_in_world": true,
+      "tuple_count": 38
+    },
+    {
+      "name": "commercial_dependency_assessment",
+      "admission": "PURPOSE",
+      "construction_class": "DERIVED",
+      "reason": "Classification or assessment is defined relative to purpose-specific policies or decision thresholds; not promoted to World IR.",
+      "purpose_independence_test": "Per-contract dependency status is defined only under purpose C current-relationship and obligation policies.",
+      "persisted_in_world": false,
+      "disposition_count_not_promoted": 0
+    },
+    {
+      "name": "contractual_exposure_invoice",
+      "admission": "PURPOSE",
+      "construction_class": "DERIVED",
+      "reason": "Classification or assessment is defined relative to purpose-specific policies or decision thresholds; not promoted to World IR.",
+      "purpose_independence_test": "Invoice exposure disposition is defined only for purpose A acquisition analysis and would not be meaningful without that question.",
+      "persisted_in_world": false,
+      "disposition_count_not_promoted": 0
+    }
+  ],
+  "limitations": [
+    {
+      "relation": "contract_lifecycle_judgment",
+      "issue": "All admitted lifecycle judgments are UNRESOLVED; active role is BOOLEAN and cannot represent unresolved state.",
+      "skipped_obligations": [
+        "contract_lifecycle_judgment:0039",
+        "contract_lifecycle_judgment:0040",
+        "contract_lifecycle_judgment:0041",
+        "contract_lifecycle_judgment:0042",
+        "contract_lifecycle_judgment:0043"
+      ],
+      "skipped_count": 5,
+      "asserted_count": 0
+    }
+  ],
+  "summary": {
+    "identity_judgment_asserted": 38,
+    "contract_lifecycle_judgment_asserted": 0,
+    "contract_lifecycle_judgment_skipped_unresolved": 5,
+    "open_invoice_derived": 4,
+    "purpose_dispositions_not_promoted": 120
+  }
+}

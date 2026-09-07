@@ -1,0 +1,49 @@
+{
+  "domain": "harbor_towing",
+  "kind": "WORLD",
+  "trial": "C3",
+  "status": "ANSWERED",
+  "reported_model": "Composer 2.5",
+  "tools": {
+    "tool_calls_started": 11,
+    "shell_calls": 2,
+    "read_calls": 6,
+    "write_calls": 0,
+    "python_executions_guess": 2,
+    "mentioned_paths": [
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90/CONSUMER.md",
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90/purpose.txt",
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90/QUESTIONS.md",
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90/inspect_world.py",
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90",
+      "inspect_world.py",
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90/research/semantic_integration/runtime_v0/world.py",
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90",
+      "/",
+      "/",
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90",
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90/world/world.purpose.json",
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90/answers.json"
+    ]
+  },
+  "exploration": {
+    "reads": [
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90/CONSUMER.md",
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90/purpose.txt",
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90/QUESTIONS.md",
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90/inspect_world.py",
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90/research/semantic_integration/runtime_v0/world.py",
+      "/tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90/world/world.purpose.json"
+    ],
+    "writes": [],
+    "shells": [
+      "cd /tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90 && python3 inspect_world.py",
+      "cd /tmp/world-experiment/e2e-semantic-compilation-v1/65f268b3c3726499a01b2b9f52b45e90 && python3 << 'PY'\nimport json\nimport sys\nfrom pathlib import Path\n\nROOT = Path('.').resolve()\nsys.path.insert(0, str(ROOT))\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\n\ndb = ROOT / \"world\" / \"world.sqlite\"\nworld = ConstructionWorld.open(db)\n\nqueries = {\n    \"tow_job\": \"SELECT * FROM tow_job ORDER BY job_id\",\n    \"effective_rate\": \"SELECT * FROM effective_rate ORDER BY job_id\",\n"
+    ],
+    "n_reads": 6,
+    "n_writes": 0,
+    "n_shells": 2
+  },
+  "n_sql_hint": 2,
+  "finished_at": "2026-09-06T08:27:57.783548+00:00"
+}

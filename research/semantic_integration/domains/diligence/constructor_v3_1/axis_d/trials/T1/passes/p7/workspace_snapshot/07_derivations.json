@@ -1,0 +1,218 @@
+{
+  "pass": "P7",
+  "derivations": [
+    {
+      "output_relation": "identity_candidate_pair",
+      "required_input_relations": [
+        "crm_account",
+        "invoice",
+        "contract",
+        "registry_entity"
+      ],
+      "optional_enrichment_relations": [],
+      "epistemic_behavior": "Mechanical connectivity only; emits directed identifier pairs without asserting sameness or distinctness.",
+      "completeness_assumptions": "Every commercial relationship thread compiled from CRM account id and contract filename stem yields the full cross-product of crm:, billing:, contract:, and registry: identifiers required for Purpose B connectivity.",
+      "deterministic_computation": true,
+      "required_premise": "Source-native account ids, billed names, contract stems, and registry company numbers are present in their respective mechanical relations.",
+      "optional_enrichment": "None; thread grouping uses filename/account-id correspondence heuristics only.",
+      "blocking_unresolved_state": [],
+      "non_blocking_unresolved_state": []
+    },
+    {
+      "output_relation": "open_invoice",
+      "required_input_relations": ["invoice"],
+      "optional_enrichment_relations": [],
+      "epistemic_behavior": "Filters invoice rows where source status equals open; no purpose policy.",
+      "completeness_assumptions": "Universe is all invoice tuples; output cardinality equals count of invoices with status='open'.",
+      "deterministic_computation": true,
+      "required_premise": "invoice.status is populated verbatim from billing sources.",
+      "optional_enrichment": "None.",
+      "blocking_unresolved_state": [],
+      "non_blocking_unresolved_state": []
+    },
+    {
+      "output_relation": "contract_in_force_active",
+      "required_input_relations": ["contract_in_force"],
+      "optional_enrichment_relations": ["contract_term"],
+      "epistemic_behavior": "Maps resolved contract_in_force dispositions to boolean active; omits UNRESOLVED contracts rather than defaulting false.",
+      "completeness_assumptions": "Only contracts with disposition IN_FORCE or EXPIRED appear; UNRESOLVED lifecycle judgments are absent from the projection.",
+      "deterministic_computation": true,
+      "required_premise": "contract_in_force.disposition is IN_FORCE or EXPIRED for rows to materialize.",
+      "optional_enrichment": "contract_term and contract_section ground lifecycle adjudication upstream but are not read directly by this projection.",
+      "blocking_unresolved_state": [
+        {
+          "relation": "contract_in_force",
+          "disposition": "UNRESOLVED",
+          "effect": "Contract omitted from contract_in_force_active; downstream purposes must treat missing active as blocking, not false."
+        }
+      ],
+      "non_blocking_unresolved_state": []
+    },
+    {
+      "output_relation": "commercial_dependency",
+      "required_input_relations": [
+        "open_invoice",
+        "contract",
+        "contract_in_force",
+        "clause_presence",
+        "identity_judgment"
+      ],
+      "optional_enrichment_relations": [
+        "contract_in_force_active",
+        "identity_candidate_pair",
+        "invoice"
+      ],
+      "epistemic_behavior": "Emits dependent only when current commercial relationship AND at least one qualifying obligation kind are confidently established; otherwise unresolved. Never emits a false-negative dependent=false row.",
+      "completeness_assumptions": "One row per contract/counterparty thread that is dependent or must be reported unresolved when identity or lifecycle inputs block assessment.",
+      "deterministic_computation": true,
+      "required_premise": "Joint test: (open invoice in thread OR active contract with auto_renewal/rolling_term PRESENT) AND at least one of exclusivity, auto_renewal, rolling_term is PRESENT in clause_presence.",
+      "optional_enrichment": "identity_candidate_pair and invoice tuples locate open invoices and counterparty identifiers within threads when commercial_dependency rows are not pre-materialized.",
+      "blocking_unresolved_state": [
+        {
+          "relation": "identity_judgment",
+          "disposition": "UNRESOLVED",
+          "effect": "Forces status unresolved even when invoices and obligations appear present."
+        },
+        {
+          "relation": "contract_in_force",
+          "disposition": "UNRESOLVED",
+          "effect": "Blocks asserting active renewing contract limb of current-relationship test; may still emit unresolved when open invoices exist."
+        },
+        {
+          "relation": "clause_presence",
+          "disposition": "UNRESOLVED",
+          "effect": "Blocks obligation_kinds population and prevents dependent status."
+        }
+      ],
+      "non_blocking_unresolved_state": [
+        {
+          "relation": "clause_presence",
+          "disposition": "absent_row",
+          "effect": "Absence of PRESENT is not evidence of absence; does not assert non-dependency, only withholds dependent."
+        }
+      ]
+    },
+    {
+      "output_relation": "purpose_ir_a_invoices",
+      "required_input_relations": [
+        "invoice",
+        "contract",
+        "clause_presence",
+        "contract_in_force",
+        "invoice_contract_association"
+      ],
+      "optional_enrichment_relations": [
+        "identity_candidate_pair",
+        "identity_judgment",
+        "contract_in_force_active"
+      ],
+      "epistemic_behavior": "Includes invoice rows tied to an active contract bearing at least one acquisition-relevant clause; association field is asserted or unresolved, never omitted when inclusion criteria met.",
+      "completeness_assumptions": "Row coverage for invoices qualifying under active-contract plus acquisition-clause policy, or requiring unresolved association when join evidence is insufficient.",
+      "deterministic_computation": true,
+      "required_premise": "contract_in_force resolves IN_FORCE (or contract_in_force_active.active=true) AND clause_presence.disposition=PRESENT for at least one Purpose A acquisition-relevant kind on the governing contract in the invoice thread.",
+      "optional_enrichment": "When invoice_contract_association is absent, identity_judgment SAME_ENTITY between billing: and contract: identifiers may upgrade association to asserted; otherwise association defaults to unresolved.",
+      "blocking_unresolved_state": [
+        {
+          "relation": "contract_in_force",
+          "disposition": "UNRESOLVED",
+          "effect": "Blocks active-contract premise; invoice excluded from output even if acquisition clauses would otherwise qualify."
+        },
+        {
+          "relation": "clause_presence",
+          "disposition": "UNRESOLVED",
+          "effect": "Blocks acquisition-clause premise; invoice excluded."
+        },
+        {
+          "relation": "clause_presence",
+          "disposition": "absent_relation",
+          "effect": "No acquisition-clause evidence available; no Purpose A rows emitted."
+        },
+        {
+          "relation": "invoice_contract_association",
+          "disposition": "unresolved",
+          "effect": "Does not block inclusion; row emitted with association=unresolved."
+        }
+      ],
+      "non_blocking_unresolved_state": [
+        {
+          "relation": "identity_judgment",
+          "disposition": "UNRESOLVED",
+          "effect": "Prevents asserted association but does not block row when other required premises hold and association policy allows unresolved reporting."
+        }
+      ]
+    },
+    {
+      "output_relation": "purpose_ir_b_links",
+      "required_input_relations": ["identity_judgment"],
+      "optional_enrichment_relations": ["identity_candidate_pair"],
+      "epistemic_behavior": "Projects identity judgments to directed links with epistemic SAME_ENTITY, DISTINCT, or UNRESOLVED; similarity alone never implies SAME_ENTITY.",
+      "completeness_assumptions": "When identity_judgment is empty, falls back to identity_candidate_pair universe with epistemic UNRESOLVED for every required connectivity link.",
+      "deterministic_computation": true,
+      "required_premise": "identity_judgment tuple exists for each emitted link when semantic adjudication has been loaded into world.",
+      "optional_enrichment": "identity_candidate_pair supplies the connectivity universe when judgments are not persisted in world.sqlite.",
+      "blocking_unresolved_state": [],
+      "non_blocking_unresolved_state": [
+        {
+          "relation": "identity_judgment",
+          "disposition": "UNRESOLVED",
+          "effect": "Emitted as epistemic UNRESOLVED; does not suppress the link row."
+        },
+        {
+          "relation": "identity_judgment",
+          "disposition": "absent_relation",
+          "effect": "Candidate pairs still emitted with epistemic UNRESOLVED per completeness policy."
+        }
+      ]
+    },
+    {
+      "output_relation": "purpose_ir_c_dependencies",
+      "required_input_relations": [
+        "commercial_dependency"
+      ],
+      "optional_enrichment_relations": [
+        "open_invoice",
+        "contract",
+        "contract_in_force",
+        "clause_presence",
+        "identity_judgment",
+        "identity_candidate_pair",
+        "invoice"
+      ],
+      "epistemic_behavior": "Projects commercial_dependency rows to Purpose C JSON; status is dependent or unresolved only.",
+      "completeness_assumptions": "When commercial_dependency is not materialized, synthesizes unresolved rows for contract threads with open invoices or blocked assessments.",
+      "deterministic_computation": true,
+      "required_premise": "commercial_dependency row exists, or fallback conjunction of current relationship and qualifying obligations can be evaluated from world inputs.",
+      "optional_enrichment": "open_invoice_ids and obligation_kinds enriched from open_invoice and clause_presence when commercial_dependency counterparty field is sparse.",
+      "blocking_unresolved_state": [
+        {
+          "relation": "identity_judgment",
+          "disposition": "UNRESOLVED",
+          "effect": "Forces status unresolved."
+        },
+        {
+          "relation": "contract_in_force",
+          "disposition": "UNRESOLVED",
+          "effect": "Blocks dependent status from renewing-contract limb; row may still be unresolved with open invoices."
+        },
+        {
+          "relation": "clause_presence",
+          "disposition": "UNRESOLVED",
+          "effect": "Blocks dependent status."
+        }
+      ],
+      "non_blocking_unresolved_state": [
+        {
+          "relation": "clause_presence",
+          "disposition": "absent_relation",
+          "effect": "Prevents dependent classification; emits unresolved when current relationship indicators exist."
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Per 06_admission.json, Purpose relations (clause_presence, identity_judgment, invoice_contract_association, commercial_dependency) are not promoted into 06_world/world.sqlite; derive_purposes.py reads only world.sqlite and therefore cannot apply adjudicated dispositions from 05_dispositions.json.",
+    "Purpose A output is empty in the current world state because clause_presence is absent and contract_in_force is UNRESOLVED for all non-expired MSAs, blocking both required premises.",
+    "Purpose B links are emitted from identity_candidate_pair with epistemic UNRESOLVED because identity_judgment is not persisted in world.",
+    "Purpose C rows are unresolved with empty obligation_kinds because clause_presence and identity_judgment are absent; open_invoice_ids are populated mechanically from billing threads."
+  ]
+}

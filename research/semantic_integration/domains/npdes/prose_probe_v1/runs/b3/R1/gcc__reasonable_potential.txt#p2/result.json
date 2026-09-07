@@ -1,0 +1,137 @@
+{
+  "candidates": [
+    {
+      "source": "gcc/reasonable_potential.pdf",
+      "locator": "page 2, section body",
+      "exact_span": "Input pollutant geometric mean concentration as micro-gram per liter (ug/l or ppb) unless other unit is specified for the parameter.",
+      "affected_purpose": "A",
+      "computation_change_reason": "Whether a parameter's reported concentration is interpreted in ug/l/ppb or in another specified unit changes the numeric value used for limit comparison and whether a measurement exceeds an applicable limit."
+    },
+    {
+      "source": "gcc/reasonable_potential.pdf",
+      "locator": "page 2, section body",
+      "exact_span": "Effluent value reported as \"< detection level\" (DL) but the DL is greater than MQL, input \"1/2 DL\" for calculation.",
+      "affected_purpose": "A,C",
+      "computation_change_reason": "When DL exceeds MQL, substituting one-half DL as the effluent concentration (Ce) yields a numeric compliance comparison value rather than treating the result as non-numeric or missing; a different reading of DL versus MQL or of the half-DL substitution rule changes both the applicable comparison value (A) and whether the case is classified as documented no-data versus a derived numeric result (C)."
+    },
+    {
+      "source": "gcc/reasonable_potential.pdf",
+      "locator": "page 2, section body",
+      "exact_span": "Effluent value reported as \"< detection level\" (DL) and the DL is smaller than MQL, no data is inputted.",
+      "affected_purpose": "A,C",
+      "computation_change_reason": "When DL is below MQL, no effluent value is entered for calculation, so no numeric exceedance comparison is performed (A) and the monitoring period is treated as a documented no-data or non-comparable state rather than a numeric result (C); boundary interpretation of DL relative to MQL determines which branch applies."
+    },
+    {
+      "source": "gcc/reasonable_potential.pdf",
+      "locator": "page 2, section body",
+      "exact_span": "If a less than MQL vakue is reported, input either the reported value or \"0\" for calculation.",
+      "affected_purpose": "A,C",
+      "computation_change_reason": "The discretionary choice between the reported below-MQL value and zero changes the effluent concentration used in limit comparison (A) and whether the evidence is treated as a low numeric result versus a documented no-data/zero-input state (C)."
+    },
+    {
+      "source": "gcc/reasonable_potential.pdf",
+      "locator": "page 2, section body",
+      "exact_span": "Cd = [(F*Qa*Ca) + (Qe*2.13*Ce)] / (F*Qa + Qe)",
+      "affected_purpose": "A",
+      "computation_change_reason": "Instream waste concentration (Cd) derived from this formula may be the basis for determining whether an effluent discharge exceeds applicable water quality criteria; different interpretation of any input term or the fixed 2.13 factor changes the computed Cd and thus whether a limit is exceeded."
+    },
+    {
+      "source": "gcc/reasonable_potential.pdf",
+      "locator": "page 2, section body",
+      "exact_span": "F    = Fraction of stream allowed for mixing (see \"Procedures for Implementing NPDES Permits in New Mexico\")",
+      "affected_purpose": "A",
+      "computation_change_reason": "The mixing fraction F directly scales ambient contribution in the Cd formula; a different F value from the referenced procedures changes the computed instream concentration and therefore which numeric criterion is met or exceeded."
+    },
+    {
+      "source": "gcc/reasonable_potential.pdf",
+      "locator": "page 2, section body",
+      "exact_span": "Qa = Critical low flow of stream at discharge point expressed as the 4Q3 or harmonic mean flow for human health criteria",
+      "affected_purpose": "A",
+      "computation_change_reason": "Selection between 4Q3 and harmonic mean as Qa alters dilution in the Cd calculation, changing the computed instream waste concentration and the resulting compliance determination against applicable criteria."
+    },
+    {
+      "source": "gcc/reasonable_potential.pdf",
+      "locator": "page 2, section body",
+      "exact_span": "The following formular convert metals reported in total form to dissolved form if criteria are in dissolved form",
+      "affected_purpose": "A",
+      "computation_change_reason": "Whether total-reported metal measurements must be converted to dissolved form before comparison determines which numeric criterion (total versus dissolved) is the enforceable applicable limit."
+    },
+    {
+      "source": "gcc/reasonable_potential.pdf",
+      "locator": "page 2, section body",
+      "exact_span": "Kp = Kpo * (TSS**a)",
+      "affected_purpose": "A",
+      "computation_change_reason": "The partition coefficient Kp governs conversion from total to dissolved metal concentration; different interpretation of Kpo, alpha, or the TSS value used changes the dissolved fraction and the numeric limit against which effluent is compared."
+    },
+    {
+      "source": "gcc/reasonable_potential.pdf",
+      "locator": "page 2, section body",
+      "exact_span": "C/Ct = 1/ (1 + Kp*TSS* 10^-6)",
+      "affected_purpose": "A",
+      "computation_change_reason": "The dissolved fraction C/Ct determines how total metal criteria are adjusted; a different Kp or TSS interpretation changes the applicable dissolved numeric limit."
+    },
+    {
+      "source": "gcc/reasonable_potential.pdf",
+      "locator": "page 2, section body",
+      "exact_span": "Total Metal Criteria (Ct) = Cr / (C/Ct)",
+      "affected_purpose": "A",
+      "computation_change_reason": "This formula derives the total-metal enforceable criterion from the dissolved criterion; interpretation of Cr or C/Ct changes the numeric limit used for compliance comparison."
+    },
+    {
+      "source": "gcc/reasonable_potential.pdf",
+      "locator": "page 2, section body, Stream Linear Partition Coefficient table",
+      "exact_span": "Copper                  5.3                       1040000       -0.74      83938.9652     0.28423877     1.5064655",
+      "affected_purpose": "A",
+      "computation_change_reason": "The table provides both a total value (5.3) and a dissolved value (1.5064655) for copper; which column represents the enforceable applicable limit depends on whether dissolved or total criteria govern and on partition-coefficient conversion."
+    },
+    {
+      "source": "gcc/reasonable_potential.pdf",
+      "locator": "page 2, section body, Stream Linear Partition Coefficient table",
+      "exact_span": "Nickel                  10                           490000     -0.57      70507.7677     0.32100327     3.2100327",
+      "affected_purpose": "A",
+      "computation_change_reason": "Nickel carries distinct total (10) and dissolved (3.2100327) criteria values; interpretation of which applies and whether partition conversion is required changes the numeric limit for exceedance determination."
+    },
+    {
+      "source": "gcc/reasonable_potential.pdf",
+      "locator": "page 2, section body, Stream Linear Partition Coefficient table",
+      "exact_span": "Silver                   5                        2390000       -1.03      71938.7701     0.31663976     1.5831988",
+      "affected_purpose": "A",
+      "computation_change_reason": "Silver total (5) and dissolved (1.5831988) criteria differ; selection of the operative limit column affects whether a reported measurement exceeds the applicable numeric standard."
+    },
+    {
+      "source": "gcc/reasonable_potential.pdf",
+      "locator": "page 2, section body, hardness dependent criteria table",
+      "exact_span": "Aluminum (T)                                     Acute                                   e(1.3695[ln(hardness)]+1.8308)                              8061.08346                 If Stream pH < 6.5, enter 750 in cell O113",
+      "affected_purpose": "A",
+      "computation_change_reason": "The acute aluminum criterion is hardness-dependent via an exponential formula but is overridden by a fixed value of 750 when stream pH is below 6.5; interpretation of hardness, pH threshold, or which rule applies changes the enforceable numeric limit."
+    },
+    {
+      "source": "gcc/reasonable_potential.pdf",
+      "locator": "page 2, section body, hardness dependent criteria table",
+      "exact_span": "Chronic                                 e(1.3695[ln(hardness)]+0.9161)                              3229.56667                 If Stream pH < 6.5, enter 87 in cell P113",
+      "affected_purpose": "A",
+      "computation_change_reason": "The chronic aluminum criterion uses a hardness-based formula unless stream pH is below 6.5, in which case 87 applies; different interpretation of the pH condition or hardness input changes the applicable chronic limit."
+    },
+    {
+      "source": "gcc/reasonable_potential.pdf",
+      "locator": "page 2, section body, hardness dependent criteria table",
+      "exact_span": "Cadmium (D)                                      Acute                                   e(0.8968[ln(hardness)]-3.5699)*CF1                       2.81678584                    CF1 = 1.136672 - 0.041838*ln(hardness)",
+      "affected_purpose": "A",
+      "computation_change_reason": "The acute cadmium dissolved criterion depends on both hardness and a site-specific correction factor CF1; interpretation of hardness or CF1 calculation changes the numeric limit used for exceedance comparison."
+    },
+    {
+      "source": "gcc/reasonable_potential.pdf",
+      "locator": "page 2, section body, hardness dependent criteria table",
+      "exact_span": "Chronic                                 e(0.7647[ln(hardness)]-4.2180)*CF2                       0.71005471                    CF2 = 1.101672 - 0.041838*ln(hardness)",
+      "affected_purpose": "A",
+      "computation_change_reason": "The chronic cadmium dissolved criterion incorporates hardness and CF2; different hardness or CF2 values yield a different enforceable chronic limit for compliance evaluation."
+    },
+    {
+      "source": "gcc/reasonable_potential.pdf",
+      "locator": "page 2, section body",
+      "exact_span": "TSS = Total suspended solids concentration found in receiving stream (or in effluent for intermittent stream)",
+      "affected_purpose": "A",
+      "computation_change_reason": "Whether TSS is taken from the receiving stream or from effluent for intermittent streams changes Kp and C/Ct, altering the dissolved-metal conversion and the applicable numeric criterion."
+    }
+  ]
+}

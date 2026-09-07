@@ -1,0 +1,50 @@
+{
+  "steps": [
+    {
+      "fact": "Registry record 09338441 lists the company name VELLUM PRINT CO LTD.",
+      "grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 09338441"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Billing records show a billed entity named Vellum Print Co Ltd.",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "The billing observation does not state a company registration number or other legal identifier for the billed entity.",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "The packet does not state that the billing name maps to company number 09338441, nor does it license identifier uniqueness from name alone.",
+      "grounding": null,
+      "mechanical": true
+    },
+    {
+      "fact": "Compatible name forms between the billing and registry observations are insufficient to establish identity under the grounding contract.",
+      "grounding": null,
+      "mechanical": false
+    }
+  ],
+  "disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 09338441"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Vellum Print Co Ltd"
+    }
+  ],
+  "support_claim": "The packet links a billing name to a registry company number only by compatible name text, without a shared legal identifier or explicit mapping, so neither identity nor distinctness is established."
+}

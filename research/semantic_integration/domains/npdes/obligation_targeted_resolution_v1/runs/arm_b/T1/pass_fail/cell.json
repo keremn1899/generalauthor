@@ -1,0 +1,813 @@
+{
+  "trial": "T1",
+  "obligation_id": "pass_fail",
+  "n_occurrences": 12,
+  "reported_model_retrieve": "Composer 2.5",
+  "reported_model_adjudicate": "Composer 2.5",
+  "retrieval": {
+    "n_tool_paths": 21,
+    "structured_paths": [
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/0965430a21fc1e9d3ab0752ed05b0bb6/sources/document_inventory.json",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/0965430a21fc1e9d3ab0752ed05b0bb6/sources/permit_limits.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/0965430a21fc1e9d3ab0752ed05b0bb6/sources/dmr_measurements.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/0965430a21fc1e9d3ab0752ed05b0bb6/sources/permit_limits.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/0965430a21fc1e9d3ab0752ed05b0bb6/sources/permit_limits.csv"
+    ],
+    "document_paths": [
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/0965430a21fc1e9d3ab0752ed05b0bb6/documents/INDEX.md",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/0965430a21fc1e9d3ab0752ed05b0bb6/documents/farmington/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/0965430a21fc1e9d3ab0752ed05b0bb6/documents/farmington/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/0965430a21fc1e9d3ab0752ed05b0bb6/documents/farmington/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/0965430a21fc1e9d3ab0752ed05b0bb6/documents/farmington/final_permit.txt"
+    ],
+    "n_documents_touched": 2,
+    "queries": [
+      "PASS\\s*=\\s*0|FAIL\\s*=\\s*1|PASS.*FAIL",
+      "NM0020583|9A|pass=0",
+      "PASS.*FAIL|pass.*fail|whole effluent|WET|NOEC|toxicity",
+      "PASS|FAIL|footnote.*9|\\*9|Enter a|CONCENTRATION|TEM3D|TOM3D|22415|22418",
+      "3610839676|3610839682|TEM3D",
+      "wc -c /tmp/world-experiment/npdes-obligation-targeted-resolution-v1/0965430a21fc1e9d3ab0752ed05b0bb6/documents/farmington/final_permit.txt /tmp/world-experiment/npdes-obligation-targeted-resolution-v1/0965430a21fc1e9d3ab0752ed05b0bb6/sources/permit_limits.csv /tmp/world-experiment/npdes-obligation-t"
+    ],
+    "n_queries": 6
+  },
+  "plan": {
+    "proposition": "PASS=0 / FAIL=1 is a binary whole-effluent-toxicity (WET) outcome code\u20140 means pass and 1 means fail\u2014reported in the DMR concentration-max field; it is not a measured pollutant concentration and is not an ordinary numeric concentration-limit comparison.",
+    "would_establish": [
+      "DMR_COMMENT_TEXT on affected permit-limit rows explicitly defining PASS=0 and FAIL=1 and instructing reporters to enter 0 or 1 in the concentration-max field",
+      "Permit Part II WET reporting table mapping TEM/retest STORET codes to enter 0 when NOEC is at or above the critical dilution and 1 when below",
+      "Structured limit rows for pass/fail parameters using unit code 9A (pass=0;fail=1) with no numeric limit value, alongside companion TOM/TQM parameters for numeric NOEC reporting",
+      "DMR measurement rows reporting literal 0 with 9A pass=0;fail=1 units for TEM3D"
+    ],
+    "would_refute": [
+      "Authoritative text treating reported 0/1 values as mg/L, %, or other concentration magnitudes to be compared against LIMIT_VALUE_NMBR",
+      "Evidence that pass/fail parameters share numeric limit thresholds comparable to conventional pollutant limits",
+      "Permit language equating the 0/1 entry with the NOEC concentration itself rather than a coded pass/fail outcome"
+    ],
+    "likely_authoritative_source_types": [
+      "permit_limits.csv DMR_COMMENT_TEXT on NM0020583 WET limit-set rows",
+      "documents/farmington/final_permit.txt Part II WET reporting requirements and NOEC/failure definitions",
+      "dmr_measurements.csv reported values and units for TEM3D and retest parameters"
+    ],
+    "insufficient_alone": [
+      "Presence of LIMIT_VALUE_TYPE_CODE C3 or STATISTICAL_BASE MAX without the DMR comment or permit narrative",
+      "Parameter descriptions containing 'Pass/Fail' without the explicit 0/1 coding legend",
+      "Co-occurrence of 0 reported values and empty LIMIT_VALUE_NMBR on retest rows without permit reporting instructions"
+    ],
+    "unknowable_from_structured_data_alone": [
+      "That 0 means NOEC at or above critical dilution (pass) and 1 means NOEC below critical dilution (fail)\u2014this substantive criterion is stated in permit narrative, not in CSV fields alone",
+      "Definition of critical dilution and acute test failure for WET\u2014requires permit Part II text"
+    ]
+  },
+  "packet": {
+    "obligation_id": "pass_fail",
+    "exact_semantic_question": "What does PASS=0 / FAIL=1 reporting mean, and is it a numeric concentration comparison?",
+    "purpose": [
+      "A",
+      "B",
+      "C"
+    ],
+    "relation_contract": "binary pass/fail coding is not ordinary concentration comparison",
+    "candidate_interpretations": [
+      {
+        "label": "binary_wet_outcome_code",
+        "description": "0 and 1 are categorical pass/fail codes for whole-effluent-toxicity test outcome. 0 = pass (NOEC at or above critical dilution); 1 = fail (NOEC below critical dilution). Values are entered in the DMR concentration-max field but do not represent a measured concentration magnitude.",
+        "supported_by": [
+          "DMR_COMMENT_TEXT pass/fail legend on all 12 affected limit rows",
+          "final_permit.txt Part II reporting table for TEM3D/TEM6C and retest codes",
+          "9A pass=0;fail=1 unit on pass/fail limit rows with empty LIMIT_VALUE_NMBR"
+        ]
+      },
+      {
+        "label": "numeric_concentration_comparison",
+        "description": "Reported 0/1 values are pollutant concentrations (mg/L, %, etc.) compared numerically against LIMIT_VALUE_NMBR.",
+        "supported_by": [],
+        "refuted_by": [
+          "DMR comment explicitly defines 0/1 as pass/fail codes, not concentrations",
+          "Pass/fail parameters have no numeric LIMIT_VALUE_NMBR; companion TOM3D/TOM6C parameters carry numeric NOEC reporting separately"
+        ]
+      },
+      {
+        "label": "shared_comment_different_reporting_regimes",
+        "description": "All 12 rows share the PASS=0/FAIL=1 comment at the limit-set level, but only TEM/retest parameters (8 rows) use binary 0/1 reporting; TOM3D/TOM6C/TQM3D/TQM6C (4 rows) report numeric NOEC or coefficient-of-variation values per separate permit instructions.",
+        "supported_by": [
+          "permit_limits.csv rows 101\u2013106 show TOM/TQM parameters with 23% limits under same comment",
+          "final_permit.txt distinguishes pass/fail entry (TEM codes) from NOEC concentration reporting (TOM codes)"
+        ]
+      }
+    ],
+    "retained_snippets": [
+      {
+        "source_id": "sources/permit_limits.csv",
+        "location": "row LIMIT_VALUE_ID=3610839676, PARAMETER_CODE=22415",
+        "text": "(PASS = 0  FAIL = 1) REPORT PASS AS '0' OR REPORT FAIL AS '1' IN CONCENTRATION MAX. ABOVE.",
+        "why_retained": "Direct structured definition of the 0/1 coding and where to report it on the DMR."
+      },
+      {
+        "source_id": "sources/permit_limits.csv",
+        "location": "row LIMIT_VALUE_ID=3610839682, PARAMETER_CODE=TEM3D",
+        "text": "LIMIT_VALUE_NMBR=empty; LIMIT_UNIT_CODE=9A; STANDARD_UNIT_DESC=pass=0;fail=1; PARAMETER_DESC=Low Flow Pass/Fail Static Renewal 48Hr Acute Daphnia pulex",
+        "why_retained": "Shows pass/fail parameters use unit 9A and carry no numeric limit threshold."
+      },
+      {
+        "source_id": "sources/permit_limits.csv",
+        "location": "row LIMIT_VALUE_ID=3610839684, PARAMETER_CODE=TOM3D",
+        "text": "LIMIT_VALUE_NMBR=23; LIMIT_UNIT_CODE=23; STANDARD_UNIT_DESC=%; PARAMETER_DESC=NOAEC Lethal Statis Renewal 48 Hr Acute Daphnia pulex",
+        "why_retained": "Companion parameter in same limit set reports numeric NOEC (%), not 0/1 pass/fail codes."
+      },
+      {
+        "source_id": "sources/dmr_measurements.csv",
+        "location": "row DMR_FORM_VALUE_ID=3832994493, LIMIT_VALUE_ID=3610839682, MONITORING_PERIOD_END=2024-11-30",
+        "text": "DMR_VALUE_NMBR=0; DMR_VALUE_STANDARD_UNITS=9A; limit/standard unit desc pass=0;fail=1; DMR_VALUE_QUALIFIER_CODE==",
+        "why_retained": "Observed reporting practice: literal 0 with pass/fail unit, not a concentration."
+      },
+      {
+        "source_id": "documents/farmington/final_permit.txt",
+        "location": "Part II, lines 512\u2013514, reporting table",
+        "text": "Enter a \"1\" if the No Observed Effect Concentration (NOEC) for survival is less than the critical dilution, otherwise enter a \"0\".",
+        "why_retained": "Authoritative permit definition mapping 0/1 to WET pass/fail based on NOEC vs critical dilution."
+      },
+      {
+        "source_id": "documents/farmington/final_permit.txt",
+        "location": "Part II, lines 518\u2013520, retest reporting row",
+        "text": "(If required) Retest 1 \u2013 Enter a \"1\" if the NOEC for survival is less than the critical dilution, otherwise enter \"0\".",
+        "why_retained": "Same 0/1 semantics apply to retest parameters (22418/22415) in the affected set."
+      },
+      {
+        "source_id": "documents/farmington/final_permit.txt",
+        "location": "Part II, line 515, reporting table",
+        "text": "Report the NOEC value for survival                          TOM3D                 TOM6C",
+        "why_retained": "Separates numeric NOEC concentration reporting from binary pass/fail coding on TEM codes."
+      },
+      {
+        "source_id": "documents/farmington/final_permit.txt",
+        "location": "Part II, lines 390\u2013393, NOEC and failure definitions",
+        "text": "Acute test failure is defined as a demonstration of a statistically significant lethal effect at test completion to a test species at or below the critical dilution",
+        "why_retained": "Substantive criterion underlying the 1 (fail) code; outcome derives from toxicity test, not concentration limit arithmetic."
+      }
+    ],
+    "contradictory_evidence": [],
+    "known_limitations": [
+      "Critical dilution magnitude is not stated in the inspected structured rows; only the comparison logic (NOEC vs critical dilution) is established from permit text.",
+      "Four of twelve affected limit rows (TOM3D, TOM6C, TQM3D, TQM6C) share the PASS=0/FAIL=1 comment but are governed by separate numeric-reporting instructions; the pass/fail legend applies to TEM and retest parameters, not to those four.",
+      "Sublethal retest parameters (22418, 22419) use the same 0/1 coding in structured data; permit retest table text inspected references survival NOEC vs critical dilution for retest 1\u20133."
+    ],
+    "allowed_dispositions": [
+      "SUPPORTED_RESOLUTION",
+      "SUPPORTED_NEGATIVE",
+      "UNRESOLVED"
+    ]
+  },
+  "judgment": {
+    "disposition": "SUPPORTED_RESOLUTION",
+    "grounding": [
+      {
+        "source_id": "sources/permit_limits.csv",
+        "location": "row LIMIT_VALUE_ID=3610839676, PARAMETER_CODE=22415",
+        "proposition": "PASS=0 and FAIL=1 are categorical codes to enter in the concentration-max DMR field, not measured concentration magnitudes."
+      },
+      {
+        "source_id": "sources/permit_limits.csv",
+        "location": "row LIMIT_VALUE_ID=3610839682, PARAMETER_CODE=TEM3D",
+        "proposition": "Pass/fail WET parameters use unit 9A (pass=0;fail=1) and carry no numeric LIMIT_VALUE_NMBR threshold."
+      },
+      {
+        "source_id": "sources/permit_limits.csv",
+        "location": "row LIMIT_VALUE_ID=3610839684, PARAMETER_CODE=TOM3D",
+        "proposition": "Companion NOEC parameters in the same limit set report numeric percent limits (23%), not 0/1 pass/fail codes."
+      },
+      {
+        "source_id": "sources/dmr_measurements.csv",
+        "location": "row DMR_FORM_VALUE_ID=3832994493, LIMIT_VALUE_ID=3610839682",
+        "proposition": "Observed FY reporting uses literal 0 with unit 9A, consistent with pass/fail coding rather than concentration."
+      },
+      {
+        "source_id": "documents/farmington/final_permit.txt",
+        "location": "Part II, lines 512-514",
+        "proposition": "Enter 1 when survival NOEC is below critical dilution (fail); otherwise enter 0 (pass)."
+      },
+      {
+        "source_id": "documents/farmington/final_permit.txt",
+        "location": "Part II, lines 518-520",
+        "proposition": "Retest rows use the same 0/1 NOEC-versus-critical-dilution coding."
+      },
+      {
+        "source_id": "documents/farmington/final_permit.txt",
+        "location": "Part II, line 515",
+        "proposition": "TOM3D/TOM6C require separate numeric NOEC concentration reporting, distinct from binary pass/fail entry."
+      },
+      {
+        "source_id": "documents/farmington/final_permit.txt",
+        "location": "Part II, lines 390-393",
+        "proposition": "Acute test failure is a toxicity-outcome determination at or below critical dilution, not arithmetic limit comparison."
+      }
+    ],
+    "interpretation": "binary_wet_outcome_code",
+    "epistemic_basis": "SOURCE_ESTABLISHED",
+    "scope": "ONE_RELATION_OR_VOCABULARY",
+    "remaining_uncertainty": "Critical dilution magnitude is not stated in the retained structured rows. Four of twelve limit rows that share the PASS=0/FAIL=1 comment (TOM3D, TOM6C, TQM3D, TQM6C) are governed by separate numeric NOEC or coefficient-of-variation reporting instructions and must not be treated as binary 0/1 pass/fail parameters.",
+    "failure_mode_if_unresolved": null
+  },
+  "proposal": {
+    "interpretation": "For limit rows whose structured unit is 9A (pass=0;fail=1) with empty LIMIT_VALUE_NMBR, reported 0/1 values are categorical whole-effluent-toxicity pass/fail outcome codes (0 = pass: NOEC at or above critical dilution; 1 = fail: NOEC below critical dilution), entered in the DMR concentration-max field but not representing a measured concentration magnitude. This is not ordinary numeric concentration comparison against LIMIT_VALUE_NMBR. Rows sharing the limit-set PASS/FAIL comment but carrying numeric percent limits (TOM/TQM codes) remain numeric NOEC reporting and are excluded from this mapping.",
+    "scope": "ONE_RELATION_OR_VOCABULARY",
+    "epistemic_basis": "SOURCE_ESTABLISHED",
+    "exact_grounding": [
+      "sources/permit_limits.csv row LIMIT_VALUE_ID=3610839676: (PASS = 0  FAIL = 1) REPORT PASS AS '0' OR REPORT FAIL AS '1' IN CONCENTRATION MAX.",
+      "sources/permit_limits.csv row LIMIT_VALUE_ID=3610839682: LIMIT_UNIT_CODE=9A; STANDARD_UNIT_DESC=pass=0;fail=1; empty LIMIT_VALUE_NMBR",
+      "sources/permit_limits.csv row LIMIT_VALUE_ID=3610839684: LIMIT_VALUE_NMBR=23; LIMIT_UNIT_CODE=23; STANDARD_UNIT_DESC=%",
+      "sources/dmr_measurements.csv row DMR_FORM_VALUE_ID=3832994493: DMR_VALUE_NMBR=0; DMR_VALUE_STANDARD_UNITS=9A",
+      "documents/farmington/final_permit.txt Part II lines 512-514: Enter 1 if NOEC < critical dilution, else 0",
+      "documents/farmington/final_permit.txt Part II line 515: Report NOEC value for survival on TOM3D/TOM6C separately"
+    ],
+    "semantic_delta": "Replace blanket pass_fail_reporting_semantics unresolved holes (triggered by shared DMR_COMMENT_TEXT) with a unit-based classifier: rows with pass/fail unit 9A and no numeric limit are modeled as binary_pass_fail_limit and binary_pass_fail_measurement relations; numeric_comparison_candidate remains limited to rows with both reported and limit numeric values. TOM/TQM rows that share the comment but have numeric limits are not flagged as pass/fail semantics unresolved.",
+    "affected_obligations": [
+      "pass_fail_reporting_semantics"
+    ],
+    "affected_occurrence_count": 8,
+    "remaining_uncertainty": "Critical dilution numeric value is not in retained snippets. Sublethal retest parameters (22418, 22419) are included in the binary 0/1 set by structured unit/comment evidence but retest permit text inspected references survival NOEC only.",
+    "admit": "ADMIT_DISPOSABLE"
+  },
+  "refinement": null,
+  "mutated_before_evidence": false,
+  "dry_run": {
+    "public": {
+      "ok": true,
+      "errors": [],
+      "n_hole_groups": 9,
+      "n_hole_instances": 525,
+      "relation_row_counts": {
+        "dmr_measurement": 824,
+        "permit_limit": 105,
+        "permit_document": 12,
+        "fy2025_measurement": 824,
+        "measurement_limit_pair": 824,
+        "binary_pass_fail_limit": 0,
+        "binary_pass_fail_measurement": 0,
+        "numeric_comparison_candidate": 342,
+        "no_numeric_result_case": 186,
+        "monitoring_requirement_fy2025": 105
+      },
+      "requirement_names": [
+        "fy2025_measurements_materializable",
+        "measurement_limit_pairs_materializable",
+        "unique_applicable_limit_per_measurement",
+        "numeric_comparison_candidates_materializable",
+        "limit_value_for_comparison",
+        "reported_value_for_comparison",
+        "limit_comparison_operator",
+        "reported_value_qualifier",
+        "optional_monitoring_flag_for_limit_applicability",
+        "limit_type_code_for_enforceability",
+        "statistical_base_for_limit_comparison",
+        "binary_pass_fail_reporting_unit",
+        "binary_pass_fail_measurement_unit",
+        "binary_pass_fail_reporting_regime",
+        "binary_pass_fail_limits_materializable",
+        "binary_pass_fail_measurements_materializable",
+        "monitoring_requirements_materializable",
+        "monitoring_frequency_code",
+        "limit_sample_type_code",
+        "optional_monitoring_flag_for_obligation",
+        "permit_limit_comment_text",
+        "limit_set_designator_for_schedule",
+        "no_numeric_result_cases_materializable",
+        "nodi_code_semantics",
+        "optional_monitoring_flag_for_missing_evidence",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "permit_document_text_not_available"
+      ],
+      "hole_groups": [
+        {
+          "group_id": "g000",
+          "requirement": "aggregated_reporting_requirement",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 40,
+          "purpose": [
+            "B",
+            "C"
+          ],
+          "sample_subjects": [
+            {
+              "limit_value_id": "3610673284",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610673282",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610673283",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610673281",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610673290",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610673289",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610673278",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610673277",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610673280",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610673279",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610838794",
+              "limit_set_schedule_id": "3600891019"
+            },
+            {
+              "limit_value_id": "3610838793",
+              "limit_set_schedule_id": "3600891019"
+            }
+          ],
+          "expected": "purpose-computable interpretation"
+        },
+        {
+          "group_id": "g001",
+          "requirement": "binary_pass_fail_limits_materializable",
+          "failure_kind": "NO_MATERIALIZABLE_PATH",
+          "relation": "binary_pass_fail_limit",
+          "n_instances": 1,
+          "purpose": [
+            "A",
+            "B",
+            "C"
+          ],
+          "sample_subjects": [
+            {}
+          ],
+          "expected": "relation has rows"
+        },
+        {
+          "group_id": "g002",
+          "requirement": "binary_pass_fail_measurements_materializable",
+          "failure_kind": "NO_MATERIALIZABLE_PATH",
+          "relation": "binary_pass_fail_measurement",
+          "n_instances": 1,
+          "purpose": [
+            "A",
+            "B",
+            "C"
+          ],
+          "sample_subjects": [
+            {}
+          ],
+          "expected": "relation has rows"
+        },
+        {
+          "group_id": "g003",
+          "requirement": "conditional_discharge_dependent_monitoring",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 17,
+          "purpose": [
+            "B",
+            "C"
+          ],
+          "sample_subjects": [
+            {
+              "limit_value_id": "3610840344",
+              "limit_set_schedule_id": "3600904607"
+            },
+            {
+              "limit_value_id": "3610840345",
+              "limit_set_schedule_id": "3600904607"
+            },
+            {
+              "limit_value_id": "3610840341",
+              "limit_set_schedule_id": "3600904607"
+            },
+            {
+              "limit_value_id": "3610840343",
+              "limit_set_schedule_id": "3600904607"
+            },
+            {
+              "limit_value_id": "3610840342",
+              "limit_set_schedule_id": "3600904607"
+            },
+            {
+              "limit_value_id": "3610840340",
+              "limit_set_schedule_id": "3600904607"
+            },
+            {
+              "limit_value_id": "3610840349",
+              "limit_set_schedule_id": "3600904607"
+            },
+            {
+              "limit_value_id": "3610840350",
+              "limit_set_schedule_id": "3600904607"
+            },
+            {
+              "limit_value_id": "3610840348",
+              "limit_set_schedule_id": "3600904607"
+            },
+            {
+              "limit_value_id": "3610840339",
+              "limit_set_schedule_id": "3600904606"
+            },
+            {
+              "limit_value_id": "3610840337",
+              "limit_set_schedule_id": "3600904606"
+            },
+            {
+              "limit_value_id": "3610840338",
+              "limit_set_schedule_id": "3600904606"
+            }
+          ],
+          "expected": "purpose-computable interpretation"
+        },
+        {
+          "group_id": "g004",
+          "requirement": "limit_sample_type_code",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 105,
+          "purpose": [
+            "B"
+          ],
+          "sample_subjects": [
+            {
+              "limit_sample_type_code": "12",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673284"
+            },
+            {
+              "limit_sample_type_code": "12",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673282"
+            },
+            {
+              "limit_sample_type_code": "12",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673283"
+            },
+            {
+              "limit_sample_type_code": "12",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673281"
+            },
+            {
+              "limit_sample_type_code": "GR",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129864"
+            },
+            {
+              "limit_sample_type_code": "GR",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833505|limit_value_id=3610129864"
+            },
+            {
+              "limit_sample_type_code": "GR",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833505|limit_value_id=3610129865"
+            },
+            {
+              "limit_sample_type_code": "GR",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129865"
+            },
+            {
+              "limit_sample_type_code": "GR",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673290"
+            },
+            {
+              "limit_sample_type_code": "GR",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673289"
+            },
+            {
+              "limit_sample_type_code": "GR",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840344"
+            },
+            {
+              "limit_sample_type_code": "GR",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840345"
+            }
+          ],
+          "expected": "limit_sample_type_code in known ['']"
+        },
+        {
+          "group_id": "g005",
+          "requirement": "monitoring_frequency_code",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 105,
+          "purpose": [
+            "B"
+          ],
+          "sample_subjects": [
+            {
+              "limit_freq_of_analysis_code": "05/WK",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673284"
+            },
+            {
+              "limit_freq_of_analysis_code": "05/WK",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673282"
+            },
+            {
+              "limit_freq_of_analysis_code": "05/WK",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673283"
+            },
+            {
+              "limit_freq_of_analysis_code": "05/WK",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673281"
+            },
+            {
+              "limit_freq_of_analysis_code": "01/01",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129864"
+            },
+            {
+              "limit_freq_of_analysis_code": "01/01",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833505|limit_value_id=3610129864"
+            },
+            {
+              "limit_freq_of_analysis_code": "01/01",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833505|limit_value_id=3610129865"
+            },
+            {
+              "limit_freq_of_analysis_code": "01/01",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600833510|limit_value_id=3610129865"
+            },
+            {
+              "limit_freq_of_analysis_code": "05/WK",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673290"
+            },
+            {
+              "limit_freq_of_analysis_code": "05/WK",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673289"
+            },
+            {
+              "limit_freq_of_analysis_code": "01/07",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840344"
+            },
+            {
+              "limit_freq_of_analysis_code": "01/07",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840345"
+            }
+          ],
+          "expected": "limit_freq_of_analysis_code in known ['']"
+        },
+        {
+          "group_id": "g006",
+          "requirement": "nodi_code_semantics",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "no_numeric_result_case",
+          "n_instances": 186,
+          "purpose": [
+            "C"
+          ],
+          "sample_subjects": [
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662047"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662059"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662071"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662083"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662048"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662060"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662072"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662084"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662049"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662061"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662073"
+            },
+            {
+              "nodi_code": "9",
+              "measurement": "measurement:dmr_form_value_id=3920662085"
+            }
+          ],
+          "expected": "nodi_code in known ['']"
+        },
+        {
+          "group_id": "g007",
+          "requirement": "permit_document_text_not_available",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "permit_document",
+          "n_instances": 1,
+          "purpose": [
+            "B",
+            "C"
+          ],
+          "sample_subjects": [
+            {
+              "source": "document_inventory.json"
+            }
+          ],
+          "expected": "purpose-computable interpretation"
+        },
+        {
+          "group_id": "g008",
+          "requirement": "permit_limit_comment_text",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "permit_limit",
+          "n_instances": 69,
+          "purpose": [
+            "B",
+            "C"
+          ],
+          "sample_subjects": [
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673284"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673282"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673283"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673281"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673290"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673289"
+            },
+            {
+              "dmr_comment_text": "WHEN DISCHARGING.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840344"
+            },
+            {
+              "dmr_comment_text": "WHEN DISCHARGING.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840345"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673278"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673277"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673280"
+            },
+            {
+              "dmr_comment_text": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+              "permit_limit_row": "permit_limit_row:limit_set_schedule_id=3600891019|limit_value_id=3610673279"
+            }
+          ],
+          "expected": "dmr_comment_text in known ['']"
+        }
+      ]
+    },
+    "delta": {
+      "relation_count_changes": {
+        "binary_pass_fail_limit": {
+          "baseline": null,
+          "proposed": 0
+        },
+        "binary_pass_fail_measurement": {
+          "baseline": null,
+          "proposed": 0
+        }
+      },
+      "requirements_added": [
+        "binary_pass_fail_limits_materializable",
+        "binary_pass_fail_measurement_unit",
+        "binary_pass_fail_measurements_materializable",
+        "binary_pass_fail_reporting_regime",
+        "binary_pass_fail_reporting_unit"
+      ],
+      "requirements_removed": [
+        "pass_fail_reporting_semantics"
+      ],
+      "requirements_changed": [],
+      "relation_mode_changes": {
+        "binary_pass_fail_limit": {
+          "baseline": null,
+          "proposed": "PURPOSE"
+        },
+        "binary_pass_fail_measurement": {
+          "baseline": null,
+          "proposed": "PURPOSE"
+        }
+      },
+      "n_hole_groups": {
+        "baseline": 8,
+        "proposed": 9
+      },
+      "n_hole_instances": {
+        "baseline": 535,
+        "proposed": 525
+      },
+      "hole_requirements_added": [
+        "binary_pass_fail_limits_materializable",
+        "binary_pass_fail_measurements_materializable"
+      ],
+      "hole_requirements_removed": [
+        "pass_fail_reporting_semantics"
+      ],
+      "WORLD_semantics_changed": true,
+      "PURPOSE_semantics_changed": true,
+      "ok": {
+        "baseline": true,
+        "proposed": true
+      }
+    }
+  },
+  "finished_at": "2026-09-05T13:55:13.829147+00:00"
+}

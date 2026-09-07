@@ -1,0 +1,40 @@
+{
+  "propositions": [
+    {
+      "proposition": "Registry row 4721193 records company ID 4721193 with legal name MERIDIAN ENERGY PARTNERS LLC, jurisdiction Delaware, and status active.",
+      "source_grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 4721193"
+      },
+      "establishes": "other",
+      "relevance": "Characterizes the legal entity associated with the right referent registry:4721193."
+    },
+    {
+      "proposition": "Billing records list billed_name Meridian Energy Partners LLC.",
+      "source_grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Meridian Energy Partners LLC"
+      },
+      "establishes": "other",
+      "relevance": "Characterizes the entity named by the left referent billing:Meridian Energy Partners LLC."
+    },
+    {
+      "proposition": "The legal name in registry row 4721193 is MERIDIAN ENERGY PARTNERS LLC.",
+      "source_grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 4721193"
+      },
+      "establishes": "other",
+      "relevance": "Provides the registry-side name for comparison with the billing referent; name correspondence alone does not establish cross-referent identity under the grounding contract."
+    },
+    {
+      "proposition": "The billing billed_name is Meridian Energy Partners LLC.",
+      "source_grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Meridian Energy Partners LLC"
+      },
+      "establishes": "other",
+      "relevance": "Provides the billing-side name for comparison with registry:4721193; no observation links this billing referent to registry ID 4721193."
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "obligation_id": "obl:commercial_dependency_judgment:c5a18690639e",
+  "selected_observations": [
+    {
+      "source_path": "sources/crm.csv",
+      "location": "crm_account_id=MER-55",
+      "excerpt": "crm_account_id,account_name,domain,country,owner,status\nMER-55,Meridian Energy Partners,meridian-ep.com,US,S. Ortiz,active"
+    },
+    {
+      "source_path": "sources/contracts/MSA-MER-2024.md",
+      "location": "header",
+      "excerpt": "# Advisory retainer\nCounterparty: Meridian Energy Partners LLC\nEffective: 2 February 2024\nTerm: 12 months, then month-to-month."
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "invoice_id=INV-5001 status=open",
+      "excerpt": "{\n  \"invoice_id\": \"INV-5001\",\n  \"billed_name\": \"Meridian Energy Partners LLC\",\n  \"vat_or_tax_id\": \"\",\n  \"amount\": 250000,\n  \"currency\": \"USD\",\n  \"period\": \"2025-Q1\",\n  \"status\": \"open\"\n}"
+    },
+    {
+      "source_path": "sources/contracts/MSA-MER-2024.md",
+      "location": "section 14: Change of control",
+      "excerpt": "## 14. Change of control\n\nThe provider may terminate this agreement upon a change of control of Meridian Energy Partners LLC."
+    }
+  ],
+  "selection_rationale": "CRM account, governing contract header/term, any open invoice for the commercial relationship, and obligation-relevant clause excerpts support the Purpose C two-prong dependency test.",
+  "known_missing_information": [
+    "Prong-two obligation_kind_judgment rows are not adjudicated in P2; dependency status depends on separate ACCEPT/REJECT on exclusivity, auto_renewal, or rolling_term.",
+    "Identity joins between crm, billing, and contract identifiers remain unresolved until P3 adjudication.",
+    "P2 emitted semantic candidate tuples with empty disposition; no adjudication performed.",
+    "commercial_dependency_judgment candidates omit crm:VEL-19 / contract:SOW-VEL-2022 pair.",
+    "open_invoices_by_contract derivation is registered but never run; depends on resolved identity and association judgments."
+  ]
+}

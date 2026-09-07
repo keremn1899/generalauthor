@@ -1,0 +1,74 @@
+{
+  "proposed_disposition": "SAME_ENTITY",
+  "proof_obligations": [
+    {
+      "obligation": "Identify the legal counterparty named in contract MSA-OAK-2018.",
+      "required_for": "SAME_ENTITY",
+      "satisfied": true,
+      "evidence": [
+        {
+          "source_path": "sources/contracts/MSA-OAK-2018.md",
+          "location": "header"
+        }
+      ]
+    },
+    {
+      "obligation": "Establish that Oakfield Logistics GmbH (contract counterparty) and Oakfield Logistik GmbH (billing entity) are the same legal entity.",
+      "required_for": "SAME_ENTITY",
+      "satisfied": true,
+      "evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        },
+        {
+          "source_path": "sources/company_registry.csv",
+          "location": "row HRB 88421"
+        }
+      ]
+    },
+    {
+      "obligation": "Establish that billing:Oakfield Logistik GmbH corresponds to the registered entity HRB 88421.",
+      "required_for": "SAME_ENTITY",
+      "satisfied": true,
+      "evidence": [
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Oakfield Logistik GmbH"
+        },
+        {
+          "source_path": "sources/company_registry.csv",
+          "location": "row HRB 88421"
+        }
+      ]
+    },
+    {
+      "obligation": "Establish that billing:Oakfield Logistik GmbH and contract:MSA-OAK-2018 refer to different legal entities.",
+      "required_for": "DISTINCT",
+      "satisfied": false,
+      "evidence": []
+    }
+  ],
+  "unsatisfied_obligations": [
+    "Establish that billing:Oakfield Logistik GmbH and contract:MSA-OAK-2018 refer to different legal entities."
+  ],
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/contracts/MSA-OAK-2018.md",
+      "location": "header"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row HRB 88421"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Oakfield Logistik GmbH"
+    }
+  ],
+  "support_claim": "Commercial notes explicitly record a 2023 rebrand from Oakfield Logistics GmbH (the MSA-OAK-2018 counterparty) to Oakfield Logistik GmbH with unchanged Handelsregister number HRB 88421, which matches the billing name and registry row."
+}

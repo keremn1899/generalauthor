@@ -1,0 +1,42 @@
+{
+  "payload": [
+    {
+      "obligation_id": "R1/c0428",
+      "relation": "probe_obligation",
+      "values": [
+        "Chlordane row and adjacent pollutant rows with the same N/A/Report pattern in Part I Section A",
+        "Table column headers for 30-day average, daily maximum, and 7-day average limit columns versus measurement frequency and sample type columns",
+        "Permit usage of 'N/A' and 'Report' across limit and reporting columns in this table section"
+      ],
+      "disposition": "ACCEPT",
+      "grounding": [
+        {
+          "packet": "04_packets/R1_c0428.json",
+          "location": "selected_observations[0].location",
+          "value": "Page: 4, Section: part_i, Chlordane row"
+        },
+        {
+          "packet": "04_packets/R1_c0428.json",
+          "location": "selected_observations[0].excerpt",
+          "value": "Chlordane                      N/A             N/A            N/A            N/A          N/A         Report       1/Quarter            Grab"
+        },
+        {
+          "packet": "04_packets/R1_c0428.json",
+          "location": "selected_observations[1].excerpt",
+          "value": "POLLUTANT                  30-DAY AVG      DAILY MAX 7-DAY AVG        30-DAY           DAILY MAX    7-DAY AVG   MEASUREMENT       SAMPLE TYPE"
+        },
+        {
+          "packet": "04_packets/R1_c0428.json",
+          "location": "selected_observations[1].excerpt",
+          "value": "Cadmium                        N/A             N/A            N/A            N/A          N/A         Report       1/Quarter            Grab"
+        },
+        {
+          "packet": "04_packets/R1_c0428.json",
+          "location": "selected_observations[1].excerpt",
+          "value": "Cyanide                    0.817 lbs/day   1.225 lbs/day      N/A         14.67 ug/L     22 ug/L       N/A          2/month             Grab"
+        }
+      ],
+      "rationale": "The Chlordane row at Outfall 001 in Part I Section A does not establish any enforceable numeric effluent discharge limit: all six limit columns (30-day average, daily maximum, and 7-day average for both mass and concentration) are explicitly marked N/A, unlike parameters such as Cyanide that carry numeric limits in the same columns. It does establish a required monitoring and reporting obligation at the stated frequency: the row assigns Report in the final limit-column position, 1/Quarter measurement frequency, and Grab sample type, matching the same N/A/Report pattern used for adjacent pollutants (Cadmium, Aldrin, Toxaphene, etc.) and contrasting with limit-bearing rows. Table headers separate the six effluent-limit columns from measurement frequency and sample type, so Report and 1/Quarter are monitoring obligations rather than limit values. The answer to why_demanded is therefore (b), not (a) or (c)."
+    }
+  ]
+}

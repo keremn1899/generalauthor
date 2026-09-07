@@ -1,0 +1,22 @@
+{
+  "obligation_id": "obl:missing_evidence_classification:a4514a4e8bdaa972",
+  "selected_observations": [
+    {
+      "source_path": "sources/structured/dmr_measurements.csv",
+      "location": "line 544; DMR_EVENT_ID=3621392519; DMR_VALUE_ID=3847407849",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0020583; PERM_FEATURE_NMBR=TX1; PARAMETER_CODE=51443; PARAMETER_DESC=Whole Effluent Toxicity - Retest #3; MONITORING_PERIOD_END_DATE=05/31/2025; DMR_EVENT_ID=3621392519; DMR_VALUE_ID=3847407849; NODI_CODE=9"
+    },
+    {
+      "source_path": "sources/structured/permit_limits.csv",
+      "location": "line 73; DMR_COMMENT_TEXT on limit:3606351399:3610839680",
+      "excerpt": "(PASS = 0  FAIL = 1) REPORT PASS AS '0' OR REPORT FAIL AS '1' IN CONCENTRATION MAX. ABOVE.  IF ALL TESTS PASS FOR THE FIRST YEAR OF THE PERMIT, THE FREQUENCY WILL BE REDUCED FOR YEARS 2-5 TO:  1/6 MONTHS FOR DAPHNIA P..."
+    }
+  ],
+  "selection_rationale": "Centers on NODI-coded or absent numeric DMR reporting plus any structured permit comment tied to the parameter schedule.",
+  "known_missing_information": [
+    "02_mechanical_world/world.sqlite not present in workspace; evidence selected directly from structured CSV sources using P2 join rules.",
+    "Permit PDF sources listed in sources/source_manifest.json were not ingested; permit_stated_condition packets use structured DMR_COMMENT_TEXT only.",
+    "Classification may depend on documented_no_discharge_assertion adjudication and Purpose B obligation context.",
+    "NODI code semantics require permit/DMR documentary interpretation beyond the coded value alone."
+  ]
+}

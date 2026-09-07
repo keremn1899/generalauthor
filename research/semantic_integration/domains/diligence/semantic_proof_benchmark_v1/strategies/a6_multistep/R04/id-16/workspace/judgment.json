@@ -1,0 +1,60 @@
+{
+  "steps": [
+    {
+      "fact": "Candidate left referent registry:11847201 corresponds to the registered company HELION ROBOTICS LIMITED.",
+      "grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847201"
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "Candidate right referent registry:11847299 corresponds to the registered company HELION INDUSTRIAL SYSTEMS LTD.",
+      "grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847299"
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "Commercial notes identify Helion Robotics Limited as the legal entity behind the Helion Robotics operating name.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Commercial notes state that Helion Industrial Systems Ltd is a different company from the Helion Robotics legal entity discussed in the same paragraph.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "The registry legal name HELION ROBOTICS LIMITED matches the Helion Robotics Limited entity named in commercial notes; the registry legal name HELION INDUSTRIAL SYSTEMS LTD matches the Helion Industrial Systems Ltd entity characterized there as a different company.",
+      "grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847201"
+      },
+      "mechanical": true
+    }
+  ],
+  "disposition": "DISTINCT",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 11847201"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 11847299"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "Registry rows tie each candidate to distinct legal names, and commercial notes explicitly state that Helion Industrial Systems Ltd is a different company from the Helion Robotics legal entity."
+}

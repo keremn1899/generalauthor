@@ -1,0 +1,9 @@
+Alongside the CSV tables, this permit package includes an inventory of 12 PDF-style documents: filenames, a document_kind label, file size, and a hash—but no extracted text in the structured sources we're working from.
+
+The kinds in the inventory include final_permit, fact_sheet, statement_of_basis, reasonable_potential, and minor_modification. The draft lists each document and links it to the permit, but it deliberately does not read narrative conditions out of those filenames or rank one document type as overriding another. It marks the whole situation as explicitly unresolved: permit conditions that live only in document prose are not available as structured evidence here.
+
+That matters for monitoring-obligation and missing-evidence work because discharge-dependent requirements, special studies, seasonal conditions, and explanations for why data might be absent often live in permit narrative rather than in limit-schedule rows.
+
+If we did have the document text, I'd want your judgment on authority: when a fact sheet, statement of basis, and final permit all exist for the same permit, which one would you treat as controlling for interpreting a ambiguous limit comment or a NODI situation—and does minor_modification or reasonable_potential ever supersede the final permit for the conditions we're evaluating in FY2025?
+
+I'm not asking you to supply the missing PDFs. I'm asking whether the filename kinds themselves imply a hierarchy we could safely use even without text, or whether authority is inherently a read-the-document question that has to stay open until someone actually opens the final permit language.

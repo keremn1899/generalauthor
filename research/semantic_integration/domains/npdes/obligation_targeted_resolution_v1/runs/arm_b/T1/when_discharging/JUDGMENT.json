@@ -1,0 +1,35 @@
+{
+  "disposition": "SUPPORTED_RESOLUTION",
+  "grounding": [
+    {
+      "source_id": "documents/aztec/final_permit.txt",
+      "location": "Part I.A footnotes lines 92-93",
+      "establishes": "Footnote *1 'When discharging.' attaches to MEASUREMENT FREQUENCY column entries for (*1)-marked parameters, not to numeric effluent limit values."
+    },
+    {
+      "source_id": "documents/aztec/final_permit.txt",
+      "location": "Part I.A.1 lines 56-66",
+      "establishes": "Intermittent-flow outfall 001 authorizes episodic backwash discharges that remain subject to stated limits and monitoring schedules when discharge occurs."
+    },
+    {
+      "source_id": "documents/aztec/final_permit.txt",
+      "location": "Part I.C.5 lines 150-153",
+      "establishes": "When no discharge occurs during a sampling month, the permittee marks NO DISCHARGE on the DMR instead of performing discharge-conditioned monitoring for that month."
+    },
+    {
+      "source_id": "documents/aztec/statement_of_basis.txt",
+      "location": "Section 5 lines 506-511",
+      "establishes": "Narrative permit basis confirms monitoring frequencies (flow daily when discharging, pH weekly when discharging, TRC daily when discharging, TDS/cyanide quarterly) are tied to discharge occurrence."
+    },
+    {
+      "source_id": "sources/permit_limits.csv",
+      "location": "LIMIT_VALUE_ID 3610840344 (representative of 17 rows)",
+      "establishes": "Structured encoding carries DMR_COMMENT_TEXT='WHEN DISCHARGING.' with OPTIONAL_MONITORING_FLAG=N, refuting optional-monitoring-flag semantics for this comment."
+    }
+  ],
+  "interpretation": "The permit-limit comment 'WHEN DISCHARGING.' qualifies monitoring-frequency obligations for (*1)-marked parameters: stated frequencies apply only on days or periods when the outfall is discharging. Numeric effluent limits are not suspended by the comment; they govern authorized discharges when discharge occurs. When no discharge occurs during a sampling month, discharge-conditioned monitoring is not required and the permittee reports no discharge on the DMR instead. The comment is not encoded as optional monitoring (OPTIONAL_MONITORING_FLAG remains N).",
+  "epistemic_basis": "SOURCE_ESTABLISHED",
+  "scope": "ONE_RELATION_OR_VOCABULARY",
+  "remaining_uncertainty": "Structured sources do not record whether discharge occurred in any FY2025 monitoring period for NM0028762. No NODI_CODE values appear in dmr_measurements.csv for these rows, so no-discharge reporting cannot be observed structurally. The permit does not define a machine-readable rule for aggregating compliance across partial discharge within a month or quarter (e.g., how many discharge days satisfy weekly monitoring).",
+  "failure_mode_if_unresolved": null
+}

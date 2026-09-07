@@ -1,0 +1,80 @@
+{
+  "claims": [
+    {
+      "claim": "The left referent billing:Vellum Print Co Ltd is grounded to the billed name Vellum Print Co Ltd in billing records.",
+      "status": "ESTABLISHED",
+      "burden": "other",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Vellum Print Co Ltd"
+        }
+      ]
+    },
+    {
+      "claim": "The right referent contract:SOW-VEL-2022 is grounded to a statement of work whose counterparty is named Vellum Print Co Ltd.",
+      "status": "ESTABLISHED",
+      "burden": "other",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/contracts/SOW-VEL-2022.md",
+          "location": "header"
+        }
+      ]
+    },
+    {
+      "claim": "The billing-record name Vellum Print Co Ltd and the SOW-VEL-2022 counterparty name Vellum Print Co Ltd are identical strings.",
+      "status": "ESTABLISHED",
+      "burden": "other",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Vellum Print Co Ltd"
+        },
+        {
+          "source_path": "sources/contracts/SOW-VEL-2022.md",
+          "location": "header"
+        }
+      ]
+    },
+    {
+      "claim": "billing:Vellum Print Co Ltd and contract:SOW-VEL-2022 denote the same legal counterparty.",
+      "status": "NOT_ESTABLISHED",
+      "burden": "identity",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Vellum Print Co Ltd"
+        },
+        {
+          "source_path": "sources/contracts/SOW-VEL-2022.md",
+          "location": "header"
+        }
+      ]
+    },
+    {
+      "claim": "billing:Vellum Print Co Ltd and contract:SOW-VEL-2022 denote distinct legal counterparties.",
+      "status": "NOT_ESTABLISHED",
+      "burden": "distinctness",
+      "supporting_evidence": []
+    },
+    {
+      "claim": "The packet preserves multiple live candidates or states that identity cannot be established.",
+      "status": "NOT_ESTABLISHED",
+      "burden": "unresolved_preservation",
+      "supporting_evidence": []
+    }
+  ],
+  "disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Vellum Print Co Ltd"
+    },
+    {
+      "source_path": "sources/contracts/SOW-VEL-2022.md",
+      "location": "header"
+    }
+  ],
+  "support_claim": "Both referents are grounded to the same name string, but the packet provides no evidence establishing legal-entity identity or distinctness, so the identity burden is not met."
+}

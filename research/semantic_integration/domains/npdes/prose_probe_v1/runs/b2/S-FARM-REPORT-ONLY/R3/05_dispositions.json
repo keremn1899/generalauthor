@@ -1,0 +1,35 @@
+[
+  {
+    "obligation_id": "oracle:S-FARM-REPORT-ONLY",
+    "relation": "numeric_comparison_applicable",
+    "values": {
+      "permit": "NM0020583",
+      "parameters": [
+        "Flow",
+        "TDS discharge",
+        "TDS intake",
+        "WET",
+        "named Report toxics"
+      ]
+    },
+    "disposition": "UNRESOLVED",
+    "grounding": [
+      {
+        "source_path": "farmington/final_permit.pdf",
+        "location": "page 4 section part_i",
+        "excerpt": "Flow                       Report MGD      Report MGD      Report MGD"
+      },
+      {
+        "source_path": "farmington/final_permit.pdf",
+        "location": "page 4 section part_i",
+        "excerpt": "Total Dissolved Solids,                                                                                                               12-Hour\n                              Report          Report          N/A          Report        Report        N/A          1/Week"
+      },
+      {
+        "source_path": "farmington/final_permit.pdf",
+        "location": "page 5 section part_i",
+        "excerpt": "Daphnia pulex                                                Report                Once/Quarter"
+      }
+    ],
+    "rationale": "The packet shows Report or N/A limit designations (no numeric effluent limits) for Flow, Total Dissolved Solids discharge/intake columns, and WET (Daphnia pulex), which would support REJECT for those parameters under the oracle contract (numeric comparison does not apply to report-only limits). However, the obligation also includes the parameter \"named Report toxics\", and the packet provides no selected observation identifying any toxic pollutant limit rows for permit NM0020583. Per P5, absence of packet evidence cannot support closed-world REJECT for that sub-proposition, and ACCEPT is unsupported because no numeric limits are evidenced for any listed parameter. Neither ACCEPT nor REJECT can be fully grounded across the complete parameter set; UNRESOLVED is the correct disposition."
+  }
+]

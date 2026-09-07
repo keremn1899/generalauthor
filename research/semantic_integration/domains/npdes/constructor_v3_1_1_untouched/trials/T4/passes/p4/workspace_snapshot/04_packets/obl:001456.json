@@ -1,0 +1,39 @@
+{
+  "obligation_id": "obl:001456",
+  "selected_observations": [
+    {
+      "source_path": "sources/structured/dmr_measurements.csv",
+      "location": "row 265, DMR_VALUE_ID=3856101783",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0000116; PERM_FEATURE_NMBR=001; PARAMETER_CODE=50050; PARAMETER_DESC=Flow, in conduit or thru treatment plant; MONITORING_PERIOD_END_DATE=07/31/2025; DMR_VALUE_ID=3856101783; DMR_VALUE_NMBR=.2041; DMR_UNIT_CODE=03; DMR_VALUE_QUALIFIER_CODE==; LIMIT_VALUE_ID=3610129868; LIMIT_TYPE_CODE=ENF; OPTIONAL_MONITORING_FLAG=N"
+    },
+    {
+      "source_path": "sources/structured/permit_limits.csv",
+      "location": "row 60, LIMIT_VALUE_ID=3610129868",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0000116; PERM_FEATURE_NMBR=001; PARAMETER_CODE=50050; PARAMETER_DESC=Flow, in conduit or thru treatment plant; LIMIT_VALUE_ID=3610129868; LIMIT_UNIT_CODE=03; STATISTICAL_BASE_CODE=DD; LIMIT_TYPE_CODE=ENF; OPTIONAL_MONITORING_FLAG=N; LIMIT_FREQ_OF_ANALYSIS_CODE=01/01; LIMIT_BEGIN_DATE=06/01/2021; LIMIT_END_DATE=05/31/2026"
+    },
+    {
+      "source_path": "world.sqlite/dmr_reported_value_kind",
+      "location": "measurement_id=measurement:3856101783",
+      "excerpt": "value_kind=numeric; dmr_value_nmbr=0.2041; dmr_unit_code=03"
+    },
+    {
+      "source_path": "world.sqlite/limit_value_attributes",
+      "location": "limit_row_id=limit_row:3610129868",
+      "excerpt": "has_numeric_value=0; limit_value_nmbr=0.0; limit_unit_code=03; statistical_base_code=DD"
+    },
+    {
+      "source_path": "world.sqlite/limit_source_flags",
+      "location": "limit_row_id=limit_row:3610129868",
+      "excerpt": "limit_type_code=ENF; optional_monitoring_flag=N; limit_freq_of_analysis_code=01/01"
+    },
+    {
+      "source_path": "world.sqlite/limit_effective_during_period",
+      "location": "limit_row_id=limit_row:3610129868, period_id=period:NM0000116:2025-07-31",
+      "excerpt": "overlaps=1"
+    }
+  ],
+  "selection_rationale": "Selected measurement/limit source rows and world value metadata needed for numeric comparison once enforceability is established. Blocking factors: depends_on_applicable_limit_assessment_enforceable_numeric.",
+  "known_missing_information": [
+    "Numeric exceedance verdict depends on unresolved applicable_limit_assessment."
+  ]
+}

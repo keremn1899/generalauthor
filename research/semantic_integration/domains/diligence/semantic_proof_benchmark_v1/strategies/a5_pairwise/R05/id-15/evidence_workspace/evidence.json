@@ -1,0 +1,58 @@
+{
+  "propositions": [
+    {
+      "proposition": "CRM record HEL-441 names the counterparty as Helion Robotics Ltd.",
+      "source_grounding": {
+        "source_path": "sources/crm.csv",
+        "location": "row HEL-441"
+      },
+      "establishes": "other",
+      "relevance": "Characterizes the left referent (crm:HEL-441) as Helion Robotics Ltd."
+    },
+    {
+      "proposition": "Registry record 11847299 names the entity as HELION INDUSTRIAL SYSTEMS LTD.",
+      "source_grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847299"
+      },
+      "establishes": "other",
+      "relevance": "Characterizes the right referent (registry:11847299) as HELION INDUSTRIAL SYSTEMS LTD."
+    },
+    {
+      "proposition": "Helion Robotics Ltd is the operating name used in CRM.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "other",
+      "relevance": "Links the CRM operating name to the left referent's recorded name (Helion Robotics Ltd)."
+    },
+    {
+      "proposition": "Invoices and Companies House use Helion Robotics Limited, and that is the same legal entity as Helion Robotics Ltd.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "identity",
+      "relevance": "Establishes identity between Helion Robotics Ltd (CRM name) and Helion Robotics Limited (legal/registry-facing name), but does not link either to registry:11847299."
+    },
+    {
+      "proposition": "Helion Industrial Systems Ltd is a different company.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "distinctness",
+      "relevance": "Explicitly states that Helion Industrial Systems Ltd (the name on registry:11847299) is not the same company as the Helion Robotics entity associated with CRM."
+    },
+    {
+      "proposition": "Helion Industrial Systems Ltd sold sensors in 2018 and has no current MSA.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "distinctness",
+      "relevance": "Separates Helion Industrial Systems Ltd (registry:11847299) as a distinct historical vendor with no ongoing master services agreement, supporting distinctness from the active CRM counterparty HEL-441."
+    }
+  ]
+}

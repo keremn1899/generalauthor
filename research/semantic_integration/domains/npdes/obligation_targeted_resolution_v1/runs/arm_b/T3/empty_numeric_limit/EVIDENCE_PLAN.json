@@ -1,0 +1,33 @@
+{
+  "proposition": "When LIMIT_VALUE_NMBR is empty, each permit limit row can be classified as (a) an enforceable numeric discharge limit subject to concentration comparison, (b) report-only monitoring with no numeric compliance limit, or (c) a non-numeric reporting obligation (pass/fail, conditional applicability, or aggregated reporting) that blocks ordinary numeric comparison.",
+  "would_establish": [
+    "Permit Part I limitation tables that mark a pollutant/limit column as 'Report' or 'N/A' rather than a numeric value, for rows whose structured LIMIT_VALUE_NMBR is empty",
+    "Structured DMR_COMMENT_TEXT on empty-limit rows that explicitly defines pass/fail encoding (PASS=0, FAIL=1) or geometric-mean reporting or when-discharging conditionality",
+    "Corroborating pairing where the same permit and parameter has a populated LIMIT_VALUE_NMBR on one limit-type row and an empty LIMIT_VALUE_NMBR on another, showing the empty row is not the sole numeric limit carrier",
+    "A workspace codebook or field legend defining LIMIT_VALUE_TYPE_CODE (C1/C2/C3/Q1/Q2) semantics for empty versus populated LIMIT_VALUE_NMBR"
+  ],
+  "would_refute": [
+    "A single uniform rule that all empty LIMIT_VALUE_NMBR rows denote numeric limits",
+    "A single uniform rule that all empty LIMIT_VALUE_NMBR rows denote report-only monitoring",
+    "Treating LIMIT_TYPE_CODE='ENF' alone as proof that an empty LIMIT_VALUE_NMBR row is a numeric enforceable limit",
+    "Inferring numeric limits from LIMIT_VALUE_TYPE_CODE or STATISTICAL_BASE_TYPE_CODE without permit text or DMR comment support"
+  ],
+  "likely_authoritative_source_types": [
+    "sources/permit_limits.csv structured fields (LIMIT_VALUE_NMBR, LIMIT_VALUE_TYPE_CODE, LIMIT_TYPE_CODE, DMR_COMMENT_TEXT, PARAMETER_CODE, STATISTICAL_BASE_TYPE_CODE)",
+    "documents/*/final_permit.txt Part I limitation and monitoring requirement tables",
+    "documents/*/fact_sheet.txt or statement_of_basis.txt narrative explaining report-only versus numeric limits"
+  ],
+  "insufficient_alone": [
+    "LIMIT_VALUE_NMBR empty without permit-table or DMR-comment corroboration",
+    "LIMIT_TYPE_CODE='ENF' on all 57 empty rows",
+    "LIMIT_VALUE_TYPE_CODE distribution (C3/Q2/C2/Q1/C1) without a workspace codebook",
+    "Co-occurrence of empty LIMIT_VALUE_NMBR with OPTIONAL_MONITORING_FLAG values",
+    "dmr_measurements.csv row counts alone (no FY2025 measurement rows have empty LIMIT_VALUE_NMBR in this workspace)"
+  ],
+  "unknowable_from_structured_data_alone": [
+    "Whether a blank-comment empty-limit row is report-only monitoring versus a data omission, without matching permit Part I text",
+    "The regulatory meaning of LIMIT_VALUE_TYPE_CODE values (C1/C2/C3/Q1/Q2)",
+    "Whether WHEN DISCHARGING empty rows are inapplicable for a given monitoring period without discharge-occurrence evidence",
+    "The correct numeric comparison operator for pass/fail-encoded WET retest rows beyond the DMR comment's 0/1 reporting instruction"
+  ]
+}

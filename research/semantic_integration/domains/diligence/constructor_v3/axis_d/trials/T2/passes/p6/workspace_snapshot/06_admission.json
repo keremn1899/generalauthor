@@ -1,0 +1,123 @@
+{
+  "limitations": [
+    "Commercial notes (sources/commercial_notes.md) are grounding evidence for semantic judgments but are not modeled as a separate mechanical relation; judgments must cite them in grounding packets where used.",
+    "Purpose-layer row inclusion, acquisition-relevance filtering, dependency classification, and identifier rendering transforms are not World relations per KERNEL and intention contract.",
+    "invoice_contract_association REJECT disposition (OBL-031) omitted from World IR; vocabulary has no negative disposition and kernel cannot represent closed-world negation.",
+    "open_invoice relation declared with manual schema because TaskView.declare_relation cannot assign bare invoice column when invoice_id TEXT role collides on invoice_id column."
+  ],
+  "admissions": [
+    {
+      "name": "invoice_observation",
+      "admission": "WORLD",
+      "reason": "A billed invoice as represented in authoritative billing with sourced amount, currency, period, and payment status.",
+      "purpose_independence_test": "Invoice amount, currency, period, status, and billed_name are sourced billing facts; truth does not depend on which diligence question is being asked."
+    },
+    {
+      "name": "crm_account_observation",
+      "admission": "WORLD",
+      "reason": "A CRM customer account row with its sourced account name.",
+      "purpose_independence_test": "CRM account rows are sourced operational records independent of analytical purpose."
+    },
+    {
+      "name": "registry_entity_observation",
+      "admission": "WORLD",
+      "reason": "A company registry row with sourced company number and legal name.",
+      "purpose_independence_test": "Registry legal names and company numbers are public registration facts, not purpose-relative."
+    },
+    {
+      "name": "contract_document_observation",
+      "admission": "WORLD",
+      "reason": "A contract or SOW document header with sourced counterparty text, document type, term dates, and mechanically compiled temporal active flag from explicit expiry or stated term mechanics.",
+      "purpose_independence_test": "Contract headers, dates, and mechanically compiled active flag describe sourced documents without reference to acquisition or dependency policies."
+    },
+    {
+      "name": "contract_clause_observation",
+      "admission": "WORLD",
+      "reason": "A parsed contractual clause kind present in a contract document, independent of any purpose-specific relevance filter.",
+      "purpose_independence_test": "Parsed clause kinds are present in contract text regardless of whether a purpose treats them as relevant."
+    },
+    {
+      "name": "account_contract_code_correspondence",
+      "admission": "WORLD",
+      "reason": "Deterministic correspondence between a CRM account identifier token and a contract filename code token.",
+      "purpose_independence_test": "Filename token correspondence between CRM IDs and contract stems is a deterministic join rule."
+    },
+    {
+      "name": "legal_form_mechanical_equivalence",
+      "admission": "WORLD",
+      "reason": "Exact legal-form variant normalization between two name strings that differ only in permitted corporate suffix or punctuation of the same registered name.",
+      "purpose_independence_test": "Permitted legal-form suffix normalization is a mechanical string rule, not a purpose threshold."
+    },
+    {
+      "name": "identity_judgment",
+      "admission": "WORLD",
+      "reason": "Two referents denote the same legal counterparty, are distinct, or remain unresolved.",
+      "purpose_independence_test": "Whether two referents denote the same legal entity is a factual identity proposition; purpose B defines which pairs must be linked but the judgment itself is world-eligible."
+    },
+    {
+      "name": "invoice_contract_association",
+      "admission": "WORLD",
+      "reason": "An invoice is confidently associated with a governing contract, or the billed-name to contract-counterparty linkage remains unresolved.",
+      "purpose_independence_test": "Whether an invoice is governed by a contract is a commercial linkage fact; purpose A uses association disposition values but the underlying join is independently meaningful."
+    },
+    {
+      "name": "commercial_relationship_identity_candidate",
+      "admission": "WORLD",
+      "reason": "A candidate identity pair required to connect CRM, billing, contract, and registry referents along a commercial relationship span.",
+      "purpose_independence_test": "Candidate identity pairs along a commercial span are topology facts derived from mechanical correspondence."
+    },
+    {
+      "name": "open_invoice",
+      "admission": "WORLD",
+      "reason": "An invoice whose sourced status is open.",
+      "purpose_independence_test": "Open versus paid invoice status is a sourced billing attribute independent of dependency analysis."
+    },
+    {
+      "name": "acquisition_relevant_condition_filter",
+      "admission": "PURPOSE",
+      "reason": "Purpose A subset of clause kinds that trigger invoice inclusion.",
+      "purpose_independence_test": "Which clause kinds trigger Purpose A row inclusion depends on the acquisition-exposure analytical question."
+    },
+    {
+      "name": "purpose_a_qualifying_invoice",
+      "admission": "PURPOSE",
+      "reason": "Purpose A output row when active contract bears acquisition-relevant condition.",
+      "purpose_independence_test": "An invoice qualifies for Purpose A output only when purpose policies on active contracts and acquisition-relevant clauses are applied."
+    },
+    {
+      "name": "purpose_a_row_inclusion",
+      "admission": "PURPOSE",
+      "reason": "Purpose A policy deciding which invoices appear in purpose_ir/a/output.json.",
+      "purpose_independence_test": "Including an invoice in Purpose A output is a purpose decision, not a world fact."
+    },
+    {
+      "name": "purpose_b_required_link_set",
+      "admission": "PURPOSE",
+      "reason": "Purpose B topology defining required CRM\u2013billing\u2013contract\u2013registry links.",
+      "purpose_independence_test": "The set of identity links Purpose B must emit is defined by commercial-diligence topology policy."
+    },
+    {
+      "name": "purpose_c_dependency_classification",
+      "admission": "PURPOSE",
+      "reason": "Purpose C dependent versus unresolved status over two-part dependency test.",
+      "purpose_independence_test": "Commercial dependency (dependent versus unresolved) is a composite purpose analytical construct."
+    },
+    {
+      "name": "purpose_c_current_relationship_test",
+      "admission": "PURPOSE",
+      "reason": "Purpose C prong 1 current-relationship threshold.",
+      "purpose_independence_test": "Whether an open invoice or rolling-term contract satisfies prong 1 depends on Purpose C policy thresholds."
+    },
+    {
+      "name": "identifier_rendering_transform",
+      "admission": "PURPOSE",
+      "reason": "Purpose output identifier stripping (invoice/contract prefix removal).",
+      "purpose_independence_test": "Stripping referent prefixes for purpose output rendering is a presentation transform, not world truth."
+    }
+  ],
+  "persisted_semantic_commitments": {
+    "identity_judgment": 24,
+    "invoice_contract_association": 7,
+    "invoice_contract_association_reject_omitted": 1
+  }
+}

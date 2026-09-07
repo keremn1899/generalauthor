@@ -1,0 +1,81 @@
+{
+  "obligation_id": "when_discharging",
+  "exact_semantic_question": "What does the permit-limit comment 'WHEN DISCHARGING' do to monitoring/limit applicability?",
+  "purpose": ["B", "C"],
+  "relation_contract": "comment conditions monitoring; discharge occurrence in a period is a separate factual question",
+  "candidate_interpretations": [
+    {
+      "id": "monitoring_conditional",
+      "text": "The comment makes stated monitoring frequencies and sample collection apply only during periods when the outfall is discharging; months with no discharge are handled via NO DISCHARGE DMR reporting instead of performing the (*1)-marked monitoring.",
+      "support": "Permit footnote *1 'When discharging.' annotates monitoring-frequency cells; statement of basis repeats 'when discharging' for flow, TRC, pH, TDS, and cyanide monitoring."
+    },
+    {
+      "id": "limit_waived_no_discharge",
+      "text": "The comment suspends numeric effluent limit applicability whenever discharge does not occur in a period.",
+      "support": "Not found in permit text; Part I.A numeric limits remain specified and excursion/violation language applies to reported DMR values exceeding limits."
+    },
+    {
+      "id": "optional_monitoring_flag",
+      "text": "The comment is equivalent to OPTIONAL_MONITORING_FLAG=Y, making the limit row optional.",
+      "support": "Refuted structurally: all 17 affected rows have OPTIONAL_MONITORING_FLAG=N and LIMIT_TYPE_CODE=ENF."
+    }
+  ],
+  "retained_snippets": [
+    {
+      "source_id": "documents/aztec/final_permit.txt",
+      "location": "lines 72–79, 92–93",
+      "text": "pH ... 1/Week (*1) ... Flow ... 2/Week (*1) ... Total Suspended Solids ... 1/Week (*1) ... Total Residual Chlorine ... 1/Day (*1) ... Cyanide, Total Recoverable ... 1/Quarter (*1) ... Total Dissolved Solids ... 1/Quarter (*1)\n\nFootnotes:\n*1 When discharging.",
+      "why_retained": "Authoritative permit definition of footnote *1 and its attachment to monitoring-frequency requirements; DMR_COMMENT_TEXT 'WHEN DISCHARGING.' mirrors this footnote."
+    },
+    {
+      "source_id": "documents/aztec/final_permit.txt",
+      "location": "lines 150–153",
+      "text": "5. NO DISCHARGE REPORTING\n\nIf there is no discharge from any outfall during the sampling month, place an \"X\" in the NO DISCHARGE box located in the upper right corner of the Discharge Monitoring Report.",
+      "why_retained": "Establishes the permit's alternate reporting path when monitoring conditioned on discharge does not apply because no discharge occurred in the month."
+    },
+    {
+      "source_id": "documents/aztec/final_permit.txt",
+      "location": "lines 56–66",
+      "text": "1. FINAL Effluent Limits – Outfall 001 – Intermittent Flow\n\n   During the period beginning the effective date of the permit and lasting to the permit expiration date (unless otherwise noted), the permittee is authorized to discharge backwash water ... Such discharges shall be limited and monitored by the permittee as specified below.",
+      "why_retained": "Context that the outfall is intermittent backwash discharge; limits remain specified while monitoring is discharge-dependent."
+    },
+    {
+      "source_id": "documents/aztec/statement_of_basis.txt",
+      "location": "lines 506–511",
+      "text": "Flow shall be estimated daily when discharging. Estimated flow measurements are not subject to the accuracy provisions established at Part III.C.6 of the permit. The pollutant TRC shall be monitored daily when discharging by instantaneous grab which according to Part 136 is defined as analysis within 15 minutes of collection. pH shall continue to be monitored weekly when discharging. TDS and Cyanide total recoverable shall be monitored once per quarter by grab sample.",
+      "why_retained": "Permit-writer rationale explicitly conditioning monitoring frequency on discharge occurrence for each limited parameter."
+    },
+    {
+      "source_id": "documents/aztec/statement_of_basis.txt",
+      "location": "lines 146–147",
+      "text": "Filter backwash using potable water occurs from once per day to once every three to four days depending on the plant and the time of year.",
+      "why_retained": "Operational basis for intermittent discharge that motivates discharge-conditioned monitoring rather than calendar-fixed sampling every period."
+    },
+    {
+      "source_id": "sources/permit_limits.csv",
+      "location": "row LIMIT_VALUE_ID=3610840344, LIMIT_SET_SCHEDULE_ID=3600904607",
+      "text": "NM0028762,LIMIT_SET_NAME=DISCHARGE BACKWASH WATER,DMR_COMMENT_TEXT=WHEN DISCHARGING.,PARAMETER_CODE=00400 (pH),OPTIONAL_MONITORING_FLAG=N,LIMIT_TYPE_CODE=ENF,LIMIT_FREQ_OF_ANALYSIS_CODE=01/07",
+      "why_retained": "Representative structured row showing the comment on an enforceable, non-optional limit with weekly monitoring frequency code."
+    },
+    {
+      "source_id": "sources/permit_limits.csv",
+      "location": "row LIMIT_VALUE_ID=3610840336, LIMIT_SET_SCHEDULE_ID=3600904606",
+      "text": "NM0028762,LIMIT_SET_NAME=QUARTERLY REPORTING,DMR_COMMENT_TEXT=WHEN DISCHARGING.,PARAMETER_CODE=70295 (Solids total dissolved),OPTIONAL_MONITORING_FLAG=N,LIMIT_TYPE_CODE=ENF,LIMIT_FREQ_OF_ANALYSIS_CODE=01/90",
+      "why_retained": "Shows the same comment on the quarterly limit set (8 of 17 occurrences), confirming comment applies across both monthly and quarterly monitoring schedules."
+    },
+    {
+      "source_id": "documents/aztec/final_permit.txt",
+      "location": "lines 155–163",
+      "text": "6. If any daily maximum or monthly average value exceeds the effluent limitations specified in Part I. A, the permittee shall report the excursion ...\n7. Any daily maximum or monthly average value reported in the required Discharge Monitoring Report which is in excess of the effluent limitation specified in Part I. A shall constitute evidence of violation of such effluent limitation and of this permit.",
+      "why_retained": "Shows numeric limits remain enforceable for reported values; the comment does not waive limit applicability when discharge is absent."
+    }
+  ],
+  "contradictory_evidence": [],
+  "known_limitations": [
+    "All 17 workspace occurrences of DMR_COMMENT_TEXT 'WHEN DISCHARGING' are on permit NM0028762; resolution is grounded in the aztec permit package only.",
+    "Structured CSVs do not encode an explicit link field between DMR_COMMENT_TEXT and permit footnote *1; linkage is established by textual match and co-occurring limit parameters/frequencies.",
+    "Whether discharge occurred in any specific monitoring period cannot be determined from structured CSV fields alone; that remains a separate operational fact.",
+    "Structured DMR extracts in this workspace do not include a NO DISCHARGE indicator field, so no-discharge months cannot be identified programmatically from dmr_measurements.csv."
+  ],
+  "allowed_dispositions": ["SUPPORTED_RESOLUTION", "SUPPORTED_NEGATIVE", "UNRESOLVED"]
+}

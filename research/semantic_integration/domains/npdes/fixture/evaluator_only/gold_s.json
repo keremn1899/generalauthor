@@ -1,0 +1,148 @@
+{
+  "clauses": [
+    {
+      "id": "S-FARM-TDS-STAGE",
+      "permit": "NM0020583",
+      "source_document": "farmington/final_permit.pdf",
+      "native_location": "Part I, TDS Net Increase footnotes *10 and *11",
+      "clause": "TDS net-increase limits begin on the effective date through 3 years from effective date (*10); then *11 limits apply from 3 years after effective date through expiration.",
+      "concept_governed": "time-staged numeric limits",
+      "effective_interval": "2021-12-01/2024-11-30 then 2024-12-01/2026-11-30",
+      "scope": "Outfall 001 TDS net increase",
+      "expected_semantic_interpretation": "FY2025 falls in the *11 interval (after 2024-12-01). Applicable numeric limits are 24,992 lbs/day and 449 mg/L, not the *10 values.",
+      "oracle_disposition": "ACCEPT_STAGE_11_IN_FY2025"
+    },
+    {
+      "id": "S-FARM-CN-SCHEDULE",
+      "permit": "NM0020583",
+      "source_document": "farmington/final_permit.pdf",
+      "native_location": "Part I Section B Schedule of Compliance",
+      "clause": "Achieve final Cyanide effluent limitations 12 months after permit effective date.",
+      "concept_governed": "compliance schedule then final numeric limit",
+      "effective_interval": "final limits after 2022-12-01",
+      "scope": "Cyanide Outfall 001",
+      "expected_semantic_interpretation": "FY2025 is after the 12-month schedule. Final cyanide limits apply. Schedule completion is not an excuse for FY2025 exceedance.",
+      "oracle_disposition": "FINAL_LIMITS_APPLY"
+    },
+    {
+      "id": "S-FARM-TRC-CONDITIONAL",
+      "permit": "NM0020583",
+      "source_document": "farmington/final_permit.pdf",
+      "native_location": "Part I footnote *5",
+      "clause": "TRC shall be monitored any time chlorine is used within the treatment plant. Facility uses UV disinfection.",
+      "concept_governed": "conditional monitoring / event-dependent TRC",
+      "effective_interval": "permit term",
+      "scope": "Total Residual Chlorine",
+      "expected_semantic_interpretation": "TRC monitoring is required when chlorine is used, not as routine UV-plant effluent monitoring. Absence of TRC values may be conditional rather than missing required monitoring.",
+      "oracle_disposition": "CONDITIONAL"
+    },
+    {
+      "id": "S-FARM-REPORT-ONLY",
+      "permit": "NM0020583",
+      "source_document": "farmington/final_permit.pdf",
+      "native_location": "Part I effluent table Report / N/A cells",
+      "clause": "Flow, TDS discharge, TDS intake, several toxics, and WET are Report rather than numeric effluent limits.",
+      "concept_governed": "report-only monitoring vs enforceable numeric limit",
+      "effective_interval": "permit term",
+      "scope": "named Report parameters",
+      "expected_semantic_interpretation": "Report-only parameters are not numeric exceedance findings.",
+      "oracle_disposition": "REPORT_ONLY"
+    },
+    {
+      "id": "S-AZTEC-WHEN-DISCHARGING",
+      "permit": "NM0028762",
+      "source_document": "aztec/final_permit.pdf",
+      "native_location": "Part I footnote *1",
+      "clause": "Monitoring frequencies marked *1 apply When discharging.",
+      "concept_governed": "when-discharging / intermittent-flow monitoring obligation",
+      "effective_interval": "2022-01-01/2026-12-31",
+      "scope": "Outfall 001 intermittent flow",
+      "expected_semantic_interpretation": "Monitoring is required when a discharge occurs. No-discharge periods do not create a missing-monitoring violation.",
+      "oracle_disposition": "CONDITIONAL_ON_DISCHARGE"
+    },
+    {
+      "id": "S-AZTEC-REPORT-ONLY",
+      "permit": "NM0028762",
+      "source_document": "aztec/final_permit.pdf",
+      "native_location": "Part I effluent table",
+      "clause": "Flow, Cyanide Total Recoverable, and TDS are Report. TSS and TRC and pH have numeric limits.",
+      "concept_governed": "report-only vs numeric",
+      "effective_interval": "permit term",
+      "scope": "Outfall 001",
+      "expected_semantic_interpretation": "Cyanide and TDS quarterly Report values are not numeric exceedances.",
+      "oracle_disposition": "REPORT_ONLY"
+    },
+    {
+      "id": "S-AZTEC-WET-SEASONAL",
+      "permit": "NM0028762",
+      "source_document": "aztec/final_permit.pdf",
+      "native_location": "Part I footnote *4",
+      "clause": "WET once per permit term during the first springtime after effective date, during irrigation season.",
+      "concept_governed": "seasonal / special-study / once-per-term monitoring",
+      "effective_interval": "first spring after 2022-01-01",
+      "scope": "WET Ceriodaphnia dubia and Pimephales promelas",
+      "expected_semantic_interpretation": "FY2025 is not automatically a required WET monitoring year. Applicability is unresolved unless evidence shows the once-per-term test remains outstanding.",
+      "oracle_disposition": "UNRESOLVED_UNLESS_EVIDENCE"
+    },
+    {
+      "id": "S-AZTEC-DELTA-BHC",
+      "permit": "NM0028762",
+      "source_document": "aztec/final_permit.pdf",
+      "native_location": "Part I Section B Schedule of Compliance Delta-BHC Study",
+      "clause": "Submit a detailed plan to test for Delta-BHC at the source water intake within six months after the effective date.",
+      "concept_governed": "special study / compliance schedule",
+      "effective_interval": "plan due by 2022-07-01",
+      "scope": "Delta-BHC study",
+      "expected_semantic_interpretation": "This is a special-study obligation, not a routine DMR numeric limit. FY2025 DMR absence of Delta-BHC is not by itself a discharge-limit exceedance.",
+      "oracle_disposition": "SPECIAL_STUDY"
+    },
+    {
+      "id": "S-GCC-EVENT-DISCHARGE",
+      "permit": "NM0000116",
+      "source_document": "gcc/final_permit.pdf",
+      "native_location": "Part I Section A Outfall 001 authorization",
+      "clause": "Authorized to discharge storm runoffs from storage and production areas, once-through cooling water, cleaning water, and Artesian well water from Outfall 001.",
+      "concept_governed": "event-dependent / conditional authorization",
+      "effective_interval": "2021-06-01/2026-05-31",
+      "scope": "Outfall 001",
+      "expected_semantic_interpretation": "No-discharge DMR NODI C is consistent with event-dependent authorization. Monitoring is required when discharging.",
+      "oracle_disposition": "CONDITIONAL_ON_DISCHARGE"
+    },
+    {
+      "id": "S-GCC-REPORT-ONLY",
+      "permit": "NM0000116",
+      "source_document": "gcc/final_permit.pdf",
+      "native_location": "Part I effluent table",
+      "clause": "Flow is Report. Dissolved copper and dissolved cadmium are Report. Hardness daily max is Report. TSS monthly average is Report; TSS daily max is 50 mg/L. Total aluminum and total copper have numeric limits.",
+      "concept_governed": "report-only vs numeric",
+      "effective_interval": "permit term including 2023 minor modification table",
+      "scope": "Outfall 001",
+      "expected_semantic_interpretation": "Do not treat Report parameters as numeric exceedances. TSS daily maximum 50 mg/L is enforceable when discharging.",
+      "oracle_disposition": "MIXED_NUMERIC_AND_REPORT"
+    },
+    {
+      "id": "S-GCC-WET-FIRST-DISCHARGE",
+      "permit": "NM0000116",
+      "source_document": "gcc/final_permit.pdf",
+      "native_location": "Part I footnote (2)",
+      "clause": "Perform WET testing at first discharge. Frequency Once/5 years.",
+      "concept_governed": "event-triggered special monitoring",
+      "effective_interval": "first discharge then once/5 years",
+      "scope": "WET",
+      "expected_semantic_interpretation": "WET is not a monthly DMR numeric limit. Missing monthly WET is not a numeric exceedance.",
+      "oracle_disposition": "EVENT_TRIGGERED"
+    },
+    {
+      "id": "S-SOURCE-AUTHORITY",
+      "permit": "ALL",
+      "source_document": "permits vs statement_of_basis/fact_sheet",
+      "native_location": "cover pages vs SOB/fact sheet",
+      "clause": "Effluent limitations and monitoring requirements are set forth in the permit Parts. Fact sheets/statements of basis explain the basis for those conditions.",
+      "concept_governed": "operative permit condition vs supporting rationale",
+      "effective_interval": "FY2025",
+      "scope": "all facilities",
+      "expected_semantic_interpretation": "Operative obligations ground in permit Parts I/II. Fact sheet/SOB text is supporting rationale, not an independent effluent limit.",
+      "oracle_disposition": "AUTHORITY_HIERARCHY"
+    }
+  ]
+}

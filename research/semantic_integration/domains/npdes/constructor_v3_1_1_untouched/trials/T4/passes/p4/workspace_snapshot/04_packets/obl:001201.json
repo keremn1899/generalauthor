@@ -1,0 +1,39 @@
+{
+  "obligation_id": "obl:001201",
+  "selected_observations": [
+    {
+      "source_path": "sources/structured/dmr_measurements.csv",
+      "location": "row 540, DMR_VALUE_ID=3847407838",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0020583; PERM_FEATURE_NMBR=001; PARAMETER_CODE=01027; PARAMETER_DESC=Cadmium, total [as Cd]; MONITORING_PERIOD_END_DATE=05/31/2025; DMR_VALUE_ID=3847407838; DMR_VALUE_NMBR=.5; DMR_UNIT_CODE=28; DMR_VALUE_QUALIFIER_CODE=<; LIMIT_VALUE_ID=3610838795; LIMIT_TYPE_CODE=ENF; OPTIONAL_MONITORING_FLAG=N"
+    },
+    {
+      "source_path": "sources/structured/permit_limits.csv",
+      "location": "row 32, LIMIT_VALUE_ID=3610838795",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0020583; PERM_FEATURE_NMBR=001; PARAMETER_CODE=01027; PARAMETER_DESC=Cadmium, total [as Cd]; LIMIT_VALUE_ID=3610838795; LIMIT_UNIT_CODE=28; STATISTICAL_BASE_CODE=7A; LIMIT_TYPE_CODE=ENF; OPTIONAL_MONITORING_FLAG=N; LIMIT_FREQ_OF_ANALYSIS_CODE=01/90; LIMIT_BEGIN_DATE=12/01/2021; LIMIT_END_DATE=11/30/2026"
+    },
+    {
+      "source_path": "world.sqlite/dmr_reported_value_kind",
+      "location": "measurement_id=measurement:3847407838",
+      "excerpt": "value_kind=numeric; dmr_value_nmbr=0.5; dmr_unit_code=28"
+    },
+    {
+      "source_path": "world.sqlite/limit_value_attributes",
+      "location": "limit_row_id=limit_row:3610838795",
+      "excerpt": "has_numeric_value=0; limit_value_nmbr=0.0; limit_unit_code=28; statistical_base_code=7A"
+    },
+    {
+      "source_path": "world.sqlite/limit_source_flags",
+      "location": "limit_row_id=limit_row:3610838795",
+      "excerpt": "limit_type_code=ENF; optional_monitoring_flag=N; limit_freq_of_analysis_code=01/90"
+    },
+    {
+      "source_path": "world.sqlite/limit_effective_during_period",
+      "location": "limit_row_id=limit_row:3610838795, period_id=period:NM0020583:2025-05-31",
+      "excerpt": "overlaps=1"
+    }
+  ],
+  "selection_rationale": "Selected measurement/limit source rows and world value metadata needed for numeric comparison once enforceability is established. Blocking factors: depends_on_applicable_limit_assessment_enforceable_numeric.",
+  "known_missing_information": [
+    "Numeric exceedance verdict depends on unresolved applicable_limit_assessment."
+  ]
+}

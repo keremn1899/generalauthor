@@ -1,0 +1,249 @@
+{
+  "pass": "P7",
+  "limitations": [
+    "Purpose semantic judgments were adjudicated in P5 (05_dispositions.json) and not persisted to 06_world/world.sqlite per P6 admission policy; derivations compile those dispositions against world relations rather than re-deriving semantic frontier tuples inside TaskView.",
+    "evidenced_operational_context has zero persisted tuples (28 obligations UNRESOLVED in P5); Purpose B conditional evaluation cannot draw on operational context enrichment.",
+    "Permit PDF prose beyond structured CSV fields is not compiled; schedule activation and event-condition resolution remain limited."
+  ],
+  "derivations": [
+    {
+      "output_relation": "limit_applicability_judgment",
+      "purpose": "A",
+      "required_input_relations": [
+        "fy2025_in_scope_measurement",
+        "measurement_limit_structural_candidate",
+        "dmr_measurement_assertion",
+        "permit_limit_assertion",
+        "limit_set_record"
+      ],
+      "optional_enrichment_relations": [
+        "evidenced_operational_context",
+        "limit_period_overlaps_monitoring_period"
+      ],
+      "epistemic_behavior": "Select at most one enforceable numeric limit per in-scope measurement from structural candidates, or route to explicit unresolved when conditional triggers, competing limits, or permit evidence gaps block binding.",
+      "completeness_assumptions": "Universe is fy2025_in_scope_measurement (COMPLETE over dmr_measurement_assertion). One obligation per measurement drawn from measurement_limit_structural_candidate.",
+      "deterministic_computation": false,
+      "required_premise": "P5 adjudicated disposition in 05_dispositions.json for relation limit_applicability_judgment keyed by measurement referent.",
+      "optional_enrichment": "limit_set_record.conditional_comment and evidenced_operational_context inform conditional applicability; enrichment is optional because ACCEPT may proceed on DMR LIMIT_VALUE_ID linkage alone.",
+      "blocking_unresolved_state": [
+        "limit_applicability_unknown",
+        "multiple_competing_applicable_limits_without_resolution_rule",
+        "measurement_present_but_no_candidate_limit_identified",
+        "seasonal_conditional_or_event_condition_prevents_limit_selection",
+        "insufficient_permit_or_schedule_evidence_to_bind_limit_to_measurement"
+      ],
+      "non_blocking_unresolved_state": []
+    },
+    {
+      "output_relation": "numeric_comparison_regime_judgment",
+      "purpose": "A",
+      "required_input_relations": [
+        "fy2025_in_scope_measurement",
+        "dmr_measurement_assertion",
+        "permit_limit_assertion",
+        "measurement_has_numeric_result"
+      ],
+      "optional_enrichment_relations": [
+        "limit_applicability_judgment"
+      ],
+      "epistemic_behavior": "Classify whether a measurement/limit pair is subject to enforceable numeric comparison, report-only monitoring, or non-comparable reporting based on limit enforceability flags and DMR value shape.",
+      "completeness_assumptions": "Universe is fy2025_in_scope_measurement. Evaluated after limit applicability is considered for each measurement.",
+      "deterministic_computation": true,
+      "required_premise": "P5 adjudicated disposition in 05_dispositions.json for relation numeric_comparison_regime_judgment keyed by measurement referent.",
+      "optional_enrichment": "Accepted limit_applicability_judgment tuple supplies applicable_limit for regime classification when limit linkage is established.",
+      "blocking_unresolved_state": [
+        "limit_established_but_measurement_not_numeric_comparable",
+        "unit_or_statistical_base_mismatch_precluding_comparison"
+      ],
+      "non_blocking_unresolved_state": [
+        "limit_applicability_unknown",
+        "seasonal_conditional_or_event_condition_prevents_limit_selection"
+      ]
+    },
+    {
+      "output_relation": "exceedance_judgment",
+      "purpose": "A",
+      "required_input_relations": [
+        "fy2025_in_scope_measurement",
+        "dmr_measurement_assertion",
+        "permit_limit_assertion",
+        "measurement_has_numeric_result"
+      ],
+      "optional_enrichment_relations": [
+        "limit_applicability_judgment",
+        "numeric_comparison_regime_judgment"
+      ],
+      "epistemic_behavior": "Compare reported numeric measurement to established applicable enforceable limit using limit qualifier semantics; emit exceeds or does_not_exceed only when comparison prerequisites are met.",
+      "completeness_assumptions": "Candidate universe is measurements with ACCEPT limit_applicability_judgment and enforceable_numeric_comparison regime; non-numeric measurements are out of scope for exceedance derivation.",
+      "deterministic_computation": true,
+      "required_premise": "P5 adjudicated disposition in 05_dispositions.json for relation exceedance_judgment keyed by (measurement, applicable_limit); mechanical comparison uses reported_value_nmbr, limit_value_nmbr, and limit_value_qualifier from world relations.",
+      "optional_enrichment": "numeric_comparison_regime_judgment ACCEPT:enforceable_numeric_comparison is required premise for emitting exceedance outcome; without it, exceedance is omitted rather than inferred.",
+      "blocking_unresolved_state": [
+        "unit_or_statistical_base_mismatch_precluding_comparison",
+        "limit_established_but_measurement_not_numeric_comparable"
+      ],
+      "non_blocking_unresolved_state": [
+        "limit_applicability_unknown",
+        "seasonal_conditional_or_event_condition_prevents_limit_selection"
+      ]
+    },
+    {
+      "output_relation": "purpose_ir_a_output",
+      "purpose": "A",
+      "required_input_relations": [
+        "fy2025_in_scope_measurement",
+        "dmr_measurement_assertion",
+        "facility_registry",
+        "discharge_point_registry",
+        "parameter_registry",
+        "monitoring_period_registry",
+        "permit_limit_assertion"
+      ],
+      "optional_enrichment_relations": [
+        "limit_applicability_judgment",
+        "numeric_comparison_regime_judgment",
+        "exceedance_judgment",
+        "limit_set_record"
+      ],
+      "epistemic_behavior": "Partition all FY2025 in-scope measurements into rows (established applicability and/or comparison regime) or unresolved (applicability or unit-comparison blockers). Preserve uncertainty; do not default limit or compliance outcomes.",
+      "completeness_assumptions": "rows plus unresolved account for every tuple in fy2025_in_scope_measurement (824 expected).",
+      "deterministic_computation": true,
+      "required_premise": "Compiled P5 dispositions for limit_applicability_judgment, numeric_comparison_regime_judgment, and exceedance_judgment joined to world registries.",
+      "optional_enrichment": "limit_set_record conditional_comment carried in unresolved rationale grounding only.",
+      "blocking_unresolved_state": [
+        "limit_applicability_unknown",
+        "multiple_competing_applicable_limits_without_resolution_rule",
+        "measurement_present_but_no_candidate_limit_identified",
+        "seasonal_conditional_or_event_condition_prevents_limit_selection",
+        "insufficient_permit_or_schedule_evidence_to_bind_limit_to_measurement",
+        "unit_or_statistical_base_mismatch_precluding_comparison"
+      ],
+      "non_blocking_unresolved_state": [
+        "limit_established_but_measurement_not_numeric_comparable"
+      ]
+    },
+    {
+      "output_relation": "monitoring_requirement_applicability_judgment",
+      "purpose": "B",
+      "required_input_relations": [
+        "fy2025_monitoring_requirement",
+        "limit_set_record",
+        "permit_limit_assertion"
+      ],
+      "optional_enrichment_relations": [
+        "evidenced_operational_context",
+        "dmr_measurement_assertion"
+      ],
+      "epistemic_behavior": "Three-valued applicability (required, not_required, conditional_resolved) for each FY2025 monitoring requirement; unresolved when conditional triggers or schedule activation cannot be established from evidence.",
+      "completeness_assumptions": "Universe is fy2025_monitoring_requirement (COMPLETE over limit_set_record). One obligation per monitoring_requirement referent for FY2025 applicability period.",
+      "deterministic_computation": false,
+      "required_premise": "P5 adjudicated disposition in 05_dispositions.json for relation monitoring_requirement_applicability_judgment keyed by monitoring_requirement referent.",
+      "optional_enrichment": "evidenced_operational_context for discharge-occurrence and event triggers; dmr_measurement_assertion does not establish non-requirement by absence alone.",
+      "blocking_unresolved_state": [
+        "conditional_trigger_evidence_insufficient",
+        "season_or_permit_year_boundary_ambiguous",
+        "discharge_occurrence_unknown",
+        "special_study_or_event_condition_not_documented",
+        "conflicting_permit_provisions_without_hierarchy_rule",
+        "schedule_activation_status_unknown",
+        "requirement_identity_ambiguous_across_limit_sets"
+      ],
+      "non_blocking_unresolved_state": []
+    },
+    {
+      "output_relation": "purpose_ir_b_output",
+      "purpose": "B",
+      "required_input_relations": [
+        "fy2025_monitoring_requirement",
+        "limit_set_record",
+        "facility_registry",
+        "discharge_point_registry",
+        "permit_limit_assertion"
+      ],
+      "optional_enrichment_relations": [
+        "monitoring_requirement_applicability_judgment",
+        "evidenced_operational_context"
+      ],
+      "epistemic_behavior": "Emit rows for requirements with established applicability outcomes; unresolved for requirements whose FY2025 applicability cannot be determined.",
+      "completeness_assumptions": "rows plus unresolved account for every tuple in fy2025_monitoring_requirement (6 expected).",
+      "deterministic_computation": true,
+      "required_premise": "Compiled P5 dispositions for monitoring_requirement_applicability_judgment joined to limit_set_record and registries.",
+      "optional_enrichment": "evidenced_operational_context would resolve conditional triggers when populated; currently empty in world.",
+      "blocking_unresolved_state": [
+        "conditional_trigger_evidence_insufficient",
+        "season_or_permit_year_boundary_ambiguous",
+        "discharge_occurrence_unknown",
+        "special_study_or_event_condition_not_documented",
+        "conflicting_permit_provisions_without_hierarchy_rule",
+        "schedule_activation_status_unknown",
+        "requirement_identity_ambiguous_across_limit_sets"
+      ],
+      "non_blocking_unresolved_state": []
+    },
+    {
+      "output_relation": "missing_evidence_semantic_judgment",
+      "purpose": "C",
+      "required_input_relations": [
+        "monitoring_expectation_without_numeric_result",
+        "dmr_measurement_assertion",
+        "fy2025_in_scope_measurement"
+      ],
+      "optional_enrichment_relations": [
+        "limit_set_record",
+        "permit_limit_assertion",
+        "evidenced_operational_context",
+        "monitoring_requirement_applicability_judgment"
+      ],
+      "epistemic_behavior": "Assign exactly one Purpose C taxonomy state when positive evidence supports it; never infer compliance or violation from missing numeric data alone.",
+      "completeness_assumptions": "Universe is monitoring_expectation_without_numeric_result (COMPLETE over fy2025_in_scope_measurement anti-join measurement_has_numeric_result).",
+      "deterministic_computation": false,
+      "required_premise": "P5 adjudicated disposition in 05_dispositions.json for relation missing_evidence_semantic_judgment keyed by monitoring_expectation referent.",
+      "optional_enrichment": "monitoring_requirement_applicability_judgment for cross-purpose consistency on non-requirement states; evidenced_operational_context for documented no-discharge.",
+      "blocking_unresolved_state": [
+        "nodi_or_no_data_code_uninterpretable",
+        "monitoring_expectation_identity_unclear",
+        "conflicting_documentation_of_no_discharge",
+        "insufficient_evidence_to_distinguish_no_requirement_from_missing_report",
+        "schedule_present_but_obligation_status_unknown",
+        "partial_reporting_ambiguity_across_parameters_or_outfalls"
+      ],
+      "non_blocking_unresolved_state": [
+        "discharge_occurrence_unknown",
+        "conditional_trigger_evidence_insufficient"
+      ]
+    },
+    {
+      "output_relation": "purpose_ir_c_output",
+      "purpose": "C",
+      "required_input_relations": [
+        "monitoring_expectation_without_numeric_result",
+        "dmr_measurement_assertion",
+        "facility_registry",
+        "discharge_point_registry",
+        "parameter_registry",
+        "monitoring_period_registry"
+      ],
+      "optional_enrichment_relations": [
+        "missing_evidence_semantic_judgment",
+        "limit_set_record",
+        "permit_limit_assertion"
+      ],
+      "epistemic_behavior": "Partition all FY2025 no-result monitoring expectations into rows with established semantic states or unresolved when NODI/operational evidence is insufficient.",
+      "completeness_assumptions": "rows plus unresolved account for every tuple in monitoring_expectation_without_numeric_result (186 expected).",
+      "deterministic_computation": true,
+      "required_premise": "Compiled P5 dispositions for missing_evidence_semantic_judgment joined to world measurement and registry relations.",
+      "optional_enrichment": "permit_limit_assertion and limit_set_record provide schedule context in grounding; do not substitute for positive no-discharge or non-requirement evidence.",
+      "blocking_unresolved_state": [
+        "nodi_or_no_data_code_uninterpretable",
+        "monitoring_expectation_identity_unclear",
+        "conflicting_documentation_of_no_discharge",
+        "insufficient_evidence_to_distinguish_no_requirement_from_missing_report",
+        "schedule_present_but_obligation_status_unknown",
+        "partial_reporting_ambiguity_across_parameters_or_outfalls"
+      ],
+      "non_blocking_unresolved_state": [
+        "discharge_occurrence_unknown"
+      ]
+    }
+  ]
+}

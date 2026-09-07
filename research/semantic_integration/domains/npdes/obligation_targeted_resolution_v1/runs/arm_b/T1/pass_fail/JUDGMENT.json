@@ -1,0 +1,50 @@
+{
+  "disposition": "SUPPORTED_RESOLUTION",
+  "grounding": [
+    {
+      "source_id": "sources/permit_limits.csv",
+      "location": "row LIMIT_VALUE_ID=3610839676, PARAMETER_CODE=22415",
+      "proposition": "PASS=0 and FAIL=1 are categorical codes to enter in the concentration-max DMR field, not measured concentration magnitudes."
+    },
+    {
+      "source_id": "sources/permit_limits.csv",
+      "location": "row LIMIT_VALUE_ID=3610839682, PARAMETER_CODE=TEM3D",
+      "proposition": "Pass/fail WET parameters use unit 9A (pass=0;fail=1) and carry no numeric LIMIT_VALUE_NMBR threshold."
+    },
+    {
+      "source_id": "sources/permit_limits.csv",
+      "location": "row LIMIT_VALUE_ID=3610839684, PARAMETER_CODE=TOM3D",
+      "proposition": "Companion NOEC parameters in the same limit set report numeric percent limits (23%), not 0/1 pass/fail codes."
+    },
+    {
+      "source_id": "sources/dmr_measurements.csv",
+      "location": "row DMR_FORM_VALUE_ID=3832994493, LIMIT_VALUE_ID=3610839682",
+      "proposition": "Observed FY reporting uses literal 0 with unit 9A, consistent with pass/fail coding rather than concentration."
+    },
+    {
+      "source_id": "documents/farmington/final_permit.txt",
+      "location": "Part II, lines 512-514",
+      "proposition": "Enter 1 when survival NOEC is below critical dilution (fail); otherwise enter 0 (pass)."
+    },
+    {
+      "source_id": "documents/farmington/final_permit.txt",
+      "location": "Part II, lines 518-520",
+      "proposition": "Retest rows use the same 0/1 NOEC-versus-critical-dilution coding."
+    },
+    {
+      "source_id": "documents/farmington/final_permit.txt",
+      "location": "Part II, line 515",
+      "proposition": "TOM3D/TOM6C require separate numeric NOEC concentration reporting, distinct from binary pass/fail entry."
+    },
+    {
+      "source_id": "documents/farmington/final_permit.txt",
+      "location": "Part II, lines 390-393",
+      "proposition": "Acute test failure is a toxicity-outcome determination at or below critical dilution, not arithmetic limit comparison."
+    }
+  ],
+  "interpretation": "binary_wet_outcome_code",
+  "epistemic_basis": "SOURCE_ESTABLISHED",
+  "scope": "ONE_RELATION_OR_VOCABULARY",
+  "remaining_uncertainty": "Critical dilution magnitude is not stated in the retained structured rows. Four of twelve limit rows that share the PASS=0/FAIL=1 comment (TOM3D, TOM6C, TQM3D, TQM6C) are governed by separate numeric NOEC or coefficient-of-variation reporting instructions and must not be treated as binary 0/1 pass/fail parameters.",
+  "failure_mode_if_unresolved": null
+}

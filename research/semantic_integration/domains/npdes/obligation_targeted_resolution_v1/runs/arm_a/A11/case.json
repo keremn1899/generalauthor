@@ -1,0 +1,87 @@
+{
+  "case_id": "A11",
+  "obligation_id": "geometric_mean",
+  "occurrence_id": "3610673282|3600891019",
+  "question": "What does a geometric-mean reporting comment require for comparison of individual monitoring-period values?",
+  "purpose": [
+    "A",
+    "B",
+    "C"
+  ],
+  "requirement_schema": "aggregated_reporting_requirement",
+  "source_field_value": "DMR_COMMENT_TEXT contains 'GEOMETRIC MEAN'",
+  "local_structured_context": {
+    "table": "permit_limits.csv",
+    "row": {
+      "EXTERNAL_PERMIT_NMBR": "NM0020583",
+      "PARAMETER_CODE": "00310",
+      "PARAMETER_DESC": "BOD, 5-day, 20 deg. C",
+      "LIMIT_VALUE_ID": "3610673282",
+      "LIMIT_SET_SCHEDULE_ID": "3600891019",
+      "LIMIT_VALUE_NMBR": "30",
+      "LIMIT_FREQ_OF_ANALYSIS_CODE": "05/WK",
+      "LIMIT_SAMPLE_TYPE_CODE": "12",
+      "DMR_COMMENT_TEXT": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.",
+      "LIMIT_UNIT_DESC": "mg/L",
+      "STATISTICAL_BASE_CODE": "3C"
+    }
+  },
+  "reported_model": "Composer 2.5",
+  "retrieval": {
+    "n_tool_paths": 23,
+    "structured_paths": [
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/dd1c0f3b244cc50b05aaea7416ebcf1f/sources/document_inventory.json",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/dd1c0f3b244cc50b05aaea7416ebcf1f/sources/dmr_measurements.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/dd1c0f3b244cc50b05aaea7416ebcf1f/sources/dmr_measurements.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/dd1c0f3b244cc50b05aaea7416ebcf1f/sources/permit_limits.csv",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/dd1c0f3b244cc50b05aaea7416ebcf1f/sources/permit_limits.csv"
+    ],
+    "document_paths": [
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/dd1c0f3b244cc50b05aaea7416ebcf1f/documents/INDEX.md",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/dd1c0f3b244cc50b05aaea7416ebcf1f/documents/gcc",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/dd1c0f3b244cc50b05aaea7416ebcf1f/documents/farmington",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/dd1c0f3b244cc50b05aaea7416ebcf1f/documents/farmington/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/dd1c0f3b244cc50b05aaea7416ebcf1f/documents/farmington/statement_of_basis.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/dd1c0f3b244cc50b05aaea7416ebcf1f/documents/farmington/statement_of_basis.txt"
+    ],
+    "n_documents_touched": 5,
+    "queries": [
+      "NM0020583|3610673282|3600891019|00310|TDS|BOD",
+      "TDS|geometric mean|GEOMETRIC|dissolved solids|00310|BOD|3610673282|30 mg",
+      "3610673282|3600891019",
+      "TDS|geometric mean|dissolved solids|total dissolved|00310|BOD.*30|30.*mg/L",
+      "3610673282",
+      "70295|3610673282"
+    ],
+    "n_queries": 6
+  },
+  "judgment": {
+    "occurrence_id": "3610673282|3600891019",
+    "semantic_question_used": "Does the aggregated reporting requirement in the permit limit comment\u2014report the geometric mean value of weekly values\u2014apply to this BOD5 30-day average limit row (parameter 00310, 30 mg/L)?",
+    "disposition": "SUPPORTED_NEGATIVE",
+    "interpretation": "The DMR comment text reproduces permit footnote *6 language for Total Dissolved Solids discharge monitoring, but this occurrence is the BOD5 30-day average concentration limit (limit_value_id 3610673282, 30 mg/L, statistical base 3C/AVG). Authoritative permit text assigns geometric-mean-of-weekly-values reporting only to TDS discharge (*6), not to BOD5. BOD5 is limited and reported as a 30-day average at 30 mg/L with five samples per week per footnote *1 (sampling on at least five different days), consistent with secondary-treatment ELG requirements. The geometric-mean aggregated reporting obligation therefore does not govern this row despite the shared limit-set comment in structured ICIS data.",
+    "grounding": "Structured row in sources/permit_limits.csv shows parameter 00310 (BOD) with DMR comment about TDS geometric mean attached at limit set 3600645646. documents/farmington/final_permit.txt Part I distinguishes BOD5 (30 mg/L 30-day avg, 5/Week *1) from TDS Discharge (*6, 1/Week, footnote *6 geometric mean of weekly values). documents/farmington/statement_of_basis.txt confirms BOD5 30 mg/L 30-day average limits and five-times-per-week BOD5/TSS monitoring.",
+    "documents_opened": [
+      "documents/farmington/final_permit.txt",
+      "documents/farmington/statement_of_basis.txt",
+      "sources/permit_limits.csv",
+      "OCCURRENCE.md"
+    ],
+    "snippets": [
+      {
+        "source_id": "sources/permit_limits.csv",
+        "text": "LIMIT_VALUE_ID 3610673282, PARAMETER_CODE 00310 \"BOD, 5-day, 20 deg. C\", LIMIT_VALUE_NMBR 30 mg/L, STATISTICAL_BASE_CODE 3C/AVG, DMR_COMMENT_TEXT \"TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001. REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.\", LIMIT_FREQ_OF_ANALYSIS_CODE 05/WK"
+      },
+      {
+        "source_id": "documents/farmington/final_permit.txt",
+        "text": "Biochemical Oxygen Demand, 5-day (BOD5): 30 mg/L (30-DAY AVG), 5/Week (*1). Total Dissolved Solids, Discharge (*6): Report, 1/Week. Footnote *1: Sampling on at least five different days. Footnote *6: Total dissolved solids measured at Outfall 001. Report the geometric mean value of weekly values."
+      },
+      {
+        "source_id": "documents/farmington/statement_of_basis.txt",
+        "text": "BOD5 limits of 30 mg/L for the 30-day average and 45 mg/L for the 7-day average ... Technology based pollutants; BOD5 and TSS, are proposed to be monitored five times per week, with sampling on at least five different days."
+      }
+    ],
+    "remaining_uncertainty": "Structured ICIS attaches the TDS footnote *6 comment to all rows in limit set 3600645646, including non-TDS parameters; the permit narrative does not explain that data artifact, but it does clearly assign geometric-mean weekly aggregation only to TDS discharge monitoring."
+  },
+  "finished_at": "2026-09-05T13:20:19.416570+00:00"
+}

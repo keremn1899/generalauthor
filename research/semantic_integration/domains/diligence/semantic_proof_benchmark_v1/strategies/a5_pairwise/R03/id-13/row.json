@@ -1,0 +1,84 @@
+{
+  "strategy": "a5_pairwise",
+  "trial": "R03",
+  "obligation_id": "id-13",
+  "candidate": {
+    "left": "billing:Meridian Energy Partners LLC",
+    "right": "contract:MSA-MER-2024"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Meridian Energy Partners LLC"
+    },
+    {
+      "source_path": "sources/contracts/MSA-MER-2024.md",
+      "location": "header"
+    },
+    {
+      "source_path": "sources/contracts/MSA-MER-2024.md",
+      "location": "header"
+    }
+  ],
+  "support_claim": "No extracted proposition establishes that billing:Meridian Energy Partners LLC and contract:MSA-MER-2024 denote the same legal counterparty or are distinct.",
+  "proof_size": 4,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "propositions": [
+    {
+      "proposition": "Meridian Energy Partners invoices are described as the advisory retainer under MSA-MER-2024.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "other",
+      "relevance": "Associates Meridian Energy Partners billing activity with the MSA-MER-2024 agreement, but does not by itself establish that billing:Meridian Energy Partners LLC is the same legal counterparty as the contract referent."
+    },
+    {
+      "proposition": "The billed name on record is Meridian Energy Partners LLC.",
+      "source_grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Meridian Energy Partners LLC"
+      },
+      "establishes": "other",
+      "relevance": "Characterizes the left referent (billing:Meridian Energy Partners LLC) as the entity name used in billing records."
+    },
+    {
+      "proposition": "MSA-MER-2024 is an advisory retainer agreement whose counterparty is Meridian Energy Partners LLC, effective 2 February 2024, with a 12-month initial term then month-to-month.",
+      "source_grounding": {
+        "source_path": "sources/contracts/MSA-MER-2024.md",
+        "location": "header"
+      },
+      "establishes": "other",
+      "relevance": "Characterizes the right referent (contract:MSA-MER-2024) and names Meridian Energy Partners LLC as the agreement counterparty; name correspondence alone does not establish identity between the billing referent and the contract referent."
+    },
+    {
+      "proposition": "MSA-MER-2024 restricts assignment by Meridian Energy Partners LLC, including a prohibition on assignment to a competitor of the provider.",
+      "source_grounding": {
+        "source_path": "sources/contracts/MSA-MER-2024.md",
+        "location": "header"
+      },
+      "establishes": "other",
+      "relevance": "Further describes obligations of the named contract counterparty Meridian Energy Partners LLC but does not link that party to the billing referent with establishing identity evidence."
+    }
+  ],
+  "admit": {
+    "rule": "proposed_unresolved"
+  },
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

@@ -1,0 +1,32 @@
+[
+  {
+    "obligation_id": "oracle:S-GCC-REPORT-ONLY",
+    "relation": "numeric_comparison_applicable",
+    "values": {
+      "permit": "NM0000116",
+      "outfall": "001"
+    },
+    "disposition": "UNRESOLVED",
+    "grounding": [
+      {
+        "packet_field": "selected_observations[0]",
+        "source_path": "gcc/final_permit.pdf",
+        "location": "page 3 section part_i",
+        "excerpt": "Flow                     Report MGD        Report MGD"
+      },
+      {
+        "packet_field": "selected_observations[1]",
+        "source_path": "gcc/final_permit.pdf",
+        "location": "page 3 section part_i",
+        "excerpt": "Dissolved Copper         N/A               N/A               Report            Report"
+      },
+      {
+        "packet_field": "selected_observations[2]",
+        "source_path": "gcc/final_permit.pdf",
+        "location": "page 3 section part_i",
+        "excerpt": "Total Suspended          N/A               N/A               Report            50"
+      }
+    ],
+    "rationale": "The obligation asks, for GCC Outfall 001, which of eight named parameters (Flow, dissolved copper, dissolved cadmium, hardness, TSS monthly average, TSS daily maximum, total aluminum, and total copper) support numeric exceedance comparison versus Report-only monitoring. The packet grounds limit-table rows for only three parameters on page 3 part_i: Flow shows Report MGD in both limit columns (Report-only; per-parameter numeric comparison not applicable), Dissolved Copper shows Report in the applicable columns (Report-only), and Total Suspended shows Report in one column and numeric 50 in another (numeric comparison applicable for at least one TSS limit, though the excerpt does not label monthly average versus daily maximum). No packet observation covers dissolved cadmium, hardness, total aluminum, or total copper, and TSS monthly average versus daily maximum is not distinguished in the excerpt. Per the oracle relation contract, mixed per-parameter ACCEPT/REJECT may appear in rationale, but a single obligation-level disposition requires adjudicating all asked parameters. Neither global ACCEPT (some parameters are clearly Report-only) nor global REJECT (Total Suspended includes a numeric 50) is grounded for the full parameter set. Preferring unsupported uncertainty to unsupported semantic closure, UNRESOLVED is the correct disposition."
+  }
+]

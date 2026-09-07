@@ -1,0 +1,272 @@
+{
+  "id": "case7_policy",
+  "n": 7,
+  "issue_id": "document_authority",
+  "utterance": "For this analysis, if the final permit and fact sheet disagree, use the final permit.",
+  "stage": "baseline",
+  "previous_case": null,
+  "reported_model_propose": "Composer 2.5",
+  "reported_model_decide": "Composer 2.5",
+  "reported_model_commit": "Composer 2.5",
+  "mutated_after_propose": false,
+  "mutated_after_decide": false,
+  "proposal": {
+    "utterance_understood": "For this analysis, if the final permit and fact sheet disagree, use the final permit.",
+    "candidate_scope": "ONE_PURPOSE",
+    "semantic_delta": "Certify an analysis policy (purposes B/C) that on disagreement between final_permit and fact_sheet narrative content, final_permit governs. Encode this as a PURPOSE-mode document_conflict_authority derivation grounded in the user utterance. Keep permit_document_text_not_available unresolved because narrative text is still absent from structured sources. Add document_authority_among_other_kinds as unresolved for statement_of_basis, reasonable_potential, minor_modification, part_ii_appendix, part_iv, and any other inventoried kinds not covered by the certified pair rule.",
+    "epistemic_basis": "USER_CERTIFIED_POLICY",
+    "remaining_ambiguity": "Narrative permit text is still unavailable, so disagreement cannot be evaluated from structured sources alone. Authority among document kinds other than final_permit versus fact_sheet remains unset. The user did not define what counts as disagreement or how other document kinds relate to final_permit when text is present.",
+    "primary_dry_run_id": "final_permit_over_fact_sheet"
+  },
+  "decision": {
+    "disposition": "READY_FOR_ACCEPTANCE",
+    "reason": "The user utterance is a narrow, pairwise analysis policy: when final permit and fact sheet narrative content disagree, final permit governs. The dry run encodes exactly that pair rule as a certified purpose policy without over-scoping to other document kinds or pretending narrative text is available. Plausible alternative readings (universal final-permit supremacy, or treating the policy as resolving all document-authority gaps) are weaker given the wording and would not change current measurable outcomes because narrative text is still absent from structured sources.",
+    "consequence_divergence": false,
+    "chosen_dry_run_id": "final_permit_over_fact_sheet"
+  },
+  "disposition": "READY_FOR_ACCEPTANCE",
+  "n_dry_runs": 1,
+  "dry_run_ids": [
+    "final_permit_over_fact_sheet"
+  ],
+  "clarify": false,
+  "acceptance": true,
+  "committed": true,
+  "commit_delta": {
+    "relation_count_changes": {
+      "document_conflict_authority": {
+        "baseline": null,
+        "proposed": 1
+      }
+    },
+    "requirements_added": [
+      "document_authority_among_other_kinds"
+    ],
+    "requirements_removed": [],
+    "requirements_changed": [],
+    "relation_mode_changes": {
+      "document_conflict_authority": {
+        "baseline": null,
+        "proposed": "PURPOSE"
+      }
+    },
+    "n_hole_groups": {
+      "baseline": 8,
+      "proposed": 9
+    },
+    "n_hole_instances": {
+      "baseline": 535,
+      "proposed": 536
+    },
+    "hole_requirements_added": [
+      "document_authority_among_other_kinds"
+    ],
+    "hole_requirements_removed": [],
+    "WORLD_semantics_changed": true,
+    "PURPOSE_semantics_changed": true,
+    "ok": {
+      "baseline": true,
+      "proposed": true
+    }
+  },
+  "revert": {
+    "construction_restored": true,
+    "sources_unchanged": true,
+    "source_fingerprints_after": {
+      "dmr_measurements.csv": "0dc40759d901174b94840985f5a7eda475727e643144fb8fd01890614b481488",
+      "permit_limits.csv": "59e98606b2d978956efc27992a060fd6703ae792106a3eee85b4c6b1da019b68",
+      "document_inventory.json": "e041eb1f78fd3c58feeb5a944dd03e7656e3d1d53ea5e549adcb6dc19e0e0cf6"
+    },
+    "rerun_matches_baseline": true,
+    "revert_delta": {
+      "relation_count_changes": {},
+      "requirements_added": [],
+      "requirements_removed": [],
+      "requirements_changed": [],
+      "relation_mode_changes": {},
+      "n_hole_groups": {
+        "baseline": 8,
+        "proposed": 8
+      },
+      "n_hole_instances": {
+        "baseline": 535,
+        "proposed": 535
+      },
+      "hole_requirements_added": [],
+      "hole_requirements_removed": [],
+      "WORLD_semantics_changed": false,
+      "PURPOSE_semantics_changed": false,
+      "ok": {
+        "baseline": true,
+        "proposed": true
+      }
+    }
+  },
+  "baseline": {
+    "ok": true,
+    "errors": [],
+    "n_hole_groups": 8,
+    "n_hole_instances": 535,
+    "relation_row_counts": {
+      "dmr_measurement": 824,
+      "permit_limit": 105,
+      "permit_document": 12,
+      "fy2025_measurement": 824,
+      "measurement_limit_pair": 824,
+      "numeric_comparison_candidate": 342,
+      "no_numeric_result_case": 186,
+      "monitoring_requirement_fy2025": 105
+    },
+    "requirement_names": [
+      "fy2025_measurements_materializable",
+      "measurement_limit_pairs_materializable",
+      "unique_applicable_limit_per_measurement",
+      "numeric_comparison_candidates_materializable",
+      "limit_value_for_comparison",
+      "reported_value_for_comparison",
+      "limit_comparison_operator",
+      "reported_value_qualifier",
+      "optional_monitoring_flag_for_limit_applicability",
+      "limit_type_code_for_enforceability",
+      "statistical_base_for_limit_comparison",
+      "monitoring_requirements_materializable",
+      "monitoring_frequency_code",
+      "limit_sample_type_code",
+      "optional_monitoring_flag_for_obligation",
+      "permit_limit_comment_text",
+      "limit_set_designator_for_schedule",
+      "no_numeric_result_cases_materializable",
+      "nodi_code_semantics",
+      "optional_monitoring_flag_for_missing_evidence",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "conditional_discharge_dependent_monitoring",
+      "conditional_discharge_dependent_monitoring",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "conditional_discharge_dependent_monitoring",
+      "conditional_discharge_dependent_monitoring",
+      "conditional_discharge_dependent_monitoring",
+      "conditional_discharge_dependent_monitoring",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "pass_fail_reporting_semantics",
+      "pass_fail_reporting_semantics",
+      "pass_fail_reporting_semantics",
+      "pass_fail_reporting_semantics",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "conditional_discharge_dependent_monitoring",
+      "conditional_discharge_dependent_monitoring",
+      "aggregated_reporting_requirement",
+      "conditional_discharge_dependent_monitoring",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "pass_fail_reporting_semantics",
+      "pass_fail_reporting_semantics",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "conditional_discharge_dependent_monitoring",
+      "conditional_discharge_dependent_monitoring",
+      "conditional_discharge_dependent_monitoring",
+      "conditional_discharge_dependent_monitoring",
+      "conditional_discharge_dependent_monitoring",
+      "conditional_discharge_dependent_monitoring",
+      "conditional_discharge_dependent_monitoring",
+      "conditional_discharge_dependent_monitoring",
+      "aggregated_reporting_requirement",
+      "aggregated_reporting_requirement",
+      "pass_fail_reporting_semantics",
+      "pass_fail_reporting_semantics",
+      "pass_fail_reporting_semantics",
+      "pass_fail_reporting_semantics",
+      "pass_fail_reporting_semantics",
+      "pass_fail_reporting_semantics",
+      "permit_document_text_not_available"
+    ],
+    "hole_groups": [
+      {
+        "group_id": "g000",
+        "requirement": "aggregated_reporting_requirement",
+        "failure_kind": "EXPLICIT_UNRESOLVED",
+        "relation": "monitoring_requirement_fy2025",
+        "n_instances": 40
+      },
+      {
+        "group_id": "g001",
+        "requirement": "conditional_discharge_dependent_monitoring",
+        "failure_kind": "EXPLICIT_UNRESOLVED",
+        "relation": "monitoring_requirement_fy2025",
+        "n_instances": 17
+      },
+      {
+        "group_id": "g002",
+        "requirement": "limit_sample_type_code",
+        "failure_kind": "UNINTERPRETED",
+        "relation": "monitoring_requirement_fy2025",
+        "n_instances": 105
+      },
+      {
+        "group_id": "g003",
+        "requirement": "monitoring_frequency_code",
+        "failure_kind": "UNINTERPRETED",
+        "relation": "monitoring_requirement_fy2025",
+        "n_instances": 105
+      },
+      {
+        "group_id": "g004",
+        "requirement": "nodi_code_semantics",
+        "failure_kind": "UNINTERPRETED",
+        "relation": "no_numeric_result_case",
+        "n_instances": 186
+      },
+      {
+        "group_id": "g005",
+        "requirement": "pass_fail_reporting_semantics",
+        "failure_kind": "EXPLICIT_UNRESOLVED",
+        "relation": "measurement_limit_pair",
+        "n_instances": 12
+      },
+      {
+        "group_id": "g006",
+        "requirement": "permit_document_text_not_available",
+        "failure_kind": "EXPLICIT_UNRESOLVED",
+        "relation": "permit_document",
+        "n_instances": 1
+      },
+      {
+        "group_id": "g007",
+        "requirement": "permit_limit_comment_text",
+        "failure_kind": "UNINTERPRETED",
+        "relation": "permit_limit",
+        "n_instances": 69
+      }
+    ]
+  },
+  "finished_at": "2026-09-05T11:06:05.809870+00:00"
+}

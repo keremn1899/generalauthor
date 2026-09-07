@@ -1,0 +1,40 @@
+{
+  "propositions": [
+    {
+      "proposition": "CRM uses the operating name Helion Robotics Ltd, while invoices and Companies House use Helion Robotics Limited, and these are stated to be the same legal entity.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "identity",
+      "relevance": "Links billing-side naming (invoices) to registry-side naming (Companies House) for the candidate pair billing:Helion Robotics Limited and registry:11847201."
+    },
+    {
+      "proposition": "Helion Industrial Systems Ltd is described as a different company that sold sensors in 2018 and has no current MSA.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "other",
+      "relevance": "Distinguishes a similarly named third party from the candidate referents but does not establish distinctness between billing:Helion Robotics Limited and registry:11847201."
+    },
+    {
+      "proposition": "Company registry number 11847201 is recorded as HELION ROBOTICS LIMITED, registered in England and Wales, with status active.",
+      "source_grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847201"
+      },
+      "establishes": "identity",
+      "relevance": "Grounds the right referent registry:11847201 to the legal name HELION ROBOTICS LIMITED."
+    },
+    {
+      "proposition": "Billing records list billed_name as Helion Robotics Limited.",
+      "source_grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Helion Robotics Limited"
+      },
+      "establishes": "identity",
+      "relevance": "Grounds the left referent billing:Helion Robotics Limited to the name used on invoices."
+    }
+  ]
+}

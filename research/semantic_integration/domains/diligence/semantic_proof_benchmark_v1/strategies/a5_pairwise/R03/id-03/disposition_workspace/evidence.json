@@ -1,0 +1,49 @@
+{
+  "propositions": [
+    {
+      "proposition": "Commercial notes state that Helion Robotics Ltd is the operating name used in CRM, while invoices and Companies House use Helion Robotics Limited, and that these are the same legal entity.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "identity",
+      "relevance": "Links the billing-side name 'Helion Robotics Limited' to the CRM operating name 'Helion Robotics Ltd', which is the counterparty name on MSA-HELION-2019."
+    },
+    {
+      "proposition": "Commercial notes state that Helion Industrial Systems Ltd is a different company that sold sensors in 2018 and has no current MSA.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "distinctness",
+      "relevance": "Distinguishes a similarly named Helion entity from the billing and contract referents under review."
+    },
+    {
+      "proposition": "Billing invoices record billed_name as 'Helion Robotics Limited'.",
+      "source_grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Helion Robotics Limited"
+      },
+      "establishes": "other",
+      "relevance": "Grounds the left referent billing:Helion Robotics Limited to the name appearing on invoice records."
+    },
+    {
+      "proposition": "MSA-HELION-2019 names 'Helion Robotics Ltd.' as the counterparty.",
+      "source_grounding": {
+        "source_path": "sources/contracts/MSA-HELION-2019.md",
+        "location": "header"
+      },
+      "establishes": "other",
+      "relevance": "Grounds the right referent contract:MSA-HELION-2019 to the counterparty named in that agreement."
+    },
+    {
+      "proposition": "MSA-HELION-2019 assignment clause refers to 'Helion Robotics Ltd.' as the party that may not assign the agreement without prior written notice.",
+      "source_grounding": {
+        "source_path": "sources/contracts/MSA-HELION-2019.md",
+        "location": "header"
+      },
+      "establishes": "other",
+      "relevance": "Corroborates that the contract party associated with MSA-HELION-2019 is Helion Robotics Ltd."
+    }
+  ]
+}

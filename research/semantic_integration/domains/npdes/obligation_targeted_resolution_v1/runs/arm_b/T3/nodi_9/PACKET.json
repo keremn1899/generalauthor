@@ -1,0 +1,95 @@
+{
+  "obligation_id": "nodi_9",
+  "exact_semantic_question": "What does NODI code 9 mean for a FY2025 DMR row with no numeric result?",
+  "purpose": "C",
+  "relation_contract": "no_numeric_result_case.nodi_code must be interpreted; C and 9 must not inherit each other",
+  "candidate_interpretations": [
+    {
+      "label": "Not applicable / monitoring not required for this reporting period",
+      "basis": "Permit labels WET retest DMR lines as '(If required)' and sets OPTIONAL_MONITORING_FLAG=Y with frequency code 09/99 on linked limits; permit footnote *5 states TRC shall be monitored only when chlorine is used.",
+      "status": "unsupported_as_uniform_meaning — applies to different parameter families under the same code without workspace text naming NODI 9"
+    },
+    {
+      "label": "No discharge during sampling month",
+      "basis": "Aztec permit NM0028762 contains NO DISCHARGE REPORTING instructions (checkbox on DMR form).",
+      "status": "refuted_for_nodi_9 — text is for a different permit (not NM0020583), references an 'X' in a NO DISCHARGE box rather than NODI code 9, and does not cover optional WET retest parameters"
+    },
+    {
+      "label": "Same meaning as NODI code C",
+      "basis": "Both are nonempty NODI codes on FY2025 rows lacking numeric results.",
+      "status": "refuted — NODI C appears only on permit NM0000116 (150 rows, mandatory parameters); NODI 9 appears only on permit NM0020583 (36 rows, distinct parameter set including optional WET retests)"
+    },
+    {
+      "label": "Indeterminate / code legend absent from workspace",
+      "basis": "No NODI codebook in structured sources; no permit text for NM0020583 defines NODI code 9.",
+      "status": "supported_negative — workspace lacks establishing text"
+    }
+  ],
+  "retained_snippets": [
+    {
+      "source_id": "sources/dmr_measurements.csv",
+      "location": "line 2, DMR_FORM_VALUE_ID=3920662047",
+      "text": "3602878711,NM0020583,...,22415,Whole effluent toxicity - retest #1,...,OPTIONAL_MONITORING_FLAG=Y,...,LIMIT_FREQ_OF_ANALYSIS_CODE=09/99,...,DMR_VALUE_NMBR empty,...,NODI_CODE=9",
+      "why_retained": "Representative obligation occurrence: FY2025 WET retest parameter with no numeric result and NODI 9 on the only permit using this code"
+    },
+    {
+      "source_id": "sources/dmr_measurements.csv",
+      "location": "line 330, DMR_FORM_VALUE_ID=3920642644",
+      "text": "3602878711,NM0020583,...,50060,\"Chlorine, total residual\",...,OPTIONAL_MONITORING_FLAG=N,...,LIMIT_FREQ_OF_ANALYSIS_CODE=01/01,...,DMR_VALUE_NMBR empty,...,NODI_CODE=9",
+      "why_retained": "Second parameter family under NODI 9: mandatory-flag chlorine rows (12/36) with daily frequency but no reported value"
+    },
+    {
+      "source_id": "sources/dmr_measurements.csv",
+      "location": "line 246, DMR_FORM_VALUE_ID=3896611092",
+      "text": "3602720951,NM0000116,...,50050,\"Flow, in conduit or thru treatment plant\",...,OPTIONAL_MONITORING_FLAG=N,...,DMR_VALUE_NMBR empty,...,NODI_CODE=C",
+      "why_retained": "NODI C occurs only on permit NM0000116 with different parameters; supports non-inheritance of C semantics onto code 9"
+    },
+    {
+      "source_id": "sources/permit_limits.csv",
+      "location": "line 49, LIMIT_VALUE_ID=3610839676, PARAMETER_CODE=22415",
+      "text": "NM0020583,...,22415,Whole effluent toxicity - retest #1,...,OPTIONAL_MONITORING_FLAG=Y,...,LIMIT_FREQ_OF_ANALYSIS_CODE=09/99,...,DMR_COMMENT_TEXT begins '(PASS = 0  FAIL = 1) REPORT PASS AS '0' OR REPORT FAIL AS '1'...'",
+      "why_retained": "Structured limit row linked to NODI-9 WET retest measurements shows optional monitoring and pass/fail reporting comment"
+    },
+    {
+      "source_id": "sources/permit_limits.csv",
+      "location": "line 67, LIMIT_VALUE_ID=3610673291, PARAMETER_CODE=50060",
+      "text": "NM0020583,...,50060,\"Chlorine, total residual\",...,OPTIONAL_MONITORING_FLAG=N,...,LIMIT_FREQ_OF_ANALYSIS_CODE=01/01,...,LIMIT_VALUE_NMBR=19 ug/L",
+      "why_retained": "Chlorine limit for NM0020583 is non-optional in structured data despite conditional-use language in permit footnote"
+    },
+    {
+      "source_id": "documents/farmington/final_permit.txt",
+      "location": "lines 117-120, footnote *5",
+      "text": "*5      This facility uses Ultraviolet disinfection. Total Residual Chlorine (TRC) shall be monitored any time chlorine is used within the treatment plant for disinfection, equipment cleaning, maintenance, or any other purpose. The effluent limitation for TRC is the instantaneous maximum grab sample taken during periods of chlorine use and cannot be averaged for reporting purposes.",
+      "why_retained": "Authoritative permit text for NM0020583 TRC monitoring is conditional on chlorine use but does not reference NODI code 9"
+    },
+    {
+      "source_id": "documents/farmington/final_permit.txt",
+      "location": "lines 518-520",
+      "text": "(If required) Retest 1 – Enter a “1” if the NOEC for         22418                 22415\n        survival is less than the critical dilution,\n        otherwise enter “0”.",
+      "why_retained": "Permit ties PARAMETER_CODE 22415 to conditional '(If required)' retest reporting; no NODI code named"
+    },
+    {
+      "source_id": "documents/aztec/final_permit.txt",
+      "location": "lines 150-153",
+      "text": "5. NO DISCHARGE REPORTING\n\nIf there is no discharge from any outfall during the sampling month, place an \"X\" in the NO\nDISCHARGE box located in the upper right corner of the Discharge Monitoring Report.",
+      "why_retained": "Only workspace no-discharge DMR instruction found; applies to permit NM0028762 (not NM0020583) and uses a checkbox, not NODI code 9"
+    }
+  ],
+  "contradictory_evidence": [
+    "WET retest limits carry OPTIONAL_MONITORING_FLAG=Y and permit text '(If required)', suggesting not-applicable-when-not-triggered, while chlorine limits carry OPTIONAL_MONITORING_FLAG=N with daily frequency — yet both share NODI code 9 with no numeric value.",
+    "Aztec permit NO DISCHARGE REPORTING could suggest a no-discharge interpretation, but it governs NM0028762 and references a DMR checkbox rather than NODI code 9; NODI 9 rows are exclusively on NM0020583.",
+    "Farmington footnote *5 makes TRC monitoring conditional on chlorine use, but structured OPTIONAL_MONITORING_FLAG=N on the chlorine limit row implies mandatory monitoring in the extract."
+  ],
+  "known_limitations": [
+    "Structured sources contain no NODI codebook or legend (confirmed in OBLIGATION.md known_structured_evidence).",
+    "No opened permit-package document for NM0020583 defines NODI code 9 or maps DMR no-data codes to permit states.",
+    "All 36 NODI 9 occurrences are on permit NM0020583; NODI C occurrences are on a different permit (NM0000116), preventing cross-code inference from co-occurrence.",
+    "Permit-package documents for NM0020583 lack a NO DISCHARGE REPORTING section comparable to aztec/final_permit.txt.",
+    "Structured data alone cannot distinguish documented conditional non-monitoring from inadequate monitoring evidence for chlorine rows."
+  ],
+  "allowed_dispositions": [
+    "SUPPORTED_RESOLUTION",
+    "SUPPORTED_NEGATIVE",
+    "UNRESOLVED"
+  ]
+}

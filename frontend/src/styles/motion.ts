@@ -357,8 +357,30 @@ export const DEFAULT_MOTION_PLANS = createMotionPlans();
  * still 1.45× an arrival and a collapse still 1.81× a release; both simply
  * happen sooner.
  */
-export const NODE_BIRTH_PLAN = createMotionPlan("emit", { travel: 18 });
-export const NODE_COLLAPSE_PLAN = createMotionPlan("absorb", { travel: 28 });
+/**
+ * A body falls in its own well.
+ *
+ * Mass is what separates these two plans from the spine's, and the honest
+ * place to put it is `gravity` rather than `travel` alone: a heavier body
+ * deepens the field it is moving through, so it is thrown further *and* gets
+ * there sooner. Travel alone can only buy the first half, and buys it by
+ * making a collapse take longer the more violent it is asked to look — which
+ * is backwards, and is what made a withdrawal read as a slow deflation
+ * instead of something falling in.
+ *
+ * Six times the field, so the ratios inside each plan are untouched and only
+ * the well these two live in is steeper.
+ */
+const STELLAR_GRAVITY = DEFAULT_MOTION_FIELD.gravity * 6;
+
+export const NODE_BIRTH_PLAN = createMotionPlan("emit", {
+  travel: 26,
+  gravity: STELLAR_GRAVITY,
+});
+export const NODE_COLLAPSE_PLAN = createMotionPlan("absorb", {
+  travel: 34,
+  gravity: STELLAR_GRAVITY,
+});
 
 /**
  * Slow or accelerate one authored plan without changing its physical family.

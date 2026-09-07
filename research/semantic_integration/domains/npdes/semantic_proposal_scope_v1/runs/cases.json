@@ -1,0 +1,1945 @@
+[
+  {
+    "id": "case1_bare_rejection",
+    "n": 1,
+    "issue_id": "unique_applicable_limit",
+    "utterance": "No, that's wrong.",
+    "stage": "baseline",
+    "previous_case": null,
+    "reported_model_propose": "Composer 2.5",
+    "reported_model_decide": "Composer 2.5",
+    "reported_model_commit": null,
+    "mutated_after_propose": false,
+    "mutated_after_decide": false,
+    "decision": {
+      "disposition": "NEEDS_CLARIFICATION",
+      "reason": "The expert rejected the draft's one-limit-per-measurement reading, but the rejection could mean changing how limits are paired to measurements, dropping the one-limit rule while keeping current pairing, or correcting a mischaracterization of the existing pairing logic. Dry runs show materially different row counts and hole profiles across these readings.",
+      "consequence_divergence": true,
+      "chosen_dry_run_id": null
+    },
+    "disposition": "NEEDS_CLARIFICATION",
+    "n_dry_runs": 2,
+    "dry_run_ids": [
+      "catalog_applicable_limits",
+      "remove_forced_uniqueness"
+    ],
+    "clarify": true,
+    "acceptance": false,
+    "committed": false,
+    "commit_delta": null,
+    "revert": null,
+    "baseline": {
+      "ok": true,
+      "errors": [],
+      "n_hole_groups": 8,
+      "n_hole_instances": 535,
+      "relation_row_counts": {
+        "dmr_measurement": 824,
+        "permit_limit": 105,
+        "permit_document": 12,
+        "fy2025_measurement": 824,
+        "measurement_limit_pair": 824,
+        "numeric_comparison_candidate": 342,
+        "no_numeric_result_case": 186,
+        "monitoring_requirement_fy2025": 105
+      },
+      "requirement_names": [
+        "fy2025_measurements_materializable",
+        "measurement_limit_pairs_materializable",
+        "unique_applicable_limit_per_measurement",
+        "numeric_comparison_candidates_materializable",
+        "limit_value_for_comparison",
+        "reported_value_for_comparison",
+        "limit_comparison_operator",
+        "reported_value_qualifier",
+        "optional_monitoring_flag_for_limit_applicability",
+        "limit_type_code_for_enforceability",
+        "statistical_base_for_limit_comparison",
+        "monitoring_requirements_materializable",
+        "monitoring_frequency_code",
+        "limit_sample_type_code",
+        "optional_monitoring_flag_for_obligation",
+        "permit_limit_comment_text",
+        "limit_set_designator_for_schedule",
+        "no_numeric_result_cases_materializable",
+        "nodi_code_semantics",
+        "optional_monitoring_flag_for_missing_evidence",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "permit_document_text_not_available"
+      ],
+      "hole_groups": [
+        {
+          "group_id": "g000",
+          "requirement": "aggregated_reporting_requirement",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 40
+        },
+        {
+          "group_id": "g001",
+          "requirement": "conditional_discharge_dependent_monitoring",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 17
+        },
+        {
+          "group_id": "g002",
+          "requirement": "limit_sample_type_code",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 105
+        },
+        {
+          "group_id": "g003",
+          "requirement": "monitoring_frequency_code",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 105
+        },
+        {
+          "group_id": "g004",
+          "requirement": "nodi_code_semantics",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "no_numeric_result_case",
+          "n_instances": 186
+        },
+        {
+          "group_id": "g005",
+          "requirement": "pass_fail_reporting_semantics",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "measurement_limit_pair",
+          "n_instances": 12
+        },
+        {
+          "group_id": "g006",
+          "requirement": "permit_document_text_not_available",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "permit_document",
+          "n_instances": 1
+        },
+        {
+          "group_id": "g007",
+          "requirement": "permit_limit_comment_text",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "permit_limit",
+          "n_instances": 69
+        }
+      ]
+    },
+    "finished_at": "2026-09-05T10:39:14.929481+00:00"
+  },
+  {
+    "id": "case2_underspecified",
+    "n": 2,
+    "issue_id": "unique_applicable_limit",
+    "utterance": "No, multiple limits can apply.",
+    "stage": "baseline",
+    "previous_case": null,
+    "reported_model_propose": "Composer 2.5",
+    "reported_model_decide": "Composer 2.5",
+    "reported_model_commit": null,
+    "mutated_after_propose": false,
+    "mutated_after_decide": false,
+    "decision": {
+      "disposition": "NEEDS_CLARIFICATION",
+      "reason": "The expert clearly rejects the draft policy that each FY2025 measurement has exactly one applicable governing limit. Both tested constructions remove that rule, but they disagree on how to decide which limit rows belong to each measurement: keep the DMR-referenced limit join (824 pairs, 342 numeric comparisons) or enumerate every temporally overlapping permit limit for the same permit, outfall, and parameter (4,076 pairs, 1,388 numeric comparisons). Those are materially different outcomes on this fixture.",
+      "consequence_divergence": true,
+      "chosen_dry_run_id": null
+    },
+    "disposition": "NEEDS_CLARIFICATION",
+    "n_dry_runs": 2,
+    "dry_run_ids": [
+      "drop_unique_requirement",
+      "expand_applicable_limits"
+    ],
+    "clarify": true,
+    "acceptance": false,
+    "committed": false,
+    "commit_delta": null,
+    "revert": null,
+    "baseline": {
+      "ok": true,
+      "errors": [],
+      "n_hole_groups": 8,
+      "n_hole_instances": 535,
+      "relation_row_counts": {
+        "dmr_measurement": 824,
+        "permit_limit": 105,
+        "permit_document": 12,
+        "fy2025_measurement": 824,
+        "measurement_limit_pair": 824,
+        "numeric_comparison_candidate": 342,
+        "no_numeric_result_case": 186,
+        "monitoring_requirement_fy2025": 105
+      },
+      "requirement_names": [
+        "fy2025_measurements_materializable",
+        "measurement_limit_pairs_materializable",
+        "unique_applicable_limit_per_measurement",
+        "numeric_comparison_candidates_materializable",
+        "limit_value_for_comparison",
+        "reported_value_for_comparison",
+        "limit_comparison_operator",
+        "reported_value_qualifier",
+        "optional_monitoring_flag_for_limit_applicability",
+        "limit_type_code_for_enforceability",
+        "statistical_base_for_limit_comparison",
+        "monitoring_requirements_materializable",
+        "monitoring_frequency_code",
+        "limit_sample_type_code",
+        "optional_monitoring_flag_for_obligation",
+        "permit_limit_comment_text",
+        "limit_set_designator_for_schedule",
+        "no_numeric_result_cases_materializable",
+        "nodi_code_semantics",
+        "optional_monitoring_flag_for_missing_evidence",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "permit_document_text_not_available"
+      ],
+      "hole_groups": [
+        {
+          "group_id": "g000",
+          "requirement": "aggregated_reporting_requirement",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 40
+        },
+        {
+          "group_id": "g001",
+          "requirement": "conditional_discharge_dependent_monitoring",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 17
+        },
+        {
+          "group_id": "g002",
+          "requirement": "limit_sample_type_code",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 105
+        },
+        {
+          "group_id": "g003",
+          "requirement": "monitoring_frequency_code",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 105
+        },
+        {
+          "group_id": "g004",
+          "requirement": "nodi_code_semantics",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "no_numeric_result_case",
+          "n_instances": 186
+        },
+        {
+          "group_id": "g005",
+          "requirement": "pass_fail_reporting_semantics",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "measurement_limit_pair",
+          "n_instances": 12
+        },
+        {
+          "group_id": "g006",
+          "requirement": "permit_document_text_not_available",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "permit_document",
+          "n_instances": 1
+        },
+        {
+          "group_id": "g007",
+          "requirement": "permit_limit_comment_text",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "permit_limit",
+          "n_instances": 69
+        }
+      ]
+    },
+    "finished_at": "2026-09-05T10:46:40.663596+00:00"
+  },
+  {
+    "id": "case3_substantive",
+    "n": 3,
+    "issue_id": "unique_applicable_limit",
+    "utterance": "No. A measurement may need to be compared against multiple genuinely different limit types, but duplicate or restated catalog rows should still collapse.",
+    "stage": "baseline",
+    "previous_case": null,
+    "reported_model_propose": "Composer 2.5",
+    "reported_model_decide": "Composer 2.5",
+    "reported_model_commit": null,
+    "mutated_after_propose": false,
+    "mutated_after_decide": false,
+    "decision": {
+      "disposition": "NEEDS_CLARIFICATION",
+      "reason": "Your correction clearly rejects exactly-one applicable limit per measurement and requires collapsing duplicate catalog rows, but the phrase \"multiple genuinely different limit types\" supports two readings that the dry runs treat differently: allow multiple surviving limits per measurement without a per-type cap, versus allow multiplicity only across different limit types (at most one per type). After the same deduplication step, 692 FY2025 measurements still have multiple collapsed limits sharing the same limit type code; one reading leaves them as valid comparisons (535 total unresolved items, unchanged from baseline), while the other flags those 692 cases as unresolved multiplicity (1,919 total unresolved items, +1,384).",
+      "consequence_divergence": true,
+      "chosen_dry_run_id": null
+    },
+    "disposition": "NEEDS_CLARIFICATION",
+    "n_dry_runs": 2,
+    "dry_run_ids": [
+      "multi_applicable_limits",
+      "per_limit_type_unique"
+    ],
+    "clarify": true,
+    "acceptance": false,
+    "committed": false,
+    "commit_delta": null,
+    "revert": null,
+    "baseline": {
+      "ok": true,
+      "errors": [],
+      "n_hole_groups": 8,
+      "n_hole_instances": 535,
+      "relation_row_counts": {
+        "dmr_measurement": 824,
+        "permit_limit": 105,
+        "permit_document": 12,
+        "fy2025_measurement": 824,
+        "measurement_limit_pair": 824,
+        "numeric_comparison_candidate": 342,
+        "no_numeric_result_case": 186,
+        "monitoring_requirement_fy2025": 105
+      },
+      "requirement_names": [
+        "fy2025_measurements_materializable",
+        "measurement_limit_pairs_materializable",
+        "unique_applicable_limit_per_measurement",
+        "numeric_comparison_candidates_materializable",
+        "limit_value_for_comparison",
+        "reported_value_for_comparison",
+        "limit_comparison_operator",
+        "reported_value_qualifier",
+        "optional_monitoring_flag_for_limit_applicability",
+        "limit_type_code_for_enforceability",
+        "statistical_base_for_limit_comparison",
+        "monitoring_requirements_materializable",
+        "monitoring_frequency_code",
+        "limit_sample_type_code",
+        "optional_monitoring_flag_for_obligation",
+        "permit_limit_comment_text",
+        "limit_set_designator_for_schedule",
+        "no_numeric_result_cases_materializable",
+        "nodi_code_semantics",
+        "optional_monitoring_flag_for_missing_evidence",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "permit_document_text_not_available"
+      ],
+      "hole_groups": [
+        {
+          "group_id": "g000",
+          "requirement": "aggregated_reporting_requirement",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 40
+        },
+        {
+          "group_id": "g001",
+          "requirement": "conditional_discharge_dependent_monitoring",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 17
+        },
+        {
+          "group_id": "g002",
+          "requirement": "limit_sample_type_code",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 105
+        },
+        {
+          "group_id": "g003",
+          "requirement": "monitoring_frequency_code",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 105
+        },
+        {
+          "group_id": "g004",
+          "requirement": "nodi_code_semantics",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "no_numeric_result_case",
+          "n_instances": 186
+        },
+        {
+          "group_id": "g005",
+          "requirement": "pass_fail_reporting_semantics",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "measurement_limit_pair",
+          "n_instances": 12
+        },
+        {
+          "group_id": "g006",
+          "requirement": "permit_document_text_not_available",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "permit_document",
+          "n_instances": 1
+        },
+        {
+          "group_id": "g007",
+          "requirement": "permit_limit_comment_text",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "permit_limit",
+          "n_instances": 69
+        }
+      ]
+    },
+    "finished_at": "2026-09-05T10:50:31.461376+00:00"
+  },
+  {
+    "id": "case4_purpose_scope",
+    "n": 4,
+    "issue_id": "unique_applicable_limit",
+    "utterance": "Yes, but only for Purpose A. Don't make that a general rule.",
+    "stage": "after_proposal",
+    "previous_case": "case3_substantive",
+    "reported_model_propose": "Composer 2.5",
+    "reported_model_decide": "Composer 2.5",
+    "reported_model_commit": "Composer 2.5",
+    "mutated_after_propose": false,
+    "mutated_after_decide": false,
+    "decision": {
+      "disposition": "READY_FOR_ACCEPTANCE",
+      "reason": "Your reply affirms the multi-limit reading from the prior clarification\u2014after collapsing restated catalog rows, a FY2025 measurement may be compared against multiple applicable limits even when they share a limit type code\u2014and restricts that policy to Purpose A only, not as a general WORLD rule. The sole dry run (multi_applicable_limits) matches this scope and produces the expected expansion in pairs and comparison candidates without adding new unresolved items.",
+      "consequence_divergence": false,
+      "chosen_dry_run_id": "multi_applicable_limits"
+    },
+    "disposition": "READY_FOR_ACCEPTANCE",
+    "n_dry_runs": 1,
+    "dry_run_ids": [
+      "multi_applicable_limits"
+    ],
+    "clarify": false,
+    "acceptance": true,
+    "committed": true,
+    "commit_delta": {
+      "relation_count_changes": {
+        "measurement_limit_pair": {
+          "baseline": 824,
+          "proposed": 2812
+        },
+        "numeric_comparison_candidate": {
+          "baseline": 342,
+          "proposed": 1336
+        }
+      },
+      "requirements_added": [],
+      "requirements_removed": [],
+      "requirements_changed": [
+        {
+          "name": "unique_applicable_limit_per_measurement",
+          "baseline": {
+            "name": "unique_applicable_limit_per_measurement",
+            "kind": "UNIQUE",
+            "purpose": [
+              "A"
+            ],
+            "cardinality": "ONE",
+            "relation": "measurement_limit_pair",
+            "field": null,
+            "known": null
+          },
+          "proposed": {
+            "name": "unique_applicable_limit_per_measurement",
+            "kind": "UNIQUE",
+            "purpose": [
+              "A"
+            ],
+            "cardinality": "AT_LEAST_ONE",
+            "relation": "measurement_limit_pair",
+            "field": null,
+            "known": null
+          }
+        }
+      ],
+      "relation_mode_changes": {},
+      "n_hole_groups": {
+        "baseline": 8,
+        "proposed": 8
+      },
+      "n_hole_instances": {
+        "baseline": 535,
+        "proposed": 535
+      },
+      "hole_requirements_added": [],
+      "hole_requirements_removed": [],
+      "WORLD_semantics_changed": false,
+      "PURPOSE_semantics_changed": true,
+      "ok": {
+        "baseline": true,
+        "proposed": true
+      }
+    },
+    "revert": {
+      "construction_restored": true,
+      "sources_unchanged": true,
+      "source_fingerprints_after": {
+        "dmr_measurements.csv": "0dc40759d901174b94840985f5a7eda475727e643144fb8fd01890614b481488",
+        "permit_limits.csv": "59e98606b2d978956efc27992a060fd6703ae792106a3eee85b4c6b1da019b68",
+        "document_inventory.json": "e041eb1f78fd3c58feeb5a944dd03e7656e3d1d53ea5e549adcb6dc19e0e0cf6"
+      },
+      "rerun_matches_baseline": true,
+      "revert_delta": {
+        "relation_count_changes": {},
+        "requirements_added": [],
+        "requirements_removed": [],
+        "requirements_changed": [],
+        "relation_mode_changes": {},
+        "n_hole_groups": {
+          "baseline": 8,
+          "proposed": 8
+        },
+        "n_hole_instances": {
+          "baseline": 535,
+          "proposed": 535
+        },
+        "hole_requirements_added": [],
+        "hole_requirements_removed": [],
+        "WORLD_semantics_changed": false,
+        "PURPOSE_semantics_changed": false,
+        "ok": {
+          "baseline": true,
+          "proposed": true
+        }
+      }
+    },
+    "baseline": {
+      "ok": true,
+      "errors": [],
+      "n_hole_groups": 8,
+      "n_hole_instances": 535,
+      "relation_row_counts": {
+        "dmr_measurement": 824,
+        "permit_limit": 105,
+        "permit_document": 12,
+        "fy2025_measurement": 824,
+        "measurement_limit_pair": 824,
+        "numeric_comparison_candidate": 342,
+        "no_numeric_result_case": 186,
+        "monitoring_requirement_fy2025": 105
+      },
+      "requirement_names": [
+        "fy2025_measurements_materializable",
+        "measurement_limit_pairs_materializable",
+        "unique_applicable_limit_per_measurement",
+        "numeric_comparison_candidates_materializable",
+        "limit_value_for_comparison",
+        "reported_value_for_comparison",
+        "limit_comparison_operator",
+        "reported_value_qualifier",
+        "optional_monitoring_flag_for_limit_applicability",
+        "limit_type_code_for_enforceability",
+        "statistical_base_for_limit_comparison",
+        "monitoring_requirements_materializable",
+        "monitoring_frequency_code",
+        "limit_sample_type_code",
+        "optional_monitoring_flag_for_obligation",
+        "permit_limit_comment_text",
+        "limit_set_designator_for_schedule",
+        "no_numeric_result_cases_materializable",
+        "nodi_code_semantics",
+        "optional_monitoring_flag_for_missing_evidence",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "permit_document_text_not_available"
+      ],
+      "hole_groups": [
+        {
+          "group_id": "g000",
+          "requirement": "aggregated_reporting_requirement",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 40
+        },
+        {
+          "group_id": "g001",
+          "requirement": "conditional_discharge_dependent_monitoring",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 17
+        },
+        {
+          "group_id": "g002",
+          "requirement": "limit_sample_type_code",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 105
+        },
+        {
+          "group_id": "g003",
+          "requirement": "monitoring_frequency_code",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 105
+        },
+        {
+          "group_id": "g004",
+          "requirement": "nodi_code_semantics",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "no_numeric_result_case",
+          "n_instances": 186
+        },
+        {
+          "group_id": "g005",
+          "requirement": "pass_fail_reporting_semantics",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "measurement_limit_pair",
+          "n_instances": 12
+        },
+        {
+          "group_id": "g006",
+          "requirement": "permit_document_text_not_available",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "permit_document",
+          "n_instances": 1
+        },
+        {
+          "group_id": "g007",
+          "requirement": "permit_limit_comment_text",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "permit_limit",
+          "n_instances": 69
+        }
+      ]
+    },
+    "finished_at": "2026-09-05T10:53:49.983089+00:00"
+  },
+  {
+    "id": "case5_world_generalization",
+    "n": 5,
+    "issue_id": "unique_applicable_limit",
+    "utterance": "That's generally true, not just for this analysis.",
+    "stage": "after_proposal",
+    "previous_case": "case4_purpose_scope",
+    "reported_model_propose": "Composer 2.5",
+    "reported_model_decide": "Composer 2.5",
+    "reported_model_commit": "Composer 2.5",
+    "mutated_after_propose": false,
+    "mutated_after_decide": false,
+    "decision": {
+      "disposition": "READY_FOR_ACCEPTANCE",
+      "reason": "Your reply withdraws the Purpose-A-only scope line from the prior round and affirms that the multi-limit reading is generally true\u2014not confined to this FY2025 analysis. The sole dry run (world_multi_applicable_limits) matches that reading: it models limit applicability at WORLD level, switches measurement_limit_pair to WORLD mode, and relaxes unique_applicable_limit_per_measurement to AT_LEAST_ONE. No competing dry-run interpretations with materially different counts are present.",
+      "consequence_divergence": false,
+      "chosen_dry_run_id": "world_multi_applicable_limits"
+    },
+    "disposition": "READY_FOR_ACCEPTANCE",
+    "n_dry_runs": 1,
+    "dry_run_ids": [
+      "world_multi_applicable_limits"
+    ],
+    "clarify": false,
+    "acceptance": true,
+    "committed": true,
+    "commit_delta": {
+      "relation_count_changes": {
+        "measurement_limit_pair": {
+          "baseline": 824,
+          "proposed": 2812
+        },
+        "numeric_comparison_candidate": {
+          "baseline": 342,
+          "proposed": 1336
+        }
+      },
+      "requirements_added": [],
+      "requirements_removed": [],
+      "requirements_changed": [
+        {
+          "name": "unique_applicable_limit_per_measurement",
+          "baseline": {
+            "name": "unique_applicable_limit_per_measurement",
+            "kind": "UNIQUE",
+            "purpose": [
+              "A"
+            ],
+            "cardinality": "ONE",
+            "relation": "measurement_limit_pair",
+            "field": null,
+            "known": null
+          },
+          "proposed": {
+            "name": "unique_applicable_limit_per_measurement",
+            "kind": "UNIQUE",
+            "purpose": [
+              "A"
+            ],
+            "cardinality": "AT_LEAST_ONE",
+            "relation": "measurement_limit_pair",
+            "field": null,
+            "known": null
+          }
+        }
+      ],
+      "relation_mode_changes": {
+        "measurement_limit_pair": {
+          "baseline": "PURPOSE",
+          "proposed": "WORLD"
+        }
+      },
+      "n_hole_groups": {
+        "baseline": 8,
+        "proposed": 8
+      },
+      "n_hole_instances": {
+        "baseline": 535,
+        "proposed": 535
+      },
+      "hole_requirements_added": [],
+      "hole_requirements_removed": [],
+      "WORLD_semantics_changed": true,
+      "PURPOSE_semantics_changed": true,
+      "ok": {
+        "baseline": true,
+        "proposed": true
+      }
+    },
+    "revert": {
+      "construction_restored": true,
+      "sources_unchanged": true,
+      "source_fingerprints_after": {
+        "dmr_measurements.csv": "0dc40759d901174b94840985f5a7eda475727e643144fb8fd01890614b481488",
+        "permit_limits.csv": "59e98606b2d978956efc27992a060fd6703ae792106a3eee85b4c6b1da019b68",
+        "document_inventory.json": "e041eb1f78fd3c58feeb5a944dd03e7656e3d1d53ea5e549adcb6dc19e0e0cf6"
+      },
+      "rerun_matches_baseline": true,
+      "revert_delta": {
+        "relation_count_changes": {},
+        "requirements_added": [],
+        "requirements_removed": [],
+        "requirements_changed": [],
+        "relation_mode_changes": {},
+        "n_hole_groups": {
+          "baseline": 8,
+          "proposed": 8
+        },
+        "n_hole_instances": {
+          "baseline": 535,
+          "proposed": 535
+        },
+        "hole_requirements_added": [],
+        "hole_requirements_removed": [],
+        "WORLD_semantics_changed": false,
+        "PURPOSE_semantics_changed": false,
+        "ok": {
+          "baseline": true,
+          "proposed": true
+        }
+      }
+    },
+    "baseline": {
+      "ok": true,
+      "errors": [],
+      "n_hole_groups": 8,
+      "n_hole_instances": 535,
+      "relation_row_counts": {
+        "dmr_measurement": 824,
+        "permit_limit": 105,
+        "permit_document": 12,
+        "fy2025_measurement": 824,
+        "measurement_limit_pair": 824,
+        "numeric_comparison_candidate": 342,
+        "no_numeric_result_case": 186,
+        "monitoring_requirement_fy2025": 105
+      },
+      "requirement_names": [
+        "fy2025_measurements_materializable",
+        "measurement_limit_pairs_materializable",
+        "unique_applicable_limit_per_measurement",
+        "numeric_comparison_candidates_materializable",
+        "limit_value_for_comparison",
+        "reported_value_for_comparison",
+        "limit_comparison_operator",
+        "reported_value_qualifier",
+        "optional_monitoring_flag_for_limit_applicability",
+        "limit_type_code_for_enforceability",
+        "statistical_base_for_limit_comparison",
+        "monitoring_requirements_materializable",
+        "monitoring_frequency_code",
+        "limit_sample_type_code",
+        "optional_monitoring_flag_for_obligation",
+        "permit_limit_comment_text",
+        "limit_set_designator_for_schedule",
+        "no_numeric_result_cases_materializable",
+        "nodi_code_semantics",
+        "optional_monitoring_flag_for_missing_evidence",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "permit_document_text_not_available"
+      ],
+      "hole_groups": [
+        {
+          "group_id": "g000",
+          "requirement": "aggregated_reporting_requirement",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 40
+        },
+        {
+          "group_id": "g001",
+          "requirement": "conditional_discharge_dependent_monitoring",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 17
+        },
+        {
+          "group_id": "g002",
+          "requirement": "limit_sample_type_code",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 105
+        },
+        {
+          "group_id": "g003",
+          "requirement": "monitoring_frequency_code",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 105
+        },
+        {
+          "group_id": "g004",
+          "requirement": "nodi_code_semantics",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "no_numeric_result_case",
+          "n_instances": 186
+        },
+        {
+          "group_id": "g005",
+          "requirement": "pass_fail_reporting_semantics",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "measurement_limit_pair",
+          "n_instances": 12
+        },
+        {
+          "group_id": "g006",
+          "requirement": "permit_document_text_not_available",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "permit_document",
+          "n_instances": 1
+        },
+        {
+          "group_id": "g007",
+          "requirement": "permit_limit_comment_text",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "permit_limit",
+          "n_instances": 69
+        }
+      ]
+    },
+    "finished_at": "2026-09-05T10:58:02.417982+00:00"
+  },
+  {
+    "id": "case6_uncertainty",
+    "n": 6,
+    "issue_id": "nodi_semantics",
+    "utterance": "I don't know what 9 means. Don't infer it from the pattern in the data.",
+    "stage": "baseline",
+    "previous_case": null,
+    "reported_model_propose": "Composer 2.5",
+    "reported_model_decide": "Composer 2.5",
+    "reported_model_commit": "Composer 2.5",
+    "mutated_after_propose": false,
+    "mutated_after_decide": false,
+    "decision": {
+      "disposition": "READY_FOR_ACCEPTANCE",
+      "reason": "The expert's statement is an epistemic constraint on NODI code 9: they do not know its meaning and forbid inferring it from data patterns. The draft construction already treats all non-empty NODI codes as UNINTERPRETED under nodi_code_semantics (known only for empty string), so no construction change is required and no plausible reading of the utterance would produce materially different hole counts or classifications for code 9.",
+      "consequence_divergence": false,
+      "chosen_dry_run_id": null
+    },
+    "disposition": "READY_FOR_ACCEPTANCE",
+    "n_dry_runs": 0,
+    "dry_run_ids": [],
+    "clarify": false,
+    "acceptance": true,
+    "committed": false,
+    "commit_delta": {
+      "relation_count_changes": {},
+      "requirements_added": [],
+      "requirements_removed": [],
+      "requirements_changed": [],
+      "relation_mode_changes": {},
+      "n_hole_groups": {
+        "baseline": 8,
+        "proposed": 8
+      },
+      "n_hole_instances": {
+        "baseline": 535,
+        "proposed": 535
+      },
+      "hole_requirements_added": [],
+      "hole_requirements_removed": [],
+      "WORLD_semantics_changed": false,
+      "PURPOSE_semantics_changed": false,
+      "ok": {
+        "baseline": true,
+        "proposed": true
+      }
+    },
+    "revert": {
+      "construction_restored": true,
+      "sources_unchanged": true,
+      "source_fingerprints_after": {
+        "dmr_measurements.csv": "0dc40759d901174b94840985f5a7eda475727e643144fb8fd01890614b481488",
+        "permit_limits.csv": "59e98606b2d978956efc27992a060fd6703ae792106a3eee85b4c6b1da019b68",
+        "document_inventory.json": "e041eb1f78fd3c58feeb5a944dd03e7656e3d1d53ea5e549adcb6dc19e0e0cf6"
+      },
+      "rerun_matches_baseline": true,
+      "revert_delta": {
+        "relation_count_changes": {},
+        "requirements_added": [],
+        "requirements_removed": [],
+        "requirements_changed": [],
+        "relation_mode_changes": {},
+        "n_hole_groups": {
+          "baseline": 8,
+          "proposed": 8
+        },
+        "n_hole_instances": {
+          "baseline": 535,
+          "proposed": 535
+        },
+        "hole_requirements_added": [],
+        "hole_requirements_removed": [],
+        "WORLD_semantics_changed": false,
+        "PURPOSE_semantics_changed": false,
+        "ok": {
+          "baseline": true,
+          "proposed": true
+        }
+      }
+    },
+    "baseline": {
+      "ok": true,
+      "errors": [],
+      "n_hole_groups": 8,
+      "n_hole_instances": 535,
+      "relation_row_counts": {
+        "dmr_measurement": 824,
+        "permit_limit": 105,
+        "permit_document": 12,
+        "fy2025_measurement": 824,
+        "measurement_limit_pair": 824,
+        "numeric_comparison_candidate": 342,
+        "no_numeric_result_case": 186,
+        "monitoring_requirement_fy2025": 105
+      },
+      "requirement_names": [
+        "fy2025_measurements_materializable",
+        "measurement_limit_pairs_materializable",
+        "unique_applicable_limit_per_measurement",
+        "numeric_comparison_candidates_materializable",
+        "limit_value_for_comparison",
+        "reported_value_for_comparison",
+        "limit_comparison_operator",
+        "reported_value_qualifier",
+        "optional_monitoring_flag_for_limit_applicability",
+        "limit_type_code_for_enforceability",
+        "statistical_base_for_limit_comparison",
+        "monitoring_requirements_materializable",
+        "monitoring_frequency_code",
+        "limit_sample_type_code",
+        "optional_monitoring_flag_for_obligation",
+        "permit_limit_comment_text",
+        "limit_set_designator_for_schedule",
+        "no_numeric_result_cases_materializable",
+        "nodi_code_semantics",
+        "optional_monitoring_flag_for_missing_evidence",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "permit_document_text_not_available"
+      ],
+      "hole_groups": [
+        {
+          "group_id": "g000",
+          "requirement": "aggregated_reporting_requirement",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 40
+        },
+        {
+          "group_id": "g001",
+          "requirement": "conditional_discharge_dependent_monitoring",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 17
+        },
+        {
+          "group_id": "g002",
+          "requirement": "limit_sample_type_code",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 105
+        },
+        {
+          "group_id": "g003",
+          "requirement": "monitoring_frequency_code",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 105
+        },
+        {
+          "group_id": "g004",
+          "requirement": "nodi_code_semantics",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "no_numeric_result_case",
+          "n_instances": 186
+        },
+        {
+          "group_id": "g005",
+          "requirement": "pass_fail_reporting_semantics",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "measurement_limit_pair",
+          "n_instances": 12
+        },
+        {
+          "group_id": "g006",
+          "requirement": "permit_document_text_not_available",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "permit_document",
+          "n_instances": 1
+        },
+        {
+          "group_id": "g007",
+          "requirement": "permit_limit_comment_text",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "permit_limit",
+          "n_instances": 69
+        }
+      ]
+    },
+    "finished_at": "2026-09-05T11:02:47.860874+00:00"
+  },
+  {
+    "id": "case7_policy",
+    "n": 7,
+    "issue_id": "document_authority",
+    "utterance": "For this analysis, if the final permit and fact sheet disagree, use the final permit.",
+    "stage": "baseline",
+    "previous_case": null,
+    "reported_model_propose": "Composer 2.5",
+    "reported_model_decide": "Composer 2.5",
+    "reported_model_commit": "Composer 2.5",
+    "mutated_after_propose": false,
+    "mutated_after_decide": false,
+    "decision": {
+      "disposition": "READY_FOR_ACCEPTANCE",
+      "reason": "The user utterance is a narrow, pairwise analysis policy: when final permit and fact sheet narrative content disagree, final permit governs. The dry run encodes exactly that pair rule as a certified purpose policy without over-scoping to other document kinds or pretending narrative text is available. Plausible alternative readings (universal final-permit supremacy, or treating the policy as resolving all document-authority gaps) are weaker given the wording and would not change current measurable outcomes because narrative text is still absent from structured sources.",
+      "consequence_divergence": false,
+      "chosen_dry_run_id": "final_permit_over_fact_sheet"
+    },
+    "disposition": "READY_FOR_ACCEPTANCE",
+    "n_dry_runs": 1,
+    "dry_run_ids": [
+      "final_permit_over_fact_sheet"
+    ],
+    "clarify": false,
+    "acceptance": true,
+    "committed": true,
+    "commit_delta": {
+      "relation_count_changes": {
+        "document_conflict_authority": {
+          "baseline": null,
+          "proposed": 1
+        }
+      },
+      "requirements_added": [
+        "document_authority_among_other_kinds"
+      ],
+      "requirements_removed": [],
+      "requirements_changed": [],
+      "relation_mode_changes": {
+        "document_conflict_authority": {
+          "baseline": null,
+          "proposed": "PURPOSE"
+        }
+      },
+      "n_hole_groups": {
+        "baseline": 8,
+        "proposed": 9
+      },
+      "n_hole_instances": {
+        "baseline": 535,
+        "proposed": 536
+      },
+      "hole_requirements_added": [
+        "document_authority_among_other_kinds"
+      ],
+      "hole_requirements_removed": [],
+      "WORLD_semantics_changed": true,
+      "PURPOSE_semantics_changed": true,
+      "ok": {
+        "baseline": true,
+        "proposed": true
+      }
+    },
+    "revert": {
+      "construction_restored": true,
+      "sources_unchanged": true,
+      "source_fingerprints_after": {
+        "dmr_measurements.csv": "0dc40759d901174b94840985f5a7eda475727e643144fb8fd01890614b481488",
+        "permit_limits.csv": "59e98606b2d978956efc27992a060fd6703ae792106a3eee85b4c6b1da019b68",
+        "document_inventory.json": "e041eb1f78fd3c58feeb5a944dd03e7656e3d1d53ea5e549adcb6dc19e0e0cf6"
+      },
+      "rerun_matches_baseline": true,
+      "revert_delta": {
+        "relation_count_changes": {},
+        "requirements_added": [],
+        "requirements_removed": [],
+        "requirements_changed": [],
+        "relation_mode_changes": {},
+        "n_hole_groups": {
+          "baseline": 8,
+          "proposed": 8
+        },
+        "n_hole_instances": {
+          "baseline": 535,
+          "proposed": 535
+        },
+        "hole_requirements_added": [],
+        "hole_requirements_removed": [],
+        "WORLD_semantics_changed": false,
+        "PURPOSE_semantics_changed": false,
+        "ok": {
+          "baseline": true,
+          "proposed": true
+        }
+      }
+    },
+    "baseline": {
+      "ok": true,
+      "errors": [],
+      "n_hole_groups": 8,
+      "n_hole_instances": 535,
+      "relation_row_counts": {
+        "dmr_measurement": 824,
+        "permit_limit": 105,
+        "permit_document": 12,
+        "fy2025_measurement": 824,
+        "measurement_limit_pair": 824,
+        "numeric_comparison_candidate": 342,
+        "no_numeric_result_case": 186,
+        "monitoring_requirement_fy2025": 105
+      },
+      "requirement_names": [
+        "fy2025_measurements_materializable",
+        "measurement_limit_pairs_materializable",
+        "unique_applicable_limit_per_measurement",
+        "numeric_comparison_candidates_materializable",
+        "limit_value_for_comparison",
+        "reported_value_for_comparison",
+        "limit_comparison_operator",
+        "reported_value_qualifier",
+        "optional_monitoring_flag_for_limit_applicability",
+        "limit_type_code_for_enforceability",
+        "statistical_base_for_limit_comparison",
+        "monitoring_requirements_materializable",
+        "monitoring_frequency_code",
+        "limit_sample_type_code",
+        "optional_monitoring_flag_for_obligation",
+        "permit_limit_comment_text",
+        "limit_set_designator_for_schedule",
+        "no_numeric_result_cases_materializable",
+        "nodi_code_semantics",
+        "optional_monitoring_flag_for_missing_evidence",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "permit_document_text_not_available"
+      ],
+      "hole_groups": [
+        {
+          "group_id": "g000",
+          "requirement": "aggregated_reporting_requirement",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 40
+        },
+        {
+          "group_id": "g001",
+          "requirement": "conditional_discharge_dependent_monitoring",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 17
+        },
+        {
+          "group_id": "g002",
+          "requirement": "limit_sample_type_code",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 105
+        },
+        {
+          "group_id": "g003",
+          "requirement": "monitoring_frequency_code",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 105
+        },
+        {
+          "group_id": "g004",
+          "requirement": "nodi_code_semantics",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "no_numeric_result_case",
+          "n_instances": 186
+        },
+        {
+          "group_id": "g005",
+          "requirement": "pass_fail_reporting_semantics",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "measurement_limit_pair",
+          "n_instances": 12
+        },
+        {
+          "group_id": "g006",
+          "requirement": "permit_document_text_not_available",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "permit_document",
+          "n_instances": 1
+        },
+        {
+          "group_id": "g007",
+          "requirement": "permit_limit_comment_text",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "permit_limit",
+          "n_instances": 69
+        }
+      ]
+    },
+    "finished_at": "2026-09-05T11:06:05.809870+00:00"
+  },
+  {
+    "id": "case8_external_fact",
+    "n": 8,
+    "issue_id": "document_authority",
+    "utterance": "The final permit legally overrides the fact sheet.",
+    "stage": "baseline",
+    "previous_case": null,
+    "reported_model_propose": "Composer 2.5",
+    "reported_model_decide": "Composer 2.5",
+    "reported_model_commit": "Composer 2.5",
+    "mutated_after_propose": false,
+    "mutated_after_decide": false,
+    "decision": {
+      "disposition": "READY_FOR_ACCEPTANCE",
+      "reason": "The user asserted a general legal precedence rule (final permit over fact sheet on conflict). Two plausible encodings were dry-run\u2014one as a world-level legal fact and one as a purpose-specific analysis policy\u2014and they produced identical measurable outcomes on this dataset: both added one document_kind_precedence row, both increased unresolved holes by one group and one instance (splitting other document-kind authority into permit_document_authority_other_kinds), and left all other hole counts unchanged. Because the interpretations did not diverge in consequence here, no clarification is required to choose between them; the world-level encoding matches the utterance's legal framing and the proposal's epistemic basis.",
+      "consequence_divergence": false,
+      "chosen_dry_run_id": "legal_hierarchy_world"
+    },
+    "disposition": "READY_FOR_ACCEPTANCE",
+    "n_dry_runs": 2,
+    "dry_run_ids": [
+      "legal_hierarchy_world",
+      "purpose_policy_bc"
+    ],
+    "clarify": false,
+    "acceptance": true,
+    "committed": true,
+    "commit_delta": {
+      "relation_count_changes": {
+        "document_kind_precedence": {
+          "baseline": null,
+          "proposed": 1
+        }
+      },
+      "requirements_added": [
+        "permit_document_authority_other_kinds"
+      ],
+      "requirements_removed": [],
+      "requirements_changed": [],
+      "relation_mode_changes": {
+        "document_kind_precedence": {
+          "baseline": null,
+          "proposed": "WORLD"
+        }
+      },
+      "n_hole_groups": {
+        "baseline": 8,
+        "proposed": 9
+      },
+      "n_hole_instances": {
+        "baseline": 535,
+        "proposed": 536
+      },
+      "hole_requirements_added": [
+        "permit_document_authority_other_kinds"
+      ],
+      "hole_requirements_removed": [],
+      "WORLD_semantics_changed": true,
+      "PURPOSE_semantics_changed": true,
+      "ok": {
+        "baseline": true,
+        "proposed": true
+      }
+    },
+    "revert": {
+      "construction_restored": true,
+      "sources_unchanged": true,
+      "source_fingerprints_after": {
+        "dmr_measurements.csv": "0dc40759d901174b94840985f5a7eda475727e643144fb8fd01890614b481488",
+        "permit_limits.csv": "59e98606b2d978956efc27992a060fd6703ae792106a3eee85b4c6b1da019b68",
+        "document_inventory.json": "e041eb1f78fd3c58feeb5a944dd03e7656e3d1d53ea5e549adcb6dc19e0e0cf6"
+      },
+      "rerun_matches_baseline": true,
+      "revert_delta": {
+        "relation_count_changes": {},
+        "requirements_added": [],
+        "requirements_removed": [],
+        "requirements_changed": [],
+        "relation_mode_changes": {},
+        "n_hole_groups": {
+          "baseline": 8,
+          "proposed": 8
+        },
+        "n_hole_instances": {
+          "baseline": 535,
+          "proposed": 535
+        },
+        "hole_requirements_added": [],
+        "hole_requirements_removed": [],
+        "WORLD_semantics_changed": false,
+        "PURPOSE_semantics_changed": false,
+        "ok": {
+          "baseline": true,
+          "proposed": true
+        }
+      }
+    },
+    "baseline": {
+      "ok": true,
+      "errors": [],
+      "n_hole_groups": 8,
+      "n_hole_instances": 535,
+      "relation_row_counts": {
+        "dmr_measurement": 824,
+        "permit_limit": 105,
+        "permit_document": 12,
+        "fy2025_measurement": 824,
+        "measurement_limit_pair": 824,
+        "numeric_comparison_candidate": 342,
+        "no_numeric_result_case": 186,
+        "monitoring_requirement_fy2025": 105
+      },
+      "requirement_names": [
+        "fy2025_measurements_materializable",
+        "measurement_limit_pairs_materializable",
+        "unique_applicable_limit_per_measurement",
+        "numeric_comparison_candidates_materializable",
+        "limit_value_for_comparison",
+        "reported_value_for_comparison",
+        "limit_comparison_operator",
+        "reported_value_qualifier",
+        "optional_monitoring_flag_for_limit_applicability",
+        "limit_type_code_for_enforceability",
+        "statistical_base_for_limit_comparison",
+        "monitoring_requirements_materializable",
+        "monitoring_frequency_code",
+        "limit_sample_type_code",
+        "optional_monitoring_flag_for_obligation",
+        "permit_limit_comment_text",
+        "limit_set_designator_for_schedule",
+        "no_numeric_result_cases_materializable",
+        "nodi_code_semantics",
+        "optional_monitoring_flag_for_missing_evidence",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "conditional_discharge_dependent_monitoring",
+        "aggregated_reporting_requirement",
+        "aggregated_reporting_requirement",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "pass_fail_reporting_semantics",
+        "permit_document_text_not_available"
+      ],
+      "hole_groups": [
+        {
+          "group_id": "g000",
+          "requirement": "aggregated_reporting_requirement",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 40
+        },
+        {
+          "group_id": "g001",
+          "requirement": "conditional_discharge_dependent_monitoring",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 17
+        },
+        {
+          "group_id": "g002",
+          "requirement": "limit_sample_type_code",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 105
+        },
+        {
+          "group_id": "g003",
+          "requirement": "monitoring_frequency_code",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "monitoring_requirement_fy2025",
+          "n_instances": 105
+        },
+        {
+          "group_id": "g004",
+          "requirement": "nodi_code_semantics",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "no_numeric_result_case",
+          "n_instances": 186
+        },
+        {
+          "group_id": "g005",
+          "requirement": "pass_fail_reporting_semantics",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "measurement_limit_pair",
+          "n_instances": 12
+        },
+        {
+          "group_id": "g006",
+          "requirement": "permit_document_text_not_available",
+          "failure_kind": "EXPLICIT_UNRESOLVED",
+          "relation": "permit_document",
+          "n_instances": 1
+        },
+        {
+          "group_id": "g007",
+          "requirement": "permit_limit_comment_text",
+          "failure_kind": "UNINTERPRETED",
+          "relation": "permit_limit",
+          "n_instances": 69
+        }
+      ]
+    },
+    "finished_at": "2026-09-05T11:08:38.994009+00:00"
+  }
+]

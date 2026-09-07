@@ -1,0 +1,44 @@
+{
+  "strategy": "a2_critic",
+  "trial": "R02",
+  "obligation_id": "id-02",
+  "candidate": {
+    "left": "billing:Helion Robotics Limited",
+    "right": "registry:11847201"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 11847201"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Helion Robotics Limited"
+    }
+  ],
+  "support_claim": "The packet shows invoices bill Helion Robotics Limited and registry row 11847201 lists HELION ROBOTICS LIMITED, but no observation explicitly links company number 11847201 to the billing referent, and name correspondence alone does not establish identity.",
+  "proof_size": 2,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "critic": {
+    "decision": "CONFIRM",
+    "reason": "The cited observations show matching names for billing and registry row 11847201 but none explicitly link that company number to the billing referent, so under the contract's establishing-evidence requirement identity remains unresolved."
+  },
+  "critic_reason": "cannot_upgrade",
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

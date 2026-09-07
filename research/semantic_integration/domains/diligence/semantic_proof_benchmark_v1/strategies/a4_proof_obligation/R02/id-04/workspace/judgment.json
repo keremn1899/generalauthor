@@ -1,0 +1,46 @@
+{
+  "proposed_disposition": "UNRESOLVED",
+  "proof_obligations": [
+    {
+      "obligation": "Establish that crm:NBA-102 denotes the same legal counterparty as billing:Northbridge Analytics Inc.",
+      "required_for": "SAME_ENTITY",
+      "satisfied": false,
+      "evidence": [
+        {
+          "source_path": "sources/crm.csv",
+          "location": "row NBA-102"
+        },
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Northbridge Analytics Inc."
+        },
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    },
+    {
+      "obligation": "Establish that crm:NBA-102 and billing:Northbridge Analytics Inc. denote distinct legal counterparties",
+      "required_for": "DISTINCT",
+      "satisfied": false,
+      "evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    }
+  ],
+  "unsatisfied_obligations": [
+    "Establish that crm:NBA-102 denotes the same legal counterparty as billing:Northbridge Analytics Inc.",
+    "Establish that crm:NBA-102 and billing:Northbridge Analytics Inc. denote distinct legal counterparties"
+  ],
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "Commercial notes state legal has not determined which registry entity is the contracting party and treat the registry link as unresolved, so neither same-entity identity nor distinctness is established."
+}

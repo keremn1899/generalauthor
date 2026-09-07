@@ -1,0 +1,33 @@
+{
+  "obligation_id": "obl:000352",
+  "selected_observations": [
+    {
+      "source_path": "sources/structured/dmr_measurements.csv",
+      "location": "row 194; key=3831416450",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0020583; PERM_FEATURE_NMBR=001; PARAMETER_CODE=51040; PARAMETER_DESC=E. coli; MONITORING_PERIOD_END_DATE=10/31/2024; DMR_VALUE_ID=3831416450; DMR_VALUE_NMBR=8; DMR_UNIT_DESC=CFU/100mL; STATISTICAL_BASE_CODE=DD; DMR_VALUE_QUALIFIER_CODE==; LIMIT_VALUE_ID=3610673270; VALUE_RECEIVED_DATE=11/14/2024"
+    },
+    {
+      "source_path": "02_mechanical_world/world.sqlite",
+      "location": "reported_measurement_stated[measurement:3831416450]",
+      "excerpt": "period_end=2024-10-31; value_number=8.0; statistical_base=DD; nodi_code=(none)"
+    },
+    {
+      "source_path": "sources/structured/permit_limits.csv",
+      "location": "row 69; key=3610673269",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0020583; PERM_FEATURE_NMBR=001; PARAMETER_CODE=51040; PARAMETER_DESC=E. coli; LIMIT_VALUE_ID=3610673269; LIMIT_VALUE_NMBR=126; LIMIT_UNIT_DESC=CFU/100mL; STATISTICAL_BASE_CODE=3H; LIMIT_VALUE_QUALIFIER_CODE=<=; LIMIT_TYPE_CODE=ENF; OPTIONAL_MONITORING_FLAG=N; LIMIT_FREQ_OF_ANALYSIS_CODE=05/WK; DMR_COMMENT_TEXT=TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.; LIMIT_SET_NAME=TREATED MUNICIPAL WASTEWATER; LIMIT_BEGIN_DATE=12/01/2021; LIMIT_END_DATE=11/30/2026"
+    },
+    {
+      "source_path": "sources/structured/permit_limits.csv",
+      "location": "row 71; key=3610673270",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0020583; PERM_FEATURE_NMBR=001; PARAMETER_CODE=51040; PARAMETER_DESC=E. coli; LIMIT_VALUE_ID=3610673270; LIMIT_VALUE_NMBR=235; LIMIT_UNIT_DESC=CFU/100mL; STATISTICAL_BASE_CODE=DD; LIMIT_VALUE_QUALIFIER_CODE=<=; LIMIT_TYPE_CODE=ENF; OPTIONAL_MONITORING_FLAG=N; LIMIT_FREQ_OF_ANALYSIS_CODE=05/WK; DMR_COMMENT_TEXT=TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.; LIMIT_SET_NAME=TREATED MUNICIPAL WASTEWATER; LIMIT_BEGIN_DATE=12/01/2021; LIMIT_END_DATE=11/30/2026"
+    }
+  ],
+  "selection_rationale": "Packet pairs FY2025 measurement measurement:3831416450 (NM0020583/001/51040 period_end=2024-10-31) with temporally overlapping stated limit rows sharing locational keys to support applicable-limit selection or unresolved recording.",
+  "known_missing_information": [
+    "Permit PDF files referenced in sources/source_manifest.json are absent from workspace; permit_condition_language_stated and limit narrative grounding rely on CSV comments only.",
+    "P2 materialized C1 base relations only; C4 derivations (fy2025_in_scope_measurement, candidate_limit_for_measurement, fy2025_candidate_monitoring_requirement, monitoring_expectation_without_numeric_result) are not registered in world.sqlite.",
+    "limit_source_classification judgments are unresolved for candidate limits.",
+    "candidate_limit_for_measurement derivation is not materialized; mechanical join candidates inferred from shared facility/outfall/parameter and date overlap only.",
+    "Permit condition precedence among multiple statistical bases (e.g., min/max pH pair) is not resolved from CSV extracts alone."
+  ]
+}

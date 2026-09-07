@@ -1,0 +1,18 @@
+{
+  "interpretation": "No positive semantic mapping for NODI code C can be admitted. Workspace sources establish the code's occurrence on 150 FY2025 no-numeric-result rows but not its meaning. Candidate interpretations (documented no-discharge period, EPA form-defined no-data indicator, monitoring-not-required) are unestablished or weakened; only the absence of definition is source-supported.",
+  "scope": "ONE_RELATION_OR_VOCABULARY",
+  "epistemic_basis": "SOURCE_ESTABLISHED",
+  "exact_grounding": [
+    "OBLIGATION.md lines 4-18: obligation nodi_c status UNRESOLVED; no codebook in structured sources",
+    "construction.py lines 584-590: nodi_code_semantics known values limited to empty string",
+    "sources/dmr_measurements.csv: 150 FY2025 rows with NODI_CODE='C', empty DMR_VALUE_NMBR, permit NM0000116, OPTIONAL_MONITORING_FLAG='N'",
+    "documents/gcc/final_permit.txt lines 103-122: NM0000116 reporting section lacks NODI legend and NO DISCHARGE instruction",
+    "documents/gcc/final_permit.txt lines 192-197: discharge context does not define NODI C",
+    "documents/aztec/final_permit.txt lines 150-153: NO DISCHARGE instructions apply to NM0028762, not NM0000116"
+  ],
+  "semantic_delta": null,
+  "affected_obligations": ["nodi_c"],
+  "affected_occurrence_count": 150,
+  "remaining_uncertainty": "Any reusable mapping of nodi_code='C' would require an authoritative code definition not present in workspace sources. Without such text, adding C to construction.py known values would be an unverified model hypothesis, not a source-grounded semantic rule.",
+  "admit": "UNRESOLVED"
+}

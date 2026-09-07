@@ -1,0 +1,47 @@
+{
+  "answers": [
+    {
+      "id": "T1",
+      "status": "ANSWERED",
+      "value": 15000,
+      "rationale": "award_remaining_balance records award A-101 with award_amount 50000, disbursed_total 35000, and remaining_balance 15000."
+    },
+    {
+      "id": "T2",
+      "status": "ANSWERED",
+      "value": 0,
+      "rationale": "award_match_obligation for A-102 (program SEED-FAST) records match_required as no and match_rate as 0; no cash match is required."
+    },
+    {
+      "id": "T3",
+      "status": "ANSWERED",
+      "value": {
+        "organization": "Meadow Community Trust",
+        "org_id": "ORG-MEADOW",
+        "awards": [
+          "A-101",
+          "A-103"
+        ]
+      },
+      "rationale": "Award A-101 is linked to org_id ORG-MEADOW, which organization identifies as Meadow Community Trust. The only other award for that organization is A-103."
+    },
+    {
+      "id": "T4",
+      "status": "UNRESOLVED",
+      "value": null,
+      "rationale": "A-101 is in program SEED-CORE, where cash match may be waived if a written waiver is on file. The packet does not include waiver letters, so the match obligation cannot be established confidently despite award_match_obligation listing match_required yes at rate 0.20."
+    },
+    {
+      "id": "T5",
+      "status": "UNRESOLVED",
+      "value": null,
+      "rationale": "Award A-104 carries status_code S, but status_legend_entry only defines codes A (Active) and C (Closed). S is not listed in the office legend, so its meaning cannot be interpreted."
+    },
+    {
+      "id": "T6",
+      "status": "ANSWERED",
+      "value": 15000,
+      "rationale": "Only awards with an established Active status via award_status_label are A-101 (remaining_balance 15000) and A-102 (remaining_balance 0). Awards with uninterpreted status codes (A-104, A-105) and Closed status (A-103) are excluded. Total: 15000 + 0 = 15000."
+    }
+  ]
+}

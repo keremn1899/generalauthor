@@ -1,0 +1,40 @@
+{
+  "strategy": "a1_single",
+  "trial": "R05",
+  "obligation_id": "id-06",
+  "candidate": {
+    "left": "crm:OAK-77",
+    "right": "billing:Oakfield Logistik GmbH"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row OAK-77"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Oakfield Logistik GmbH"
+    }
+  ],
+  "support_claim": "CRM row OAK-77 records the name Oakfield Logistics, commercial notes describe a rebrand between Oakfield Logistics GmbH and Oakfield Logistik GmbH with unchanged HRB 88421, and billing uses Oakfield Logistik GmbH, but no observation directly links crm:OAK-77 to billing:Oakfield Logistik GmbH.",
+  "proof_size": 1,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "justification": "Under the identity_judgment contract, SAME_ENTITY requires establishing evidence of sameness and DISTINCT requires establishing evidence of distinctness; the packet documents a rebrand and parallel CRM and billing names but never ties the CRM identifier OAK-77 to the billing referent, so neither positive nor negative burden is met.",
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

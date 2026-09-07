@@ -1,0 +1,103 @@
+{
+  "strategy": "a3_entailment",
+  "trial": "R05",
+  "obligation_id": "id-18",
+  "candidate": {
+    "left": "billing:Northbridge Analytics Inc.",
+    "right": "registry:2019-0008841"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "The packet explicitly preserves the registry link as unresolved and states that legal has not determined which registry entity is the contracting party, while no evidence establishes identity or distinctness between the Inc. billing name and the LLC registry record.",
+  "proof_size": 7,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "claims": [
+    {
+      "claim": "Billing invoices record the billed party as Northbridge Analytics Inc.",
+      "status": "ESTABLISHED",
+      "burden": "other",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/billing/invoices.json",
+          "location": "billed_name Northbridge Analytics Inc."
+        }
+      ]
+    },
+    {
+      "claim": "Registry record 2019-0008841 corresponds to NORTHBRIDGE ANALYTICS LLC in Wyoming with active status.",
+      "status": "ESTABLISHED",
+      "burden": "other",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/company_registry.csv",
+          "location": "row 2019-0008841"
+        }
+      ]
+    },
+    {
+      "claim": "A 2024 credit check returned a Wyoming LLC named Northbridge Analytics LLC.",
+      "status": "ESTABLISHED",
+      "burden": "other",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    },
+    {
+      "claim": "Legal has not determined which registry entity is the contracting party for billing:Northbridge Analytics Inc.",
+      "status": "ESTABLISHED",
+      "burden": "unresolved_preservation",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    },
+    {
+      "claim": "The packet instructs treating the registry link between billing:Northbridge Analytics Inc. and registry:2019-0008841 as unresolved.",
+      "status": "ESTABLISHED",
+      "burden": "unresolved_preservation",
+      "supporting_evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    },
+    {
+      "claim": "billing:Northbridge Analytics Inc. and registry:2019-0008841 denote the same legal counterparty.",
+      "status": "NOT_ESTABLISHED",
+      "burden": "identity",
+      "supporting_evidence": []
+    },
+    {
+      "claim": "billing:Northbridge Analytics Inc. and registry:2019-0008841 denote distinct legal counterparties.",
+      "status": "NOT_ESTABLISHED",
+      "burden": "distinctness",
+      "supporting_evidence": []
+    }
+  ],
+  "admit": {
+    "rule": "unresolved_preservation_established"
+  },
+  "oracle": "UNRESOLVED",
+  "in_oracle": true,
+  "exact": true,
+  "unsupported_closure": false,
+  "under_closure": false,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": false
+}

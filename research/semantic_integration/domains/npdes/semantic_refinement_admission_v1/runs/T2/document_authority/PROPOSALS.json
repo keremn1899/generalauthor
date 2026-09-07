@@ -1,0 +1,93 @@
+[
+  {
+    "id": "admit_issued_permit_governing_corpus",
+    "interpretation": "Each final_permit cover page defines the governing authorization corpus as the named Parts of that issued permit.",
+    "scope": "document_kind=final_permit across all three permits in inventory",
+    "epistemic_basis": "SOURCE_ESTABLISHED",
+    "exact_grounding": [
+      "documents/gcc/final_permit.txt lines 19-21",
+      "documents/farmington/final_permit.txt lines 24-25",
+      "documents/aztec/final_permit.txt lines 32-33"
+    ],
+    "semantic_delta": "Add permit_document_authority relation; map authority_role=ISSUED_GOVERNING_CORPUS for document_kind=final_permit; narrow permit_document_text_not_available unresolved to non-final_permit documents.",
+    "admit": true,
+    "remaining_uncertainty": "Does not resolve every narrative condition inside permit Parts; only establishes which document corpus governs."
+  },
+  {
+    "id": "admit_incorporated_appendix_authority",
+    "interpretation": "part_ii_appendix and part_iv files are binding only as incorporated adjuncts referenced from the issued permit, not as standalone authorization.",
+    "scope": "document_kind in (part_ii_appendix, part_iv)",
+    "epistemic_basis": "SOURCE_ESTABLISHED",
+    "exact_grounding": [
+      "documents/gcc/final_permit.txt lines 149-150",
+      "documents/farmington/final_permit.txt line 316",
+      "documents/farmington/final_permit.txt lines 24-25"
+    ],
+    "semantic_delta": "Add permit_document_authority relation; map authority_role=INCORPORATED_BY_REFERENCE for document_kind in (part_ii_appendix, part_iv).",
+    "admit": true,
+    "remaining_uncertainty": "Specific appendix content must still be read from permit Parts; incorporation does not auto-materialize every narrative condition."
+  },
+  {
+    "id": "admit_supporting_package_non_governing",
+    "interpretation": "Fact sheets, statements of basis, and reasonable-potential files are explanatory or calculation-support package material that defers enforceable limitations to the issued permit.",
+    "scope": "document_kind in (fact_sheet, statement_of_basis, reasonable_potential)",
+    "epistemic_basis": "SOURCE_ESTABLISHED",
+    "exact_grounding": [
+      "documents/gcc/fact_sheet.txt line 191",
+      "documents/gcc/fact_sheet.txt lines 504-506",
+      "documents/aztec/statement_of_basis.txt lines 556-558",
+      "documents/aztec/reasonable_potential.txt lines 12-13",
+      "documents/farmington/statement_of_basis.txt lines 1-3"
+    ],
+    "semantic_delta": "Add permit_document_authority relation; map authority_role=SUPPORTING_EXPLANATORY for document_kind in (fact_sheet, statement_of_basis, reasonable_potential).",
+    "admit": true,
+    "remaining_uncertainty": "Supporting documents may still contain condition-relevant facts (e.g., discharge occurrence triggers) that must be read from governing permit Parts for Purposes B and C."
+  },
+  {
+    "id": "admit_filename_kind_not_authority",
+    "interpretation": "Inventory document_kind and filename are not a precedence hierarchy; document text governs authority and classification.",
+    "scope": "all twelve inventoried documents",
+    "epistemic_basis": "SOURCE_ESTABLISHED",
+    "exact_grounding": [
+      "documents/farmington/statement_of_basis.txt lines 1-3",
+      "sources/document_inventory.json",
+      "no kind-ranking text in documents/"
+    ],
+    "semantic_delta": "Record authority_role=KIND_LABEL_ONLY for all permit_document rows; do not interpret document_kind as binding precedence.",
+    "admit": true,
+    "remaining_uncertainty": "Does not establish a general EPA-wide rule; corpus-local observation only."
+  },
+  {
+    "id": "withhold_global_kind_precedence_rule",
+    "interpretation": "NPDES permit packages universally rank document kinds (final_permit > fact_sheet > statement_of_basis > reasonable_potential) for conflict resolution.",
+    "scope": "WORLD",
+    "epistemic_basis": "MODEL_GENERALIZATION",
+    "exact_grounding": "none in workspace",
+    "semantic_delta": "none",
+    "admit": false,
+    "remaining_uncertainty": "Would require corpus-wide or regulatory text licensing a global kind hierarchy."
+  },
+  {
+    "id": "withhold_explicit_conflict_clause_necessity",
+    "interpretation": "Without an explicit 'in the event of conflict' clause, no functional precedence exists among package documents.",
+    "scope": "corpus_local",
+    "epistemic_basis": "MODEL_GENERALIZATION",
+    "exact_grounding": "issued-permit self-definition and draft/proposed framing refute total unknowability",
+    "semantic_delta": "none",
+    "admit": false,
+    "remaining_uncertainty": "Functional precedence from issued-permit self-definition is source-established; absence of named conflict clause is not total absence of precedence."
+  },
+  {
+    "id": "defer_minor_modification_authority",
+    "interpretation": "documents/gcc/minor_modification.txt governs or amends documents/gcc/final_permit.txt.",
+    "scope": "document_kind=minor_modification, permit NM0000116",
+    "epistemic_basis": "UNRESOLVED",
+    "exact_grounding": [
+      "documents/gcc/minor_modification.txt lines 1-9",
+      "no incorporation reference in documents/gcc/final_permit.txt"
+    ],
+    "semantic_delta": "none",
+    "admit": false,
+    "remaining_uncertainty": "Requires workspace text linking minor_modification to issued permit incorporation or supersession."
+  }
+]

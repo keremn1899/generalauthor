@@ -1,0 +1,40 @@
+{
+  "answers": [
+    {
+      "id": "Q1",
+      "status": "ANSWERED",
+      "value": 240,
+      "rationale": "J1 has service_code TOW with billed_hours 4 on 2024-06-03. rate_card.csv lists TOW at 240 per hour, and no service_conditions override applies (not overtime, STBY, or ASST)."
+    },
+    {
+      "id": "Q2",
+      "status": "ANSWERED",
+      "value": 180,
+      "rationale": "J4 has service_code ASST. service_conditions.txt section 4 requires ASST jobs to be billed using the ESCORT rate_card row, not the ASST row. rate_card.csv lists ESCORT at 180 per hour."
+    },
+    {
+      "id": "Q3",
+      "status": "ANSWERED",
+      "value": 1,
+      "rationale": "service_conditions.txt section 5 states blank billed_hours is not an established billable quantity. In jobs.csv, only J6 has a blank billed_hours field; all other jobs have a numeric value."
+    },
+    {
+      "id": "Q4",
+      "status": "ANSWERED",
+      "value": 2280,
+      "rationale": "J2 has service_code TOW with billed_hours 9 on a single calendar day (2024-06-03). Base rate is 240/hour. service_conditions.txt section 2 applies 1.5x to hours beyond 8: (8 \u00d7 240) + (1 \u00d7 240 \u00d7 1.5) = 1920 + 360 = 2280."
+    },
+    {
+      "id": "Q5",
+      "status": "UNRESOLVED",
+      "value": null,
+      "rationale": "service_conditions.txt section 6 states fuel surcharges are published in a separate circular and that this excerpt does not contain a fuel schedule. No fuel surcharge amount for J3 appears in the evidence packet."
+    },
+    {
+      "id": "Q6",
+      "status": "UNRESOLVED",
+      "value": null,
+      "rationale": "J7 is a TOW at berth B12 starting at 20:00 on 2024-06-05, which is after 18:00. berth_notice.txt requires a documented emergency for commercial towing at B12 after 18:00, but states no emergency log is attached and documentation is held by the night desk. The packet does not establish whether documented emergency authorization exists."
+    }
+  ]
+}

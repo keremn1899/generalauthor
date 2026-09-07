@@ -1,0 +1,89 @@
+{
+  "strategy": "a6_multistep",
+  "trial": "R04",
+  "obligation_id": "id-10",
+  "candidate": {
+    "left": "billing:Vellum Print Co Ltd",
+    "right": "contract:SOW-VEL-2022"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Vellum Print Co Ltd"
+    },
+    {
+      "source_path": "sources/contracts/SOW-VEL-2022.md",
+      "location": "header"
+    },
+    {
+      "source_path": "relation_contract.json",
+      "location": "grounding_contract"
+    }
+  ],
+  "support_claim": "Both sources mention the name Vellum Print Co Ltd, but the packet provides no legal identifier or explicit identity link, so neither same-entity nor distinctness is established.",
+  "proof_size": 6,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "steps": [
+    {
+      "fact": "Left referent is billing:Vellum Print Co Ltd.",
+      "grounding": {
+        "source_path": "candidate.json",
+        "location": "left"
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "Right referent is contract:SOW-VEL-2022.",
+      "grounding": {
+        "source_path": "candidate.json",
+        "location": "right"
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "Billing records list billed_name as Vellum Print Co Ltd.",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "SOW-VEL-2022 names Counterparty as Vellum Print Co Ltd.",
+      "grounding": {
+        "source_path": "sources/contracts/SOW-VEL-2022.md",
+        "location": "header"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "The packet supplies no legal identifier, explicit mapping, or other identity-establishing evidence linking the two referents; shared name text alone is insufficient under the grounding contract.",
+      "grounding": {
+        "source_path": "relation_contract.json",
+        "location": "grounding_contract"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "The packet supplies no evidence establishing that the referents denote distinct legal counterparties.",
+      "grounding": null,
+      "mechanical": false
+    }
+  ],
+  "admit": {
+    "rule": "unresolved"
+  },
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": false,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

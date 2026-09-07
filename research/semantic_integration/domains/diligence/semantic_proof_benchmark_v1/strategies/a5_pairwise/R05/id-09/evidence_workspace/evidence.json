@@ -1,0 +1,58 @@
+{
+  "propositions": [
+    {
+      "proposition": "CRM record VEL-19 lists the account name as \"Vellum Print Co\" with domain vellumprint.co.uk, country GB, contact R. Shaw, and status churned.",
+      "source_grounding": {
+        "source_path": "sources/crm.csv",
+        "location": "row VEL-19"
+      },
+      "establishes": "other",
+      "relevance": "Grounds the left referent crm:VEL-19 to the CRM account named \"Vellum Print Co\", not to \"Vellum Print Co Ltd\"."
+    },
+    {
+      "proposition": "Billing records use the billed name \"Vellum Print Co Ltd\".",
+      "source_grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      },
+      "establishes": "other",
+      "relevance": "Grounds the right referent billing:Vellum Print Co Ltd to the legal billing name appearing in invoices."
+    },
+    {
+      "proposition": "Commercial notes state that \"Vellum Print Co\" dissolved, with last paid invoice in 2024-Q3 and the SOW expired at the end of 2023.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "other",
+      "relevance": "Provides operational context for an entity named \"Vellum Print Co\" but does not link that entity to VEL-19 or to the billing name \"Vellum Print Co Ltd\"."
+    },
+    {
+      "proposition": "The CRM account name for VEL-19 is \"Vellum Print Co\" while the billing billed name is \"Vellum Print Co Ltd\" — a name variant, not an explicit identity assertion.",
+      "source_grounding": {
+        "source_path": "sources/crm.csv",
+        "location": "row VEL-19"
+      },
+      "establishes": "unresolved_preservation",
+      "relevance": "Name similarity between the two referents is compatible but does not establish that crm:VEL-19 and billing:Vellum Print Co Ltd denote the same legal counterparty."
+    },
+    {
+      "proposition": "No selected observation explicitly states that CRM record VEL-19 corresponds to the billing entity \"Vellum Print Co Ltd\".",
+      "source_grounding": {
+        "source_path": "sources/crm.csv",
+        "location": "row VEL-19"
+      },
+      "establishes": "unresolved_preservation",
+      "relevance": "The identity burden for SAME_ENTITY is not met; the packet preserves the candidate relation without establishing identity."
+    },
+    {
+      "proposition": "No selected observation explicitly states that CRM record VEL-19 and the billing entity \"Vellum Print Co Ltd\" are distinct legal counterparties.",
+      "source_grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Vellum Print Co Ltd"
+      },
+      "establishes": "unresolved_preservation",
+      "relevance": "The distinctness burden for DISTINCT is not met; absence of identity evidence does not establish distinctness."
+    }
+  ]
+}

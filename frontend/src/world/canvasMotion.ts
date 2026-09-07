@@ -20,6 +20,7 @@ import {
   staggerWaves,
   type MotionPlan,
 } from "../styles/motion";
+import { g6KeyframeMotion } from "../styles/motionG6";
 
 export type CanvasDatum = {
   id: string;
@@ -163,7 +164,7 @@ function edgeUpdateAnimation(keyPlan: MotionPlan, labelPlan = keyPlan) {
         // a label is read rather than lit, so it states its arrival at `emit`
         // while the filament under it releases at whatever the stage is.
         {
-          fields: ["opacity"],
+          fields: ["opacity", "fill"],
           shape: "label",
           ...planOptions(labelPlan),
         },
@@ -226,6 +227,287 @@ function reducedMotion(): boolean {
   } catch {
     return false;
   }
+}
+
+/**
+ * The live element behind an id, for a frame that must repaint without a draw.
+ *
+ * `graph.draw()` is what makes a redraw expensive: with any update animation
+ * declared it builds a Web Animation for *every* element on the field,
+ * whether or not that element changed — measured at ~2.5ms per element on top
+ * of a ~110ms floor, against ~0.2ms per element for the paint itself. A hover
+ * changes what a handful of marks look like, so it goes to the elements
+ * directly, the same renderer boundary a drag already reaches through to
+ * restation a plate.
+ */
+type LiveShape = {
+  nodeName?: string;
+  style?: Record<string, unknown>;
+  animate: (
+    keyframes: Record<string, unknown>[],
+    options: Record<string, unknown>,
+  ) => { cancel: () => void } | null;
+};
+
+type LiveElement = {
+  update: (attributes: Record<string, unknown>) => void;
+  /** The label's own drawn parts: its text, and the plate behind it. */
+  labelParts: () => LiveShape[];
+};
+
+function liveElement(graph: Graph, id: string): LiveElement | null {
+  const context = (
+    graph as unknown as {
+      context?: { element?: { getElement: (id: string) => unknown } };
+    }
+  ).context;
+  const element = context?.element?.getElement(id);
+  if (!element || typeof element !== "object") return null;
+  const live = element as {
+    update?: (attributes: Record<string, unknown>) => void;
+    getShape?: (name: string) => unknown;
+    destroyed?: boolean;
+  };
+  if (live.destroyed || typeof live.update !== "function") return null;
+  // `update` reaches other element methods through `this`; handing back the
+  // bare method detaches it and a filament throws while an isolated disc
+  // appears to work. Preserve the receiver at this one boundary.
+  return {
+    update: live.update.bind(element),
+    labelParts: () => {
+      if (typeof live.getShape !== "function") return [];
+      let shape: unknown = null;
+      // A label G6 has not built yet — an element whose name has never been
+      // shown — is not an error, it is a shape that does not exist to fade.
+      try {
+        shape = live.getShape.call(element, "label");
+      } catch {
+        return [];
+      }
+      const children = (shape as { children?: unknown[] } | null)?.children;
+      if (!Array.isArray(children)) return [];
+      return children.filter(
+        (child): child is LiveShape =>
+          Boolean(child) &&
+          typeof (child as LiveShape).animate === "function",
+      );
+    },
+  };
+}
+
+/**
+ * One drawn part of a label, faded, interrupting whatever it was doing.
+ *
+ * The restyle lane exists because `graph.draw()` builds an update animation
+ * for every element on the field in order to express a change on one, and a
+ * hover changes one. The cost of taking that lane was that the channel this
+ * surface changes most often — whether a filament is carrying its name —
+ * started arriving as a cut, because G6's declared update animation is a
+ * property of a draw and there is no draw here.
+ *
+ * *Part*, not the label. A G6 label is a composite of a text and the plate
+ * behind it, and animating the composite's opacity looks right until a fade is
+ * interrupted: the cascade re-drives the text and abandons the plate wherever
+ * the cancelled animation last left it. What stayed on the field was a
+ * background-coloured rectangle sitting across the filament — a gap in a
+ * stroke that was still whole underneath, which only the next full draw
+ * cleared. Driving each part explicitly is what makes an interruption total.
+ *
+ * It is `emit` for the same reason it was `emit` on the draw path: a name is a
+ * body leaving its home, and the reader's pointer is what spent the impulse.
+ */
+const fadingLabels = new WeakMap<object, { cancel: () => void }>();
+
+function fadeLabel(shape: LiveShape, from: number, to: number, plan: MotionPlan) {
+  fadingLabels.get(shape)?.cancel();
+  fadingLabels.delete(shape);
+  if (!Number.isFinite(from) || !Number.isFinite(to) || from === to) return;
+  try {
+    const running = shape.animate(
+      [{ opacity: from }, { opacity: to }],
+      g6KeyframeMotion(plan),
+    );
+    if (running) fadingLabels.set(shape, running);
+  } catch {
+    // The nucleation race the stations and contact both hit: a shape whose
+    // layout has not happened cannot be animated. `update` has already written
+    // the destination, so the honest failure is to be there without the
+    // travel.
+  }
+}
+
+/**
+ * Where a label part is going, which only the frame can say.
+ *
+ * Not the shape: while an animation stands on a part, reading its opacity back
+ * gives the animated value rather than the destination, so a fade that asked
+ * the shape where it had just been sent was told "where you already are" and
+ * declined to move. The frame's own delta is the only honest answer.
+ */
+function partDestination(
+  part: LiveShape,
+  delta: Record<string, unknown>,
+): number {
+  const key =
+    part.nodeName === "text" ? "labelOpacity" : "labelBackgroundOpacity";
+  return key in delta ? Number(delta[key]) : Number.NaN;
+}
+
+/** Style keys that changed, or null when this frame is not a pure restyle. */
+function styleDelta(
+  before: Record<string, unknown> | undefined,
+  after: Record<string, unknown> | undefined,
+): Record<string, unknown> | null {
+  const previous = before ?? {};
+  const next = after ?? {};
+  // A key the last frame wrote and this one does not is a default coming back,
+  // and `update` has no way to say "unset". No builder in `marks.ts` omits a
+  // key it ever writes, so this is a guard against a future one rather than a
+  // case in hand — and refusing the fast lane is the cheap way to be right.
+  for (const key of Object.keys(previous)) {
+    if (!(key in next)) return null;
+  }
+  const delta: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(next)) {
+    if (!Object.is(previous[key], value)) delta[key] = value;
+  }
+  return delta;
+}
+
+/**
+ * Take a frame that only changes how standing marks look.
+ *
+ * This is the hover and naming path, and it is the common one: light lifting
+ * from the pointer, a name arriving on a bond, a plate restationing to the end
+ * a person is reading from. Nothing is born, nothing dies, and
+ * `marksNeverMove` means nothing is anywhere new — so there is no lifecycle to
+ * author and no reason to hand the whole field to G6 again.
+ *
+ * `authored` is the frame this canvas last drew, not `graph.getNodeData()`.
+ * The store is the renderer's copy and it carries the renderer's own
+ * bookkeeping — `zIndex` is written into every stored datum during a draw —
+ * so diffing against it reports keys vanishing that the canvas never wrote.
+ * Comparing what was authored with what is being authored is also what makes
+ * the missing-key guard mean something.
+ *
+ * The store is still updated alongside the paint. `updateNodeData` costs half
+ * a millisecond across a field and does not repaint on its own, which is the
+ * split wanted here: `graph.getNodeData()` keeps telling the truth for the
+ * next real transition to diff against, and the pixels come from the elements.
+ *
+ * Returns false when the frame is anything more than a restyle, and the caller
+ * falls through to the authored lifecycle.
+ */
+export function restyleCanvasData(
+  graph: Graph,
+  authored: CanvasData | null,
+  next: CanvasData,
+  options: {
+    /** Absent means land on the new opacity outright — reduced motion. */
+    labelPlan?: MotionPlan;
+  } = {},
+): boolean {
+  if (!authored) return false;
+  if (
+    authored.nodes.length !== next.nodes.length ||
+    authored.edges.length !== next.edges.length
+  ) {
+    return false;
+  }
+
+  const standingNodes = new Map(authored.nodes.map((node) => [node.id, node]));
+  const standingEdges = new Map(authored.edges.map((edge) => [edge.id, edge]));
+  const nodePatches: CanvasDatum[] = [];
+  const edgePatches: CanvasDatum[] = [];
+  const paint: {
+    id: string;
+    delta: Record<string, unknown>;
+    labelWas: unknown;
+  }[] = [];
+
+  for (const node of next.nodes) {
+    const standing = standingNodes.get(node.id);
+    if (!standing) return false;
+    // A mark that is somewhere new is an arrangement, and a body moving to a
+    // new rest is `settle` rather than a repaint. Let it through here and the
+    // field would teleport.
+    if (
+      !Object.is(standing.style?.x, node.style?.x) ||
+      !Object.is(standing.style?.y, node.style?.y)
+    ) {
+      return false;
+    }
+    const delta = styleDelta(standing.style, node.style);
+    if (!delta) return false;
+    if (Object.keys(delta).length === 0) continue;
+    nodePatches.push(node);
+    paint.push({
+      id: node.id,
+      delta,
+      labelWas: standing.style?.labelOpacity,
+    });
+  }
+
+  for (const edge of next.edges) {
+    const standing = standingEdges.get(edge.id);
+    if (!standing) return false;
+    if (
+      !Object.is(standing.source, edge.source) ||
+      !Object.is(standing.target, edge.target)
+    ) {
+      return false;
+    }
+    const delta = styleDelta(standing.style, edge.style);
+    if (!delta) return false;
+    if (Object.keys(delta).length === 0) continue;
+    edgePatches.push(edge);
+    paint.push({
+      id: edge.id,
+      delta,
+      labelWas: standing.style?.labelOpacity,
+    });
+  }
+
+  // Nothing to say. The frame is still handled — a draw would have been a
+  // whole field of animations set up to express no change at all.
+  if (!paint.length) return true;
+
+  if (nodePatches.length) graph.updateNodeData(nodePatches as never);
+  if (edgePatches.length) graph.updateEdgeData(edgePatches as never);
+  for (const { id, delta, labelWas } of paint) {
+    const element = liveElement(graph, id);
+    // The store is already correct; an element G6 has not built yet will be
+    // built from it. Nothing to repaint, nothing to fall back for.
+    if (!element) continue;
+    const plan = options.labelPlan;
+    const fading =
+      plan !== undefined && naming(delta) ? element.labelParts() : [];
+    // Read before the update, not after: `update` writes the destination, and
+    // an interrupted fade has to resume from where the eye last saw it rather
+    // than from where the last settled frame claimed it was.
+    const travel = fading.map((part) => ({
+      part,
+      from: liveOpacity(part, labelWas),
+      to: partDestination(part, delta),
+    }));
+    element.update(delta);
+    if (plan === undefined) continue;
+    for (const { part, from, to } of travel) fadeLabel(part, from, to, plan);
+  }
+  return true;
+}
+
+/** What the eye is seeing now, falling back to the last settled frame. */
+function liveOpacity(shape: LiveShape, standing: unknown): number {
+  const live = Number(shape.style?.opacity);
+  if (Number.isFinite(live)) return live;
+  const last = Number(standing ?? 0);
+  return Number.isFinite(last) ? last : 0;
+}
+
+/** Whether this frame changes whether a name is showing at all. */
+function naming(delta: Record<string, unknown>): boolean {
+  return "labelOpacity" in delta || "labelBackgroundOpacity" in delta;
 }
 
 /**

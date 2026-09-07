@@ -1,0 +1,76 @@
+{
+  "strategy": "a6_multistep",
+  "trial": "R04",
+  "obligation_id": "id-15",
+  "candidate": {
+    "left": "crm:HEL-441",
+    "right": "registry:11847299"
+  },
+  "proposed_disposition": "DISTINCT",
+  "final_disposition": "DISTINCT",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row HEL-441"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 11847299"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "CRM HEL-441 denotes Helion Robotics Ltd, registry 11847299 denotes HELION INDUSTRIAL SYSTEMS LTD, and the commercial notes explicitly state those are different companies.",
+  "proof_size": 4,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "steps": [
+    {
+      "fact": "Referent crm:HEL-441 is recorded as Helion Robotics Ltd in the CRM.",
+      "grounding": {
+        "source_path": "sources/crm.csv",
+        "location": "row HEL-441"
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "Referent registry:11847299 is recorded as HELION INDUSTRIAL SYSTEMS LTD in the company registry.",
+      "grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847299"
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "Commercial notes state that Helion Robotics Ltd (the CRM operating name) and Helion Industrial Systems Ltd are not the same legal entity; Helion Industrial Systems Ltd is explicitly described as a different company.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "The company name Helion Industrial Systems Ltd in the commercial notes corresponds to the entity denoted by registry:11847299 (HELION INDUSTRIAL SYSTEMS LTD) as given by the registry row selected for that referent.",
+      "grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847299"
+      },
+      "mechanical": true
+    }
+  ],
+  "admit": {
+    "rule": "steps_grounded"
+  },
+  "oracle": "DISTINCT",
+  "in_oracle": true,
+  "exact": true,
+  "unsupported_closure": false,
+  "under_closure": false,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": false
+}

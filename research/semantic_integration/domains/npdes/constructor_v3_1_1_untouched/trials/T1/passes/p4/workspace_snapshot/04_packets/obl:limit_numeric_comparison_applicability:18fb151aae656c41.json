@@ -1,0 +1,26 @@
+{
+  "obligation_id": "obl:limit_numeric_comparison_applicability:18fb151aae656c41",
+  "selected_observations": [
+    {
+      "source_path": "sources/structured/dmr_measurements.csv",
+      "location": "line 446; DMR_EVENT_ID=3621391572; DMR_VALUE_ID=3847188387",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0020583; PERM_FEATURE_NMBR=001; PARAMETER_CODE=00310; PARAMETER_DESC=BOD, 5-day, 20 deg. C; MONITORING_PERIOD_END_DATE=05/31/2025; DMR_EVENT_ID=3621391572; DMR_VALUE_ID=3847188387; DMR_VALUE_NMBR=222; DMR_UNIT_CODE=26; DMR_VALUE_QUALIFIER_CODE==; STATISTICAL_BASE_CODE=7A; NODI_CODE=(absent)"
+    },
+    {
+      "source_path": "sources/structured/permit_limits.csv",
+      "location": "line 2; limit:3606239979:3610673284",
+      "excerpt": "LIMIT_ID=3606239979; LIMIT_VALUE_ID=3610673284; LIMIT_VALUE_NMBR=1669; LIMIT_UNIT_CODE=26; STATISTICAL_BASE_CODE=3C; LIMIT_VALUE_TYPE_CODE=Q1; LIMIT_TYPE_CODE=ENF; OPTIONAL_MONITORING_FLAG=N; LIMIT_FREQ_OF_ANALYSIS_CODE=05/WK"
+    },
+    {
+      "source_path": "sources/structured/permit_limits.csv",
+      "location": "line 3; limit:3606239979:3610673282",
+      "excerpt": "LIMIT_ID=3606239979; LIMIT_VALUE_ID=3610673282; LIMIT_VALUE_NMBR=30; LIMIT_UNIT_CODE=19; STATISTICAL_BASE_CODE=3C; LIMIT_VALUE_TYPE_CODE=C2; LIMIT_TYPE_CODE=ENF; OPTIONAL_MONITORING_FLAG=N; LIMIT_FREQ_OF_ANALYSIS_CODE=05/WK"
+    }
+  ],
+  "selection_rationale": "Classification depends on a selected applicable limit; blocked until applicable_limit_selection resolves. Includes LIMIT_TYPE_CODE and OPTIONAL_MONITORING_FLAG from joined limit schedule rows for enforceable-vs-report-only classification.",
+  "known_missing_information": [
+    "02_mechanical_world/world.sqlite not present in workspace; evidence selected directly from structured CSV sources using P2 join rules.",
+    "Permit PDF sources listed in sources/source_manifest.json were not ingested; permit_stated_condition packets use structured DMR_COMMENT_TEXT only.",
+    "No unique applicable limit selected yet; LIMIT_TYPE_CODE and OPTIONAL_MONITORING_FLAG interpretation is candidate-relative."
+  ]
+}

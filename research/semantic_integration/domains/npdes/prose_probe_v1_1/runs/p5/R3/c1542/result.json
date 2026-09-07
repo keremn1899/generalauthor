@@ -1,0 +1,42 @@
+{
+  "payload": [
+    {
+      "obligation_id": "R3/c1542",
+      "relation": "probe_obligation",
+      "values": [
+        "Outfalls 001 limits table column headers distinguishing lbs/day vs mg/l and 30-Day Avg vs Daily Max",
+        "Adjacent pollutant rows in the same table that use Report, N/A, and *** in limitation columns",
+        "Flow row monitoring requirements (1/Day frequency, Estimate sample type)"
+      ],
+      "disposition": "UNRESOLVED",
+      "grounding": [
+        {
+          "source_path": "gcc/final_permit.pdf",
+          "location": "Page: 3, Section: part_i, Outfalls 001 limits table, Flow row",
+          "excerpt": "Flow                     Report MGD        Report MGD        ***               ***                1/Day        Estimate"
+        },
+        {
+          "source_path": "gcc/final_permit.pdf",
+          "location": "adjacent pages around 3, Outfalls 001 limits table column headers",
+          "excerpt": "EFFLUENT                             MINIMUM              MAXIMUM                       FREQUENCY    SAMPLE TYPE\nPOLLUTANT       30-Day Avg      Daily Max       30-Day Avg   Daily Max"
+        },
+        {
+          "source_path": "gcc/final_permit.pdf",
+          "location": "adjacent pages around 3, Outfalls 001 limits table adjacent pollutant rows",
+          "excerpt": "pH                                   6.0                  9.0                           1/Day        Grab\n...\nTotal Suspended          N/A               N/A               Report            50                 1/Week               Grab\nSolids\nTotal Aluminum           0.78              0.78              0.75              0.75               1/Week               Grab\nTotal Copper             N/A               N/A               0.011             0.011              1/Week               Grab\nDissolved Copper         N/A               N/A               Report            Report             1/Week               Grab"
+        },
+        {
+          "source_path": "gcc/final_permit.pdf",
+          "location": "adjacent pages around 3, footnote (1)",
+          "excerpt": "(1) See Part II.B. for best management practices and discharge restrictions."
+        },
+        {
+          "source_path": "04_packets/R3_c1542.json",
+          "location": "known_missing_information",
+          "excerpt": "Packet is auto-assembled from the nominated passage; it may be evidence-insufficient."
+        }
+      ],
+      "rationale": "The Flow row at Outfall 001 shows non-numeric limitation entries ('Report MGD' in both lbs/day columns and '***' in both mg/l columns) alongside separate monitoring requirements (1/Day, Estimate), and adjacent pollutant rows contrast numeric limits (e.g., pH 6.0\u20139.0, Total Aluminum 0.78) with Report/N/A/*** patterns. This table-local evidence is consistent with a reporting-only treatment for flow in these cells, but it does not establish the full proposition that no enforceable numeric discharge limit applies to flow anywhere in the permit. Footnote (1) cross-references Part II.B for discharge restrictions, which is not included in the packet and could impose flow-related limits outside this table. The packet provides no footnote defining '***', and known_missing_information flags the assembly as potentially evidence-insufficient. Neither ACCEPT (establishing no enforceable numeric limit and reporting-only exceedance treatment) nor REJECT (establishing that such a limit exists or that the entries foreclose reporting-only treatment) is grounded by the available evidence, so UNRESOLVED is the correct disposition."
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "current_interpretation": "Permit package documents are inventoried in permit_document with filename, document_kind, byte size, and sha256 hash. No document body text is available in structured sources. The draft declares permit_document_text_not_available as explicitly unresolved rather than inferring narrative permit conditions or ranking document kinds (final_permit, fact_sheet, statement_of_basis, reasonable_potential, minor_modification) by filename alone.",
+  "status": "EXPLICIT_UNRESOLVED",
+  "why_it_matters": "Purposes B and C may depend on narrative permit conditions—discharge-dependent monitoring, special studies, or explanations of missing data—that are not represented in dmr_measurements.csv or permit_limits.csv. Without document text or an authority rule, the analysis cannot establish what those conditions require or which document would govern if text were present.",
+  "supporting_evidence_used": [
+    "ISSUES.md section document_authority",
+    "purposes/visible_b.md",
+    "purposes/visible_c.md",
+    "construction.py: permit_document relation and document inventory mapping (lines 176-186, 283-294)",
+    "construction.py: permit_document_text_not_available unresolved declaration (lines 634-641)",
+    "ISSUES.md: document_inventory.json fields; 12 inventoried documents; 1 explicit unresolved"
+  ],
+  "evidence_snippets_used": [
+    "document_kind=final_permit",
+    "document_kind=fact_sheet",
+    "document_kind=statement_of_basis",
+    "document_kind=reasonable_potential",
+    "document_kind=minor_modification"
+  ],
+  "contracts_involved": [
+    "world.map(permit_document, grounding=document_inventory.json)",
+    "purpose.unresolved(permit_document_text_not_available, relation=permit_document, subject source=document_inventory.json)",
+    "permit_document relation fields: document_kind, filename, bytes (no text body)"
+  ],
+  "alternatives_considered": [
+    "Treat final_permit document_kind as authoritative over fact_sheet or statement_of_basis when text is unavailable",
+    "Infer hierarchy among document kinds from filename labels alone",
+    "Leave all narrative permit conditions unresolved until document text is available (current draft choice)"
+  ],
+  "affected_computations": [
+    "permit_document (12 rows)",
+    "permit_document_text_not_available (1 EXPLICIT_UNRESOLVED covering the inventoried document set)"
+  ],
+  "remaining_uncertainty": "Which document would be authoritative if text were present; whether filename kinds imply hierarchy."
+}

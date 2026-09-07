@@ -1,0 +1,75 @@
+{
+  "part": "B",
+  "domain": "harbor_towing",
+  "arm": "A0",
+  "trial": "P1",
+  "status": "ANSWERED",
+  "reported_model": "Composer 2.5",
+  "tools": {
+    "tool_calls_started": 12,
+    "shell_calls": 3,
+    "read_calls": 6,
+    "write_calls": 0,
+    "python_executions_guess": 3,
+    "mentioned_paths": [
+      "/tmp/world-experiment/world-read-programming-v1/365f096597dc53d58ebefd3a0970cc71/PROGRAMMER.md",
+      "/tmp/world-experiment/world-read-programming-v1/365f096597dc53d58ebefd3a0970cc71/PURPOSE.txt",
+      "/tmp/world-experiment/world-read-programming-v1/365f096597dc53d58ebefd3a0970cc71/TASKS.md",
+      "/tmp/world-experiment/world-read-programming-v1/365f096597dc53d58ebefd3a0970cc71/inspect_world.py",
+      "/tmp/world-experiment/world-read-programming-v1/365f096597dc53d58ebefd3a0970cc71",
+      "inspect_world.py",
+      "/tmp/world-experiment/world-read-programming-v1/365f096597dc53d58ebefd3a0970cc71/taskview/README.md",
+      "/tmp/world-experiment/world-read-programming-v1/365f096597dc53d58ebefd3a0970cc71",
+      "/",
+      "/",
+      "/tmp/world-experiment/world-read-programming-v1/365f096597dc53d58ebefd3a0970cc71/taskview/agent_surface.py",
+      "/tmp/world-experiment/world-read-programming-v1/365f096597dc53d58ebefd3a0970cc71",
+      "/",
+      "/",
+      "/tmp/world-experiment/world-read-programming-v1/365f096597dc53d58ebefd3a0970cc71/answers.json"
+    ]
+  },
+  "exploration": {
+    "reads": [
+      "/tmp/world-experiment/world-read-programming-v1/365f096597dc53d58ebefd3a0970cc71/PROGRAMMER.md",
+      "/tmp/world-experiment/world-read-programming-v1/365f096597dc53d58ebefd3a0970cc71/PURPOSE.txt",
+      "/tmp/world-experiment/world-read-programming-v1/365f096597dc53d58ebefd3a0970cc71/TASKS.md",
+      "/tmp/world-experiment/world-read-programming-v1/365f096597dc53d58ebefd3a0970cc71/inspect_world.py",
+      "/tmp/world-experiment/world-read-programming-v1/365f096597dc53d58ebefd3a0970cc71/taskview/README.md",
+      "/tmp/world-experiment/world-read-programming-v1/365f096597dc53d58ebefd3a0970cc71/taskview/agent_surface.py"
+    ],
+    "writes": [],
+    "shells": [
+      "cd /tmp/world-experiment/world-read-programming-v1/365f096597dc53d58ebefd3a0970cc71 && python3 inspect_world.py",
+      "cd /tmp/world-experiment/world-read-programming-v1/365f096597dc53d58ebefd3a0970cc71 && python3 << 'PY'\nimport json\nimport sys\nfrom pathlib import Path\n\nROOT = Path('.').resolve()\nsys.path.insert(0, str(ROOT))\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\n\ndb = ROOT / \"world\" / \"world.sqlite\"\nworld = ConstructionWorld.open(db)\n\nqueries = {\n    \"vessel\": \"SELECT * FROM vessel\",\n    \"tow_job\": \"SELECT * FROM tow_job\",\n    \"job_charge\": \"SELECT * FROM job_charge\",\n    ",
+      "cd /tmp/world-experiment/world-read-programming-v1/365f096597dc53d58ebefd3a0970cc71 && python3 << 'PY'\nimport json\nimport sys\nfrom pathlib import Path\n\nROOT = Path('.').resolve()\nsys.path.insert(0, str(ROOT))\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\n\ndb = ROOT / \"world\" / \"world.sqlite\"\nworld = ConstructionWorld.open(db)\n\n# P1\np1 = world.query_semantic(\"\"\"\nSELECT t.vessel_id, SUM(jc.charge) AS total_established_charges\nFROM tow_job t\nJOIN job_charge jc ON jc.j"
+    ],
+    "n_reads": 6,
+    "n_writes": 0,
+    "n_shells": 3
+  },
+  "surface": {
+    "n_reads": 6,
+    "n_shells": 3,
+    "n_writes": 0,
+    "catalog_calls": 1,
+    "schema_inspections": 0,
+    "select_count": 4,
+    "join_count": 0,
+    "cte_count": 0,
+    "query_semantic_count": 1,
+    "inspect_world_calls": 1,
+    "raw_source_reads": [],
+    "n_sql_hint": 5
+  },
+  "initial_context": {
+    "initial_context_bytes": 1771,
+    "contract_bytes": 0,
+    "tasks_bytes": 557,
+    "purpose_bytes": 196
+  },
+  "world_hashes": {
+    "harbor_towing": "e653bd02b174a30015f2c58685cc86627cb117c36065f0069717bbc926b9d129"
+  },
+  "finished_at": "2026-09-06T09:50:08.413260+00:00"
+}

@@ -1,0 +1,64 @@
+{
+  "steps": [
+    {
+      "fact": "The identity judgment compares left referent crm:MER-55 against right referent billing:Meridian Energy Partners LLC.",
+      "grounding": null,
+      "mechanical": true
+    },
+    {
+      "fact": "CRM row MER-55 lists the account name as Meridian Energy Partners (no LLC suffix).",
+      "grounding": {
+        "source_path": "sources/crm.csv",
+        "location": "row MER-55"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Billing records the billed name as Meridian Energy Partners LLC.",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Meridian Energy Partners LLC"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Commercial notes state that Meridian Energy Partners invoices are the advisory retainer under MSA-MER-2024.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "No selected observation supplies a shared legal identifier, an explicit MER-55-to-billing mapping, or a packet statement that the CRM account and billed name denote the same legal counterparty.",
+      "grounding": null,
+      "mechanical": true
+    },
+    {
+      "fact": "The relation contract requires establishing evidence for SAME_ENTITY; name similarity and invoice-context association are insufficient to establish identity.",
+      "grounding": null,
+      "mechanical": true
+    },
+    {
+      "fact": "No selected observation establishes that crm:MER-55 and billing:Meridian Energy Partners LLC are distinct legal counterparties.",
+      "grounding": null,
+      "mechanical": true
+    }
+  ],
+  "disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/crm.csv",
+      "location": "row MER-55"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Meridian Energy Partners LLC"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "The packet links similar names and invoicing context but provides no establishing identity evidence (shared legal identifier or explicit mapping) and no establishing distinctness evidence, so the referents remain unresolved."
+}

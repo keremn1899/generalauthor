@@ -1,0 +1,109 @@
+{
+  "tasks": [
+    {
+      "id": "P1",
+      "status": "ANSWERED",
+      "result": {
+        "by_organization": [
+          {
+            "org_id": "ORG-HARBOR",
+            "legal_name": "Harbor Community Trust",
+            "total_remaining_undisbursed": 20000
+          },
+          {
+            "org_id": "ORG-MEADOW",
+            "legal_name": "Meadow Community Trust",
+            "total_remaining_undisbursed": 15000
+          },
+          {
+            "org_id": "ORG-RIDGE",
+            "legal_name": "Ridge Arts",
+            "total_remaining_undisbursed": 10000
+          }
+        ]
+      },
+      "code": "SELECT o.org_id, o.legal_name,\n       SUM(CAST(arb.remaining_balance AS REAL)) AS total_remaining_undisbursed\nFROM organization o\nJOIN award a ON a.org_id = o.org_id\nJOIN award_remaining_balance arb ON arb.award_id = a.award_id\nGROUP BY o.org_id, o.legal_name\nORDER BY o.org_id",
+      "unresolved_handling": "All organizations and awards have established remaining_balance values in award_remaining_balance; no unresolved balances were encountered for this aggregation."
+    },
+    {
+      "id": "P2",
+      "status": "ANSWERED",
+      "result": {
+        "starting_award_id": "A-101",
+        "organization": {
+          "org_id": "ORG-MEADOW",
+          "legal_name": "Meadow Community Trust",
+          "ein": "81-1111111"
+        },
+        "organization_awards": [
+          {
+            "award_id": "A-101",
+            "org_id": "ORG-MEADOW",
+            "program": "SEED-CORE",
+            "amount": "50000",
+            "start": "2024-01-01",
+            "end": "2024-12-31",
+            "status_code": "A"
+          },
+          {
+            "award_id": "A-103",
+            "org_id": "ORG-MEADOW",
+            "program": "SEED-CORE",
+            "amount": "15000",
+            "start": "2023-01-01",
+            "end": "2023-12-31",
+            "status_code": "C"
+          }
+        ],
+        "disbursements": [
+          {
+            "award_id": "A-101",
+            "date": "2024-02-15",
+            "amount": "20000"
+          },
+          {
+            "award_id": "A-101",
+            "date": "2024-06-15",
+            "amount": "15000"
+          },
+          {
+            "award_id": "A-103",
+            "date": "2023-06-01",
+            "amount": "15000"
+          }
+        ]
+      },
+      "code": "-- organization for A-101\nSELECT o.* FROM organization o\nJOIN award a ON a.org_id = o.org_id\nWHERE a.award_id = 'A-101';\n\n-- all awards of that organization\nSELECT a.* FROM award a\nJOIN award a0 ON a0.org_id = a.org_id\nWHERE a0.award_id = 'A-101'\nORDER BY a.award_id;\n\n-- all disbursements for those awards\nSELECT d.* FROM disbursement d\nJOIN award a ON a.award_id = d.award_id\nJOIN award a0 ON a0.org_id = a.org_id\nWHERE a0.award_id = 'A-101'\nORDER BY d.award_id, d.date;",
+      "unresolved_handling": "Traversal uses established org_id links on award rows; all referenced awards and disbursements are present in the World."
+    },
+    {
+      "id": "P3",
+      "status": "ANSWERED",
+      "result": {
+        "active_remaining_total": 15000,
+        "active_awards": [
+          {
+            "award_id": "A-101",
+            "remaining_balance": 15000
+          },
+          {
+            "award_id": "A-102",
+            "remaining_balance": 0
+          }
+        ],
+        "unresolved_sibling_awards": [
+          {
+            "award_id": "A-105",
+            "org_id": "ORG-RIDGE",
+            "status_code": "H",
+            "remaining_balance": 10000,
+            "failure_kind": "UNINTERPRETED",
+            "requirement_id": "award_status_interpretable"
+          }
+        ]
+      },
+      "code": "-- Active awards: status established via award_status_label (legend codes A/C only)\nSELECT a.award_id, CAST(arb.remaining_balance AS REAL) AS remaining_balance\nFROM award a\nJOIN award_status_label asl ON asl.award_id = a.award_id\nJOIN award_remaining_balance arb ON arb.award_id = a.award_id\nWHERE asl.status_label = 'Active';\n\n-- Unresolved status identities from purpose_requirement_failure\nSELECT affected_identity, failure_kind, requirement_id\nFROM purpose_requirement_failure\nWHERE relation_name = 'award' AND requirement_id = 'award_status_interpretable';\n\n-- Sibling awards of Active awards with uninterpreted status\nSELECT DISTINCT s.award_id, s.org_id, s.status_code,\n       CAST(arb.remaining_balance AS REAL) AS remaining_balance\nFROM award active\nJOIN award_status_label asl ON asl.award_id = active.award_id AND asl.status_label = 'Active'\nJOIN award s ON s.org_id = active.org_id AND s.award_id != active.award_id\nJOIN award_remaining_balance arb ON arb.award_id = s.award_id\nWHERE s.award_id IN (\n  SELECT affected_identity FROM purpose_requirement_failure\n  WHERE relation_name = 'award' AND requirement_id = 'award_status_interpretable'\n)\nORDER BY s.award_id;",
+      "unresolved_handling": "Active status is limited to awards with an established label in award_status_label (codes A and C in status_legend_entry). Awards A-104 (code S) and A-105 (code H) are flagged UNINTERPRETED in purpose_requirement_failure and excluded from the Active total. Unresolved siblings are reported separately with their actual remaining_balance (not treated as zero). A-104 is unresolved but not a sibling of any Active award, so it is omitted from the sibling list."
+    }
+  ]
+}

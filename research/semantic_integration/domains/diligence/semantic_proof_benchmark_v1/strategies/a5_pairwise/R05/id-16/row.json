@@ -1,0 +1,97 @@
+{
+  "strategy": "a5_pairwise",
+  "trial": "R05",
+  "obligation_id": "id-16",
+  "candidate": {
+    "left": "registry:11847201",
+    "right": "registry:11847299"
+  },
+  "proposed_disposition": "DISTINCT",
+  "final_disposition": "DISTINCT",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 11847201"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row 11847299"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    }
+  ],
+  "support_claim": "Registry entries 11847201 and 11847299 ground to HELION ROBOTICS LIMITED and HELION INDUSTRIAL SYSTEMS LTD respectively, and commercial notes explicitly describe Helion Industrial Systems Ltd as a different company from the Helion Robotics legal entity.",
+  "proof_size": 5,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "propositions": [
+    {
+      "proposition": "Registry entry 11847201 names HELION ROBOTICS LIMITED, registered in England and Wales, with status active.",
+      "source_grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847201"
+      },
+      "establishes": "other",
+      "relevance": "Grounds the left referent (registry:11847201) to a specific registered legal name and company number."
+    },
+    {
+      "proposition": "Registry entry 11847299 names HELION INDUSTRIAL SYSTEMS LTD, registered in England and Wales, with status active.",
+      "source_grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row 11847299"
+      },
+      "establishes": "other",
+      "relevance": "Grounds the right referent (registry:11847299) to a specific registered legal name and company number."
+    },
+    {
+      "proposition": "Helion Robotics Ltd (CRM operating name) and Helion Robotics Limited (invoices and Companies House) are described as the same legal entity.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "identity",
+      "relevance": "Links the commercial/CRM naming for Helion Robotics to the Helion Robotics Limited legal entity that corresponds to registry:11847201."
+    },
+    {
+      "proposition": "Helion Industrial Systems Ltd is described as a different company from the Helion Robotics entity discussed in the same passage.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "distinctness",
+      "relevance": "Explicitly contrasts Helion Industrial Systems Ltd against the Helion Robotics legal entity, bearing on whether registry:11847201 and registry:11847299 denote the same counterparty."
+    },
+    {
+      "proposition": "Helion Industrial Systems Ltd sold sensors in 2018 and has no current MSA, as stated in the commercial notes.",
+      "source_grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "establishes": "other",
+      "relevance": "Provides additional contextual characterization of Helion Industrial Systems Ltd as a separately referenced counterparty in commercial records."
+    }
+  ],
+  "admit": {
+    "rule": "distinctness_proposition_present"
+  },
+  "oracle": "DISTINCT",
+  "in_oracle": true,
+  "exact": true,
+  "unsupported_closure": false,
+  "under_closure": false,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": false
+}

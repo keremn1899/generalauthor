@@ -1,0 +1,437 @@
+{
+  "ok": true,
+  "structurally_valid": true,
+  "errors": [],
+  "spine": {
+    "referents": {
+      "Measurement": 824,
+      "Limit": 105
+    },
+    "relations": {
+      "measurement": {
+        "kind": "base",
+        "rows": 824,
+        "unbound": 0
+      },
+      "limit_row": {
+        "kind": "base",
+        "rows": 105,
+        "unbound": 0
+      },
+      "candidate_limit": {
+        "kind": "derived",
+        "rows": 1004,
+        "inputs": [
+          "measurement",
+          "limit_row"
+        ],
+        "unbound": 0
+      }
+    }
+  },
+  "n_trigger_instances": 1642,
+  "n_trigger_groups": 8,
+  "trigger_groups": [
+    {
+      "group_id": "g000",
+      "requirement_id": "applicable_limit",
+      "failure_kind": "CARDINALITY_OVERSATISFIED",
+      "relation": "candidate_limit",
+      "n_instances": 212,
+      "purpose": [
+        "A"
+      ],
+      "sample_subjects": [
+        {
+          "measurement": "Measurement:NM0020583|001|70295|10/31/2024"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|11/30/2024"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|12/31/2024"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|01/31/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|02/28/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|03/31/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|04/30/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|05/31/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|06/30/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|07/31/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|08/31/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|09/30/2025"
+        }
+      ],
+      "expected": "cardinality ONE"
+    },
+    {
+      "group_id": "g001",
+      "requirement_id": "applicable_limit",
+      "failure_kind": "COMPARISON_OPERATOR_REQUIRED",
+      "relation": "candidate_limit",
+      "n_instances": 452,
+      "purpose": [
+        "A"
+      ],
+      "sample_subjects": [
+        {
+          "measurement": "Measurement:NM0020583|TX1|22415|11/30/2024"
+        },
+        {
+          "measurement": "Measurement:NM0020583|TX1|22415|02/28/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|TX1|22415|05/31/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|TX1|22415|08/31/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|TX1|22416|11/30/2024"
+        },
+        {
+          "measurement": "Measurement:NM0020583|TX1|22416|02/28/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|TX1|22416|05/31/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|TX1|22416|08/31/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|TX1|22418|11/30/2024"
+        },
+        {
+          "measurement": "Measurement:NM0020583|TX1|22418|02/28/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|TX1|22418|05/31/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|TX1|22418|08/31/2025"
+        }
+      ],
+      "expected": "numeric ['limit_value'] present for comparison"
+    },
+    {
+      "group_id": "g002",
+      "requirement_id": "applicable_limit",
+      "failure_kind": "MULTIPLE_CANDIDATES",
+      "relation": "candidate_limit",
+      "n_instances": 212,
+      "purpose": [
+        "A"
+      ],
+      "sample_subjects": [
+        {
+          "measurement": "Measurement:NM0020583|001|70295|10/31/2024"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|11/30/2024"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|12/31/2024"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|01/31/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|02/28/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|03/31/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|04/30/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|05/31/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|06/30/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|07/31/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|08/31/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|09/30/2025"
+        }
+      ],
+      "expected": "unique applicable candidate"
+    },
+    {
+      "group_id": "g003",
+      "requirement_id": "applicable_limit",
+      "failure_kind": "UNINTERPRETED_REQUIRED_CODE",
+      "relation": "candidate_limit",
+      "n_instances": 336,
+      "purpose": [
+        "A"
+      ],
+      "sample_subjects": [
+        {
+          "measurement": "Measurement:NM0020583|TX1|22415|11/30/2024"
+        },
+        {
+          "measurement": "Measurement:NM0020583|TX1|22415|02/28/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|TX1|22415|05/31/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|TX1|22415|08/31/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|TX1|22416|11/30/2024"
+        },
+        {
+          "measurement": "Measurement:NM0020583|TX1|22416|02/28/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|TX1|22416|05/31/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|TX1|22416|08/31/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|TX1|22418|11/30/2024"
+        },
+        {
+          "measurement": "Measurement:NM0020583|TX1|22418|02/28/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|TX1|22418|05/31/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|TX1|22418|08/31/2025"
+        }
+      ],
+      "expected": "nodi_code in known ['']"
+    },
+    {
+      "group_id": "g004",
+      "requirement_id": "missing_evidence",
+      "failure_kind": "CARDINALITY_OVERSATISFIED",
+      "relation": "measurement",
+      "n_instances": 200,
+      "purpose": [
+        "C"
+      ],
+      "sample_subjects": [
+        {
+          "measurement": "Measurement:NM0020583|001|70295|10/31/2024"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|11/30/2024"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|12/31/2024"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|01/31/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|02/28/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|03/31/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|04/30/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|05/31/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|06/30/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|07/31/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|08/31/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|09/30/2025"
+        }
+      ],
+      "expected": "cardinality ONE"
+    },
+    {
+      "group_id": "g005",
+      "requirement_id": "missing_evidence",
+      "failure_kind": "MULTIPLE_CANDIDATES",
+      "relation": "measurement",
+      "n_instances": 200,
+      "purpose": [
+        "C"
+      ],
+      "sample_subjects": [
+        {
+          "measurement": "Measurement:NM0020583|001|70295|10/31/2024"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|11/30/2024"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|12/31/2024"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|01/31/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|02/28/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|03/31/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|04/30/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|05/31/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|06/30/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|07/31/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|08/31/2025"
+        },
+        {
+          "measurement": "Measurement:NM0020583|001|70295|09/30/2025"
+        }
+      ],
+      "expected": "unique applicable candidate"
+    },
+    {
+      "group_id": "g006",
+      "requirement_id": "monitoring_obligation",
+      "failure_kind": "CARDINALITY_OVERSATISFIED",
+      "relation": "limit_row",
+      "n_instances": 15,
+      "purpose": [
+        "B"
+      ],
+      "sample_subjects": [
+        {
+          "limit": "Limit:3610129864"
+        },
+        {
+          "limit": "Limit:3610129865"
+        },
+        {
+          "limit": "Limit:3610129867"
+        },
+        {
+          "limit": "Limit:3610129901"
+        },
+        {
+          "limit": "Limit:3610129870"
+        },
+        {
+          "limit": "Limit:3610129902"
+        },
+        {
+          "limit": "Limit:3610129871"
+        },
+        {
+          "limit": "Limit:3610129866"
+        },
+        {
+          "limit": "Limit:3610129903"
+        },
+        {
+          "limit": "Limit:3610129905"
+        },
+        {
+          "limit": "Limit:3610129906"
+        },
+        {
+          "limit": "Limit:3610129904"
+        }
+      ],
+      "expected": "cardinality ONE"
+    },
+    {
+      "group_id": "g007",
+      "requirement_id": "monitoring_obligation",
+      "failure_kind": "MULTIPLE_CANDIDATES",
+      "relation": "limit_row",
+      "n_instances": 15,
+      "purpose": [
+        "B"
+      ],
+      "sample_subjects": [
+        {
+          "limit": "Limit:3610129864"
+        },
+        {
+          "limit": "Limit:3610129865"
+        },
+        {
+          "limit": "Limit:3610129867"
+        },
+        {
+          "limit": "Limit:3610129901"
+        },
+        {
+          "limit": "Limit:3610129870"
+        },
+        {
+          "limit": "Limit:3610129902"
+        },
+        {
+          "limit": "Limit:3610129871"
+        },
+        {
+          "limit": "Limit:3610129866"
+        },
+        {
+          "limit": "Limit:3610129903"
+        },
+        {
+          "limit": "Limit:3610129905"
+        },
+        {
+          "limit": "Limit:3610129906"
+        },
+        {
+          "limit": "Limit:3610129904"
+        }
+      ],
+      "expected": "unique applicable candidate"
+    }
+  ],
+  "relation_row_counts": {
+    "measurement": 824,
+    "limit_row": 105,
+    "candidate_limit": 1004
+  },
+  "referent_counts": {
+    "Measurement": 824,
+    "Limit": 105
+  }
+}

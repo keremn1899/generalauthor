@@ -1,0 +1,28 @@
+{
+  "structured_inspected": [
+    "sources/permit_limits.csv — LIMIT_FREQ_OF_ANALYSIS_CODE distinct values, FY2025-overlap counts, permit/parameter pairings for each code",
+    "sources/document_inventory.json — document paths for permit-package cross-reference (via documents/INDEX.md)"
+  ],
+  "documents_opened": [
+    "documents/farmington/final_permit.txt",
+    "documents/gcc/final_permit.txt",
+    "documents/aztec/final_permit.txt",
+    "documents/farmington/statement_of_basis.txt"
+  ],
+  "sections_inspected": [
+    "documents/farmington/final_permit.txt — Part I effluent limits table (lines 56–109), footnote *1 (lines 111–112), Part II WET retest reporting (lines 500–524, 558–577)",
+    "documents/gcc/final_permit.txt — Part I monitoring frequency columns (lines 57–74), WET table (lines 80–84)",
+    "documents/aztec/final_permit.txt — Part I monitoring requirements (lines 71–82), footnotes *1–*4 (lines 92–102)",
+    "documents/farmington/statement_of_basis.txt — Section 5 Monitoring Frequency for Limited Parameters (lines 634–644)"
+  ],
+  "snippets_inspected": 8,
+  "queries_or_actions": [
+    "Read OBLIGATION.md, BUDGET.md, documents/INDEX.md, construction.py purpose-B requirement for monitoring_frequency_code",
+    "Python parse of sources/permit_limits.csv: distinct LIMIT_FREQ_OF_ANALYSIS_CODE values and FY2025 permit/parameter mappings",
+    "Grep documents/ for opaque codes (05/WK, 01/07, 01/01, 01/90, 09/99, 99/99) — zero document hits",
+    "Grep documents/ for human-readable frequency strings (Five/Week, 1/Week, 1/Day, Continuous, 2/month, Once/Quarter, retest codes)",
+    "Cross-matched structured rows to permit Part I tables by EXTERNAL_PERMIT_NMBR and PARAMETER_CODE/parameter name"
+  ],
+  "n_documents_opened": 4,
+  "approx_chars_inspected": 22400
+}

@@ -1,0 +1,89 @@
+{
+  "case_id": "A17",
+  "obligation_id": "monitoring_frequency",
+  "occurrence_id": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840344",
+  "question": "What monitoring frequencies do opaque LIMIT_FREQ_OF_ANALYSIS_CODE values (e.g. 05/WK, 01/07, 01/01) establish?",
+  "purpose": [
+    "B"
+  ],
+  "requirement_schema": "monitoring_frequency_code",
+  "source_field_value": "LIMIT_FREQ_OF_ANALYSIS_CODE nonempty",
+  "local_structured_context": {
+    "table": "permit_limits.csv",
+    "row": {
+      "EXTERNAL_PERMIT_NMBR": "NM0028762",
+      "PARAMETER_CODE": "00400",
+      "PARAMETER_DESC": "pH",
+      "LIMIT_VALUE_ID": "3610840344",
+      "LIMIT_SET_SCHEDULE_ID": "3600904607",
+      "LIMIT_VALUE_NMBR": "6.6",
+      "LIMIT_FREQ_OF_ANALYSIS_CODE": "01/07",
+      "LIMIT_SAMPLE_TYPE_CODE": "GR",
+      "DMR_COMMENT_TEXT": "WHEN DISCHARGING.",
+      "LIMIT_UNIT_DESC": "SU",
+      "STATISTICAL_BASE_CODE": "ME"
+    }
+  },
+  "reported_model": "Composer 2.5",
+  "retrieval": {
+    "n_tool_paths": 20,
+    "structured_paths": [
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/085e2fa4f5a272be31e73da078641671/sources/document_inventory.json",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/085e2fa4f5a272be31e73da078641671/sources/dmr_measurements.csv"
+    ],
+    "document_paths": [
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/085e2fa4f5a272be31e73da078641671/documents/INDEX.md",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/085e2fa4f5a272be31e73da078641671/documents/farmington",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/085e2fa4f5a272be31e73da078641671/documents/aztec",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/085e2fa4f5a272be31e73da078641671/documents/aztec/statement_of_basis.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/085e2fa4f5a272be31e73da078641671/documents/aztec/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/085e2fa4f5a272be31e73da078641671/documents/aztec/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/085e2fa4f5a272be31e73da078641671/documents/aztec"
+    ],
+    "n_documents_touched": 5,
+    "queries": [
+      "NM0028762|3610840344|3600904607|01/07",
+      "NM0028762|backwash|pH|01/07|frequency|WHEN DISCHARGING",
+      "backwash|pH|frequency|01/07|when discharg|6\\.6|monitor",
+      "01/07|weekly|frequency|pH|6\\.6|backwash|when discharg",
+      "01/07|FREQ|frequency_code|monitoring_frequency",
+      "3610840344|NM0028762.*00400",
+      "week|01/07|calendar|reporting period"
+    ],
+    "n_queries": 7
+  },
+  "judgment": {
+    "occurrence_id": "permit_limit_row:limit_set_schedule_id=3600904607|limit_value_id=3610840344",
+    "semantic_question_used": "monitoring_frequency_code",
+    "disposition": "SUPPORTED_RESOLUTION",
+    "interpretation": "For this pH minimum limit (parameter 00400, limit value 6.6 su) on permit NM0028762 outfall 001, the structured frequency code 01/07 requires one grab pH measurement per week during periods when the permittee is discharging backwash water. Monitoring is not required during non-discharge periods.",
+    "grounding": "The permit_limits.csv row for limit_value_id 3610840344 carries LIMIT_FREQ_OF_ANALYSIS_CODE 01/07 for pH at outfall 001 under the DISCHARGE BACKWASH WATER limit set with DMR comment WHEN DISCHARGING. The final permit Part I effluent limits table for the same permit, outfall, parameter code 00400, and pH range (minimum 6.6, maximum 9.0 standard units) states measurement frequency 1/Week with footnote *1 When discharging. The statement of basis for NM0028762 independently states that pH shall continue to be monitored weekly when discharging. No workspace code legend maps 01/07 in the abstract, but the permit narrative for this specific limit row establishes the required sampling interval.",
+    "documents_opened": [
+      "OCCURRENCE.md",
+      "PASS_TASK.md",
+      "documents/INDEX.md",
+      "construction.py",
+      "purposes/visible_b.md",
+      "sources/permit_limits.csv",
+      "sources/document_inventory.json",
+      "documents/aztec/final_permit.txt",
+      "documents/aztec/statement_of_basis.txt"
+    ],
+    "snippets": [
+      {
+        "source_id": "sources/permit_limits.csv",
+        "text": "NM0028762 ... 00400,pH ... 3610840344,C1,6.6 ... ME,MIN,>= ... GR,01/07 ... WHEN DISCHARGING."
+      },
+      {
+        "source_id": "documents/aztec/final_permit.txt",
+        "text": "POLLUTANT CODE ... pH 00400 ... MINIMUM 6.6 ... MAXIMUM 9.0 ... FREQUENCY 1/Week (*1) ... SAMPLE TYPE Grab ... Footnotes: *1 When discharging."
+      },
+      {
+        "source_id": "documents/aztec/statement_of_basis.txt",
+        "text": "pH shall continue to be monitored weekly when discharging."
+      }
+    ],
+    "remaining_uncertainty": "Whether discharge actually occurred during specific Federal FY2025 evaluation periods is not established from structured sources alone (separate conditional-applicability issue). The permit text does not define whether a week is a calendar week or any rolling seven-day interval."
+  },
+  "finished_at": "2026-09-05T13:38:57.653701+00:00"
+}

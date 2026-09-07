@@ -1,0 +1,139 @@
+{
+  "domain": "seed_grants",
+  "arm": "E1",
+  "trial": "R1",
+  "status": "ANSWERED",
+  "reported_model": "Composer 2.5",
+  "orient_model": "Composer 2.5",
+  "orient_surface": {
+    "n_reads": 9,
+    "n_shells": 4,
+    "n_writes": 0,
+    "header_rereads": 1,
+    "schema_description_calls": 0,
+    "select_count": 3,
+    "join_count": 1,
+    "query_semantic_count": 0,
+    "grounding_inspections": 0,
+    "failure_inspections": 1,
+    "raw_source_reads": []
+  },
+  "orient_exploration": {
+    "reads": [
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/HEADER.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/ACCESS.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/world/world.purpose.json",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/world/world.admission.json",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/research/semantic_integration/runtime_v0/world.py",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/world/world.sqlite.origins.json",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/research/semantic_integration/runtime_v0/purpose.py"
+    ],
+    "writes": [],
+    "shells": [
+      "cd /tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e && PYTHONPATH=. python3 << 'PY'\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\nworld = ConstructionWorld.open(\"world/world.sqlite\")\n\n# List relations/tables\nimport sqlite3\nconn = sqlite3.connect(\"world/world.sqlite\")\ntables = conn.execute(\"SELECT name FROM sqlite_master WHERE type='table' ORDER BY name\").fetchall()\nprint(\"TABLES:\", [t[0] for t in tables])\n\n# Try semantic query ",
+      "cd /tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e && PYTHONPATH=. python3 << 'PY'\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\nimport json\n\nworld = ConstructionWorld.open(\"world/world.sqlite\")\n\nrelations = [\n    \"organization\", \"award\", \"disbursement\", \"award_remaining_balance\",\n    \"award_match_obligation\", \"program_match_rule\", \"status_legend_entry\",\n    \"award_status_label\", \"purpose_requirement_failure\"\n]\n\nfor rel in rel",
+      "cd /tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e && PYTHONPATH=. python3 << 'PY'\nimport sqlite3, json\nfrom collections import defaultdict\n\nconn = sqlite3.connect(\"world/world.sqlite\")\nconn.row_factory = sqlite3.Row\n\n# Join analysis: awards with org, balance, match, status\nq = \"\"\"\nSELECT a.award_id, a.org_id, o.legal_name, a.program, a.amount, a.status_code,\n       arb.remaining_balance, arb.disbursed_total,\n       amo.match_required, amo.match_rate,\n     ",
+      "cd /tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e && PYTHONPATH=. python3 << 'PY'\nimport sqlite3, json\n\nconn = sqlite3.connect(\"world/world.sqlite\")\nconn.row_factory = sqlite3.Row\n\n# Which assertions are SEMANTIC vs MECHANICAL for purpose failures\norigins = json.load(open(\"world/world.sqlite.origins.json\"))[\"assertions\"]\nprint(\"=== PURPOSE FAILURE ASSERTION ORIGINS ===\")\nfor a in conn.execute(\"\"\"\nSELECT a.assertion_id, p.requirement_id, p.failure_kind, p.s"
+    ],
+    "n_reads": 9,
+    "n_writes": 0,
+    "n_shells": 4
+  },
+  "orient_tools": {
+    "tool_calls_started": 15,
+    "shell_calls": 4,
+    "read_calls": 9,
+    "write_calls": 0,
+    "python_executions_guess": 4,
+    "mentioned_paths": [
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/HEADER.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/ACCESS.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/world/world.purpose.json",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/world/world.admission.json",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/research/semantic_integration/runtime_v0/world.py",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e",
+      "ConstructionWorld.open(\"world/world.sqlite\")",
+      "relations/tables",
+      "sqlite3.connect(\"world/world.sqlite\")",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e",
+      "ConstructionWorld.open(\"world/world.sqlite\")",
+      "sqlite3.connect(\"world/world.sqlite\")",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/research/semantic_integration/runtime_v0/world.py",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/world/world.sqlite.origins.json",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e",
+      "sqlite3.connect(\"world/world.sqlite\")",
+      "'N/A'}\")",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/research/semantic_integration/runtime_v0/purpose.py",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/research/semantic_integration/runtime_v0/purpose.py",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e",
+      "sqlite3.connect(\"world/world.sqlite\")",
+      "json.load(open(\"world/world.sqlite.origins.json\"))[\"assertions\"]",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/NOTES.md"
+    ]
+  },
+  "task_surface": {
+    "n_reads": 8,
+    "n_shells": 2,
+    "n_writes": 0,
+    "header_rereads": 1,
+    "schema_description_calls": 0,
+    "select_count": 3,
+    "join_count": 0,
+    "query_semantic_count": 2,
+    "grounding_inspections": 0,
+    "failure_inspections": 0,
+    "raw_source_reads": []
+  },
+  "task_exploration": {
+    "reads": [
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/HEADER.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/NOTES.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/ACCESS.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/TASKS.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/research/semantic_integration/runtime_v0/world.py",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/AGENT.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/taskview/README.md"
+    ],
+    "writes": [],
+    "shells": [
+      "cd /tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e && PYTHONPATH=. python3 << 'PY'\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\nworld = ConstructionWorld.open(\"world/world.sqlite\")\n\n# List tables\nimport sqlite3\nconn = sqlite3.connect(\"file:world/world.sqlite?mode=ro\", uri=True)\ntables = conn.execute(\"SELECT name FROM sqlite_master WHERE type='table' ORDER BY name\").fetchall()\nprint(\"Tables:\", [t[0] for t in tables])\n\n# T1: re",
+      "cd /tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e && PYTHONPATH=. python3 << 'PY'\nfrom research.semantic_integration.runtime_v0.world import ConstructionWorld\nworld = ConstructionWorld.open(\"world/world.sqlite\")\n\nprint(\"=== All award_status_label ===\")\nfor r in world.query_semantic(\"SELECT * FROM award_status_label ORDER BY award_id\"):\n    print(r)\n\nprint(\"\\n=== All purpose failures ===\")\nfor r in world.query_semantic(\"SELECT * FROM purpose_requirement_fai"
+    ],
+    "n_reads": 8,
+    "n_writes": 0,
+    "n_shells": 2
+  },
+  "task_tools": {
+    "tool_calls_started": 18,
+    "shell_calls": 2,
+    "read_calls": 8,
+    "write_calls": 0,
+    "python_executions_guess": 2,
+    "mentioned_paths": [
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/HEADER.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/NOTES.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/ACCESS.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/TASKS.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/research/semantic_integration/runtime_v0/world.py",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/AGENT.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/research/semantic_integration/runtime_v0/world.py",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e",
+      "ConstructionWorld.open(\"world/world.sqlite\")",
+      "sqlite3.connect(\"file:world/world.sqlite?mode",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e",
+      "ConstructionWorld.open(\"world/world.sqlite\")",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/taskview/README.md",
+      "/tmp/world-experiment/autonomous-world-exploration-v1/b2d1920ed37152e28efe8116350f712e/answers.json"
+    ]
+  },
+  "initial_context": {
+    "header_bytes": 2226,
+    "access_bytes": 350,
+    "purpose_bytes": 233,
+    "agent_bytes": 616,
+    "initial_context_bytes": 3192
+  },
+  "finished_at": "2026-09-06T11:41:08.920191+00:00"
+}

@@ -1,0 +1,25 @@
+{
+  "obligation_id": "obl:identity_judgment:4963f5172ae8",
+  "selected_observations": [
+    {
+      "source_path": "sources/crm.csv",
+      "location": "crm_account_id=NBA-102",
+      "excerpt": "crm_account_id,account_name,domain,country,owner,status\nNBA-102,Northbridge Analytics,northbridge.io,US,J. Patel,active"
+    },
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "company_number=3840192",
+      "excerpt": "company_number,legal_name,jurisdiction,status\n3840192,NORTHBRIDGE ANALYTICS INC,Delaware,active"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph",
+      "excerpt": "Northbridge: sales uses the short name \"Northbridge Analytics\". Billing and the MSA use \"Northbridge Analytics Inc.\" A 2024 credit check also returned a Wyoming LLC, \"Northbridge Analytics LLC\". Legal has not determined which registry entity is the contracting party. Treat that registry link as unresolved."
+    }
+  ],
+  "selection_rationale": "Side-by-side source rows for crm:NBA-102 and registry:3840192 plus any commercial_notes on operating-name variants, rebrands, or explicit unresolved registry links.",
+  "known_missing_information": [
+    "P2 emitted semantic candidate tuples with empty disposition; no adjudication performed.",
+    "open_invoices_by_contract derivation is registered but never run; depends on resolved identity and association judgments."
+  ]
+}

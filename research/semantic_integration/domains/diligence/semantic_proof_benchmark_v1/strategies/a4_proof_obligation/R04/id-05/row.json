@@ -1,0 +1,65 @@
+{
+  "strategy": "a4_proof_obligation",
+  "trial": "R04",
+  "obligation_id": "id-05",
+  "candidate": {
+    "left": "billing:Northbridge Analytics Inc.",
+    "right": "contract:MSA-NBA-2021"
+  },
+  "proposed_disposition": "UNRESOLVED",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Northbridge Analytics Inc."
+    },
+    {
+      "source_path": "sources/contracts/MSA-NBA-2021.md",
+      "location": "header"
+    }
+  ],
+  "support_claim": "Billing and the MSA use closely similar names, but the packet states legal has not determined which registry entity is the contracting party and treats that registry link as unresolved, so neither identity nor distinctness is established.",
+  "proof_size": 2,
+  "proof_valid": true,
+  "isolation_leaks": [],
+  "proof_obligations": [
+    {
+      "obligation": "Establish that billing:Northbridge Analytics Inc. is the same legal counterparty as the entity bound under contract MSA-NBA-2021",
+      "required_for": "SAME_ENTITY",
+      "satisfied": false,
+      "evidence": [
+        {
+          "source_path": "sources/commercial_notes.md",
+          "location": "paragraph 1"
+        }
+      ]
+    },
+    {
+      "obligation": "Establish that billing:Northbridge Analytics Inc. is a distinct legal entity from the counterparty under contract MSA-NBA-2021",
+      "required_for": "DISTINCT",
+      "satisfied": false,
+      "evidence": []
+    }
+  ],
+  "admit": {
+    "rule": "unresolved"
+  },
+  "unsatisfied": [
+    "Establish that billing:Northbridge Analytics Inc. is the same legal counterparty as the entity bound under contract MSA-NBA-2021",
+    "Establish that billing:Northbridge Analytics Inc. is a distinct legal entity from the counterparty under contract MSA-NBA-2021"
+  ],
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": false,
+  "correct_same_never_proposed": true
+}

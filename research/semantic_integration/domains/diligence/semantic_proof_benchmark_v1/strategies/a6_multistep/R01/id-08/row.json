@@ -1,0 +1,73 @@
+{
+  "strategy": "a6_multistep",
+  "trial": "R01",
+  "obligation_id": "id-08",
+  "candidate": {
+    "left": "billing:Oakfield Logistik GmbH",
+    "right": "registry:HRB 88421"
+  },
+  "proposed_disposition": "SAME_ENTITY",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row HRB 88421"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Oakfield Logistik GmbH"
+    }
+  ],
+  "support_claim": "Registry HRB 88421 is registered to Oakfield Logistik GmbH, commercial notes establish that HRB 88421 is the unchanged legal identifier for that entity through rebranding, and billing invoices use that same registered name.",
+  "proof_size": 4,
+  "proof_valid": false,
+  "isolation_leaks": [],
+  "steps": [
+    {
+      "fact": "Handelsregister record HRB 88421 lists the registered company name as Oakfield Logistik GmbH.",
+      "grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row HRB 88421"
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "The entity rebranded to Oakfield Logistik GmbH while Handelsregister number HRB 88421 did not change, licensing HRB 88421 as the stable legal identifier for that entity.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "Billing records bill the name Oakfield Logistik GmbH.",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Oakfield Logistik GmbH"
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "The billing referent billing:Oakfield Logistik GmbH and the registry referent registry:HRB 88421 both denote the legal counterparty whose registered name is Oakfield Logistik GmbH and whose Handelsregister number is HRB 88421.",
+      "grounding": null,
+      "mechanical": false
+    }
+  ],
+  "admit": {
+    "rule": "ungrounded_nonmechanical_step"
+  },
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": true,
+  "correct_same_never_proposed": false
+}

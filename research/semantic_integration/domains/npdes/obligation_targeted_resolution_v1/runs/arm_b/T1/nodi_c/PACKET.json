@@ -1,0 +1,110 @@
+{
+  "obligation_id": "nodi_c",
+  "exact_semantic_question": "What does NODI code C mean for a FY2025 DMR row with no numeric result?",
+  "purpose": "C",
+  "relation_contract": "no_numeric_result_case.nodi_code must be interpreted before missing-evidence classification",
+  "candidate_interpretations": [
+    {
+      "id": "documented_no_discharge",
+      "label": "NODI C documents that no discharge occurred during the monitoring period (permit-authorized no-discharge reporting).",
+      "status": "not_established"
+    },
+    {
+      "id": "conditional_monitoring_not_required",
+      "label": "NODI C indicates monitoring was not required for the period (conditional/optional limit not applicable).",
+      "status": "not_established_and_structurally_inconsistent",
+      "note": "All 150 FY2025 C-coded rows have OPTIONAL_MONITORING_FLAG='N'."
+    },
+    {
+      "id": "other_authorized_no_data",
+      "label": "NODI C marks another permit-authorized no-data reporting state (e.g., zero flow, not sampled, below quantification with authorized zero reporting).",
+      "status": "not_established"
+    },
+    {
+      "id": "missing_required_evidence",
+      "label": "NODI C indicates required monitoring was reported without a numeric result and without an established no-data authorization for the period.",
+      "status": "not_established"
+    },
+    {
+      "id": "unresolved_code",
+      "label": "NODI C is present in structured data but its semantic meaning cannot be resolved from workspace sources.",
+      "status": "supported_by_absence_of_establishing_text"
+    }
+  ],
+  "retained_snippets": [
+    {
+      "source_id": "sources/dmr_measurements.csv",
+      "location": "line 246 (representative row dmr_form_value_id=3896611092)",
+      "text": "EXTERNAL_PERMIT_NMBR=NM0000116, PARAMETER_CODE=50050, MONITORING_PERIOD_END_DATE=10/31/2024, DMR_VALUE_NMBR=(empty), OPTIONAL_MONITORING_FLAG=N, NODI_CODE=C",
+      "why_retained": "Representative FY2025 no-numeric row carrying NODI C; shows required-monitoring flag and affected permit/parameter."
+    },
+    {
+      "source_id": "sources/dmr_measurements.csv",
+      "location": "aggregated FY2025 filter (FY 2024-10-01 through 2025-09-30; empty DMR_VALUE_NMBR)",
+      "text": "186 FY2025 no-numeric rows total; NODI_CODE distribution: C=150, 9=36. All 150 C rows: EXTERNAL_PERMIT_NMBR=NM0000116 only; OPTIONAL_MONITORING_FLAG=N for all; parameters {01105:40, 50050:20, 00400:20, 01040:20, 01042:20, 00530:20, 00900:10}; 10 monthly reporting events with 15 parameters each.",
+      "why_retained": "Structural scope of the obligation: C is exclusive to NM0000116 and appears across full multi-parameter DMR submissions, not isolated flow rows."
+    },
+    {
+      "source_id": "construction.py",
+      "location": "lines 584-591",
+      "text": "purpose.require_interpreted(\"nodi_code_semantics\", relation=\"no_numeric_result_case\", field=\"nodi_code\", known=[\"\"], purpose=\"C\", per=\"measurement\")",
+      "why_retained": "Defines the blocked requirement: only empty string is currently known; value C is UNINTERPRETED."
+    },
+    {
+      "source_id": "documents/gcc/final_permit.txt",
+      "location": "Part I Section A, line 66",
+      "text": "Flow                     Report MGD        Report MGD        ***               ***                1/Day        Estimate",
+      "why_retained": "NM0000116 requires daily flow reporting by estimate; contextualizes no-numeric flow rows but does not define NODI C."
+    },
+    {
+      "source_id": "documents/gcc/final_permit.txt",
+      "location": "Part I Section B, lines 103-115",
+      "text": "B.     REPORTING OF MONITORING RESULTS (MINOR DISCHARGERS)\n\nDischarge Monitoring Report (DMR) results shall be electronically reported to EPA\nper 40 CFR 127.16. To submit electronically, access the NetDMR website at\nhttps://netdmr.epa.gov.",
+      "why_retained": "Establishes NetDMR electronic reporting for NM0000116 but provides no NODI code legend."
+    },
+    {
+      "source_id": "documents/gcc/final_permit.txt",
+      "location": "Part II Section C, lines 196-197",
+      "text": "2. Discharges are restricted to overflows from the retention pond due to catastrophic or chronic\nprecipitation events.",
+      "why_retained": "Permit discharge restriction context for NM0000116; does not map NODI C to a named reporting state."
+    },
+    {
+      "source_id": "documents/gcc/fact_sheet.txt",
+      "location": "Section III, lines 126-127",
+      "text": "In addition, because discharge is very infrequent, with the last\ndischarge occuring more than five years ago, it is impossible to have the permittee submit data",
+      "why_retained": "Facility-level discharge infrequency narrative for NM0000116; contextual but not a NODI C definition."
+    }
+  ],
+  "contradictory_evidence": [
+    {
+      "claim": "Facility narrative suggests no-discharge conditions that could explain empty numeric results.",
+      "source_id": "documents/gcc/fact_sheet.txt",
+      "location": "Section III, lines 126-127; Section VI lines 375-376",
+      "tension": "Infrequent/overflow-only discharge context is compatible with empty results but does not define what NODI code C means or authorize a specific missing-evidence classification."
+    },
+    {
+      "claim": "All C-coded rows have OPTIONAL_MONITORING_FLAG='N', indicating required monitoring.",
+      "source_id": "sources/dmr_measurements.csv",
+      "location": "aggregated FY2025 C rows",
+      "tension": "If NODI C were interpreted as 'monitoring not required,' that would conflict with structured required-monitoring flags on every affected row."
+    },
+    {
+      "claim": "Another permit in the workspace (NM0028762) includes explicit NO DISCHARGE DMR checkbox instructions.",
+      "source_id": "documents/aztec/final_permit.txt",
+      "location": "Part I item 5, lines 150-153",
+      "tension": "Shows the workspace can contain no-discharge reporting instructions, but those instructions are not in the NM0000116 package where all NODI C rows occur; not usable as establishing text for this obligation."
+    }
+  ],
+  "known_limitations": [
+    "No NODI codebook or NODI_CODE field legend appears in structured sources (dmr_measurements.csv, permit_limits.csv) or in the NM0000116 permit package documents inspected.",
+    "documents/gcc/final_permit.txt contains NetDMR reporting requirements but no definition of NODI codes and no NO DISCHARGE box instruction equivalent to other permits in the inventory.",
+    "Structural co-occurrence (C with empty DMR_VALUE_NMBR, single permit, batched parameters) identifies affected rows but is not a code legend per PASS_TASK and PRINCIPLES.",
+    "Facility discharge-infrequency narrative does not state that reporters use NODI C, or what C documents, for Purpose C classification.",
+    "External EPA NetDMR or national NODI dictionaries are out of scope and were not used."
+  ],
+  "allowed_dispositions": [
+    "SUPPORTED_RESOLUTION",
+    "SUPPORTED_NEGATIVE",
+    "UNRESOLVED"
+  ]
+}

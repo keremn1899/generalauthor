@@ -1,0 +1,235 @@
+{
+  "trial": "T1",
+  "obligation_id": "monitoring_frequency",
+  "n_occurrences": 105,
+  "reported_model_retrieve": "Composer 2.5",
+  "reported_model_adjudicate": "Composer 2.5",
+  "retrieval": {
+    "n_tool_paths": 29,
+    "structured_paths": [],
+    "document_paths": [
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/bd3c56451fa1c163885ed4326434938e/documents/INDEX.md",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/bd3c56451fa1c163885ed4326434938e/documents/farmington/statement_of_basis.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/bd3c56451fa1c163885ed4326434938e/documents/gcc/fact_sheet.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/bd3c56451fa1c163885ed4326434938e/documents/aztec/statement_of_basis.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/bd3c56451fa1c163885ed4326434938e/documents/gcc/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/bd3c56451fa1c163885ed4326434938e/documents/aztec/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/bd3c56451fa1c163885ed4326434938e/documents/farmington/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/bd3c56451fa1c163885ed4326434938e/documents/farmington/final_permit.txt",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/bd3c56451fa1c163885ed4326434938e/documents/farmington",
+      "/tmp/world-experiment/npdes-obligation-targeted-resolution-v1/bd3c56451fa1c163885ed4326434938e/documents/farmington/final_permit.txt"
+    ],
+    "n_documents_touched": 8,
+    "queries": [
+      "LIMIT_FREQ_OF_ANALYSIS|freq_of_analysis|05/WK|01/07|01/01",
+      "05/WK|01/07|01/01|frequency|FREQ|weekly|quarterly|monthly|monitoring",
+      "05/WK|01/07|01/01|01/90|FREQ_OF_ANALYSIS|frequency code",
+      "five times per week|once per week|weekly|1/year|quarterly|daily",
+      "five times per week|once per week|weekly|1/year|quarterly|daily",
+      "five times|5 times|once per|1 per|times per week|times/week|per week|per month|per quarter|per year|1/year",
+      "MONITORING\\s+FREQUENCY|FREQUENCY\\s+\\(\\*|frequency.*sample",
+      "Five/Week|5/Week|1/Week|1/Day|2/Week|1/Quarter|2/month|Once/|Continuous|99/99",
+      "09/99|99/99",
+      "retest|09/99|99/99|22415|WET",
+      "09/99|99/99|FREQ_OF_ANALYSIS|frequency code"
+    ],
+    "n_queries": 11
+  },
+  "plan": {
+    "proposition": "Each distinct LIMIT_FREQ_OF_ANALYSIS_CODE value in permit_limits.csv encodes a specific monitoring frequency obligation (samples or measurements per calendar period, or a non-periodic monitoring mode) that can be read directly from workspace permit-package text or an in-workspace code legend.",
+    "would_establish": [
+      "An explicit codebook, glossary, or field definition in workspace sources naming LIMIT_FREQ_OF_ANALYSIS_CODE values and their meanings",
+      "Permit Part I monitoring tables that state a MEASUREMENT FREQUENCY in plain language for the same permit number and pollutant/parameter as a structured permit_limits.csv row, allowing audited pairing of code to frequency",
+      "Narrative statement-of-basis or fact-sheet sections that state monitoring frequencies for the same facility parameters represented in structured limits",
+      "Permit language defining non-calendar modes (e.g., continuous monitoring, conditional retest reporting) for rows carrying sentinel-looking codes such as 99/99 or 09/99"
+    ],
+    "would_refute": [
+      "Workspace text stating that LIMIT_FREQ_OF_ANALYSIS_CODE values are placeholders, deprecated, or not authoritative for monitoring frequency",
+      "Demonstrated permit-text frequencies that systematically contradict the code paired to the same permit and parameter in permit_limits.csv",
+      "Evidence that the same code value is used for materially different monitoring frequencies across permits without any documentary explanation"
+    ],
+    "likely_authoritative_source_types": [
+      "documents/*/final_permit.txt Part I limitation and monitoring requirement tables",
+      "documents/*/statement_of_basis.txt monitoring frequency discussion sections",
+      "documents/*/fact_sheet.txt monitoring frequency for limited parameters sections",
+      "sources/permit_limits.csv for code inventory and permit-parameter pairing only (not as a standalone legend)"
+    ],
+    "insufficient_alone": [
+      "Unique code strings and their counts in permit_limits.csv",
+      "DMR_FREQ_OF_ANALYSIS_CODE co-occurrence patterns in dmr_measurements.csv",
+      "Training-data or general EPA ICIS-NPDES conventions not reproduced in workspace files",
+      "Permit narrative that discusses monitoring frequency without matching the same permit number and parameter as the coded limit row"
+    ],
+    "unknowable_from_structured_data_alone": [
+      "The semantic mapping from opaque code tokens (05/WK, 01/07, 01/01, etc.) to monitoring frequency, because structured sources contain the codes but no in-workspace codebook table",
+      "Whether sentinel codes 99/99 and 09/99 denote continuous monitoring or conditional/event-triggered reporting without permit-text pairing for those exact rows",
+      "The general NN/XX encoding rule (count over period unit) inferred only from pairwise correlation rather than an explicit field definition"
+    ]
+  },
+  "packet": {
+    "obligation_id": "monitoring_frequency",
+    "exact_semantic_question": "What monitoring frequencies do opaque LIMIT_FREQ_OF_ANALYSIS_CODE values (e.g. 05/WK, 01/07, 01/01) establish?",
+    "purpose": "B",
+    "relation_contract": "frequency codes must be interpreted for monitoring obligations",
+    "candidate_interpretations": [
+      {
+        "id": "calendar_count_over_period",
+        "statement": "For calendar codes, LIMIT_FREQ_OF_ANALYSIS_CODE has the form NN/PP where NN is the number of required analyses and PP is a period token (01=day, 07=week, 30=month, 90=quarter, WK=week count literal), as inferred from permit-text frequency paired to the same permit and parameter.",
+        "codes_supported_in_workspace": {
+          "05/WK": "five analyses per week (permit text: 'Five/Week' or '5/Week')",
+          "01/07": "one analysis per week (permit text: '1/Week')",
+          "01/01": "one analysis per day (permit text: '1/Day' or 'Daily')",
+          "02/07": "two analyses per week (permit text: '2/Week')",
+          "01/90": "one analysis per quarter (permit text: '1/Quarter' or 'Once/Quarter')",
+          "02/30": "two analyses per month (permit text: '2/month')"
+        },
+        "evidence_basis": "Permit Part I tables name MEASUREMENT FREQUENCY in plain language for the same EXTERNAL_PERMIT_NMBR and PARAMETER_CODE as structured rows; no workspace file states the NN/PP rule explicitly."
+      },
+      {
+        "id": "continuous_flow",
+        "statement": "99/99 denotes continuous monitoring (not a periodic sample count), as used for NM0020583 flow with sample type Totalizing Meter.",
+        "codes_supported_in_workspace": {
+          "99/99": "continuous flow monitoring"
+        },
+        "evidence_basis": "Permit text says 'Continuous' for flow; structured row carries 99/99. Literal code string absent from documents."
+      },
+      {
+        "id": "conditional_retest",
+        "statement": "09/99 denotes conditional WET retest reporting triggered by test failure ('If required'), not a fixed calendar sampling frequency.",
+        "codes_supported_in_workspace": {
+          "09/99": "report only when retest required after WET failure"
+        },
+        "evidence_basis": "Permit retest table labels rows '(If required) Retest N'; structured WET retest parameters carry 09/99. Literal code string absent from documents."
+      },
+      {
+        "id": "unresolved_no_legend",
+        "statement": "Codes cannot be interpreted from workspace sources alone because no in-workspace codebook defines LIMIT_FREQ_OF_ANALYSIS_CODE and permit documents never print the opaque tokens.",
+        "evidence_basis": "PASS_TASK constraint; grep of documents/ finds zero literal code matches."
+      }
+    ],
+    "retained_snippets": [
+      {
+        "source_id": "documents/farmington/final_permit.txt",
+        "location": "lines 56\u201386",
+        "text": "pH ... Five/Week (*1) ... Biochemical Oxygen ... 5/Week (*1) ... Total Residual Chlorine ... Daily ... Total Dissolved Solids ... 1/Week ... Cyanide ... 2/month ... Cadmium ... 1/Quarter",
+        "why_retained": "NM0020583 Part I table states plain-language MEASUREMENT FREQUENCY values that pair with structured codes 05/WK, 01/01, 01/07, 02/30, and 01/90 for matching parameters."
+      },
+      {
+        "source_id": "documents/farmington/final_permit.txt",
+        "location": "line 63",
+        "text": "Flow ... Continuous ... Totalizing Meter",
+        "why_retained": "NM0020583 flow monitoring is continuous in permit text; structured flow rows for the same permit carry LIMIT_FREQ_OF_ANALYSIS_CODE 99/99."
+      },
+      {
+        "source_id": "documents/farmington/final_permit.txt",
+        "location": "lines 518\u2013523",
+        "text": "(If required) Retest 1 \u2013 Enter a \u201c1\u201d if the NOEC for survival is less than the critical dilution, otherwise enter \u201c0\u201d. ... 22418 ... 22415 ... (If required) Retest 2 ... 22419 ... 22416",
+        "why_retained": "WET retest parameters 22415/22416/22418/22419 are conditional ('If required'), matching structured rows that carry code 09/99 rather than a calendar frequency."
+      },
+      {
+        "source_id": "documents/gcc/final_permit.txt",
+        "location": "lines 57\u201374",
+        "text": "pH ... 1/Day ... Flow ... 1/Day ... Total Suspended Solids ... 1/Week ... Total Aluminum ... 1/Week ... Total Copper ... 1/Week",
+        "why_retained": "NM0000116 Part I pairs 1/Day with structured code 01/01 (pH, flow) and 1/Week with structured code 01/07 (TSS, metals)."
+      },
+      {
+        "source_id": "documents/aztec/final_permit.txt",
+        "location": "lines 72\u201382",
+        "text": "pH ... 1/Week (*1) ... Flow ... 2/Week (*1) ... Total Suspended Solids ... 1/Week (*1) ... Total Residual Chlorine ... 1/Day (*1) ... Cyanide, Total Recoverable ... 1/Quarter (*1) ... Total Dissolved Solids ... 1/Quarter (*1)",
+        "why_retained": "NM0028762 Part I pairs 1/Week\u219201/07, 2/Week\u219202/07, 1/Day\u219201/01, and 1/Quarter\u219201/90 for the same parameters in structured limits."
+      },
+      {
+        "source_id": "documents/farmington/statement_of_basis.txt",
+        "location": "lines 638\u2013644",
+        "text": "BOD5 and TSS, are proposed to be monitored five times per week, with sampling on at least five different days. ... monitoring frequencies of daily for TRC and five times per week for E. coli, pH and flow are consistent with the previous permit. Report requirements of once per week for TDS is also consistent with the previous permit.",
+        "why_retained": "Narrative corroborates 05/WK (five/week), 01/01 (daily TRC), and 01/07 (once/week TDS) semantics for NM0020583; also flags a potential flow-frequency tension with the final permit."
+      },
+      {
+        "source_id": "documents/gcc/fact_sheet.txt",
+        "location": "lines 345\u2013348",
+        "text": "Based on the discharge frequency of the facility, the NMIP requires that pH has daily monitoring frequency and all other limited parameters have weekly monitoring frequency requirements. Flow is proposed to be monitored daily by estimate.",
+        "why_retained": "Independent narrative for NM0000116 supports 01/01 (daily pH, flow) and 01/07 (weekly other parameters) pairing logic."
+      },
+      {
+        "source_id": "sources/permit_limits.csv",
+        "location": "header + representative rows (e.g. NM0020583 pH 00400 \u2192 05/WK; NM0000116 pH 00400 \u2192 01/01; NM0028762 flow 50050 \u2192 02/07)",
+        "text": "LIMIT_FREQ_OF_ANALYSIS_CODE is a populated field on every permit limit row; eight distinct values appear (01/07, 01/90, 05/WK, 01/01, 09/99, 02/30, 99/99, 02/07) with no accompanying code-definition column.",
+        "why_retained": "Documents the opaque codes present in structured data and confirms absence of an in-file legend; enables audited permit-parameter crosswalk."
+      }
+    ],
+    "contradictory_evidence": [
+      {
+        "source_id": "documents/farmington/statement_of_basis.txt",
+        "location": "line 642",
+        "text": "monitoring frequencies of daily for TRC and five times per week for E. coli, pH and flow are consistent with the previous permit",
+        "conflict": "Final permit Part I lists Flow as 'Continuous' (not five/week), while structured flow rows carry 99/99, not 05/WK. Narrative and final-permit table disagree on flow frequency wording."
+      },
+      {
+        "source_id": "documents/farmington/final_permit.txt",
+        "location": "lines 57 vs 76",
+        "text": "pH ... Five/Week (*1) ... E. Coli Bacteria ... 5/Week (*1)",
+        "conflict": "Both pH and E. coli use five-per-week permit language but share code 05/WK with parameters that permit text labels simply '1/Week' (TDS, percent removal) coded 01/07\u2014showing the code distinguishes count within a week, not merely 'weekly'."
+      }
+    ],
+    "known_limitations": [
+      "No workspace file defines LIMIT_FREQ_OF_ANALYSIS_CODE as a field or prints the opaque code strings; interpretation relies on permit-parameter crosswalk, which PASS_TASK cautions is not itself a code legend.",
+      "Sentinel codes 99/99 and 09/99 never appear in document text; their meanings are inferred only from row pairing with 'Continuous' and 'If required' retest language.",
+      "The general NN/PP encoding convention is not stated authoritatively anywhere in the workspace.",
+      "Coverage is limited to three permits (NM0000116, NM0020583, NM0028762); codes are only exemplified for parameters present in this dataset.",
+      "Conditional footnotes (e.g., aztec '*1 When discharging') modulate when monitoring applies but are separate from the code-to-frequency mapping."
+    ],
+    "allowed_dispositions": [
+      "SUPPORTED_RESOLUTION",
+      "SUPPORTED_NEGATIVE",
+      "UNRESOLVED"
+    ]
+  },
+  "judgment": {
+    "disposition": "UNRESOLVED",
+    "grounding": "Retained workspace snippets establish plain-language MEASUREMENT FREQUENCY obligations for named parameters on permits NM0020583, NM0000116, and NM0028762 (e.g., documents/farmington/final_permit.txt lines 56\u201386: pH Five/Week, TRC Daily, TDS 1/Week; documents/gcc/final_permit.txt lines 57\u201374: pH and Flow 1/Day, TSS 1/Week; documents/aztec/final_permit.txt lines 72\u201382: Flow 2/Week, TRC 1/Day, TDS 1/Quarter). sources/permit_limits.csv confirms eight distinct LIMIT_FREQ_OF_ANALYSIS_CODE values with no definition column. No retained snippet prints any opaque code token (05/WK, 01/07, 01/01, 99/99, 09/99, etc.) or states an NN/PP encoding rule. Candidate code meanings in the packet are tied to permit+parameter crosswalk between CSV rows and permit tables, which the packet itself flags as insufficient to serve as a code legend.",
+    "interpretation": "unresolved_no_legend",
+    "epistemic_basis": "UNRESOLVED",
+    "scope": "ONE_RELATION_OR_VOCABULARY",
+    "remaining_uncertainty": "Whether LIMIT_FREQ_OF_ANALYSIS_CODE values encode count-over-period (NN/PP), whether sentinel codes 99/99 and 09/99 mean continuous monitoring and conditional WET retest respectively, whether the crosswalk generalizes beyond the three exemplified permits and eight observed values, and how to reconcile contradictory flow-frequency wording (Continuous + 99/99 in final permit vs five-times-per-week narrative in documents/farmington/statement_of_basis.txt line 642).",
+    "failure_mode_if_unresolved": "EVIDENCE_INSUFFICIENT"
+  },
+  "proposal": {
+    "interpretation": "calendar_count_over_period",
+    "scope": "ONE_RELATION_OR_VOCABULARY",
+    "epistemic_basis": "MODEL_HYPOTHESIS",
+    "exact_grounding": "Permit Part I plain-language frequencies (documents/farmington/final_permit.txt, documents/gcc/final_permit.txt, documents/aztec/final_permit.txt) paired structurally to CSV LIMIT_FREQ_OF_ANALYSIS_CODE values on matching EXTERNAL_PERMIT_NMBR and PARAMETER_CODE; narrative corroboration in documents/farmington/statement_of_basis.txt and documents/gcc/fact_sheet.txt. No workspace source states the NN/PP rule or prints code strings.",
+    "semantic_delta": "Would map each LIMIT_FREQ_OF_ANALYSIS_CODE to a structured monitoring frequency (analysis count and calendar period, or sentinel semantics for 99/99 continuous and 09/99 conditional retest) on monitoring_requirement_fy2025.limit_freq_of_analysis_code, satisfying purpose B require_interpreted for monitoring_frequency_code.",
+    "affected_obligations": [
+      "monitoring_frequency"
+    ],
+    "affected_occurrence_count": null,
+    "remaining_uncertainty": "General NN/PP convention is not authoritatively stated; sentinel codes lack document literals; crosswalk is structural not definitional; flow-frequency contradiction for NM0020583; coverage limited to three permits and eight code values observed in sources/permit_limits.csv.",
+    "admit": "UNVERIFIED_PROPOSAL"
+  },
+  "refinement": {
+    "parent": "monitoring_frequency",
+    "children": [
+      "monitoring_frequency_calendar_codes",
+      "monitoring_frequency_noncalendar_codes"
+    ],
+    "why_necessary": "Retrieved permit text establishes plain-language calendar sampling frequencies (1/Day, 1/Week, 5/Week, 2/Week, 1/Quarter, 2/month) that pair consistently with six of eight code values, but two codes (99/99, 09/99) attach to qualitatively different monitoring modes\u2014continuous totalizing flow and conditional WET retest reporting\u2014whose permit language never uses the opaque code strings and is not reducible to a samples-per-period calendar obligation.",
+    "occurrence_partition": {
+      "monitoring_frequency_calendar_codes": [
+        "01/01",
+        "01/07",
+        "02/07",
+        "05/WK",
+        "01/90",
+        "02/30"
+      ],
+      "monitoring_frequency_noncalendar_codes": [
+        "99/99",
+        "09/99"
+      ]
+    },
+    "mechanically_computable": true
+  },
+  "mutated_before_evidence": false,
+  "dry_run": null,
+  "finished_at": "2026-09-05T14:02:28.917803+00:00"
+}

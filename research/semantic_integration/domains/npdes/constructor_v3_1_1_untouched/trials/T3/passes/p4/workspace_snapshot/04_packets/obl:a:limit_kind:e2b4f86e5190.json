@@ -1,0 +1,38 @@
+{
+  "obligation_id": "obl:a:limit_kind:e2b4f86e5190",
+  "selected_observations": [
+    {
+      "source_path": "sources/structured/dmr_measurements.csv",
+      "location": "row 35, DMR_VALUE_ID=3831416459",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0020583; PERM_FEATURE_NMBR=001; PARAMETER_CODE=70295; PARAMETER_DESC=Solids, total dissolved; MONITORING_PERIOD_END_DATE=10/31/2024; DMR_VALUE_ID=3831416459; DMR_VALUE_NMBR=319; DMR_UNIT_CODE=19; DMR_VALUE_QUALIFIER_CODE==; LIMIT_TYPE_CODE=ENF; LIMIT_VALUE_ID=3610673297; STATISTICAL_BASE_CODE=DD; VALUE_RECEIVED_DATE=11/14/2024"
+    },
+    {
+      "source_path": "02_mechanical_world/world.sqlite",
+      "location": "compiled_dmr_measurement/dmr:3831416459",
+      "excerpt": "measurement_id=dmr:3831416459; permit=NM0020583; feature=001; parameter_code=70295; period_end=2024-10-31; dmr_value_id=3831416459; reported_value_number=319.0; reported_unit_code=19; value_qualifier==; nodi_code=; linked_limit_value_id=3610673297"
+    },
+    {
+      "source_path": "02_mechanical_world/world.sqlite",
+      "location": "compiled_limit_value/limit_val:3610673285:3600891019",
+      "excerpt": "limit_value_ref_id=limit_val:3610673285:3600891019; limit_value_id=3610673285; limit_type_code=ENF; optional_monitoring_flag=N; limit_value_number=0.0; limit_unit_code=26; statistical_base_code=3C; limit_value_qualifier=; limit_set_designator=A; all_months_active=1; frequency_code=01/07; effective=2021-12-01..2026-11-30"
+    },
+    {
+      "source_path": "sources/structured/permit_limits.csv",
+      "location": "row 86, LIMIT_VALUE_ID=3610673285",
+      "excerpt": "EXTERNAL_PERMIT_NMBR=NM0020583; PERM_FEATURE_NMBR=001; PARAMETER_CODE=70295; PARAMETER_DESC=Solids, total dissolved; LIMIT_VALUE_ID=3610673285; LIMIT_SET_SCHEDULE_ID=3600891019; LIMIT_TYPE_CODE=ENF; LIMIT_UNIT_CODE=26; STATISTICAL_BASE_CODE=3C; OPTIONAL_MONITORING_FLAG=N; LIMIT_BEGIN_DATE=12/01/2021; LIMIT_END_DATE=11/30/2026; LIMIT_SET_DESIGNATOR=A; LIMIT_FREQ_OF_ANALYSIS_CODE=01/07; DMR_COMMENT_TEXT=TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES.; ALL_MONTHS_LIMIT=JAN--FEB--MAR--APR--MAY--JUN--JUL--AUG--SEP--OCT--NOV--DEC"
+    },
+    {
+      "source_path": "02_mechanical_world/world.sqlite",
+      "location": "compiled_limit_value/limit_val:3610673285:3600891019/dmr_comment_text",
+      "excerpt": "TOTAL DISSOLVED SOLIDS (TDS) MEASURED AT OUTFALL 001.  REPORT THE GEOMETRIC MEAN VALUE OF THE WEEKLY VALUES."
+    }
+  ],
+  "selection_rationale": "Packet grounds limit_kind_resolution for candidate pair (dmr:3831416459, limit_val:3610673285:3600891019): DMR reported form and limit schedule typing (LIMIT_TYPE_CODE, OPTIONAL_MONITORING_FLAG, numeric threshold, units, statistical base).",
+  "known_missing_information": [
+    "P2 compiled BASE relations only; DERIVED universes (period_in_fy2025, dmr_in_fy2025_scope, measurement_limit_candidate_pair, monitoring_requirement_in_fy2025, missing_evidence_case_universe) computed inline per 01_vocabulary.json C4 rules, not persisted in world.sqlite.",
+    "Purpose C absent-submission cases are not enumerable: frequency-code interpretation rules are not compiled as world facts.",
+    "Blank LIMIT_VALUE_NMBR and DMR_VALUE_NMBR stored as 0.0 (TaskView REAL NOT NULL); ordinary-numeric detection treats bare 0.0 as non-ordinary.",
+    "Per-month seasonal activation not modeled; only all_months_active boolean available for limit schedule disambiguation.",
+    "Permit PDF text extraction deferred; condition_anchor_text limited to DMR_COMMENT_TEXT from permit_limits.csv."
+  ]
+}

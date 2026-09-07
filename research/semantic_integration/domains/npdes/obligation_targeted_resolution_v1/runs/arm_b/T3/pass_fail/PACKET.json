@@ -1,0 +1,92 @@
+{
+  "obligation_id": "pass_fail",
+  "exact_semantic_question": "What does PASS=0 / FAIL=1 reporting mean, and is it a numeric concentration comparison?",
+  "purpose": ["A", "B", "C"],
+  "relation_contract": "binary pass/fail coding is not ordinary concentration comparison",
+  "candidate_interpretations": [
+    {
+      "id": "binary_wet_outcome",
+      "statement": "PASS=0 and FAIL=1 are categorical DMR codes for whole-effluent-toxicity test outcome: report 0 when the test passes (NOEC for survival is not less than the critical dilution) and report 1 when the test fails (NOEC for survival is less than the critical dilution).",
+      "evidence_alignment": "supported"
+    },
+    {
+      "id": "numeric_concentration_comparison",
+      "statement": "Reported 0 or 1 values are numeric pollutant concentrations to be compared against a concentration-based effluent limit using ordinary numeric comparison.",
+      "evidence_alignment": "refuted"
+    },
+    {
+      "id": "dmr_form_field_label_only",
+      "statement": "'CONCENTRATION MAX' in the DMR comment refers only to the DMR form column label for entering the pass/fail code, without establishing a concentration limit comparison.",
+      "evidence_alignment": "supported"
+    }
+  ],
+  "retained_snippets": [
+    {
+      "source_id": "sources/permit_limits.csv",
+      "location": "row LIMIT_VALUE_ID=3610839676, PARAMETER_CODE=22415",
+      "text": "(PASS = 0  FAIL = 1) REPORT PASS AS '0' OR REPORT FAIL AS '1' IN CONCENTRATION MAX. ABOVE.",
+      "why_retained": "Authoritative structured instruction defining the PASS/FAIL coding and where to report it on the DMR."
+    },
+    {
+      "source_id": "sources/permit_limits.csv",
+      "location": "row LIMIT_VALUE_ID=3610839682, PARAMETER_CODE=TEM3D",
+      "text": "LIMIT_UNIT_DESC=pass=0;fail=1, STANDARD_UNIT_DESC=pass=0;fail=1, LIMIT_VALUE_NMBR=(empty)",
+      "why_retained": "Shows pass/fail parameters carry a categorical unit code and no numeric limit value for concentration comparison."
+    },
+    {
+      "source_id": "sources/permit_limits.csv",
+      "location": "row LIMIT_VALUE_ID=3610839684, PARAMETER_CODE=TOM3D",
+      "text": "LIMIT_UNIT_DESC=%, STANDARD_UNIT_DESC=%, LIMIT_VALUE_NMBR=(empty); same DMR_COMMENT_TEXT as pass/fail rows",
+      "why_retained": "Contrasts numeric NOEC reporting (percent units) with pass/fail coding within the same WET limit set sharing one comment."
+    },
+    {
+      "source_id": "documents/farmington/final_permit.txt",
+      "location": "Part II Section 3.c, lines 512-514",
+      "text": "Enter a \"1\" if the No Observed Effect Concentration (NOEC) for survival is less than the critical dilution, otherwise enter a \"0\".",
+      "why_retained": "Permit narrative defining the biological meaning of 1 (fail) vs 0 (pass) on TEM3D/TEM6C pass/fail fields."
+    },
+    {
+      "source_id": "documents/farmington/final_permit.txt",
+      "location": "Part II Section 3.c, lines 515-516",
+      "text": "Report the NOEC value for survival                          TOM3D                 TOM6C",
+      "why_retained": "Establishes that numeric NOEC concentration (percent) is reported on separate parameters, not via the 0/1 pass/fail code."
+    },
+    {
+      "source_id": "documents/farmington/final_permit.txt",
+      "location": "Part II Section 3.c, lines 518-520",
+      "text": "(If required) Retest 1 – Enter a \"1\" if the NOEC for survival is less than the critical dilution, otherwise enter \"0\".",
+      "why_retained": "Extends the same pass/fail semantics to retest STORET codes (22415/22418 etc.) referenced in structured data."
+    },
+    {
+      "source_id": "documents/farmington/final_permit.txt",
+      "location": "Part II Section D.1.b, lines 390-394",
+      "text": "Acute test failure is defined as a demonstration of a statistically significant lethal effect at test completion to a test species at or below the critical dilution",
+      "why_retained": "Defines what constitutes a toxicity test failure underlying the FAIL=1 code."
+    },
+    {
+      "source_id": "sources/dmr_measurements.csv",
+      "location": "row DMR_FORM_VALUE_ID=3832994493, PARAMETER_CODE=TEM3D, MONITORING_PERIOD_END_DATE=11/30/2024",
+      "text": "DMR_VALUE_NMBR=0, DMR_UNIT_DESC=pass=0;fail=1, DMR_VALUE_STANDARD_UNITS=0, LIMIT_VALUE_NMBR=(empty), LIMIT_VALUE_STANDARD_UNITS=(empty)",
+      "why_retained": "Observed reporting uses categorical 0/1 values with pass/fail units and no paired numeric limit for comparison."
+    }
+  ],
+  "contradictory_evidence": [
+    {
+      "source_id": "sources/permit_limits.csv",
+      "location": "DMR_COMMENT_TEXT on all 12 WET rows",
+      "text": "REPORT PASS AS '0' OR REPORT FAIL AS '1' IN CONCENTRATION MAX. ABOVE.",
+      "note": "The phrase 'CONCENTRATION MAX' could be misread as requiring a concentration magnitude comparison; permit Part II clarifies this is the pass/fail entry field, while actual NOEC concentrations are reported separately on TOM parameters."
+    }
+  ],
+  "known_limitations": [
+    "The PASS=0/FAIL=1 DMR_COMMENT_TEXT is replicated on all 12 rows in the WET limit set, including TOM/TQM parameters that use percent units for numeric NOEC or coefficient-of-variation reporting; the pass/fail coding applies to TEM and retest codes, not to TOM/TQM.",
+    "Structured sources do not define the numeric value of 'critical dilution' for automated pass/fail determination; permit narrative references the concept but the threshold is not encoded as LIMIT_VALUE_NMBR on pass/fail rows.",
+    "Six of twelve permit limit rows are optional retest parameters (OPTIONAL_MONITORING_FLAG=Y) with no FY2025 reported values in dmr_measurements.csv; semantics are established from permit text but occurrence-level applicability depends on whether a retest was triggered.",
+    "Evidence is from permit NM0020583 (Farmington) only; all 12 affected structured rows belong to this permit."
+  ],
+  "allowed_dispositions": ["SUPPORTED_RESOLUTION", "SUPPORTED_NEGATIVE", "UNRESOLVED"],
+  "resolution": {
+    "disposition": "SUPPORTED_RESOLUTION",
+    "summary": "PASS=0 / FAIL=1 is a binary whole-effluent-toxicity reporting code: 0 indicates the test passed (NOEC for survival is not less than the critical dilution) and 1 indicates the test failed (NOEC for survival is less than the critical dilution). It is not an ordinary numeric concentration comparison against an effluent limit; numeric NOEC values, when required, are reported separately on TOM parameters in percent."
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "strategy": "a6_multistep",
+  "trial": "R04",
+  "obligation_id": "id-08",
+  "candidate": {
+    "left": "billing:Oakfield Logistik GmbH",
+    "right": "registry:HRB 88421"
+  },
+  "proposed_disposition": "SAME_ENTITY",
+  "final_disposition": "UNRESOLVED",
+  "supporting_evidence": [
+    {
+      "source_path": "sources/company_registry.csv",
+      "location": "row HRB 88421"
+    },
+    {
+      "source_path": "sources/commercial_notes.md",
+      "location": "paragraph 1"
+    },
+    {
+      "source_path": "sources/billing/invoices.json",
+      "location": "billed_name Oakfield Logistik GmbH"
+    }
+  ],
+  "support_claim": "HRB 88421 is registered to Oakfield Logistik GmbH and the packet states that identifier did not change when the company rebranded to that name, matching the Oakfield Logistik GmbH billed in invoices.",
+  "proof_size": 4,
+  "proof_valid": false,
+  "isolation_leaks": [],
+  "steps": [
+    {
+      "fact": "registry:HRB 88421 lists the legal entity name Oakfield Logistik GmbH.",
+      "grounding": {
+        "source_path": "sources/company_registry.csv",
+        "location": "row HRB 88421"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "The entity that rebranded to Oakfield Logistik GmbH retained Handelsregister number HRB 88421.",
+      "grounding": {
+        "source_path": "sources/commercial_notes.md",
+        "location": "paragraph 1"
+      },
+      "mechanical": false
+    },
+    {
+      "fact": "billing:Oakfield Logistik GmbH is the billed name Oakfield Logistik GmbH in billing records.",
+      "grounding": {
+        "source_path": "sources/billing/invoices.json",
+        "location": "billed_name Oakfield Logistik GmbH"
+      },
+      "mechanical": true
+    },
+    {
+      "fact": "HRB 88421 and the billing referent Oakfield Logistik GmbH denote the same legal counterparty because the registry assigns that name to HRB 88421 and the packet states the identifier did not change through rebranding to that name.",
+      "grounding": null,
+      "mechanical": false
+    }
+  ],
+  "admit": {
+    "rule": "ungrounded_nonmechanical_step"
+  },
+  "oracle": "SAME_ENTITY",
+  "in_oracle": true,
+  "exact": false,
+  "unsupported_closure": false,
+  "under_closure": true,
+  "polarity": false,
+  "grounding_valid": true,
+  "proposed_wrong_caught": false,
+  "correct_downgraded": true,
+  "correct_same_never_proposed": false
+}
