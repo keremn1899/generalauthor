@@ -1,4 +1,8 @@
-"""Candidate World execution, fail-closed accept validation, atomic publish."""
+"""Candidate World execution, fail-closed accept validation, atomic publish.
+
+Implements publication integrity and WORLD BASE SOURCE accountability for the
+construction boundary. Does not change TaskView.
+"""
 
 from __future__ import annotations
 

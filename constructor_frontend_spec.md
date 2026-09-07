@@ -5,6 +5,12 @@
 **Scope:** Human review of, and intervention in, an agent-authored construction
 **Non-goal:** Becoming an ontology authoring tool
 
+**Authority note:** This specification is the review UI over the **research
+nine-pass constructor** (P0–P8 artifacts). It is not the product construction
+architecture and not World IR ontology. Product construction is
+`research/semantic_integration/CONSTRUCTION.md`. Semantics are
+`CONSTITUTION.md`. P0–P8 filenames below are that compiler's current emission.
+
 ---
 
 ## 1. Product boundary
@@ -13,9 +19,10 @@ The read-side explorer answers *what is true and why*. This surface answers
 *how did this become true, and where should a person intervene*.
 
 It is a **review and intervention surface over an agent's construction**. The
-constructor (composer-2.5, passes P0–P8) authors the world. A human reads what
-it did, disagrees where it is wrong, and owns publication. That division is
-already the product boundary in `CLAUDE.md`:
+research nine-pass constructor (composer-2.5, passes P0–P8) is the artifact
+shape this surface currently reads. A human reads what it did, disagrees where
+it is wrong, and owns publication. That division is already the product
+boundary in `CLAUDE.md`:
 
 > The editor agent owns interpretation and authors construction programs. […]
 > A human owns publication.
@@ -81,9 +88,11 @@ shape this surface.
 
 ---
 
-## 2. What the constructor emits — frozen
+## 2. What the research constructor emits — frozen for this surface
 
-The front end reads these artifacts. It does not change their shape.
+The front end reads these artifacts. It does not change their shape. A product
+construction that does not emit these files can still be a valid World; this
+table is the research compiler's current emission, not ontology.
 
 | Pass | Artifact | The human question |
 |---|---|---|

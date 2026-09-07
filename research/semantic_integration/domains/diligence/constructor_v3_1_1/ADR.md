@@ -1,5 +1,7 @@
 # ADR: Constructor v3.1.1 ABI materializability invariant
 
+This increment hardens the **research nine-pass constructor**. It is not generic heterogeneous-source ingestion and not a kernel change. Product construction: `research/semantic_integration/CONSTRUCTION.md`.
+
 FOUNDATIONAL: kernel unchanged. TaskView hash remains identical (`7704e551b50cacb9`).
 
 COMPILER_INVARIANT: `SATISFIED(f) => f in Normalize(W)` for every required consumer semantic field or relation f. `SATISFIED` is a realizability guarantee, not merely a declaration guarantee.

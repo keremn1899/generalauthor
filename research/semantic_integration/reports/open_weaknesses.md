@@ -7,7 +7,9 @@ These are the current iffy bits. Evidence is what the sealed probes actually sho
 
 Authorities this note sits with:
 
-- [`ARCHITECTURE.md`](../ARCHITECTURE.md) — layers; kernel moves only on a concrete counterexample
+- [`CONSTITUTION.md`](../CONSTITUTION.md) — semantic properties; kernel moves only on a concrete counterexample
+- [`CONSTRUCTION.md`](../CONSTRUCTION.md) — product construction loop; next experiment is the top construction surface
+- [`ARCHITECTURE.md`](../ARCHITECTURE.md) — thin index
 - [`minimal_semantic_integration_synthesis_v0.md`](minimal_semantic_integration_synthesis_v0.md) — what the NPDES campaign appears to have established
 - [`drop_in_harness_v0_spec.md`](drop_in_harness_v0_spec.md) — guest harness; still unimplemented
 
@@ -36,7 +38,7 @@ Sealed results this table draws on (do not modify):
 | Spine factoring / minimality | Agents find the distinctions well but express them at inconsistent granularity | Mixed | New-domain convergence + post-construction factoring | Anatomy: E1 7/7 stable core; factorized schemas ~11–16; T3=31 vs T5=8 hole groups from grain (seasonal months, comment families), not different primary coverage. Much minimality is safely post-construction. |
 | Semantic frontier recall | Earlier NPDES constructors missed staged TDS and source authority | Observed capability weakness | New-domain purpose where those semantics are central rather than peripheral | Purpose-First Python Spine recovered WHEN DISCHARGING / staged TDS / source authority 5/5 after the spine-compiler and prose probes had missed them as purpose-reachable holes. That is a capability win on a known miss, not evidence those families are now reliably found in a new domain. |
 | Cross-reconstruction app stability | Different constructors may name equivalent semantics differently | Known pressure, untested product failure | Defer until persistent/generated apps actually break | E2E held one T5 contract fixed while facts were enriched; consumer rewrite count = 0. That is **not** the ABI question. E2E Q22 and the drop-in spec both defer `semantic_identity` / cross-reconstruction until a real consumer breaks. |
-| Kernel adequacy | No demonstrated missing representational primitive | Strong so far | Don't touch unless a new domain produces a concrete counterexample | Matches [`ARCHITECTURE.md`](../ARCHITECTURE.md) §1. E2E: no correctness failure that required a new kernel primitive, graph API, or Source IR. TaskView/kernel were not modified. |
+| Kernel adequacy | No demonstrated missing representational primitive | Strong so far | Don't touch unless a new domain produces a concrete counterexample | Matches [`CONSTITUTION.md`](../CONSTITUTION.md). E2E: no correctness failure that required a new kernel primitive, graph API, or Source IR. TaskView/kernel were not modified. |
 
 ---
 

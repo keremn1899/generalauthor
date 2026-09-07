@@ -4,6 +4,8 @@
 **Foundation:** frozen Spike 1 `runtime_v0` (`SPIKE1_RUNTIME_LOOP_SUPPORTED`) over TaskView.  
 **Judgment:** `DROP_IN_HARNESS_SHAPE_COHERENT`
 
+Product authority: [`../CONSTITUTION.md`](../CONSTITUTION.md), [`../CONSTRUCTION.md`](../CONSTRUCTION.md). This file is a guest-harness sketch. Directory layout and `construction.py` as a required filename are mechanisms, not constitution.
+
 The harness is a **guest** in an arbitrary existing workspace. It compiles heterogeneous evidence into a grounded programmable World, then stays out of the agent's way. Permanent software handles invariants. Agent intelligence handles strategies.
 
 ```text

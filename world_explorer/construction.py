@@ -5,6 +5,11 @@ questions about what is true; this one opens the *run that built it* and
 answers questions about what was decided, by whom, on what evidence, and what
 is still open. `constructor_frontend_spec.md` §12 is the contract.
 
+This module reads the **research nine-pass constructor** artifact map
+(P0–P8). That map is not product construction ontology; see CONSTRUCTION.md.
+A future construction agent that does not emit these files is not a defect
+in the World contract.
+
 **It cannot write.** There is no method here that opens a file for writing, and
 none should be added: a verdict is recorded beside the run by the surface that
 takes it (§14 step 3), never into a pass artifact and never into a compiled

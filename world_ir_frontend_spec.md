@@ -5,6 +5,10 @@
 **Scope:** Human exploration of a compiled semantic world  
 **Non-goal:** Redesigning the canonical World IR around visualization
 
+**Semantic authority:** `research/semantic_integration/CONSTITUTION.md`. This
+document restates the calculus only as a visualization constraint. It does not
+own the construction architecture; see `CONSTRUCTION.md`.
+
 ---
 
 ## 1. Product boundary
@@ -46,7 +50,9 @@ World IR
 
 # 2. Canonical semantic model — frozen
 
-The canonical World IR is not a property graph.
+The canonical World IR is not a property graph. The load-bearing account is
+`research/semantic_integration/CONSTITUTION.md`. This section restates it only
+so the visual layer cannot drift.
 
 The semantic core is:
 

@@ -3,6 +3,10 @@
 This package is a deliberately isolated SQLite prototype. It does not modify or
 wrap Graphauthor's graph product.
 
+It is the current **store** for World IR. The product semantic properties live
+in `research/semantic_integration/CONSTITUTION.md`. This README is the
+implemented TaskView contract, not a competing constitution.
+
 The semantic plane is composed of ordinary typed SQL tables—one table per named
 relation. The `_tv_*` tables hold the system plane: thin referents, relation
 schemas, assertion identity and grounding, derivation definitions and inputs,

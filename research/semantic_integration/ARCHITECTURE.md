@@ -1,47 +1,43 @@
-# Semantic-integration layers
+# Semantic-integration architecture
 
-This is a research constructor stack. The product kernel (TaskView) is unchanged.
+This file is an **index**. It is not a second constitution.
 
-## 1. Foundational (hard to change)
+| Read | For |
+| --- | --- |
+| [`CONSTITUTION.md`](CONSTITUTION.md) | Load-bearing semantic properties, change bars, what a valid World is |
+| [`CONSTRUCTION.md`](CONSTRUCTION.md) | Product construction loop, `runtime_v0`, research constructor, agent brief |
+| [`reports/open_weaknesses.md`](reports/open_weaknesses.md) | Current iffy bits (evidence, not a plan to implement) |
+| [`reports/minimal_semantic_integration_synthesis_v0.md`](reports/minimal_semantic_integration_synthesis_v0.md) | Experimental synthesis after the NPDES campaign |
 
-`taskview/` — Referent, named typed n-ary Relation, Derivation, grounding, open-world UNRESOLVED, World vs purpose lifetime.
+The product kernel (TaskView) is unchanged by this document. A kernel change still needs a concrete representational counterexample. Constructor v3 has none.
 
-No constructor prompt, adjudication strategy, semantic-family hint, or diligence-only rule belongs here.
+---
 
-A kernel change needs a correctness counterexample. Constructor v3 has none. Current iffy bits after the NPDES / E2E programmability campaign — including this kernel bar — are recorded in [`reports/open_weaknesses.md`](reports/open_weaknesses.md).
+## Layers (dependency direction)
 
-## 2. Semantic contracts (expected to evolve)
-
-Machine-readable ABI: `RelationContract` (roles with optional `semantic_identity`), `PurposeProjectionContract` (`field_sources` to consumer fields), derivation/projection contracts.
-
-Constructors may name tables and roles freely. Consumer programs depend on **consumer field identity**, not constructor relation names.
-
-## 3. Replaceable compiler passes
-
+```text
+FOUNDATIONAL          taskview/ + invariants in CONSTITUTION.md
+        ↑
+CONTRACTS             grounding / materializability / consumer identity / write boundary
+        ↑
+MECHANISMS            runtime_v0, SemanticWorld wrap, sidecars, construction.py
+        ↑
+RESEARCH STRATEGIES   nine-pass P0–P8, packets, REFINED, cue verifier, Probe A/B
 ```
-P0 intention → P1 vocabulary/contracts → P2 mechanical
-→ P3 frontier → P4 packets → P5 adjudicate → P6 admit
-→ normalize → P7 derive → P8 project
-```
-
-P8 is deterministic. Normalization is deterministic given contracts.
-
-P6 World commit is validated by `validate_provenance()`: every durable assertion must have SOURCE, WORLD, ASSERTION, or DERIVATION grounding.
-
-Required consumer identities are checked by ABI completeness (`SATISFIED` / `UNSATISFIED` / `AMBIGUOUS`) before projection. `SATISFIED` is a realizability guarantee, not merely a declaration guarantee: for required consumer field/relation \(f\), \(SATISFIED(f) \Rightarrow f \in \text{Normalize}(W)\). ABI completeness and normalization share the same materialization semantics. Declared bindings that cannot be materialized from World produce `UNSATISFIED: NOT_MATERIALIZABLE` and yield `INCOMPLETE_PURPOSE` before projection. Missing bindings fail locally; they are not fuzzy-repaired.
-
-Default P5 is a bounded single adjudicator. A DISTINCT-only negative-closure gate may downgrade DISTINCT to UNRESOLVED. It must not change SAME or upgrade UNRESOLVED.
-
-## 4. Experimental (not a core dependency)
-
-Cue-list verifier, critic, entailment, proof-obligation gates, pairwise/multistep proof, semantic-family hints, Probe A/B strategy code.
-
-Sealed under `semantic_proof_benchmark_v1/` and `schema_normalization_v1/`. Default Constructor v3 must not import them.
-
-## 5. Allowed dependency direction
 
 Experimental strategies may depend on contracts and TaskView.
 
 Foundational semantics must never depend on an experimental strategy.
 
-Default v3 runtime may depend on A/B/C contracts and TaskView. It must not depend on Probe A strategies or the v2 cue verifier.
+`runtime_v0` may depend on TaskView and `core/`. TaskView must not import `runtime_v0`. Default Constructor v3 runtime must not import Probe A strategies or the v2 cue verifier.
+
+---
+
+## What is not this index
+
+- **Constructor v3.1.1** is a fail-closed materializability hardening of the research constructor, not generic heterogeneous-source ingestion. See `domains/diligence/constructor_v3_1_1/ADR.md`.
+- **Nine-pass artifacts** are that compiler's emission. The construction-review UI (`constructor_frontend_spec.md`, `world_explorer/construction.py`) reads them. They are not World IR ontology.
+- **`construction.py`** is a supported feeding mechanism, not a primitive.
+- **Sealed reports** stay sealed. Do not rewrite them to match this index.
+
+Historical layer notes that this file used to carry (P0–P8 as “the” compiler, Probe A/B as §4) now live in `CONSTRUCTION.md` §4 and `CONSTITUTION.md` §6.

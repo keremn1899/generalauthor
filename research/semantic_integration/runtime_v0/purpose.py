@@ -1,4 +1,8 @@
-"""Deterministic purpose requirements. Failures are an ordinary PURPOSE relation."""
+"""Deterministic purpose requirements. Failures are an ordinary PURPOSE relation.
+
+``purpose_requirement_failure`` is a mechanism for explicit unresolvedness, not
+a kernel primitive. See CONSTITUTION.md.
+"""
 
 from __future__ import annotations
 

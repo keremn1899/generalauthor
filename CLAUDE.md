@@ -10,7 +10,7 @@ else. Establish which one you are in before you change anything.
 | | **World IR** (live) | **Graphauthor graph-v1** (frozen) |
 |---|---|---|
 | Store | `taskview/` — SQLite, one table per relation | `graph_storage/` — Ladybug `.lbug` |
-| Construction | nine-pass agent constructor | agent-authored `workbook/build.py` |
+| Construction | capable agent → World construction boundary (`runtime_v0` is the current mechanism; nine-pass constructor is research) | agent-authored `workbook/build.py` |
 | Read plane | `world_explorer/` | `mcp_server/` |
 | Front end | `frontend/src/world/` | `frontend/src/product/` |
 | Route | `#/world` | `#/graph`, `#/review` |
@@ -25,13 +25,17 @@ belongs to the World IR line.
 
 ## The product
 
-A local, read-only semantic data layer that integrates heterogeneous
-authoritative sources into grounded, reusable, computable world state. The
-value hypothesis is reuse: cross-source meaning is constructed once and reused
-across analyses instead of reconstructed per question.
+A local semantic compilation layer. Given a user purpose and a heterogeneous
+evidence/workspace, a capable agent constructs the smallest grounded World
+sufficient for that purpose and leaves unestablished meaning unresolved.
+Consumers (SQL, Python, agents, the explorer) reuse that World instead of
+reconstructing source-specific semantics from the original files.
 
-An agent constructs. A human reviews and owns publication. The product never
-authors interpretation.
+An agent constructs. A human reviews and owns publication. The product runtime
+never authors interpretation.
+
+Authoritative account: `research/semantic_integration/CONSTITUTION.md`.
+Construction loop and agent brief: `research/semantic_integration/CONSTRUCTION.md`.
 
 ## The semantic calculus — frozen
 
@@ -46,7 +50,7 @@ explicit unresolved state.
 
 This does not move. Change it only for a concrete correctness counterexample
 showing the core cannot represent something required — not for the
-convenience of a view.
+convenience of a view. Details and change bars are in the constitution.
 
 Three facts that are easy to get wrong and are load-bearing:
 
@@ -72,44 +76,37 @@ ConstructionOrigin           MECHANICAL | SEMANTIC | DERIVED | ADJUDICATED
 A person's decision entering as `SEMANTIC` launders it as the machine's, and
 every downstream claim about construction becomes untrue.
 
-## Construction: the nine passes
+## Construction
 
-The constructor is an LLM agent, isolated per pass. It writes artifacts; the
-host validates and materializes.
-
-```text
-P0  00_intention_contract.json     purposes → objectives, scope, epistemics
-P1  01_vocabulary.json             relations, roles, admission, class
-P2  02_mechanical_world/           deterministic compile; grounded BASE tuples
-P3  03_obligations.json            the frontier: what a purpose needs decided
-P4  04_packets/<obligation>.json   bounded evidence per obligation
-P5  05_dispositions.json           adjudication
-P6  06_admission.json, 06_world/   WORLD vs PURPOSE; the compiled world
-P7  07_derivations.json            derived relations, blocking premises
-P8  08_outputs/{a,b,c}.json        purpose answers
-```
-
-Still nine. v3 added no pass — normalization is a deterministic stage inside
-projection, not one a human reviews — and put machine checks *inside* passes
-instead. Each writes a document whose whole contract is a top-level `ok`:
+The product construction story is not a pass machine:
 
 ```text
-P1  01_abi_completeness.json       are the required consumer fields declarable
-P6  06_provenance.json             is every durable assertion grounded
-P8  08_abi_completeness.json       do those fields materialize before projection
+purpose + heterogeneous workspace
+        → capable construction agent
+        → arbitrary programming / exploration
+        → World construction boundary
+        → candidate World
+        → deterministic validation / publication
+        → accepted World
 ```
 
-A pass can write its artifact, exit 0, and say no in the same breath. The read
-plane carries that (`PASS_ATTESTATIONS` in `world_explorer/construction.py`)
-and a refused check withholds CERTIFIED — §5 lets the reader withhold
-certification and never confer it, so that is the direction it resolves in.
-Absence is silence: runs frozen before the checks existed read unchanged.
+`runtime_v0` is the current boundary mechanism (`construction.py` executed into
+a candidate TaskView, then accept or discard). `construction.py` is a supported
+authoring shape, not a semantic primitive.
 
-Lives in `research/semantic_integration/`; `ARCHITECTURE.md` there is the
-current account of the pipeline. The kernel is `core/kernel.py` (wraps
-`taskview.TaskView`, never forks it); the constructor line is v3, most recently
-`domains/diligence/constructor_v3_1_1/`, with `constructor_v2/` frozen beside
-it. Both are readable by the same read plane, which is the point.
+The nine-pass P0–P8 constructor in `domains/diligence/constructor_v3_1_1/`
+(with `constructor_v2/` frozen beside it) is **research compiler strategy**.
+It earned invariants the constitution keeps (WORLD vs PURPOSE, provenance,
+fail-closed materializability). It is not the permanent product workflow.
+v3.1.1 is that compiler's ABI-materializability hardening, not generic
+heterogeneous-source ingestion.
+
+The construction-review read plane (`world_explorer/construction.py`) still
+reads nine-pass artifacts. That is a reviewer of the research compiler, not
+World IR ontology.
+
+The kernel is `core/kernel.py` (wraps `taskview.TaskView`, never forks it).
+`research/semantic_integration/ARCHITECTURE.md` is a thin index.
 
 **`research/` is user-owned.** Do not modify it, and never overwrite sealed
 results, unless the task is explicitly that work.
@@ -119,34 +116,39 @@ results, unless the task is explicitly that work.
 | Path | Role |
 |---|---|
 | `taskview/` | the store: model, TaskView, agent surface |
-| `research/semantic_integration/` | kernel, constructor, benchmarks — user-owned |
-| `world_explorer/` | read plane: `adapter.py` formats, `http.py` serves |
+| `research/semantic_integration/` | constitution, kernel wrap, `runtime_v0` boundary, research constructor, benchmarks — user-owned |
+| `research/semantic_integration/runtime_v0/` | current construction-boundary mechanism (not ontology) |
+| `world_explorer/` | read plane: `adapter.py` formats, `http.py` serves; `construction.py` reads the research nine-pass run |
 | `frontend/src/world/` | the explorer UI |
 | `frontend/src/styles/` | `graphDna.ts`, `motion.ts` — the shared visual kernel |
-| `scripts/build_world.py` | compile a world the explorer can open |
+| `scripts/build_world.py` | compile a BOM-lineage world the explorer can open |
 | `data/worlds/` | compiled worlds + sidecars (generated, not source) |
 
 `world_explorer/adapter.py` **holds no state.** Every method reads through to
 the open world. An adapter that caches is a second copy of the world with its
 own staleness.
 
-A world on disk is four files, and the origins sidecar is the one that gets
-missed:
+A compiled World is a TaskView sqlite plus sidecars. The origins sidecar is
+the one that gets missed. Two current clusters exist; they are mechanisms,
+not two calculi:
 
 ```text
-bomS1.sqlite                 TaskView
-bomS1.sqlite.origins.json    construction origin per assertion
-bomS1.demand.json            the purpose and what it leaves unresolved
-bomS1.demand.json.sha256
+BOM / explorer lineage              runtime_v0 accepted/
+bomS1.sqlite                        world.sqlite
+bomS1.sqlite.origins.json           world.sqlite.origins.json
+bomS1.demand.json                   world.purpose.json
+bomS1.demand.json.sha256            world.admission.json
 ```
 
 ## Design authorities
 
 In order. Benchmarks are evidence, not specification.
 
-1. `world_ir_frontend_spec.md` — the read side
-2. `constructor_frontend_spec.md` — the construction-review side
-3. `Read-side World v0 — first product-shaped reuse slice.md` — product thesis
+1. `research/semantic_integration/CONSTITUTION.md` — semantic properties
+2. `research/semantic_integration/CONSTRUCTION.md` — construction architecture and agent brief
+3. `world_ir_frontend_spec.md` — the read-side presentation contract
+4. `constructor_frontend_spec.md` — review UI over the research nine-pass constructor
+5. `Read-side World v0 — first product-shaped reuse slice.md` — early read-side product thesis
 
 Do not recover product behavior from deleted design history, old branches,
 trial outputs, or database fixtures.

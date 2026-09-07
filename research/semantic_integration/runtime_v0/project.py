@@ -1,4 +1,8 @@
-"""Project root: sources + construction.py → candidate → accepted TaskView."""
+"""Project root: sources + construction.py → candidate → accepted TaskView.
+
+``construction.py`` is the current authoring shape, not ontology. The host
+executes it into a candidate directory and either publishes or discards.
+"""
 
 from __future__ import annotations
 

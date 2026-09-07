@@ -1,4 +1,8 @@
-"""Fail-closed construction wrap over SemanticWorld. Does not change TaskView."""
+"""Fail-closed construction wrap over SemanticWorld. Does not change TaskView.
+
+WORLD BASE requires SOURCE grounding; PURPOSE-scoped rows may omit it.
+Admission scope is a sidecar mechanism for the WORLD vs PURPOSE invariant.
+"""
 
 from __future__ import annotations
 

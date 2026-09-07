@@ -3,6 +3,8 @@
 **Status:** research synthesis after the NPDES purpose-first / obligation / refinement campaign.  
 **Not:** a TaskView schema change, Constructor promotion, product-spec replacement, or host-strategy fossilization.
 
+Product authority after the architecture pass: [`../CONSTITUTION.md`](../CONSTITUTION.md) and [`../CONSTRUCTION.md`](../CONSTRUCTION.md). This file remains experimental evidence, not law.
+
 Sealed experiments this document synthesizes (do not modify):
 
 - Purpose-First Python Spine Probe  

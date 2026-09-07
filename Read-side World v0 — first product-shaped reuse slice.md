@@ -1,5 +1,9 @@
 # Read-side World v0 — first product-shaped reuse slice
 
+**Status:** early read-side product thesis (BOM explorer slice).  
+**Semantic / construction authority:** `research/semantic_integration/CONSTITUTION.md`, `CONSTRUCTION.md`.
+This file is not the construction architecture and does not require the nine-pass constructor.
+
 We are beginning implementation of the minimal read-side product built on the existing semantic-integration research kernel.
 
 Do not turn this into a general platform.

@@ -1,4 +1,7 @@
-"""Thin experimental kernel over the existing TaskView store."""
+"""Thin World IR wrap over the existing TaskView store.
+
+Not a second calculus. See CONSTITUTION.md.
+"""
 
 from research.semantic_integration.core.kernel import SemanticWorld
 from research.semantic_integration.core.origins import ConstructionOrigin, OriginMetadataError

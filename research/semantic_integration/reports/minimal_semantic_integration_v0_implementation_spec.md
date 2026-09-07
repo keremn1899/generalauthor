@@ -1,7 +1,9 @@
 # Minimal Semantic Integration System — v0 implementation spec
 
 **Status:** research-only implementation specification.  
-**Not:** an implementation, a TaskView/kernel change, a Constructor change, or a replacement for `ARCHITECTURE.md`, `world_ir_frontend_spec.md`, or `constructor_frontend_spec.md`.
+**Not:** an implementation, a TaskView/kernel change, a Constructor change, or a replacement for `CONSTITUTION.md`, `CONSTRUCTION.md`, `ARCHITECTURE.md`, `world_ir_frontend_spec.md`, or `constructor_frontend_spec.md`.
+
+Product authority: [`../CONSTITUTION.md`](../CONSTITUTION.md), [`../CONSTRUCTION.md`](../CONSTRUCTION.md). This spec remains the research-only v0 implementation sketch that Spike 1 partially realized.
 
 This document asks whether the synthesis in `minimal_semantic_integration_synthesis_v0.md` compiles into a **small believable piece of software**, given what already exists.
 
@@ -16,7 +18,7 @@ NOT_NEEDED        out of v0 even as research promotion
 
 Authority order for this pass:
 
-1. Frozen foundation: `taskview/` plus `research/semantic_integration/ARCHITECTURE.md` §1.
+1. Frozen foundation: `taskview/` plus [`CONSTITUTION.md`](../CONSTITUTION.md).
 2. Existing compiler contracts: Constructor v3.1.1 `RelationContract` / `field_sources` / ABI materializability (do not invent a second ABI).
 3. Experimental synthesis: `reports/minimal_semantic_integration_synthesis_v0.md`.
 4. Product UI specs: read, not rewritten. v0 does not implement them.

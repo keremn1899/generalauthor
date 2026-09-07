@@ -1,6 +1,8 @@
 # Constructor v3
 
-Diligence development increment. Not a fourth-domain claim.
+Diligence **research compiler**. Not the product construction architecture, not a fourth-domain claim.
+
+Product construction: `research/semantic_integration/CONSTRUCTION.md`. Semantics: `CONSTITUTION.md`.
 
 - Kernel: `taskview/` (unchanged)
 - Contracts + runtime: `runtime/`
@@ -8,4 +10,4 @@ Diligence development increment. Not a fourth-domain claim.
 - P8: normalize through contracts, then deterministic project
 - Experimental strategies stay in sealed Probe A/B packages
 
-See `research/semantic_integration/ARCHITECTURE.md` and `reports/constructor_v3.md`.
+See `research/semantic_integration/ARCHITECTURE.md` (index) and `reports/constructor_v3.md`.

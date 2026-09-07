@@ -1,4 +1,8 @@
-"""Research-only v0 construction runtime. Wraps TaskView. Not a product surface.
+"""Construction-boundary runtime over TaskView.
+
+A capable agent may author ordinary Python that explores sources and commits a
+candidate World. This package is a supported *mechanism* for that boundary, not
+a semantic primitive and not a required filename. See CONSTRUCTION.md.
 
 TaskView must not import this package.
 """

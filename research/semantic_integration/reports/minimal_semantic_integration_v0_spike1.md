@@ -2,6 +2,8 @@
 
 Research-only vertical slice. Not a productization. Not an ABI increment.
 
+Product reading: `runtime_v0` is the current construction-boundary *mechanism* (`CONSTRUCTION.md`). This report remains the sealed spike evidence. Do not rewrite it.
+
 Runtime: `research/semantic_integration/runtime_v0/`  
 Fixture: `research/semantic_integration/runtime_v0/fixtures/minimal_v0/`  
 Tests: `tests/semantic_integration/test_runtime_v0_spike1.py`

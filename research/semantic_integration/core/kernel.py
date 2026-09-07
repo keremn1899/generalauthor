@@ -1,8 +1,8 @@
-"""Experimental World IR/semantic kernel.
+"""World IR wrap over ``taskview.TaskView``. Never a fork of TaskView.
 
-Wraps ``taskview.TaskView`` instead of forking it.  Domain vocabularies live in
-fixture/config code.  Construction origin is recorded beside TaskView, not as
-a TaskView schema change.
+The calculus is CONSTITUTION.md. This module is the current kernel *mechanism*:
+domain vocabularies live in fixture/config code; construction origin is
+recorded beside TaskView, not as a TaskView schema change.
 """
 
 from __future__ import annotations
