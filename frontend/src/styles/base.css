@@ -31,7 +31,9 @@
 
   font-family: var(--font-sans);
   line-height: 1.4;
-  font-weight: 400;
+  /* Literal fallback for the same reason `.route-loading` below carries one:
+     this paints before the shell mounts and writes `--weight-regular`. */
+  font-weight: var(--weight-regular, 400);
   color: var(--ink);
   background: var(--panel);
 }
@@ -113,7 +115,7 @@ body {
    four pinned status values.
 
    It is a whole bug class rather than one bug: it cost the composer's blue
-   checkboxes and every secondary decision button in Review, and the design
+   checkboxes and every secondary decision button in the inspector, and the design
    suite structurally cannot catch it, because a UA default is never written in
    a stylesheet for a rule to find. Reset once, here. */
 button {
@@ -133,10 +135,9 @@ button:disabled {
    That comment above says "reset once, here", and it was half true: it reset
    `button` and left every native input painting itself in the UA accent, which
    in Chrome is a blue nothing in this product chose. So the fix was applied
-   per-component instead — `accent-color` appears in three separate stylesheets,
-   once per class that happened to have a checkbox in it — and Settings then
-   grew a fourth class, `settings__check`, which nobody remembered to patch. Its
-   "check the key with OpenRouter first" box has been Chrome blue ever since.
+   per-component instead — `accent-color` appeared in separate stylesheets,
+   once per class that happened to have a checkbox in it — and a new checkbox
+   could easily be forgotten.
 
    Per-component patching cannot close a bug whose symptom is the *absence* of a
    declaration: there is no failing selector to find, only a class that was
@@ -196,7 +197,7 @@ pre,
 
 /* Visible to a screen reader, to nothing else.
 
-   This lived inside `ReviewWorkspace.css`'s toolbar block, so deleting that
+   This lived inside an older toolbar stylesheet, so deleting that
    block deleted the only definition and every `sr-only` label in the product
    became visible text. A utility used by more than one surface belongs to the
    base, not to whichever component happened to need it first. */

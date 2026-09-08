@@ -1,6 +1,7 @@
-"""Thin World IR wrap over the existing TaskView store.
+"""World semantic implementation and SQLite storage primitives.
 
-Not a second calculus. See CONSTITUTION.md.
+The public product is centered on World operations; these modules are the
+implementation beneath that surface.
 """
 
 from ontology_author.world.core.kernel import SemanticWorld

@@ -1,8 +1,0 @@
-{
-  "utterance_understood": "No. A measurement may need to be compared against multiple genuinely different limit types, but duplicate or restated catalog rows should still collapse.",
-  "candidate_scope": "ONE_PURPOSE",
-  "semantic_delta": "Reject the draft policy that each FY2025 measurement has exactly one applicable numeric limit. Derive measurement_limit_pair by matching each measurement to all permit-limit catalog rows that share permit, outfall, parameter, and an effective interval containing the monitoring period, then collapse duplicate or restated catalog rows before materialization. Replace the Purpose A uniqueness requirement from cardinality ONE per measurement to AT_LEAST_ONE per measurement, allowing multiple surviving pairs when they represent genuinely different limits.",
-  "epistemic_basis": "USER_CERTIFIED_POLICY",
-  "remaining_ambiguity": "The expert did not specify which structured fields distinguish genuinely different limits from restatements beyond limit type. The dry-run collapse key uses limit_type_code, limit_id, limit_value_standard_units, limit_value_qualifier_code, and statistical_base_type_code; narrower keys (e.g., limit_value_id only) or broader keys may be intended. It is also unresolved whether multiple limits sharing the same limit_type_code but differing in numeric value or limit_id should all remain applicable, or whether downstream per-measurement comparison requirements should be re-scoped to each measurement–limit pair.",
-  "primary_dry_run_id": "multi_applicable_limits"
-}

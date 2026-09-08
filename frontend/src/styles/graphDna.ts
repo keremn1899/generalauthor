@@ -93,10 +93,10 @@ export const GRAPH_DNA_THEME: Record<ThemeMode, GraphDnaTheme> = {
 };
 
 /**
- * Provisional matter — a graph nobody has published yet.
+ * Muted matter — semantic material that is not yet settled.
  *
- * A construction is looked at for the same reason a published graph is, so it
- * has to stay legible; what it must never do is read as settled. The move is
+ * Unsettled material still has to stay legible; what it must never do is read
+ * as settled. The move is
  * therefore *within* the scale rather than out of it: the field comes up one
  * step, matter comes down one or two, and the gap between them narrows.
  * Everything is still the same gray in the same room — the graph just has less
@@ -104,13 +104,13 @@ export const GRAPH_DNA_THEME: Record<ThemeMode, GraphDnaTheme> = {
  *
  * Matter sat two to three steps down at first and read as fog rather than as a
  * state: legibility is the whole reason to open this surface, so the mute has
- * to be the smallest one that still cannot be mistaken for a published graph.
+ * to be the smallest one that still cannot be mistaken for settled material.
  * It is a step gentler than it was.
  *
  * Done as a palette rather than as `opacity` on the stage, which is what this
  * replaced. Opacity fades a whole subtree including its labels and any focus
  * state drawn over it, so a lit answer on a construction came out fainter than
- * unlit matter on a published graph — the emphasis inverted. A palette moves
+ * unlit matter on a settled World — the emphasis inverted. A palette moves
  * the resting look and leaves every state that is drawn *on top* at full
  * strength.
  */
@@ -164,17 +164,16 @@ export const GRAPH_DNA_FOCUS: GraphDnaFocusTheme = {
 /**
  * Product chrome — shell, panels, rules, type.
  *
- * Here rather than beside the product because the graph is the design source:
+ * Here rather than beside individual components because the World canvas is
+ * the visual source:
  * chrome is the same ink and the same paper as node matter, one step apart on
  * the same Radix scale, and that relationship is the thing worth keeping. The
- * shell reads these on every render, so the DNA workbench tunes what actually
+ * shell reads these on every render, so one palette controls what actually
  * ships.
  *
- * This used to be stated twice — as hex in `ProductShell.css` and as tokens in
- * the workbench — and the two had already drifted: `ink-muted` shipped as
- * `#646464` while the workbench showed `gray9`, and `rule` as `#d9d9d9` against
- * `gray6`. Every chrome knob on that page was tuning a value the product did
- * not use.
+ * This used to be stated twice — as hex in shell styles and as separate tokens
+ * — and the two had already drifted. Keeping the palette here gives the
+ * inspector one source for chrome contrast and status colour.
  */
 export type GraphDnaChrome = {
   canvas: RadixToken;
@@ -205,7 +204,7 @@ export const GRAPH_DNA_CHROME: Record<ThemeMode, GraphDnaChrome> = {
 };
 
 /**
- * Provisional chrome — the shell around a graph nobody has published.
+ * Muted chrome — the shell around unsettled semantic material.
  *
  * Same move as the matter palette and it has to be applied together: chrome
  * one step quieter under an unchanged map would read as a rendering fault
@@ -239,7 +238,7 @@ export const GRAPH_DNA_PROVISIONAL_CHROME: Record<ThemeMode, GraphDnaChrome> = {
  * a state that changes what you do. Three states, and adding a fourth is a
  * design decision that has to be made here.
  *
- * These lived as six hex literals inside `ReviewWorkspace.css`, from when
+ * These lived as six hex literals inside an older review stylesheet, from when
  * Review was the only surface with status to report. Two things broke that:
  *
  *   The nav now reports the same "waiting for you" in the top bar. A value that
@@ -308,9 +307,9 @@ export function chromeCssVariables(
  * The focus palette as CSS, for the canvas's inverted reading state.
  *
  * Named `--focus-*` and never spelled as hex in a stylesheet, for the reason
- * `GRAPH_DNA_CHROME` exists. Ask does not read these directly: it uses the
- * shell's `--canvas` / `--ink`, which `ProductShell` remaps onto this palette
- * when the map inverts. Wiring Ask at `--focus-*` while the map was still
+ * `GRAPH_DNA_CHROME` exists. The inspector does not read these directly: it
+ * uses the shell's `--canvas` / `--ink`, which the World shell remaps onto this
+ * palette when the map inverts. Wiring the inspector at `--focus-*` while the map was still
  * light put dark-room ink on a light field.
  */
 export function focusCssVariables(
@@ -401,7 +400,7 @@ export const GRAPH_DNA_GEOMETRY = {
  *                the shape of the assertion exists, the content does not
  *
  * Staleness is deliberately absent from this list. It is a property of a whole
- * relation in TaskView (`is_stale(relation)`), not of one tuple, so a per-chip
+ * relation in the World storage layer (`is_stale(relation)`), not of one tuple, so a per-chip
  * mark would claim a precision the store does not have. A stale relation's
  * matter renders in `GRAPH_DNA_PROVISIONAL_THEME` instead — the palette that
  * already means "present, legible, not to be treated as settled".

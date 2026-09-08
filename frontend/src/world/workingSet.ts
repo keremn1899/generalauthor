@@ -454,7 +454,19 @@ export type DemandPlacement = {
 export function placeDemand(set: WorkingSet, input: DemandPlacement): WorkingSet {
   if (set.demands.has(input.key)) return set;
   const next = clone(set);
-  const referentRoles = input.roles.filter((role) => role.referent);
+  /**
+   * Only the roles this obligation actually names.
+   *
+   * An obligation is the one tuple shape whose referent roles can be unbound —
+   * that is most of what makes it an obligation. `String(undefined)` put a
+   * referent called `undefined` on the field, gave it a spoke, and let it be
+   * dragged, selected and remembered across reloads: a mark standing for a
+   * thing the world has never mentioned. An unfilled role is not a referent
+   * with a strange name; it is nothing, and nothing is what gets drawn.
+   */
+  const referentRoles = input.roles.filter(
+    (role) => role.referent && input.values[role.name] != null,
+  );
   const spokes = referentRoles.map((role) => ({
     role: role.name,
     id: String(input.values[role.name]),

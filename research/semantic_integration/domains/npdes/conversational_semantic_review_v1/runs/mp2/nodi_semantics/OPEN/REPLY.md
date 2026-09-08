@@ -1,5 +1,0 @@
-When the numeric result is blank but a NODI code is filled in, I read that as the submitter giving a reason for the missing number—not as “no data at all.” That’s a different situation from a row where both the value and the code are empty. The code is doing explanatory work on those rows.
-
-For your counts, I would not treat `C` and `9` as the same thing. They show up in different volumes, and I’d keep them separate in any analysis. I don’t have a reliable, dataset-specific definition for either one from the codes alone. I wouldn’t guess that `9` means “not required” just because it’s a single digit, or infer what `C` means from the letter itself.
-
-In practice, the honest answer is that I need the official NODI legend or codebook for this reporting context before I’d say what each code means. Conceptually, “no discharge occurred” and “monitoring wasn’t required” are different stories—but I won’t map `C` or `9` to either without that documentation. Until then, I’d describe them as distinct populated no-data reasons and leave the semantics open.

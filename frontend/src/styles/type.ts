@@ -64,15 +64,19 @@ export const TYPE_STEPS: readonly TypeStep[] = [
   "display",
 ] as const;
 
-/** `--type-<step>` and `--lead-<step>` for every step. */
+/** `--type-<step>`, `--lead-<step>` and `--weight-<step>`, all in one call. */
 export function typeCssVariables(
   scale: Record<TypeStep, number> = TYPE_SCALE,
   leading: Record<TypeStep, number> = TYPE_LEADING,
+  weight: Record<WeightStep, number> = WEIGHT_SCALE,
 ): Record<string, string> {
   const vars: Record<string, string> = {};
   for (const step of TYPE_STEPS) {
     vars[`--type-${step}`] = `${scale[step]}rem`;
     vars[`--lead-${step}`] = String(leading[step]);
+  }
+  for (const step of WEIGHT_STEPS) {
+    vars[`--weight-${step}`] = String(weight[step]);
   }
   return vars;
 }
@@ -98,3 +102,35 @@ export function nearestStep(rem: number): TypeStep {
   }
   return best;
 }
+
+/**
+ * The weight scale — three named steps, for the same reason size has five.
+ *
+ * `font-weight` had no scale at all: the inspector stylesheets
+ * alone carried 400, 500 and 600 with no name for any of them, chosen per
+ * rule rather than per intent, plus a lone 450 in the frozen product/ lineage
+ * that nothing else agreed with. Three steps is what the actual live values
+ * already collapse to once they are named instead of typed:
+ *
+ * ```text
+ * regular   400   running text, most labels — the unmarked default
+ * emphasis  500   a control that is live, active, or the current selection
+ * strong    600   a heading, a primary number, a badge holding its own
+ * ```
+ *
+ * Same rule as the size scale: a stylesheet writes `var(--weight-emphasis)`,
+ * never `500`. `scripts/check_field_laws.py` enforces both.
+ */
+export type WeightStep = "regular" | "emphasis" | "strong";
+
+export const WEIGHT_SCALE: Record<WeightStep, number> = {
+  regular: 400,
+  emphasis: 500,
+  strong: 600,
+};
+
+export const WEIGHT_STEPS: readonly WeightStep[] = [
+  "regular",
+  "emphasis",
+  "strong",
+] as const;

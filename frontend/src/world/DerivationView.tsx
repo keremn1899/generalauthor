@@ -25,6 +25,8 @@
  */
 
 import { useEffect, useState } from "react";
+import { usePresence } from "../styles/usePresence";
+import { ProblemNotice } from "./ProblemNotice";
 import {
   worldApi,
   type WorldDerivation,
@@ -109,6 +111,37 @@ function Tree({
   );
 }
 
+/**
+ * The rule, disclosed.
+ *
+ * Two things had to be true for this to stop jolting. It stays mounted through
+ * the absorb, because a `<pre>` that unmounts on the closing frame has no
+ * transition to run and just leaves a hole. And what animates is the *row*, not
+ * the block: `--rise` moves opacity and transform only, so the SQL would still
+ * have claimed its full height on the opening frame and shoved the whole
+ * closure down before fading in. A `0fr → 1fr` grid row carries the height with
+ * no measurement and no hard-coded max.
+ *
+ * A person pressed `rule`, so this is a caused change and it is allowed to
+ * move. Its time and curve are the spine's, like everything else.
+ */
+function Sql({ sql, open }: { sql: string; open: boolean }) {
+  const presence = usePresence(open);
+  if (!presence.mounted || !sql) return null;
+  return (
+    <div
+      className={`deriv__disclosure${presence.shown ? " is-in" : ""}`}
+      aria-hidden={presence.shown ? undefined : true}
+    >
+      {/* The grid item carries no padding of its own, so `min-height: 0`
+          actually takes it to zero; the `<pre>` keeps its padding inside. */}
+      <div className="deriv__clip">
+        <pre className="deriv__sql">{sql}</pre>
+      </div>
+    </div>
+  );
+}
+
 export function DerivationView({
   relation,
   assertionId,
@@ -132,6 +165,7 @@ export function DerivationView({
   const [closure, setClosure] = useState<WorldDerivation | null>(null);
   const [support, setSupport] = useState<WorldSupport | null>(null);
   const [problem, setProblem] = useState<string | null>(null);
+  const [supportProblem, setSupportProblem] = useState<string | null>(null);
   const [showSql, setShowSql] = useState(false);
 
   useEffect(() => {
@@ -139,6 +173,7 @@ export function DerivationView({
     setClosure(null);
     setSupport(null);
     setProblem(null);
+    setSupportProblem(null);
     worldApi
       .derivation(relation)
       .then((answer) => {
@@ -156,7 +191,9 @@ export function DerivationView({
         .then((answer) => {
           if (!cancelled) setSupport(answer);
         })
-        .catch(() => undefined);
+        .catch((failure: Error) => {
+          if (!cancelled) setSupportProblem(failure.message);
+        });
     }
     return () => {
       cancelled = true;
@@ -194,15 +231,29 @@ export function DerivationView({
         </button>
       </TableBar>
 
-      {problem ? <p className="table__problem">{problem}</p> : null}
+      {problem ? <ProblemNotice message={problem} title="Unable to load derivation" /> : null}
+      {supportProblem ? <ProblemNotice message={supportProblem} title="Unable to load supporting tuples" /> : null}
 
       <div className="deriv__scroll">
-        {showSql && run ? <pre className="deriv__sql">{run.sql}</pre> : null}
+        <Sql sql={run?.sql ?? ""} open={showSql && Boolean(run)} />
 
-        <div className="deriv__columns">
-          <section>
-            <h3>rests on</h3>
-            {closure ? (
+        {/*
+          * One line while the closure is in flight — the idiom every other
+          * panel on this surface already uses, and the reason this one felt
+          * rough. It used to emit the two headings over nothing and then snap
+          * the trees, the run table and the bar's meta in together when the
+          * fetch landed: a cross-fade to an empty skeleton followed by an
+          * uncaused jump. Nothing here is a `flow`; a read is a lookup, and
+          * `Waiting` is for writes.
+          */}
+        {!closure && !problem ? (
+          <p className="world__hint deriv__note">Reading what this rests on…</p>
+        ) : null}
+
+        {closure ? (
+          <div className="deriv__columns">
+            <section>
+              <h3>rests on</h3>
               <Tree
                 root={relation}
                 adjacency={closure.rests_on}
@@ -210,12 +261,10 @@ export function DerivationView({
                 empty={`${relation} is asserted, not computed. It rests on nothing in this world.`}
                 onOpen={onOpen}
               />
-            ) : null}
-          </section>
+            </section>
 
-          <section>
-            <h3>supports</h3>
-            {closure ? (
+            <section>
+              <h3>supports</h3>
               <Tree
                 root={relation}
                 adjacency={closure.supports}
@@ -223,24 +272,24 @@ export function DerivationView({
                 empty={`No derivation in this world reads ${relation}.`}
                 onOpen={onOpen}
               />
-            ) : null}
-          </section>
-        </div>
+            </section>
+          </div>
+        ) : null}
 
         {run ? (
           <section className="deriv__run">
             <h3>
               last run
               <span>
-                {run.last_run_view_revision === null
+                {run.last_run_world_revision === null
                   ? "never"
-                  : `rev ${run.last_run_view_revision}`}
+                  : `rev ${run.last_run_world_revision}`}
                 {run.output_cardinality === null
                   ? ""
                   : ` · ${run.output_cardinality} out`}
               </span>
             </h3>
-            {run.last_error ? <p className="table__problem">{run.last_error}</p> : null}
+            {run.last_error ? <ProblemNotice message={run.last_error} title="Derivation failed" /> : null}
             {/* Not a windowed table: a derivation reads a handful of relations,
                 and a scroller around four rows is furniture. */}
             <div className="deriv__grid" data-head="true">

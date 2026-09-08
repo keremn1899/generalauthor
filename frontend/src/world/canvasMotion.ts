@@ -221,7 +221,8 @@ function anchorOf(
   );
 }
 
-function reducedMotion(): boolean {
+/** The one motion policy question every canvas asks. Shared, not re-derived. */
+export function reducedMotion(): boolean {
   try {
     return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   } catch {

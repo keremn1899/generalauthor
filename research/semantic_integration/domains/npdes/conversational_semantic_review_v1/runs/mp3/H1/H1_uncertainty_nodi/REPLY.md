@@ -1,5 +1,0 @@
-I can’t give you a reliable read on code **9** from what you’ve shown. Without the NODI legend for this submission — the official list that says what each code means on the form — I wouldn’t treat **9** as interchangeable with **C**, or guess its meaning from the digit itself. For those 36 rows, I’d leave the monitoring-period story unresolved until you have that legend in hand.
-
-**C** is the one I’d be slightly more comfortable talking about in general terms, but even there I wouldn’t lock in “no discharge” or “not required” from the code alone. A blank result plus **C** usually signals some kind of documented no-data condition, not a measured concentration — but whether that means no discharge, monitoring wasn’t called for that period, or something else still depends on the permit and how the row was filled out. I wouldn’t use **C** by itself as proof of compliance or violation.
-
-If NODI were empty rather than coded, that would be a different problem — more like missing explanation than a chosen reason. The flow vs. toxicity patterns you noticed might be real, but I wouldn’t treat them as conclusions without the legend and a look at the underlying permits.

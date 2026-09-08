@@ -1,7 +1,0 @@
-For federal fiscal year 2025, we need to know which numeric discharge limit applies to each reported measurement before we can say whether the measurement exceeded that limit.
-
-The draft construction links each FY2025 measurement to one permit limit row. It does that by matching the limit value and schedule identifiers already present on the DMR row, and it only includes measurements whose monitoring period end date falls inside FY2025 (October 1, 2024 through September 30, 2025). On this dataset that join produced exactly one limit per measurement — 824 pairs total, with no case where a single measurement matched two competing limits.
-
-That one-to-one result is already what the draft assumes mechanically. What I do not know from the structured data alone is whether that assumption would hold in messier situations. For example, if the permit catalog has overlapping effective-date intervals for the same outfall and parameter, should those be treated as separate limits that could both apply, or should we still pick exactly one governing limit for compliance comparison? Similarly, if the same limit appears more than once in the catalog as separate rows, should that count as multiple applicable limits even when the numeric value is the same?
-
-If you work with these permits regularly: does one measurement ever legitimately have more than one enforceable numeric limit at the same time, or is the draft's "exactly one" rule the right default?

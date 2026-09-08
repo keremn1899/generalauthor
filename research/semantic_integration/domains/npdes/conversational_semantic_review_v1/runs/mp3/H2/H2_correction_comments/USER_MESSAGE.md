@@ -1,9 +1,0 @@
-I'm working through the permit limit rows for this facility in Federal FY2025 (October 2024 through September 2025). Alongside the usual structured fields — parameter, limit value, frequency, dates — many rows carry free-text comments in the DMR comment field. Most are blank, but 69 rows have something written there.
-
-Seventeen of those comments are essentially just "WHEN DISCHARGING." They appear on limits tied to intermittent or conditional outfalls — backwash discharge, quarterly reporting parameters, things like that. The structured data gives us the limit itself, the monitoring schedule, and whatever was actually reported on the DMR, but it does not tell us whether discharge occurred during a given monitoring period.
-
-Right now I am not treating that phrase as self-explanatory. I have the comment text sitting there as raw source material, and I have not converted it into a rule like "monitoring applies only if discharge happened that period" or "this limit is always in force regardless." I have also flagged it as something I cannot resolve from the structured sources alone, because I do not see a field that establishes discharge occurrence for the period being evaluated.
-
-Before I go further: in your reading of permits like this, what does "WHEN DISCHARGING" actually do? Does it mean the permittee is only obligated to monitor and report when discharge is occurring — and if there was no discharge in a period, the requirement does not apply? Or does it mean something different, like describing when the limit applies during an event rather than conditioning whether monitoring is required at all? And is that something you would expect to determine from the DMR and limit tables we have here, or would you normally need the permit narrative or some other record to answer it?
-
-I am not asking you to pick from a fixed list of answers. Tell me what you think is right, what I have wrong, or what nuance I am missing.

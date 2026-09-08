@@ -149,6 +149,30 @@ export function projectionOf(arity: number, referentArity: number) {
   return "property" as const;
 }
 
+/**
+ * Whether a disc's name is longer than the disc will show.
+ *
+ * A referent's label wraps to `labelMaxLines` and ellipsises what is left, so
+ * `Philips Respironics BiPAP A30 family` reads as `Philips Respironics …` and
+ * the rest is only recoverable by selecting the mark. Knowing *that* it was cut
+ * is what lets a surface offer the whole of it without offering a tooltip over
+ * every name on the field, most of which say all they have to say.
+ *
+ * An estimate, and deliberately a slightly generous one: the wrap is the
+ * renderer's and breaks on words, so the usable width of the last line is
+ * always less than the box. Erring toward "not truncated" means the rare
+ * borderline name goes without the offer, which is quieter than the reverse.
+ */
+export function discLabelTruncated(label: string, p: MarkParams): boolean {
+  if (!label) return false;
+  const box =
+    p.discDiameter * (GRAPH_DNA_GEOMETRY.labelMaxWidth / 100) *
+    GRAPH_DNA_GEOMETRY.labelMaxLines;
+  return (
+    textWidth(label, GRAPH_DNA_GEOMETRY.labelSize, DISC_LABEL_WEIGHT) > box
+  );
+}
+
 export function discNode(
   id: string,
   x: number,
@@ -184,6 +208,8 @@ export function discNode(
       lineWidth: 0,
       labelText: label,
       labelPlacement: "center" as const,
+      labelTextAlign: "center" as const,
+      labelTextBaseline: "middle" as const,
       // Contact scales the already-laid-out name with its body. Keeping a
       // canonical identity transform prevents G6 from inventing a transform
       // origin on the first pressed frame and changing line breaks mid-load.
@@ -268,6 +294,8 @@ export function chipNode(
       lineCap: "round" as const,
       labelText: text,
       labelPlacement: "center" as const,
+      labelTextAlign: "center" as const,
+      labelTextBaseline: "middle" as const,
       labelTransform: [["scale", 1, 1]] as [["scale", number, number]],
       labelTransformOrigin: "0px 0px",
       labelFill: filled ? paint.field : paint.ink,
@@ -361,6 +389,16 @@ export type SpokeOptions = {
   showRole: boolean;
   /** Placement along the spoke, 0 at the referent. */
   labelPlacement?: number;
+  /**
+   * Graph-space shift of the plate, for spokes that share a station.
+   *
+   * Two roles of one relation filled by the same kind run the same route —
+   * `earlier_action` and `later_action` leave the same disc for the same chip
+   * — so a station alone puts both names on the same point. The same stack a
+   * filament gives parallel claims, for the same reason: see `bondLabelStep`.
+   */
+  labelOffsetX?: number;
+  labelOffsetY?: number;
 };
 
 /** A referent filling a role in an assertion. */
@@ -423,8 +461,8 @@ export function spokeEdge(
       // Same as a bond: G6's BaseEdge default is 4px of unstated X, which
       // shoved every role name off the spoke and made two of them look like
       // they were fighting the plate rather than sitting on their own lines.
-      labelOffsetX: 0,
-      labelOffsetY: 0,
+      labelOffsetX: options.labelOffsetX ?? 0,
+      labelOffsetY: options.labelOffsetY ?? 0,
       labelPlacement: options.labelPlacement ?? p.roleLabelAt,
     },
   };
@@ -439,7 +477,25 @@ export function spokeEdge(
  * rim the renderer actually clips to — see `rimDistance` — because a share of
  * an assumed length is a percentage again, wearing a distance's clothes.
  */
-export const BOND_LABEL_ALONG_PX = 44;
+export const BOND_LABEL_ALONG_PX = 52;
+
+/**
+ * The air a plate keeps between its *near edge* and the rim it stands off.
+ *
+ * `BOND_LABEL_ALONG_PX` is measured to the plate's centre, which is the right
+ * thing for a short name and wrong for a long one: `checkout_authorization` is
+ * wider than twice the station, so centring it 52px off the rim puts its near
+ * edge *inside* the disc. The plate then reads as a badge stuck to the mark
+ * rather than as a name standing on the filament, and the disc's own label
+ * competes with it.
+ *
+ * So the station is the larger of the two: the measured centre distance, or
+ * whatever centre distance this particular plate needs in order to clear the
+ * rim by this gap. A short name keeps the tuned value exactly; only a name
+ * wide enough to reach the rim is pushed out, and it is pushed out by exactly
+ * as much as its own width demands.
+ */
+export const BOND_LABEL_RIM_GAP_PX = 18;
 
 /**
  * The same station for a spoke, which has far less room to hold it in.
@@ -455,6 +511,68 @@ export const BOND_LABEL_ALONG_PX = 44;
  * ten. It is a distance for the same reason 44 is.
  */
 export const SPOKE_LABEL_ALONG_PX = 16;
+
+/**
+ * The air a role plate keeps between its *near edge* and the disc it stands off.
+ *
+ * The bond's 18px is wrong here and not by a little: a spoke's whole rim gap
+ * was measured between 11 and 73px, so demanding 18px of clearance plus half a
+ * plate sends every role name wider than a few characters past the middle. 4px
+ * is a plate not touching a disc, which is the whole claim being made.
+ */
+export const SPOKE_LABEL_RIM_GAP_PX = 4;
+
+/**
+ * Why there is no far-end allowance here, having measured for one.
+ *
+ * A spoke is asymmetric — its far end is the chip whose role this *is* — so a
+ * name too wide to fit between the rim and the middle looked like it should be
+ * allowed to travel past the midpoint and stand against its own chip instead.
+ * Measured against real type metrics over every role name in this world and
+ * every spoke length from 10 to 200px, that allowance changes the station in
+ * **none** of 960 cases, and it cannot: it only ever extends the reach when
+ * `half + gap < filament / 2`, and a plate that small never asks for more than
+ * the near-rim station in the first place.
+ *
+ * What a plate wider than its own spoke gets instead is the midpoint, which is
+ * where `Math.min` already puts it — the least-bad station, overlapping both
+ * ends by the same small amount rather than one end by twice as much. A name
+ * that does not fit between two rims is not a placement problem, and moving it
+ * is not the fix.
+ */
+
+/**
+ * A role plate's width. The same arithmetic as `chipWidth`, at role type size.
+ *
+ * `chipWidth` reads `chipLabelSize`, and a spoke's name is set at
+ * `roleLabelSize` — larger, and lighter. Measuring a role with the chip's
+ * metrics understates it, and the whole point of a width-aware station is that
+ * the width is the real one.
+ */
+export function roleWidth(text: string, p: MarkParams): number {
+  return Math.round(
+    textWidth(text, p.roleLabelSize, p.roleLabelWeight) + p.chipPaddingX * 2,
+  );
+}
+
+/**
+ * Where a role name stands off, and how far it may travel to get there.
+ *
+ * One place because two passes ask: the draw stations every spoke, and the
+ * drag re-stations the ones that moved. A station the two compute differently
+ * is a name that jumps the first time a mark is picked up — the same reason
+ * the bond's half-plate is spelled out at both of its call sites.
+ */
+export function spokeLabelStation(
+  role: string,
+  p: MarkParams,
+): { halfPlate: number; air: LabelAir } {
+  const halfPlate = roleWidth(role, p) / 2;
+  return {
+    halfPlate,
+    air: { rimGap: SPOKE_LABEL_RIM_GAP_PX },
+  };
+}
 
 /**
  * Air between stacked plates that share a filament, in graph pixels.
@@ -575,6 +693,61 @@ export function rimDistance(rim: MarkRim, dx: number, dy: number): number {
   return Math.min(byWidth, byHeight);
 }
 
+/**
+ * How far past the rim a point must sit to clear the *body* by `want`.
+ *
+ * For a disc these are the same number, and always have been: the rim is a
+ * constant distance from the centre in every direction, so a point `want` past
+ * it along one ray is `want` from the mark in every other direction too.
+ *
+ * A plate is not that shape, and stationing against it along the ray is what
+ * made a role name look pinned to a relation while the identical station read
+ * as roomy beside a referent. A 60×10 plate exits a 45° ray about 7px from its
+ * centre — through the *short* edge, close to the middle of a box that then
+ * goes on extending 30px sideways underneath. Standing 16px further along that
+ * ray leaves the plate's long edge only 11px below the name, and the 30px of
+ * box under it is what the eye reads. The disc has no such overhang; the gap
+ * it shows is the gap that was asked for.
+ *
+ * So the clearance is measured to the box, not along the ray: the returned
+ * distance is whatever it takes for the true distance from the plate's
+ * boundary to be `want`. Head-on it changes nothing — a ray leaving straight
+ * up already clears by exactly what it travelled — and it pays out most where
+ * the overhang is worst, at the shallow angles that produced the complaint.
+ */
+export function rimStandoff(
+  rim: MarkRim,
+  dx: number,
+  dy: number,
+  want: number,
+): number {
+  if (rim.shape === "disc") return want;
+  const len = Math.hypot(dx, dy);
+  if (!(len > 1e-6)) return want;
+  const ux = Math.abs(dx) / len;
+  const uy = Math.abs(dy) / len;
+  const w = rim.halfWidth;
+  const h = rim.halfHeight;
+  // Distance from the centre at which the point clears the box by `want`.
+  let centre: number;
+  if (uy < 1e-6) centre = (w + want) / ux;
+  else if (ux < 1e-6) centre = (h + want) / uy;
+  else {
+    const byFace = (w + want) / ux;
+    const byEdge = (h + want) / uy;
+    if (byFace * uy <= h) centre = byFace;
+    else if (byEdge * ux <= w) centre = byEdge;
+    else {
+      // The point clears a corner, so both extents are in play at once:
+      // |t·u − (w, h)| = want, solved for the far root.
+      const b = w * ux + h * uy;
+      const disc = b * b - (w * w + h * h - want * want);
+      centre = disc > 0 ? b + Math.sqrt(disc) : b + want;
+    }
+  }
+  return Math.max(want, centre - rimDistance(rim, dx, dy));
+}
+
 /** The drawn stroke's length: centre to centre, less both rims. */
 function filamentLength(
   source: { x: number; y: number },
@@ -606,6 +779,16 @@ function filamentLength(
  * a bond in from 210px of air to 6px slid its name from 44px off the rim to
  * 2.7px — the plate crawling down its own filament as the mark moved.
  */
+/**
+ * What a label is allowed to hold clear at each end of the line it stands on.
+ *
+ * Absent means the bond's own tuned rim gap. A spoke states its own, because
+ * 18px of clearance on a filament whose whole air can be 11px is not a gap,
+ * it is a name at the midpoint — the ratio `SPOKE_LABEL_ALONG_PX` exists to
+ * avoid.
+ */
+export type LabelAir = { rimGap?: number };
+
 export function bondLabelAlong(
   source: { x: number; y: number },
   target: { x: number; y: number },
@@ -613,9 +796,22 @@ export function bondLabelAlong(
   fromRim: MarkRim = discRim(p),
   toRim: MarkRim = discRim(p),
   station = BOND_LABEL_ALONG_PX,
+  halfPlate = 0,
+  /** The rim this station is measured from — see `rimStandoff`. */
+  nearRim: MarkRim | null = null,
+  air: LabelAir = {},
 ): number {
   const filament = filamentLength(source, target, fromRim, toRim);
-  return filament > 1 ? Math.min(station, filament / 2) : 0;
+  // The plate's own width is part of where its centre has to be. Widening a
+  // name must move it out, not let it grow back over the mark it names.
+  const rimGap = air.rimGap ?? BOND_LABEL_RIM_GAP_PX;
+  const wanted = Math.max(station, rimGap + halfPlate);
+  // …and the shape of what it stands off is part of it too: past a rectangle,
+  // travelling `wanted` along the ray is not clearing `wanted` of rectangle.
+  const along = nearRim
+    ? rimStandoff(nearRim, target.x - source.x, target.y - source.y, wanted)
+    : wanted;
+  return filament > 1 ? Math.min(along, filament / 2) : 0;
 }
 
 export function bondLabelPlacement(
@@ -626,11 +822,23 @@ export function bondLabelPlacement(
   fromRim: MarkRim = discRim(p),
   toRim: MarkRim = discRim(p),
   station = BOND_LABEL_ALONG_PX,
+  halfPlate = 0,
+  air: LabelAir = {},
 ): number {
   if (!near) return 0.5;
   const filament = filamentLength(source, target, fromRim, toRim);
   if (!(filament > 1)) return 0.5;
-  const along = bondLabelAlong(source, target, p, fromRim, toRim, station);
+  const along = bondLabelAlong(
+    source,
+    target,
+    p,
+    fromRim,
+    toRim,
+    station,
+    halfPlate,
+    near === "source" ? fromRim : toRim,
+    air,
+  );
   return near === "source" ? along / filament : 1 - along / filament;
 }
 
@@ -655,6 +863,9 @@ export function bondLabelLayout(
   fromRim: MarkRim = discRim(p),
   toRim: MarkRim = discRim(p),
   station = BOND_LABEL_ALONG_PX,
+  /** Half the plate this layout is for, so the station clears its near edge. */
+  halfPlate = 0,
+  air: LabelAir = {},
 ): BondLabelLayout {
   const placement = bondLabelPlacement(
     source,
@@ -664,6 +875,8 @@ export function bondLabelLayout(
     fromRim,
     toRim,
     station,
+    halfPlate,
+    air,
   );
   const nudge = p.chipLabelNudge;
   return { placement, offsetX: stack.x, offsetY: stack.y + nudge };
@@ -740,6 +953,8 @@ export function filamentEdge(
       labelBackgroundHeight: p.chipHeight,
       labelPadding: [p.chipPaddingY, p.chipPaddingX] as [number, number],
       labelAutoRotate: false,
+      labelTextAlign: "center" as const,
+      labelTextBaseline: "middle" as const,
       labelPlacement: options.labelPlacement ?? 0.5,
     },
   };
@@ -833,6 +1048,8 @@ export function summaryEdge(
       labelBackgroundHeight: p.chipHeight,
       labelPadding: [p.chipPaddingY, p.chipPaddingX] as [number, number],
       labelAutoRotate: false,
+      labelTextAlign: "center" as const,
+      labelTextBaseline: "middle" as const,
       labelPlacement: options.placement ?? 0.5,
     },
   };

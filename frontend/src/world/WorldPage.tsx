@@ -12,11 +12,8 @@
  * per keystroke would be slower than holding the list — and a search that
  * cannot be out of date is one less thing to reason about.
  *
- * Deliberately not wrapped in `ProductShell`. That shell knows about graphs,
- * logs, constructions, an operator plane and a write path — none of which
- * exist here. Chrome is imported from that page: the same classes, the same
- * overlay, finder, reader and instrument. Where a World fact has no Graph
- * equivalent, WorldPage.css keeps the remainder.
+ * The inspector reads durable semantic state; construction and interpretation
+ * remain in the coding-agent conversation.
  */
 
 import {
@@ -27,6 +24,7 @@ import {
   useReducer,
   useRef,
   useState,
+  type ReactNode,
 } from "react";
 import {
   worldApi,
@@ -39,13 +37,13 @@ import {
   type WorldTuple,
 } from "../api/world";
 import { type ThemeMode } from "../styles/graphDna";
+import { useWorldIcon } from "./useWorldIcon";
 import {
   DEFAULT_MOTION_PLANS,
   still,
-  type MotionPlans,
 } from "../styles/motion";
-import type { LightField } from "../styles/light";
 import { ShowBand } from "./ShowBand";
+import { ProblemNotice } from "./ProblemNotice";
 import {
   TABLES_HANDLE_RESERVE,
   TABLES_WIDTH_DEFAULT,
@@ -60,22 +58,17 @@ import {
   type ExpansionRequests,
 } from "./expansionMachine";
 import { FrontierTable, type Obligation } from "./FrontierTable";
-import { MARK_DEFAULTS, type MarkParams } from "./marks";
+import { MARK_DEFAULTS } from "./marks";
 import { RelationTable } from "./RelationTable";
 import { SchemaCanvas } from "./SchemaCanvas";
-import { readField, writeField } from "./fieldMemory";
-import { createLabSandboxSet } from "./mockWorldData";
+import { holdsField, readField, writeField } from "./fieldMemory";
 import { chipKind } from "./schemaGraph";
-import type { TableChrome } from "./tableChrome";
+import { TableBar, type TableChrome } from "./tableChrome";
 import { WorldTable } from "./WorldTable";
 import {
   WorldCanvas,
-  type AntTuning,
   type CanvasSelection,
-  type MaterialTuning,
-  type SelectionTreatment,
 } from "./WorldCanvas";
-import type { DriftTuning } from "./drift";
 import type { CameraInsets } from "./canvasFocus";
 import {
   arrange,
@@ -96,16 +89,13 @@ import {
   type Point,
   type WorkingSet,
 } from "./workingSet";
-import { OverlayPanel } from "../product/OverlayPanel";
-import { chromeClass } from "../product/overlayChrome";
+import { OverlayPanel } from "./WorldOverlay";
+import { chromeClass } from "./worldOverlayChrome";
 import { Swap } from "../styles/Swap";
 import { useHeld, usePresence } from "../styles/usePresence";
 import { useSequencedSwap } from "../styles/useSequencedSwap";
 import { PanelClose } from "./panelChrome";
-import {
-  readStoredPanelSize,
-  storePanelSize,
-} from "../product/ResizableDivider";
+import { readStoredPanelSize, storePanelSize } from "./WorldResize";
 import "../styles/presence.css";
 import {
   SHOW_DEFAULT,
@@ -115,16 +105,16 @@ import {
   type ShowState,
 } from "./show";
 import "./WorldPage.css";
-import "../product/ProductShell.css";
-import "../product/NodeFinder.css";
-import "../product/NodeReaderPanel.css";
-import "../product/GraphWorkspace.css";
-import "../product/OverlayPanel.css";
-import "../product/overlayChrome.css";
+import "./WorldShell.css";
+import "./WorldFinder.css";
+import "./WorldReader.css";
+import "./WorldCanvas.css";
+import "./WorldOverlay.css";
+import "./worldOverlayChrome.css";
 
 export function readStoredWorldTheme(): ThemeMode {
   try {
-    return localStorage.getItem("graphauthor.productTheme") === "dark"
+    return localStorage.getItem("ontology-author.productTheme") === "dark"
       ? "dark"
       : "light";
   } catch {
@@ -152,17 +142,29 @@ export type Directory = { id: string; label: string | null }[];
 
 export function Find({
   directory,
+  ask,
   onPick,
 }: {
   directory: Directory;
+  /**
+   * Where to look when the directory is not the whole world.
+   *
+   * Absent, this box is a filter over an array it can see all of, and an
+   * exact miss is a fact. Present, the directory is short and the same
+   * question has to go to the plane — the box has not become cleverer, it has
+   * stopped answering from a list it was never given in full.
+   */
+  ask?: (query: string) => Promise<Directory>;
   onPick: (id: string, label: string) => void;
 }) {
   const [query, setQuery] = useState("");
   const [focused, setFocused] = useState(false);
   const [active, setActive] = useState(0);
+  const [asked, setAsked] = useState<Directory>([]);
+  const [searchProblem, setSearchProblem] = useState<string | null>(null);
   const rootRef = useRef<HTMLDivElement | null>(null);
   const listId = useId();
-  const matches = useMemo(() => {
+  const local = useMemo(() => {
     const needle = query.trim().toLowerCase();
     if (!needle) return [];
     return directory
@@ -173,6 +175,47 @@ export function Find({
       )
       .slice(0, 10);
   }, [directory, query]);
+  /**
+   * The plane's answer to the same substring, when there is one to ask.
+   *
+   * Held back by a beat, because this fires on the keystroke rather than on a
+   * submit and nobody means the third letter of a word as a question. The
+   * generation guard is the ordinary one: an answer to a query nobody is
+   * typing any more is not an answer.
+   */
+  useEffect(() => {
+    if (!ask) return;
+    const needle = query.trim();
+    setSearchProblem(null);
+    if (!needle) {
+      setAsked([]);
+      return;
+    }
+    let cancelled = false;
+    const timer = window.setTimeout(() => {
+      void ask(needle)
+        .then((found) => {
+          if (!cancelled) setAsked(found.slice(0, 10));
+        })
+        .catch((failure: Error) => {
+          if (!cancelled) {
+            setAsked([]);
+            setSearchProblem(failure.message);
+          }
+        });
+    }, 160);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
+  }, [ask, query]);
+  const matches = useMemo(() => {
+    if (!ask) return local;
+    // What is already in hand, then what the plane added — one list, no
+    // duplicates, and the marks the reader could already see stay on top.
+    const seen = new Set(local.map((item) => item.id));
+    return [...local, ...asked.filter((item) => !seen.has(item.id))].slice(0, 10);
+  }, [ask, local, asked]);
   const open = focused && Boolean(query.trim());
   const presence = usePresence(open);
 
@@ -206,7 +249,7 @@ export function Find({
         aria-controls={listId}
         aria-autocomplete="list"
         aria-activedescendant={
-          open && matches[active] ? `${listId}-${active}` : undefined
+          open && !searchProblem && matches[active] ? `${listId}-${active}` : undefined
         }
         value={query}
         placeholder="find..."
@@ -225,7 +268,7 @@ export function Find({
             event.currentTarget.blur();
             return;
           }
-          if (!matches.length) return;
+          if (searchProblem || !matches.length) return;
           if (event.key === "ArrowDown") {
             event.preventDefault();
             setActive((index) => (index + 1) % matches.length);
@@ -250,7 +293,7 @@ export function Find({
           {/* The list arrives and departs; what is *in* it does not tween.
               Typing another character is a new answer, and animating between
               two answers draws a continuity retrieval does not claim. */}
-          {matches.length ? (
+          {searchProblem ? <li role="presentation"><ProblemNotice message={searchProblem} title="Search unavailable" /></li> : matches.length ? (
             matches.map((item, index) => (
               <li
                 key={item.id}
@@ -289,21 +332,44 @@ export function ReaderHeader({
   kind,
   meta,
   onClose,
+  children,
 }: {
   title: string;
   kind?: string;
   meta?: string;
   onClose?: () => void;
+  /**
+   * What this subject *is*, carried above the rule with its name.
+   *
+   * The rule across a reader separates identity from what you can do next. A
+   * referent's own fields are identity — `tool_identity_remap L1` is part of
+   * answering "which tool is this", not an action — so below the rule they
+   * left the panel's one navigable thing, Expand through, sitting under a
+   * paragraph of facts and a gap that read as a mistake whenever there were
+   * no facts to print.
+   */
+  children?: ReactNode;
 }) {
   return (
+    <div className="world-reader__brow">
     <header className="world-reader__header">
       <div className="world-reader__heading">
-        <h2>{title}</h2>
+        {/*
+          * The type sits beside the name because it qualifies it — `checkout`
+          * *referent*, `checkout_record` *demanded tuple*. Held out at the far
+          * edge it read as a second control next to `close`, and it lined up
+          * with neither the name nor the panel's own right edge.
+          */}
+        <div className="world-reader__title">
+          <h2>{title}</h2>
+          {kind ? <span className="node-reader__kind">{kind}</span> : null}
+        </div>
         {meta ? <p>{meta}</p> : null}
       </div>
-      {kind ? <span className="node-reader__kind">{kind}</span> : null}
       {onClose ? <PanelClose onClose={onClose} /> : null}
     </header>
+      {children}
+    </div>
   );
 }
 
@@ -401,17 +467,29 @@ export function AssertionPanel({
             {folding === "open" ? "Open on the field" : "Fold onto the line"}
           </button>
         ) : null}
-        <button
-          type="button"
-          className="node-reader__link"
-          onClick={() =>
-            onDerivation(assertion.relation, assertion.assertion_id)
-          }
-        >
-          {assertion.mode === "DERIVED"
-            ? "Why this tuple"
-            : "What depends on this"}
-        </button>
+        {/* Only the backward direction survives here.
+
+            This footer used to carry the derivation table under two names:
+            "Why this tuple" for a DERIVED assertion, and "What depends on
+            this" for an asserted one. They are not the same offer. The first
+            answers a question the tuple itself raises — the machine says this
+            holds, on what — and there is nowhere else on the surface to ask
+            it. The second is a search for consequences, which is a question
+            about the *relation*, is already one click away as `Dependencies`
+            on the relation reader, and on an asserted tuple usually answers
+            with nothing at all. A bar that offers it on every edge spends its
+            width claiming there is something to see. */}
+        {assertion.mode === "DERIVED" ? (
+          <button
+            type="button"
+            className="node-reader__link"
+            onClick={() =>
+              onDerivation(assertion.relation, assertion.assertion_id)
+            }
+          >
+            Why this tuple
+          </button>
+        ) : null}
         <button
           type="button"
           className="node-reader__link"
@@ -434,7 +512,12 @@ export function AssertionPanel({
  * positive assertion is not a false one — the world has not been asked, or has
  * been asked and could not answer — so the state line says what is absent, the
  * evidence line says what is not recorded, and neither is dressed as a result.
- * §16: no write path, no action, no "resolve this" button. This product reads.
+ *
+ * §16 holds here without qualification: no path from this panel to a world
+ * tuple, no "resolve this", and nothing to fill in. **The reader reads.**
+ *
+ * It deliberately has no write controls: semantic interpretation and
+ * resolution happen in the conversation and enter a later rebuild.
  */
 export function DemandPanel({
   obligation,
@@ -472,39 +555,66 @@ export function DemandPanel({
         onClose={onClose}
       />
       <div className="world-reader__content">
+        {/*
+          * One fact list, not four headed sections.
+          *
+          * What this panel is for is a *specific* open question, and the four
+          * `<h3>` sections it used to carry printed the same three sentences
+          * on every one of them — the epistemology of unresolvedness, the
+          * whole purpose statement, the generation rule already standing at
+          * the foot of the frontier. A sentence that is identical on every
+          * obligation carries no information about the obligation, and the
+          * front-end rules call a mark that carries nothing decoration.
+          *
+          * So the constants are gone: `unresolved` is in the header where the
+          * state belongs, and the purpose lives once, on the frontier, where
+          * it is a property of the whole demand rather than of this row. What
+          * is left is what differs between one obligation and the next — the
+          * roles it names, who asked for it, and what it rests on — in the
+          * same two-column grid the assertion reader states its facts in.
+          */}
         <ol className="world__roles">
-          {(roles.length ? roles : Object.keys(obligation.values)).map(
-            (role) => (
-              <li key={role}>
-                <b>{role}</b>
-                <span>{String(obligation.values[role] ?? "—")}</span>
-              </li>
+          {[
+            ...roles.filter((role) => role in obligation.values),
+            ...Object.keys(obligation.values).filter(
+              (key) => !roles.includes(key),
             ),
-          )}
-        </ol>
-        <section className="world-reader__section">
-          <h3>State</h3>
-          <p className="world__note">
-            {obligation.state === "UNRESOLVED"
-              ? "No positive assertion. This world is silent about the tuple; it does not deny it."
-              : "Asserted by this world."}
-          </p>
-        </section>
-        <section className="world-reader__section">
-          <h3>Demanded by</h3>
-          <p className="world__note">
-            {by.name ?? demand?.purpose.id}
-            {by.revision ? ` · revision ${by.revision}` : ""}
-          </p>
-          {demand?.purpose.statement ? (
-            <p className="world__note">{demand.purpose.statement}</p>
+          ].map((role) => (
+            <li key={role}>
+              <b>{role}</b>
+              <span>{String(obligation.values[role])}</span>
+            </li>
+          ))}
+          <li>
+            <b>asked by</b>
+            <span>
+              {by.name ?? demand?.purpose.id ?? "—"}
+              {by.revision ? ` · rev ${by.revision}` : ""}
+            </span>
+          </li>
+          {/*
+            * The source the requirement failure cites. Kept beside the roles
+            * rather than under a heading of its own: it is one more fact about
+            * this obligation, and it is the thing a person opens before
+            * deciding — a verdict recorded without looking at the evidence is
+            * what ADJUDICATED must not become.
+            */}
+          {obligation.grounding_ref ? (
+            <li>
+              <b>grounded by</b>
+              <span>{obligation.grounding_ref}</span>
+            </li>
           ) : null}
-        </section>
-        {demand?.rule ? (
-          <section className="world-reader__section">
-            <h3>Why it exists</h3>
-            <p className="world__note">{demand.rule}</p>
-          </section>
+        </ol>
+
+        {/*
+          * The constructor's own sentence about why this is unresolved, and
+          * the only prose on the panel — because it is the only prose that is
+          * different for each obligation. It is the difference between
+          * "missing" and "the sources do not define PENDING".
+          */}
+        {obligation.reason ? (
+          <p className="world__reason">{obligation.reason}</p>
         ) : null}
       </div>
       <footer className="world-reader__actions">
@@ -521,6 +631,24 @@ export function DemandPanel({
       </footer>
     </article>
   );
+}
+
+/**
+ * The namespace an id carries, or nothing.
+ *
+ * This was `id.split(":", 1)[0]`, which returns the *whole string* when there
+ * is no colon — so a world that does not namespace its referents put
+ * `FDA_RECALL_Z-1814-2024` in a chip sized for the word `part`, printed the id
+ * again on the line below, and shouldered `close` out of the header.
+ *
+ * A referent is thin and carries no type, so `part:C300` saying `part` is the
+ * id's own claim and nothing more. Where the id makes no such claim there is
+ * nothing to show, and the chip is absent rather than filled with a guess —
+ * the same restraint `scope` uses in reporting `null`.
+ */
+function namespaceOf(id: string): string | undefined {
+  const colon = id.indexOf(":");
+  return colon > 0 ? id.slice(0, colon) : undefined;
 }
 
 export function ReferentPanel({
@@ -560,21 +688,26 @@ export function ReferentPanel({
     <article className="world-reader__article">
       <ReaderHeader
         title={detail.label || detail.id}
-        kind={detail.id.split(":", 1)[0]}
-        meta={detail.id}
+        kind={namespaceOf(detail.id)}
+        // Only when it says something the title does not. An unlabelled
+        // referent is its own id, and printing it twice is not identity.
+        meta={detail.label ? detail.id : undefined}
         onClose={onClose}
-      />
-      <div className="world-reader__content">
+      >
         {detail.fields.length ? (
-          <ol className="world__roles">
-            {detail.fields.map((field) => (
-              <li key={field.assertion_id}>
-                <b>{field.relation}</b>
-                <span>{String(field.value)}</span>
-              </li>
-            ))}
-          </ol>
+          <div className="world-reader__facts">
+            <ol className="world__roles">
+              {detail.fields.map((field) => (
+                <li key={field.assertion_id}>
+                  <b>{field.relation}</b>
+                  <span>{String(field.value)}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
         ) : null}
+      </ReaderHeader>
+      <div className="world-reader__content">
         <section className="world-reader__section world-reader__section--list">
           <h3>Expand through</h3>
           <ul className="gm__list">
@@ -640,8 +773,8 @@ export function ReferentPanel({
   );
 }
 
-const READER_WIDTH_KEY = "graphauthor.worldReaderWidth";
-const TABLES_WIDTH_KEY = "graphauthor.worldFrontierWidth";
+const READER_WIDTH_KEY = "ontology-author.worldReaderWidth";
+const TABLES_WIDTH_KEY = "ontology-author.worldFrontierWidth";
 
 type TableView =
   | { kind: "world" }
@@ -653,59 +786,44 @@ type TableView =
     }
   | { kind: "derivation"; relation: string; assertion: string | null };
 
-/** A seam from construction's vocabulary card to this relation's extension.
- * Hash routing owns the path, so its query lives in the hash as well. */
+/** A link from a relation in the vocabulary to its extension. */
 function linkedRelationFromHash(): string | null {
   const hash = window.location.hash;
   const query = hash.includes("?") ? hash.slice(hash.indexOf("?") + 1) : "";
   return new URLSearchParams(query).get("relation");
 }
 
-/**
- * Optional instruments for a full-system lab.
- *
- * The page still owns all World data and interaction state. The lab is only
- * allowed to tune how the real canvas expresses that state, which prevents a
- * fixture sandbox from becoming a second, less capable World application.
- */
-export type WorldPageTuning = {
-  params?: MarkParams;
-  ants?: Partial<AntTuning>;
-  motion?: MotionPlans;
-  material?: Partial<MaterialTuning>;
-  selectionTreatment?: SelectionTreatment;
-  light?: Partial<LightField>;
-  /** The lab's live field. See `drift.ts`; off on the product surface. */
-  drift?: boolean;
-  /** Live-field parameters exposed by World Lab. */
-  driftTuning?: Partial<DriftTuning>;
-};
-
-export type WorldPageProps = {
-  tuning?: WorldPageTuning;
-  /** Replaces the recursive LAB link with a way back to the product surface. */
-  lab?: boolean;
-  /** The lab controls appearance outside the page so its instruments agree. */
-  mode?: ThemeMode;
-  onModeChange?: (mode: ThemeMode) => void;
-};
-
-export function WorldPage({
-  tuning,
-  lab = false,
-  mode: controlledMode,
-  onModeChange,
-}: WorldPageProps = {}) {
-  const motion = tuning?.motion ?? DEFAULT_MOTION_PLANS;
+export function WorldPage() {
+  const motion = DEFAULT_MOTION_PLANS;
   const [localMode, setLocalMode] = useState<ThemeMode>(readStoredWorldTheme);
-  const mode = controlledMode ?? localMode;
+  const mode = localMode;
   const [motionReady, setMotionReady] = useState(false);
   const [overview, setOverview] = useState<WorldOverview | null>(null);
+  useWorldIcon(overview?.world_id, mode);
   const [relations, setRelations] = useState<WorldRelation[]>([]);
   const [directory, setDirectory] = useState<Directory>([]);
+  /**
+   * Whether the directory in hand is the whole of the world's referents.
+   *
+   * A short directory is not a smaller world, it is a world the front end was
+   * not handed all of — so find must stop pretending the array in front of it
+   * is the answer and ask the plane. Exact misses stay exact misses either
+   * way; what changes is who is being asked.
+   */
+  const [directoryShort, setDirectoryShort] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [loadAttempt, setLoadAttempt] = useState(0);
 
   const [set, setSet] = useState<WorkingSet>(emptySet);
+  /**
+   * Whether anything is on the field.
+   *
+   * Declared here rather than beside its one-time reader, because it is the
+   * condition the whole surface turns on: the vocabulary, the dock in focus,
+   * which instruments are offered. `onField` below is this, named for the
+   * places that read it as a sentence.
+   */
+  const hasField = fieldSize(set) > 0;
   /**
    * What the last arrangement displaced, so it can be put back.
    *
@@ -745,7 +863,16 @@ export function WorldPage({
   const [readerWidth, setReaderWidth] = useState(() =>
     readStoredPanelSize(READER_WIDTH_KEY, 320),
   );
-  const [tablesOpen, setTablesOpen] = useState(false);
+  /**
+   * The TABLES dock starts out, because an empty field has nothing else.
+   *
+   * What is on screen at rest is the vocabulary, and a vocabulary is a list of
+   * what this world *could* say — you read it, you do not put anything on the
+   * field from it. The table is where a subject comes from. Closed by default,
+   * the surface opened on a canvas of relations with no visible way to reach a
+   * row, and the handle on the edge was the whole instruction.
+   */
+  const [tablesOpen, setTablesOpen] = useState(true);
   const [tablesWidth, setTablesWidth] = useState(() =>
     readStoredPanelSize(TABLES_WIDTH_KEY, TABLES_WIDTH_DEFAULT),
   );
@@ -761,13 +888,29 @@ export function WorldPage({
   const [demand, setDemand] = useState<WorldDemand | null>(null);
   const [demandProblem, setDemandProblem] = useState<string | null>(null);
   /**
-   * Vocabulary as a focus room: the field stays, parked, until Clear.
+   * The vocabulary, inverted — and with an empty field, the whole screen.
    *
-   * Emptying the working set was a one-way trip. This is the product's focus
-   * mode used for a different subject — the schema rather than a lit node —
-   * so the neighborhood is still there when you come back.
+   * Two things at once, and the second is the one that is easy to lose.
+   *
+   * With a field, this is a focus room: the field stays, parked, until Clear,
+   * because the product's focus mode is being used for a different subject —
+   * the schema rather than a lit node — and the neighbourhood should still be
+   * there when you come back.
+   *
+   * With no field, it is not a mode at all. It is the screen: there is nothing
+   * to park and nothing to come back to, so an "unfocused empty field" is a
+   * blank page nobody asked for. `true` at rest, and the pair of them is one
+   * rule — **the vocabulary is showing exactly when the field is empty** — kept
+   * by the effect below rather than by each caller remembering to.
+   *
+   * The initial value is a *guess*, and deliberately one: which screen is right
+   * cannot be known until the world's revision has arrived and the field has
+   * been restored, and painting the wrong one until then is the surface
+   * visibly flipping while a person watches — the ground going dark and light
+   * again half a second in. `holdsField` answers the only question the first
+   * paint needs, and the effect below settles it for real a moment later.
    */
-  const [vocabularyFocus, setVocabularyFocus] = useState(false);
+  const [vocabularyFocus, setVocabularyFocus] = useState(() => !holdsField());
   /**
    * What is *drawn*, which lags the intent by one absorb.
    *
@@ -803,6 +946,11 @@ export function WorldPage({
    * so nothing is written until the restore has been attempted.
    */
   const restored = useRef(false);
+  /**
+   * Whether the restore has been attempted — state, not the ref beside it,
+   * because a rule that must not fire before it has to be able to re-run after.
+   */
+  const [restoredField, setRestored] = useState(false);
   /** Synchronous duplicate guard; reducer state becomes visible next render. */
   const expansionsInFlight = useRef(new Map<string, number>());
   /** Invalidates a response that lands after its field has been cleared. */
@@ -827,7 +975,7 @@ export function WorldPage({
 
   useEffect(() => {
     try {
-      localStorage.setItem("graphauthor.productTheme", mode);
+      localStorage.setItem("ontology-author.productTheme", mode);
     } catch {
       /* private mode */
     }
@@ -845,13 +993,34 @@ export function WorldPage({
     if (!overview || restored.current) return;
     restored.current = true;
     const stored = readField(overview.world_id, overview.revision);
+    const incoming = stored && fieldSize(stored) ? stored : null;
     setSet((current) => {
       if (fieldSize(current)) return current;
-      if (stored && fieldSize(stored)) return stored;
-      if (lab) return createLabSandboxSet();
+      if (incoming) return incoming;
       return current;
     });
-  }, [lab, overview]);
+    // Both in one commit, so the rule below never sees a field that has not
+    // arrived yet and flips the surface on its way there.
+    setRestored(true);
+  }, [overview]);
+
+  /**
+   * The one rule: the vocabulary is showing exactly when the field is empty.
+   *
+   * Both directions, because a person can cross that line either way — the
+   * first row focused, the last mark taken off, Clear. Getting one direction
+   * only is how `clear the field` left an empty light canvas that was neither
+   * the field nor the default screen.
+   *
+   * Keyed on the *crossing*, not on the state: entering the vocabulary later
+   * with a field on it does not run this, because `hasField` did not change.
+   * And gated on the restore having happened, so a browser putting a field
+   * back does not show the default screen on the way.
+   */
+  useEffect(() => {
+    if (!restoredField) return;
+    setVocabularyFocus(!hasField);
+  }, [hasField, restoredField]);
 
   /** Keep the stored field level with the one on screen. */
   useEffect(() => {
@@ -881,7 +1050,8 @@ export function WorldPage({
   const tableChrome = useMemo<TableChrome>(
     () => ({
       current:
-        table.kind === "world" || table.kind === "frontier"
+        table.kind === "world" ||
+        table.kind === "frontier"
           ? table.kind
           : "other",
       hasFrontier: Boolean(overview?.demand),
@@ -889,7 +1059,12 @@ export function WorldPage({
       onFrontier: () => showTable({ kind: "frontier" }),
       onClose: collapseTables,
     }),
-    [collapseTables, overview?.demand, showTable, table.kind],
+    [
+      collapseTables,
+      overview?.demand,
+      showTable,
+      table.kind,
+    ],
   );
 
   useEffect(() => {
@@ -897,10 +1072,14 @@ export function WorldPage({
     Promise.all([worldApi.overview(), worldApi.schema(), worldApi.referents()])
       .then(([summary, schema, all]) => {
         if (cancelled) return;
+        setError(null);
         setOverview(summary);
         setRelations(schema);
-        setDirectory(all);
-        labels.current = new Map(all.map((item) => [item.id, item.label]));
+        setDirectory(all.referents);
+        setDirectoryShort(all.truncated);
+        labels.current = new Map(
+          all.referents.map((item) => [item.id, item.label]),
+        );
       })
       .catch((problem: Error) => {
         if (!cancelled) setError(problem.message);
@@ -908,7 +1087,7 @@ export function WorldPage({
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [loadAttempt]);
 
   useEffect(() => {
     const name = linkedRelation.current;
@@ -997,6 +1176,15 @@ export function WorldPage({
       : []),
   ], [set, show]);
 
+  /** The plane's own referent search, for a world too large to hold. */
+  const askWorld = useCallback(
+    async (query: string): Promise<Directory> =>
+      (await worldApi.search(query, 10))
+        .filter((item) => item.kind === "referent")
+        .map((item) => ({ id: item.id, label: item.label })),
+    [],
+  );
+
   const onFind = useCallback((id: string, label: string) => {
     if (!set.referents.size && !set.assertions.size && !set.demands.size && !set.bonds.length) {
       onSeed(id, label);
@@ -1020,13 +1208,48 @@ export function WorldPage({
         return;
       }
       const schema = relations.find((item) => item.name === relation);
+      // No `reveal` here. Expanding through a filtered-out relation is allowed
+      // — the neighbours arrive and referents draw under every filter — but it
+      // does not turn the filter off behind the person who set it. The bonds
+      // are in the working set and appear the moment the layer comes back.
       const generation = expansionGeneration.current;
       expansionsInFlight.current.set(key, generation);
       dispatchExpansion({ type: "start", key });
       try {
         const expansion = await worldApi.expand(anchor, relation);
         if (generation !== expansionGeneration.current) return;
-        if (schema) setShow((current) => reveal(schema, current));
+        /**
+         * Names for the neighbours the directory did not carry.
+         *
+         * Only when it is short: a complete directory already holds every
+         * label, and a request per expansion for an answer already in hand is
+         * the plane being asked to repeat itself. A neighbour with no name
+         * still draws — `workingSet` falls back to the id — so this failing is
+         * a field of ids, not a field of nothing.
+         */
+        if (directoryShort) {
+          const missing = [
+            ...new Set(
+              expansion.tuples.flatMap((tuple) =>
+                expansion.roles
+                  .filter((role) => role.referent)
+                  .map((role) => String(tuple.values[role.name] ?? ""))
+                  .filter((id) => id && !labels.current.has(id)),
+              ),
+            ),
+          ];
+          if (missing.length) {
+            try {
+              const found = await worldApi.labels(missing);
+              for (const [id, label] of Object.entries(found)) {
+                labels.current.set(id, label);
+              }
+            } catch {
+              // A name is not the claim. The expansion stands either way.
+            }
+            if (generation !== expansionGeneration.current) return;
+          }
+        }
         setSet((current) =>
           current.referents.has(anchor)
             ? expand(current, {
@@ -1357,11 +1580,15 @@ export function WorldPage({
     expansionGeneration.current += 1;
     expansionsInFlight.current.clear();
     dispatchExpansion({ type: "reset" });
-    setSet(lab ? createLabSandboxSet() : emptySet());
+    setSet(emptySet());
     setSelection(null);
     setHovered(null);
     setReaderOpen(false);
-  }, [lab]);
+    // Back to the state the surface starts in. The vocabulary follows from the
+    // field being empty and is not set here; the dock is, because a person
+    // asked for an empty field and the catalogue is what refills it.
+    setTablesOpen(true);
+  }, []);
 
   const enterVocabulary = useCallback(() => {
     setVocabularyFocus(true);
@@ -1375,7 +1602,9 @@ export function WorldPage({
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && vocabularyFocus) {
+      // Escape leaves the vocabulary *room*. On the default screen there is no
+      // room to leave — behind it is an empty field, which is not a place.
+      if (event.key === "Escape" && vocabularyFocus && fieldSize(set)) {
         event.preventDefault();
         leaveVocabulary();
         return;
@@ -1389,7 +1618,7 @@ export function WorldPage({
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [leaveVocabulary, onRemove, selection, vocabularyFocus]);
+  }, [leaveVocabulary, onRemove, selection, set, vocabularyFocus]);
 
   const visibleRelations = useMemo(
     () => relations.filter((item) => relationShown(item, show)),
@@ -1397,14 +1626,14 @@ export function WorldPage({
   );
   /**
    * Chrome, matter, focus and the motion spine, on the one element everything
-   * below inherits from. `worldChrome.ts` owns the composition so the design
-   * lab emits exactly the same tokens.
+   * below inherits from. `worldChrome.ts` owns the composition so the inspector
+   * uses one coherent visual vocabulary.
    */
   const style = {
     ...worldShellStyle(mode, { focus: focusDrawn, motion }),
     ...worldChromeDockVars({ tablesWidth, readerWidth }),
   };
-  const onField = fieldSize(set) > 0;
+  const onField = hasField;
   const relation = relations.find((item) => item.name === focusedRelation) ?? null;
   /**
    * The reader's subject, as one token.
@@ -1444,6 +1673,7 @@ export function WorldPage({
     () =>
       worldCameraInsets({
         focus: focusDrawn,
+        unfielded: !onField,
         tablesOpen,
         tablesWidth,
         readerOpen,
@@ -1455,12 +1685,13 @@ export function WorldPage({
       tablesOpen,
       tablesWidth,
       focusDrawn,
+      onField,
     ],
   );
 
   return (
     <main
-      className={`product-shell world${mode === "dark" ? " is-dark" : ""}${focusDrawn ? " is-focus" : ""}${motionReady ? " is-motion-ready" : ""}`}
+      className={`product-shell world${mode === "dark" ? " is-dark" : ""}${focusDrawn ? " is-focus" : ""}${onField ? "" : " is-unfielded"}${motionReady ? " is-motion-ready" : ""}`}
       style={style}
       data-mode={mode}
     >
@@ -1489,20 +1720,12 @@ export function WorldPage({
             </button>
           ) : null}
           <div className="product-shell__utils">
-            <a
-              href={lab ? "#/world" : "#/world-lab"}
-              className="product-shell__lab-link"
-              title={lab ? "Open World" : "Open World Design & Motion Lab"}
-            >
-              {lab ? "WORLD" : "LAB"}
-            </a>
             <button
               type="button"
               className="product-shell__theme"
               onClick={() => {
                 const next = mode === "light" ? "dark" : "light";
-                if (onModeChange) onModeChange(next);
-                else setLocalMode(next);
+                setLocalMode(next);
               }}
               aria-label={`Use ${mode === "light" ? "dark" : "light"} appearance`}
             >
@@ -1560,6 +1783,17 @@ export function WorldPage({
                       chrome={tableChrome}
                       onFocus={onFocusObligation}
                     />
+                  ) : table.kind === "relation" && !extension ? (
+                    // A subject with nothing behind it still keeps its bar.
+                    // Rendering nothing at all is how the change subject used
+                    // to strand a reader: the panel emptied, and with it went
+                    // the way back to world and frontier.
+                    <section className="table" aria-label={table.relation}>
+                      <TableBar chrome={tableChrome} title={table.relation} />
+                      <p className="table__rule">
+                        This world has no relation by that name.
+                      </p>
+                    </section>
                   ) : extension && table.kind === "relation" ? (
                     <RelationTable
                       key={extension.name}
@@ -1618,12 +1852,9 @@ export function WorldPage({
                 }`}
               >
                 {error ? (
-                  <p className="world__error">
-                    {error} — is the read plane running?{" "}
-                    <code>
-                      uv run --extra all python scripts/run_world_explorer.py
-                    </code>
-                  </p>
+                  <div className="world__error">
+                    <ProblemNotice message={error} onRetry={() => setLoadAttempt((attempt) => attempt + 1)} />
+                  </div>
                 ) : (
                   <>
                     {onField ? (
@@ -1633,7 +1864,7 @@ export function WorldPage({
                         <WorldCanvas
                           set={set}
                           mode={mode}
-                          params={tuning?.params ?? MARK_DEFAULTS}
+                          params={MARK_DEFAULTS}
                           hovered={hovered}
                           selection={selection}
                           show={show}
@@ -1642,14 +1873,9 @@ export function WorldPage({
                           arrangeToken={arrangeToken}
                           animateInitial={Boolean(selection)}
                           insets={cameraInsets}
-                          ants={tuning?.ants}
                           motion={motion}
-                          material={tuning?.material}
-                          selectionTreatment={tuning?.selectionTreatment}
                           spreadOnSelect={spreadOnSelect}
-                          light={tuning?.light}
-                          drift={tuning?.drift ?? false}
-                          driftTuning={tuning?.driftTuning}
+                          light={undefined}
                           onHover={setHovered}
                           onSelect={chooseFieldMark}
                           onPositions={onPositions}
@@ -1709,13 +1935,13 @@ export function WorldPage({
             >
               <div className="node-reader">
                 {noticePresence.mounted ? (
-                  <p
+                  <div
                     className={`world__notice motion-layer motion-layer--rise${
                       noticePresence.shown ? " is-in" : ""
                     }`}
                   >
-                    {noticeHeld}
-                  </p>
+                    {noticeHeld?.includes("\n") ? <ProblemNotice message={noticeHeld} /> : <span role="status">{noticeHeld}</span>}
+                  </div>
                 ) : null}
                 <Swap id={readerSubject} className="motion-swap--fill">
                   {onField && selection?.kind === "demand" ? (
@@ -1895,6 +2121,15 @@ export function WorldPage({
             <div className="instrument__group" role="group" aria-label="find">
               <Find
                 directory={set.referents.size || set.assertions.size || set.demands.size || set.bonds.length ? fieldDirectory : directory}
+                // Only for the seeding search, and only when the directory in
+                // hand is short. Once there is a field, find is a question
+                // about what is on it, and the plane has nothing to add.
+                ask={
+                  directoryShort &&
+                  !(set.referents.size || set.assertions.size || set.demands.size || set.bonds.length)
+                    ? askWorld
+                    : undefined
+                }
                 onPick={onFind}
               />
             </div>
@@ -1940,7 +2175,12 @@ export function WorldPage({
               ) : null}
             </div>
           ) : null}
-          {focusDrawn ? (
+          {/*
+            * `clear` leaves the vocabulary for the field, so it is offered only
+            * when there is a field to leave for. On the default screen the
+            * vocabulary is not a mode someone entered; it is the screen.
+            */}
+          {focusDrawn && onField ? (
             <div className="instrument__group" role="group" aria-label="Clear focus">
               <button type="button" onClick={leaveVocabulary}>
                 clear

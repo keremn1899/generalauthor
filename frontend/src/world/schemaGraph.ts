@@ -24,12 +24,18 @@
 
 import type { WorldRelation } from "../api/world";
 import {
+  bondLabelLayout,
+  bondLabelStep,
   chipNode,
   discNode,
+  discRim,
   filamentEdge,
+  plateRim,
   projectionOf,
   shelfNode,
   spokeEdge,
+  spokeLabelStation,
+  SPOKE_LABEL_ALONG_PX,
   type ChipKind,
   type MarkParams,
   type Paint,
@@ -145,16 +151,56 @@ function centroid(points: Point[]): Point {
  * Build the schema canvas.
  *
  * `stalePaint` is handed in rather than decided here: an unsettled relation
- * (stale, or a completeness receipt that is not COMPLETE) renders in the
- * provisional palette, and which palette that is belongs to the theme, not
- * to the projection.
+ * (stale, or a completeness receipt that is not COMPLETE) renders in that
+ * palette, and which palette that is belongs to the theme, not to the
+ * projection.
  */
+/**
+ * Which relations stand on each kind.
+ *
+ * Read off the same `kindOf` the layout uses, so a canvas asking "what is on
+ * this disc" and the layout asking "where does this relation hang" cannot come
+ * to different answers about the same role.
+ */
+export function relationsByKind(
+  relations: WorldRelation[],
+): Map<string, string[]> {
+  const out = new Map<string, string[]>();
+  for (const relation of relations) {
+    for (const role of relation.roles) {
+      if (!role.referent) continue;
+      const kind = kindOf(role);
+      if (!kind) continue;
+      const standing = out.get(kind);
+      if (standing) {
+        if (!standing.includes(relation.name)) standing.push(relation.name);
+      } else {
+        out.set(kind, [relation.name]);
+      }
+    }
+  }
+  return out;
+}
+
 export function schemaLayout(
   relations: WorldRelation[],
   paint: Paint,
   stalePaint: Paint,
   params: MarkParams,
-  options: { namedAtRest: boolean; focused: string | null },
+  options: {
+    namedAtRest: boolean;
+    focused: string | null;
+    /**
+     * Relations to name because a person is looking at something they are on.
+     *
+     * A binary relation is drawn as a name on a filament and nothing else, so
+     * an unnamed bond is an invisible one — and the only way to name it was to
+     * already have it selected, or to turn every name on at once. Hovering a
+     * kind now names the bonds that touch it, which is what the field has
+     * always done for a disc and its claims.
+     */
+    lit?: ReadonlySet<string>;
+  },
 ): SchemaLayout {
   const kinds = kindsIn(relations);
   const positions = ringPositions(kinds);
@@ -229,7 +275,10 @@ export function schemaLayout(
     )
       ? stalePaint
       : paint;
-    const named = options.namedAtRest || options.focused === relation.name;
+    const named =
+      options.namedAtRest ||
+      options.focused === relation.name ||
+      Boolean(options.lit?.has(relation.name));
     const kind = chipKind(relation);
 
     if (projection === "bond" && distinct) {
@@ -297,9 +346,51 @@ export function schemaLayout(
       ),
     );
     nodes.push(...furniture(relation, kind, at, chipPaint, params));
+    /**
+     * Two roles filled by the same kind run the same route, so they stack.
+     *
+     * `serial_comparison_pair` takes `earlier_action` and `later_action` from
+     * the same disc to the same chip. One station puts both names on the same
+     * point, and what a reader saw was two of four role names — the other two
+     * exactly underneath. This is the stack a filament already gives parallel
+     * claims, centred the same way, for the same reason.
+     */
+    const sharing = new Map<string, number>();
+    for (const role of referentRoles) {
+      const kind = kindOf(role);
+      if (kind) sharing.set(kind, (sharing.get(kind) ?? 0) + 1);
+    }
+    const step = bondLabelStep(params);
+    const placed = new Map<string, number>();
     referentRoles.forEach((role, roleIndex) => {
       const kind = kindOf(role);
       if (!kind) return;
+      const disc = positions.get(kind);
+      const seat = placed.get(kind) ?? 0;
+      placed.set(kind, seat + 1);
+      const middle = ((sharing.get(kind) ?? 1) - 1) / 2;
+      /**
+       * The station, which this canvas was not asking for at all.
+       *
+       * With no `labelPlacement` every role name fell to `roleLabelAt` — the
+       * midpoint — which is the ratio `SPOKE_LABEL_ALONG_PX` exists to avoid:
+       * a name that slides along its own spoke as the marks it names move.
+       * The far rim is the chip's, because a spoke ends on a plate.
+       */
+      const station = disc
+        ? bondLabelLayout(
+            disc,
+            at,
+            "source",
+            { x: step.x * (seat - middle), y: step.y * (seat - middle) },
+            params,
+            discRim(params),
+            plateRim(relation.name, params),
+            SPOKE_LABEL_ALONG_PX,
+            spokeLabelStation(role.name, params).halfPlate,
+            spokeLabelStation(role.name, params).air,
+          )
+        : null;
       edges.push(
         spokeEdge(
           `${relation.name}:${role.name}:${roleIndex}`,
@@ -307,7 +398,13 @@ export function schemaLayout(
           `rel:${relation.name}`,
           chipPaint,
           params,
-          { role: role.name, showRole: options.focused === relation.name },
+          {
+            role: role.name,
+            showRole: options.focused === relation.name,
+            labelPlacement: station?.placement,
+            labelOffsetX: station?.offsetX,
+            labelOffsetY: station?.offsetY,
+          },
         ),
       );
     });

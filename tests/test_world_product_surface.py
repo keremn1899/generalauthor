@@ -3,27 +3,88 @@
 from __future__ import annotations
 
 import json
+import re
 import sqlite3
-import shutil
 from pathlib import Path
 
 from ontology_author.world.cli import attach
 from ontology_author.world import Project
+from ontology_author.world.explorer import WorldExplorerAdapter
 from ontology_author.world.runtime.entry import create, rebuild
 from ontology_author.world.server import build_app
 from ontology_author.world.workspaces import WorldSelectionError, discover, select
 
-FIXTURE = Path("research/semantic_integration/runtime_v0/fixtures/minimal_v0")
-
-
 def _world(tmp_path: Path, name: str) -> Path:
     workspace = tmp_path / ".worlds" / name
     workspace.mkdir(parents=True)
-    shutil.copy2(FIXTURE / "construction.py", workspace / "construction.py")
-    for filename in ("accounts.csv", "orders.csv", "note.txt"):
-        destination = tmp_path / filename
-        if not destination.exists():
-            shutil.copy2(FIXTURE / "sources" / filename, destination)
+    (tmp_path / "accounts.csv").write_text(
+        "account_code,legal_name\nA1,Acme Ltd\nA2,Beta Ltd\n", encoding="utf-8"
+    )
+    (tmp_path / "orders.csv").write_text(
+        "order_id,account_code,amount\nO1,A1,100\nO2,A2,GM\n", encoding="utf-8"
+    )
+    (tmp_path / "note.txt").write_text(
+        "For this fixture, GM is a domain-specific non-numeric reporting token.\n",
+        encoding="utf-8",
+    )
+    (workspace / "construction.py").write_text(
+        '''def construct(source, world, purpose):
+    source.tables()
+    source.fields("orders.csv")
+    source.profile("orders.csv", "amount")
+    source.distinct_values("orders.csv", "amount")
+    source.join("orders.csv", "accounts.csv", [("account_code", "account_code")])
+    source.read_text("note.txt")
+
+    world.declare_relation(
+        "account",
+        [Role("account", RoleType.REFERENT), Role("account_code", RoleType.TEXT), Role("legal_name", RoleType.TEXT)],
+        scope="WORLD",
+    )
+    world.declare_relation(
+        "customer_order",
+        [Role("order", RoleType.REFERENT), Role("account", RoleType.REFERENT), Role("amount_text", RoleType.TEXT)],
+        scope="WORLD",
+    )
+    world.declare_relation("analysis_policy", [Role("statement", RoleType.TEXT)], scope="PURPOSE")
+
+    for row in source.rows("accounts.csv"):
+        referent = f"account:{row['account_code']}"
+        world.add_referent(referent, label=row["legal_name"])
+        world.assert_tuple(
+            "account",
+            {"account": referent, "account_code": row["account_code"], "legal_name": row["legal_name"]},
+            origin=ConstructionOrigin.MECHANICAL,
+            grounding=source.grounding("accounts.csv", f"account_code={row['account_code']}"),
+        )
+
+    accounts = {row["account_code"]: row for row in source.rows("accounts.csv")}
+    for row in source.rows("orders.csv"):
+        account = accounts[row["account_code"]]
+        order = f"order:{row['order_id']}"
+        world.add_referent(order, label=row["order_id"])
+        world.assert_tuple(
+            "customer_order",
+            {"order": order, "account": f"account:{account['account_code']}", "amount_text": row["amount"]},
+            origin=ConstructionOrigin.MECHANICAL,
+            grounding=source.grounding("orders.csv", f"order_id={row['order_id']}"),
+        )
+
+    world.assert_tuple(
+        "analysis_policy",
+        {"statement": "for this analysis, use legal_name from the accounts table"},
+        origin=ConstructionOrigin.ADJUDICATED,
+    )
+    purpose.require_numeric("order_amount_numeric", relation="customer_order", field="amount_text", per="order")
+    purpose.unresolved(
+        "gm_token",
+        relation="customer_order",
+        subject={"order": "order:O2", "amount_text": "GM"},
+        reason="GM is not established as numeric",
+    )
+''',
+        encoding="utf-8",
+    )
     (workspace / "PURPOSE.md").write_text(
         "# Purpose\n\nDetermine customer order amounts.\n\n"
         "## User basis\n\n> Determine customer order amounts.\n",
@@ -97,12 +158,25 @@ def test_bundled_inspector_is_read_only(tmp_path):
     with TestClient(build_app(workspace / "world" / "world.sqlite")) as client:
         page = client.get("/")
         assert page.status_code == 200
-        assert "ONTOLOGY AUTHOR" in page.text
+        assert "Ontology Author" in page.text
+        asset = re.search(r'href="(/assets/[^\"]+\.css)"', page.text)
+        assert asset and client.get(asset.group(1)).status_code == 200
         assert client.get("/world/overview").json()["world_id"] == "v0"
         assert client.post("/world/judgment", json={}).status_code == 404
         assert client.post(
             "/world/query", json={"sql": "select count(*) from account"}
         ).status_code == 200
+
+
+def test_installed_explorer_reads_the_world_bundle(tmp_path):
+    workspace = _world(tmp_path, "explorer")
+    assert rebuild(workspace).succeeded
+    with WorldExplorerAdapter(workspace / "world" / "world.sqlite") as explorer:
+        assert explorer.overview()["world_id"] == "v0"
+        assert {item["name"] for item in explorer.schema()} >= {"account", "customer_order"}
+        assert explorer.labels(["account:A1"])["account:A1"] == "Acme Ltd"
+        assert explorer.rows("account")["total"] == 2
+        assert explorer.query_semantic("SELECT COUNT(*) AS n FROM account")[0]["n"] == 2
 
 
 def test_create_does_not_generate_per_world_contract_or_sources(tmp_path):

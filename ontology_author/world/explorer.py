@@ -3,7 +3,7 @@
 The front end needs the answers listed in §14 of the World IR front-end spec:
 relation schemas, tuples, SQL, tuple inspection, construction origin, grounding,
 staleness, completeness, derivation dependencies and unresolved obligations.
-`SemanticWorld` and `TaskView` already answer nearly all of it — `describe()`
+`SemanticWorld` already answers nearly all of it — `describe()`
 alone carries roles, types, columns, mode, counts, staleness and completeness —
 so this module formats; it does not store.
 
@@ -17,7 +17,7 @@ what the tests here pin.
 Two things it does have to reconcile, because the store and the product disagree
 about words:
 
-**Origin.** `_tv_assertions.origin` is `ASSERTED` or `DERIVED` — how the tuple
+**Origin.** `_world_assertions.origin` is `ASSERTED` or `DERIVED` — how the tuple
 got into the table. The product means something else by origin: MECHANICAL,
 SEMANTIC or DERIVED — who decided it, which is what the canvas paints. That
 lives in the kernel's sidecar, via `origin_for_assertion`. A world compiled
@@ -57,17 +57,7 @@ MAX_ROWS = 500
 MAX_FIELDS = 200
 
 
-#: The PURPOSE relation `runtime_v0` materializes unresolvedness into. Unlike
-#: the nine-pass lineage, which froze an obligation set into a sidecar beside
-#: the world, the v1 boundary writes its failures *into* the world as ordinary
-#: tuples. Both are the same semantic fact — a purpose asked for meaning the
-#: world does not establish — and §8.7 renders one frontier over either.
 PURPOSE_FAILURE_RELATION = "purpose_requirement_failure"
-
-
-def _demand_path(db_path: Path) -> Path:
-    return db_path.with_suffix(".demand.json")
-
 
 def _purpose_path(db_path: Path) -> Path:
     """`world.sqlite` -> `world.purpose.json`, the v1 boundary's sidecar."""
@@ -79,11 +69,11 @@ def _admission_path(db_path: Path) -> Path:
     return db_path.with_suffix(".admission.json")
 
 
-def view_id_of(db_path: Path | str) -> str:
-    """The TaskView id a world file already carries.
+def world_id_of(db_path: Path | str) -> str:
+    """The WorldStore id a world file already carries.
 
-    Asked of the file rather than of the caller. `TaskView` refuses to open a
-    database whose `view_id` differs from the one passed in, and that id is set
+    Asked of the file rather than of the caller. `WorldStore` refuses to open a
+    database whose `world_id` differs from the one passed in, and that id is set
     by whichever compiler wrote the file — so requiring the explorer to know it
     in advance turns opening a world into a guess, and the failure reads as a
     corrupt file rather than as a mismatched string.
@@ -91,12 +81,12 @@ def view_id_of(db_path: Path | str) -> str:
     connection = sqlite3.connect(f"file:{Path(db_path)}?mode=ro", uri=True)
     try:
         row = connection.execute(
-            "SELECT view_id FROM _tv_view WHERE singleton = 1"
+            "SELECT world_id FROM _world_meta WHERE singleton = 1"
         ).fetchone()
     finally:
         connection.close()
     if row is None:
-        raise ValueError(f"{db_path} is not a TaskView world")
+        raise ValueError(f"{db_path} is not a WorldStore world")
     return str(row[0])
 
 
@@ -117,12 +107,9 @@ class WorldExplorerAdapter:
     def __init__(self, path: Path | str, *, world_id: str | None = None) -> None:
         self.path = Path(path)
         self._world = SemanticWorld(
-            self.path, world_id=world_id or view_id_of(self.path), read_only=True
+            self.path, world_id=world_id or world_id_of(self.path), read_only=True
         )
-        self._demand_document: dict[str, Any] | None = None
-        demand = _demand_path(self.path)
-        if demand.exists():
-            self._demand_document = json.loads(demand.read_text(encoding="utf-8"))
+        self._store = self._world._store
         self._purpose_document: dict[str, Any] | None = None
         purpose = _purpose_path(self.path)
         if purpose.exists():
@@ -138,7 +125,7 @@ class WorldExplorerAdapter:
         layer never mutates the origin map it loaded, so there is nothing here
         that a write-back would preserve.
         """
-        self._world.taskview.close()
+        self._world.close()
 
     def __enter__(self) -> "WorldExplorerAdapter":
         return self
@@ -148,17 +135,13 @@ class WorldExplorerAdapter:
 
     # -- reading through ----------------------------------------------------
 
-    @property
-    def _view(self):
-        return self._world.taskview
-
     def _described(self) -> list[dict[str, Any]]:
-        return self._view.describe()["relations"]
+        return self._store.describe()["relations"]
 
     def _scopes(self) -> dict[str, str]:
         """relation -> WORLD | PURPOSE, from the admission sidecar.
 
-        Read on every call, like everything else here. Scope is not a TaskView
+        Read on every call, like everything else here. Scope is not a WorldStore
         column — it is admitted at publication and recorded beside the file —
         so a compiled world that carries no admission document has no scopes,
         and every relation reports `null` rather than a guessed WORLD. Guessing
@@ -199,7 +182,7 @@ class WorldExplorerAdapter:
     def _grounding(self, subject_type: str, subject_id: str) -> list[dict[str, Any]]:
         """Grounding with its detail opened up.
 
-        TaskView stores `detail` as a JSON string, which is right for a store
+        WorldStore stores `detail` as a JSON string, which is right for a store
         and wrong for the thing that has to draw `engineering_notes.md lines
         6-14` in a panel. Parsed here, once, rather than in every consumer —
         and the source handle and location are lifted to the top level because
@@ -210,7 +193,7 @@ class WorldExplorerAdapter:
         of loss this product cannot afford.
         """
         out: list[dict[str, Any]] = []
-        for row in self._view.groundings(subject_type, subject_id):
+        for row in self._store.groundings(subject_type, subject_id):
             item: dict[str, Any] = {"kind": row["kind"], "reference": row["reference"]}
             try:
                 detail = json.loads(row["detail"]) if row["detail"] else {}
@@ -240,7 +223,7 @@ class WorldExplorerAdapter:
     def _completeness_out(receipt: Mapping[str, Any] | None) -> dict[str, Any] | None:
         """The completeness claim, named for the canvas rather than the store.
 
-        TaskView's receipt carries versions, fingerprints and environment —
+        WorldStore's receipt carries versions, fingerprints and environment —
         facts the derivation drawer already has from the run record. What the
         overlay needs is the declared status, the universe it was claimed over,
         and whether that claim is still current. A missing receipt is `None`,
@@ -270,8 +253,8 @@ class WorldExplorerAdapter:
         nothing kept between calls — the adapter reads through.
         """
         seen: dict[str, list[str]] = {}
-        for row in self._view.query(
-            "SELECT relation_name, assertion_id FROM _tv_assertions"
+        for row in self._store.query(
+            "SELECT relation_name, assertion_id FROM _world_assertions"
         ):
             origins = seen.setdefault(row["relation_name"], [])
             origin = self._origin(row["assertion_id"])
@@ -289,19 +272,18 @@ class WorldExplorerAdapter:
         construction origins. Nothing that only needs the name should pay for
         that.
         """
-        return {"world_id": self._world.world_id, "revision": self._view.revision}
+        return {"world_id": self._world.world_id, "revision": self._store.revision}
 
     def overview(self) -> dict[str, Any]:
         described = self._described()
-        counts = self._view.query(
-            "SELECT (SELECT COUNT(*) FROM _tv_referents) AS referents, "
-            "(SELECT COUNT(*) FROM _tv_assertions) AS assertions"
+        counts = self._store.query(
+            "SELECT (SELECT COUNT(*) FROM _world_referents) AS referents, "
+            "(SELECT COUNT(*) FROM _world_assertions) AS assertions"
         )[0]
         origins: dict[str, int] = {}
-        for row in self._view.query("SELECT assertion_id FROM _tv_assertions"):
+        for row in self._store.query("SELECT assertion_id FROM _world_assertions"):
             origin = self._origin(row["assertion_id"])
             origins[origin] = origins.get(origin, 0) + 1
-        demand = self._demand_document
         incomplete = [
             record["name"]
             for record in described
@@ -310,27 +292,17 @@ class WorldExplorerAdapter:
         ]
         return {
             "world_id": self._world.world_id,
-            "revision": self._view.revision,
+            "revision": self._store.revision,
             "relations": len(described),
             "referents": counts["referents"],
             "assertions": counts["assertions"],
             "origins": origins,
             "stale": self._world.stale_relations(),
             "incomplete": incomplete,
-            # The frontier tab exists when a purpose does, whichever lineage
-            # carries it. Gating this on the nine-pass sidecar alone would hide
-            # the frontier of every world the v1 boundary rebuilt — the
-            # surface would be built, reachable by URL, and invisible.
-            "demand": self._demand_overview(demand),
+            "demand": self._demand_overview(),
         }
 
-    def _demand_overview(self, demand: dict[str, Any] | None) -> dict[str, Any] | None:
-        if demand is not None:
-            return {
-                "purpose": demand["purpose"],
-                "obligations": demand["obligation_count"],
-                "demanded": demand["candidate_case_count"],
-            }
+    def _demand_overview(self) -> dict[str, Any] | None:
         frontier = self._purpose_frontier()
         if frontier is None:
             return None
@@ -426,7 +398,7 @@ class WorldExplorerAdapter:
         show, and inventing one would put a type on the canvas the world has
         never asserted.
         """
-        rows = self._view.query(
+        rows = self._store.query(
             f'SELECT DISTINCT substr("{column}", 1, instr("{column}", \':\') - 1) '
             f'AS kind FROM "{relation}" '
             f'WHERE "{column}" IS NOT NULL AND instr("{column}", \':\') > 0 '
@@ -470,7 +442,7 @@ class WorldExplorerAdapter:
             key = (relation, role.name)
             population[key] = {
                 str(row["value"])
-                for row in self._view.query(
+                for row in self._store.query(
                     f'SELECT DISTINCT "{role.column}" AS value FROM "{relation}" '
                     f'WHERE "{role.column}" IS NOT NULL'
                 )
@@ -522,8 +494,8 @@ class WorldExplorerAdapter:
     def derivation_inputs(self, relation: str) -> list[str]:
         return [
             row["input_relation"]
-            for row in self._view.query(
-                "SELECT input_relation FROM _tv_derivation_inputs "
+            for row in self._store.query(
+                "SELECT input_relation FROM _world_derivation_inputs "
                 "WHERE relation_name = ? ORDER BY input_relation",
                 (relation,),
             )
@@ -541,8 +513,8 @@ class WorldExplorerAdapter:
         needle = f"%{query}%"
         out: list[dict[str, Any]] = [
             {"kind": "referent", "id": row["id"], "label": row["label"]}
-            for row in self._view.query(
-                "SELECT id, label FROM _tv_referents "
+            for row in self._store.query(
+                "SELECT id, label FROM _world_referents "
                 "WHERE id LIKE ? OR label LIKE ? ORDER BY id LIMIT ?",
                 (needle, needle, min(limit, MAX_ROWS)),
             )
@@ -559,8 +531,22 @@ class WorldExplorerAdapter:
         """Every referent, for a front end that wants to search locally."""
         return [
             {"id": row["id"], "label": row["label"]}
-            for row in self._view.query("SELECT id, label FROM _tv_referents ORDER BY id")
+            for row in self._store.query("SELECT id, label FROM _world_referents ORDER BY id")
         ]
+
+    def labels(self, referent_ids: Iterable[str]) -> dict[str, str | None]:
+        """Return labels for a bounded set of referent ids."""
+        ids = list(dict.fromkeys(str(item) for item in referent_ids if str(item)))
+        if not ids:
+            return {}
+        marks = ",".join("?" for _ in ids)
+        return {
+            row["id"]: row["label"]
+            for row in self._store.query(
+                f"SELECT id, label FROM _world_referents WHERE id IN ({marks})",
+                ids,
+            )
+        }
 
     # -- §7.2 referent neighborhood ----------------------------------------
 
@@ -576,8 +562,8 @@ class WorldExplorerAdapter:
         thousands of times, and reading those rows to find out how many there
         are is how a cheap question becomes a multi-megabyte answer.
         """
-        rows = self._view.query(
-            "SELECT id, label FROM _tv_referents WHERE id = ?", (referent_id,)
+        rows = self._store.query(
+            "SELECT id, label FROM _world_referents WHERE id = ?", (referent_id,)
         )
         if not rows:
             raise KeyError(f"no referent {referent_id!r} in this world")
@@ -597,7 +583,7 @@ class WorldExplorerAdapter:
             # 22,413 times, and the answer was a 3.27 MB document of 22,413
             # card fields — each one having cost its own origin lookup — that
             # the reader then tried to render as 22,413 rows.
-            count = self._view.query(
+            count = self._store.query(
                 f'SELECT COUNT(*) AS n FROM "{record["name"]}" WHERE {where}',
                 arguments,
             )[0]["n"]
@@ -620,7 +606,7 @@ class WorldExplorerAdapter:
                 and len(scalar_roles) == 1
                 and count <= MAX_FIELDS
             ):
-                found = self._view.query(
+                found = self._store.query(
                     f'SELECT * FROM "{record["name"]}" WHERE {where}', arguments
                 )
                 for row in found:
@@ -661,7 +647,7 @@ class WorldExplorerAdapter:
         if not referent_roles:
             return {"relation": relation, "roles": [r.name for r in roles], "tuples": []}
         where = " OR ".join(f'"{role.column}" = ?' for role in referent_roles)
-        rows = self._view.query(
+        rows = self._store.query(
             f'SELECT * FROM "{relation}" WHERE {where} LIMIT ?',
             [referent_id] * len(referent_roles) + [min(limit, MAX_ROWS)],
         )
@@ -730,11 +716,11 @@ class WorldExplorerAdapter:
             predicate = " OR ".join(f'"{role.column}" = ?' for role in referent_roles)
             where = f" WHERE ({predicate})"
             subject_values = [subject] * len(referent_roles)
-            total = self._view.query(
+            total = self._store.query(
                 f'SELECT COUNT(*) AS n FROM "{relation}"{where}', subject_values
             )[0]["n"]
 
-        rows = self._view.query(
+        rows = self._store.query(
             f'SELECT * FROM "{relation}"{where}{clause} LIMIT ? OFFSET ?',
             [*subject_values, min(limit, MAX_ROWS), max(0, offset)],
         )
@@ -768,8 +754,8 @@ class WorldExplorerAdapter:
         both carry, and reconstructing a values map to look a tuple back up is
         an opportunity to get it subtly wrong.
         """
-        found = self._view.query(
-            "SELECT relation_name, origin, created_revision FROM _tv_assertions "
+        found = self._store.query(
+            "SELECT relation_name, origin, created_revision FROM _world_assertions "
             "WHERE assertion_id = ?",
             (assertion_id,),
         )
@@ -778,7 +764,7 @@ class WorldExplorerAdapter:
         relation = found[0]["relation_name"]
         record = self._relation(relation)
         roles = self._roles(record)
-        rows = self._view.query(
+        rows = self._store.query(
             f'SELECT * FROM "{relation}" WHERE _assertion_id = ?', (assertion_id,)
         )
         values = {role.name: rows[0][role.column] for role in roles} if rows else {}
@@ -829,7 +815,7 @@ class WorldExplorerAdapter:
         draws a tree; the closure is what is true.
 
         The run record is where staleness stops being a flag and becomes an
-        account. TaskView remembers the version and cardinality of every input
+        account. WorldStore remembers the version and cardinality of every input
         as it stood when the derivation last ran, so each can be compared
         against the same relation now: an input that has moved since is the
         reason the output is suspect, named. Inputs the engine snapshotted but
@@ -842,8 +828,8 @@ class WorldExplorerAdapter:
 
         upward: dict[str, list[str]] = {}
         downward: dict[str, list[str]] = {}
-        for row in self._view.query(
-            "SELECT relation_name, input_relation FROM _tv_derivation_inputs "
+        for row in self._store.query(
+            "SELECT relation_name, input_relation FROM _world_derivation_inputs "
             "ORDER BY relation_name, input_relation"
         ):
             upward.setdefault(row["relation_name"], []).append(row["input_relation"])
@@ -892,18 +878,18 @@ class WorldExplorerAdapter:
 
         run: dict[str, Any] | None = None
         if record["mode"] == "DERIVED":
-            held = self._view.query(
+            held = self._store.query(
                 "SELECT sql, definition_revision, execution_status, "
-                "last_run_view_revision, result_fingerprint, output_cardinality, "
-                "last_error FROM _tv_derivations WHERE relation_name = ?",
+                "last_run_world_revision, result_fingerprint, output_cardinality, "
+                "last_error FROM _world_derivations WHERE relation_name = ?",
                 (relation,),
             )
             if held:
                 taken = {
                     row["input_relation"]: row
-                    for row in self._view.query(
+                    for row in self._store.query(
                         "SELECT input_relation, relation_version, cardinality "
-                        "FROM _tv_derivation_run_inputs WHERE relation_name = ?",
+                        "FROM _world_derivation_run_inputs WHERE relation_name = ?",
                         (relation,),
                     )
                 }
@@ -934,7 +920,7 @@ class WorldExplorerAdapter:
                     "sql": held[0]["sql"],
                     "state": held[0]["execution_status"],
                     "definition_revision": held[0]["definition_revision"],
-                    "last_run_view_revision": held[0]["last_run_view_revision"],
+                    "last_run_world_revision": held[0]["last_run_world_revision"],
                     "output_cardinality": held[0]["output_cardinality"],
                     "last_error": held[0]["last_error"],
                     "inputs": inputs,
@@ -957,7 +943,7 @@ class WorldExplorerAdapter:
         """Input tuples that mention this derived tuple's referents.
 
         §8.6 asks for drill-down from relation-level dependency into
-        tuple-level provenance *where available* — and here it is not. TaskView
+        tuple-level provenance *where available* — and here it is not. WorldStore
         records lineage per relation, not per row: no table in this world says
         which input rows produced this output row. Rather than invent that edge
         and draw it as if the world had asserted it, this answers the question
@@ -1014,10 +1000,10 @@ class WorldExplorerAdapter:
                 # alias in WHERE is a SQLite extension, and this file is the
                 # one place a portability accident would be silent.
                 values = wanted * len(referent_roles)
-                answer["matched"] = self._view.query(
+                answer["matched"] = self._store.query(
                     f'SELECT COUNT(*) AS n FROM "{name}" WHERE ({score}) > 0', values
                 )[0]["n"]
-                rows = self._view.query(
+                rows = self._store.query(
                     f'SELECT *, ({score}) AS _support FROM "{name}" '
                     f"WHERE ({score}) > 0 ORDER BY _support DESC LIMIT ?",
                     [*values, *values, self.MAX_SUPPORT],
@@ -1040,49 +1026,12 @@ class WorldExplorerAdapter:
         the world asserts, and with no purpose there is no such thing as an
         unresolved obligation — which is different from there being none.
         """
-        document = self._demand_document
-        if document is None:
-            return self._purpose_frontier()
-        obligations = []
-        for obligation in document["obligations"]:
-            relation = obligation["relation"]
-            values = obligation["values"]
-            resolved = self._view.assertion_id_for_tuple(relation, values)
-            exists = bool(
-                self._view.query(
-                    f'SELECT 1 FROM "{relation}" WHERE _assertion_id = ? LIMIT 1',
-                    (resolved,),
-                )
-            )
-            obligations.append(
-                {
-                    "relation": relation,
-                    "values": values,
-                    "demanded_by": obligation["demanded_by"],
-                    "state": "ASSERTED" if exists else "UNRESOLVED",
-                    "assertion_id": resolved if exists else None,
-                }
-            )
-        return {
-            "purpose": document["purpose"],
-            "rule": document["generation_rule"],
-            "demanded": document["candidate_case_count"],
-            "obligations": obligations,
-        }
+        return self._purpose_frontier()
 
     def _purpose_frontier(self) -> dict[str, Any] | None:
         """The same frontier, read off a world rebuilt by the v1 boundary.
 
-        Two differences from the nine-pass lineage, both semantic rather than
-        cosmetic.
-
-        There is no generation rule and no purpose revision. A rule that
-        enumerates candidate cases is a property of that compiler, not of a
-        World, and inventing `rev 1` for a purpose that never declared one
-        would put a number on the surface that nothing in the world backs.
-        Both come back absent and the frontier prints neither.
-
-        And every obligation here is unresolved. `purpose_requirement_failure`
+        Every obligation here is unresolved. `purpose_requirement_failure`
         holds only what a requirement did *not* get; a requirement the world
         satisfied leaves no row. So this lineage cannot show the quiet resolved
         half of a frontier the way a frozen obligation set can — where the
@@ -1128,8 +1077,8 @@ class WorldExplorerAdapter:
             "purpose": {"statement": str((document or {}).get("text", "")).strip()},
             "rule": None,
             # What the purpose asked for, at the granularity this lineage asks
-            # it: one entry per declared requirement, where the nine-pass
-            # counts candidate cases.
+            # it: one entry per declared requirement, preserving the
+            # construction's requested granularity.
             "demanded": len(requirements) or len(obligations),
             "obligations": obligations,
             # Relation-level, and additive: the declarations themselves, each
@@ -1153,7 +1102,7 @@ class WorldExplorerAdapter:
             record["name"] == PURPOSE_FAILURE_RELATION for record in self._described()
         ):
             return []
-        return self._view.query(
+        return self._store.query(
             f'SELECT _assertion_id, requirement_id, affected_identity, failure_kind, '
             f'relation_name, subject_json, grounding_ref FROM "{PURPOSE_FAILURE_RELATION}"'
         )
@@ -1182,7 +1131,7 @@ __all__ = [
     "MAX_FIELDS",
     "MAX_ROWS",
     "PURPOSE_FAILURE_RELATION",
-    "view_id_of",
+    "world_id_of",
     "UNKNOWN_ORIGIN",
     "Role",
     "WorldExplorerAdapter",

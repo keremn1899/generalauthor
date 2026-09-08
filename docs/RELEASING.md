@@ -21,7 +21,7 @@ or long-lived upload token is stored in this repository. See the
 ## Release process
 
 1. Update `version` in `pyproject.toml` and the release notes.
-2. Run `uv run --extra all --extra dev pytest` locally.
+2. Build the inspector assets, then run `uv run --extra dev pytest` locally.
 3. Create and push a version tag such as `v0.1.0`.
 4. Create a matching GitHub Release. The release workflow builds an sdist and
    wheel, checks them, uploads them as release artifacts, and publishes to PyPI.
@@ -34,5 +34,5 @@ or long-lived upload token is stored in this repository. See the
    ```
 
 The released wheel must include `ontology_author.world`, its bundled inspector
-assets, and the `taskview` store. The legacy graph packages remain available
-through their explicit legacy entrypoints.
+assets and the World SQLite implementation. Historical graph/MCP code is not part of the
+normal installation.

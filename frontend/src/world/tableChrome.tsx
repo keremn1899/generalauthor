@@ -47,12 +47,30 @@ export function TableBar({
             aria-pressed={chrome.current === "frontier"}
             onClick={chrome.onFrontier}
           >
-            frontier
+            {/*
+              * The list is of unresolved obligations, so the tab says
+              * unresolved. "Frontier" is the right word for the *set* — it is
+              * what moves as a world is built, and the docstrings keep it —
+              * but as a tab beside `world` it named a concept rather than a
+              * place, and a reader had to already know the theory to guess
+              * what was behind it.
+              */}
+            unresolved
           </button>
         ) : null}
       </nav>
-      {title ? <b>{title}</b> : null}
-      {meta ? <span className="table__meta">{meta}</span> : null}
+      {/*
+        * The two of them in one box, and the box takes the free space rather
+        * than the text's width. That is what makes the fade honest: the mask
+        * eats the last stretch of the *box*, so a name that fits ends well
+        * before it and only a name that has run out of room is faded away.
+        */}
+      {title || meta ? (
+        <div className="table__said">
+          {title ? <b>{title}</b> : null}
+          {meta ? <span className="table__meta">{meta}</span> : null}
+        </div>
+      ) : null}
       <div className="table__actions">
         {children}
         <PanelClose onClose={chrome.onClose} />

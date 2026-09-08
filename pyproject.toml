@@ -8,13 +8,13 @@ version = "0.1.0"
 description = "Construct and maintain purpose-fit ontologies called Worlds"
 readme = "README.md"
 requires-python = ">=3.11,<3.14"
-license = { file = "LICENSE" }
+license = "Apache-2.0"
+license-files = ["LICENSE"]
 authors = [{ name = "Kerem" }]
-keywords = ["knowledge-graph", "traversal", "agents", "provenance"]
+keywords = ["ontology", "semantic-data", "agents", "provenance"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: Apache Software License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -24,59 +24,10 @@ classifiers = [
 dependencies = ["starlette>=0.37,<1", "uvicorn>=0.29"]
 
 [project.optional-dependencies]
-world = ["starlette>=0.37,<1", "uvicorn>=0.29"]
-graph = [
-    "real_ladybug>=0.15.0,<0.16",
-    "pydantic>=2.0",
-    "requests>=2.31.0",
-    "python-dotenv>=1.0.0",
-    "httpx>=0.27.0",
-    "PyYAML>=6.0",
-]
-mcp = [
-    "real_ladybug>=0.15.0,<0.16",
-    "pydantic>=2.0",
-    "requests>=2.31.0",
-    "python-dotenv>=1.0.0",
-    "httpx>=0.27.0",
-    "PyYAML>=6.0",
-    "mcp>=1.0,<2",
-]
-http = [
-    "real_ladybug>=0.15.0,<0.16",
-    "pydantic>=2.0",
-    "requests>=2.31.0",
-    "python-dotenv>=1.0.0",
-    "httpx>=0.27.0",
-    "PyYAML>=6.0",
-    "mcp>=1.0,<2",
-    "starlette>=0.37,<1",
-    "uvicorn>=0.29",
-]
-construct = ["beautifulsoup4>=4.12.0", "pypdf>=5.0"]
-cursor = [
-    "real_ladybug>=0.15.0,<0.16", "pydantic>=2.0", "requests>=2.31.0",
-    "python-dotenv>=1.0.0", "httpx>=0.27.0", "PyYAML>=6.0",
-    "mcp>=1.0,<2", "beautifulsoup4>=4.12.0", "pypdf>=5.0",
-    "cursor-sdk>=1.0.30",
-]
-dev = [
-    "real_ladybug>=0.15.0,<0.16", "pydantic>=2.0", "requests>=2.31.0",
-    "python-dotenv>=1.0.0", "httpx>=0.27.0", "PyYAML>=6.0",
-    "pytest>=8.0.0", "cursor-sdk>=1.0.30",
-]
-all = [
-    "real_ladybug>=0.15.0,<0.16", "pydantic>=2.0", "requests>=2.31.0",
-    "python-dotenv>=1.0.0", "httpx>=0.27.0", "PyYAML>=6.0",
-    "mcp>=1.0,<2", "starlette>=0.37,<1", "uvicorn>=0.29",
-    "beautifulsoup4>=4.12.0", "pypdf>=5.0", "cursor-sdk>=1.0.30",
-]
+dev = ["pytest>=8.0.0", "httpx>=0.27.0"]
 
 [project.scripts]
 author = "ontology_author.world.cli:main"
-graphauthor-graph = "mcp_server.bootstrap:main"
-graphauthor-mcp = "mcp_server.stdio:main"
-graphauthor-workbook = "scripts.atoms:main"
 
 [project.urls]
 Homepage = "https://github.com/keremn1899/ontology-author"
@@ -85,30 +36,11 @@ Issues = "https://github.com/keremn1899/ontology-author/issues"
 
 [tool.setuptools]
 include-package-data = true
-py-modules = [
-    "backend_tools",
-    "contract",
-    "engine",
-    "graph_overlay",
-    "graph_read",
-    "models",
-    "normative",
-    "retrieval_program",
-    "tools",
-]
 
 [tool.setuptools.packages.find]
 where = ["."]
 include = [
     "ontology_author*",
-    "graph_storage*",
-    "graph_layout*",
-    "interaction*",
-    "mcp_server*",
-    "source_pipeline*",
-    "taskview*",
-    "write_path*",
-    "scripts",
 ]
 exclude = [
     "tests*",
@@ -122,4 +54,4 @@ exclude = [
 ]
 
 [tool.setuptools.package-data]
-"*" = ["*.md", "*.txt", "*.yml", "*.yaml", "*.json", "*.html", "*.js", "*.css"]
+"ontology_author.world" = ["CAPABILITY.md", "static/**/*"]

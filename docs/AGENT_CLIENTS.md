@@ -3,7 +3,7 @@
 Install the World runtime once:
 
 ```bash
-uv tool install --editable '.[world]'
+uv tool install ontology-author
 ```
 
 Run the command from the project root you want the agent to work in:

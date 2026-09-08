@@ -30,7 +30,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { worldApi, type WorldRelation, type WorldRole, type WorldTuple } from "../api/world";
 import { still } from "../styles/motion";
+import { ProblemNotice } from "./ProblemNotice";
 import { useRowWindow } from "./rowWindow";
+import { shortenIdentifier, useTableWidth } from "./tableWidth";
 import { TableBar, type TableChrome } from "./tableChrome";
 
 /** Fixed, because a windowed table needs to know where a row is without asking. */
@@ -74,6 +76,8 @@ export function RelationTable({
   const [roles, setRoles] = useState<WorldRole[]>(relation.roles);
   const [pages, setPages] = useState<Map<number, WorldTuple[]>>(new Map());
   const [problem, setProblem] = useState<string | null>(null);
+  const frame = useRef<HTMLElement>(null);
+  const width = useTableWidth(frame);
   const window_ = useRowWindow(total, ROW_HEIGHT, OVERSCAN);
   const { first, last, reset } = window_;
   /** Pages already asked for, so a scroll does not re-ask on every frame. */
@@ -165,7 +169,12 @@ export function RelationTable({
   );
 
   return (
-    <section className="table" aria-label={`${relation.name} extension`}>
+    <section
+      className="table"
+      aria-label={`${relation.name} extension`}
+      ref={frame}
+      data-width={width}
+    >
       <TableBar
         chrome={chrome}
         title={relation.name}
@@ -173,6 +182,10 @@ export function RelationTable({
           <>
             {total} tuple{total === 1 ? "" : "s"}
             {subject ? ` of ${subject.label}` : ""} · {relation.mode.toLowerCase()}
+            {/* Printed only when the world recorded it. An absent admission
+                document is not a claim of WORLD scope, and filling one in here
+                would make the stronger claim on the world's behalf. */}
+            {relation.scope ? ` · ${relation.scope.toLowerCase()}` : ""}
             {relation.stale ? " · stale" : ""}
             {relation.completeness && relation.completeness.status !== "COMPLETE"
               ? ` · ${relation.completeness.status.toLowerCase()}`
@@ -210,15 +223,16 @@ export function RelationTable({
                     : { role: role.name, desc: false },
               )
             }
+            title={role.name}
           >
-            {role.name}
+            {width === "narrow" ? shortenIdentifier(role.name) : role.name}
             {order?.role === role.name ? (order.desc ? " ↓" : " ↑") : ""}
           </button>
         ))}
         <span>origin</span>
       </div>
 
-      {problem ? <p className="table__problem">{problem}</p> : null}
+      {problem ? <ProblemNotice message={problem} title="Unable to load relation" /> : null}
 
       <div className="table__scroll" ref={window_.ref} onScroll={window_.onScroll}>
         <div className="table__spacer" style={{ height: total * ROW_HEIGHT }}>

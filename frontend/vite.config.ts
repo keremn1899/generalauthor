@@ -3,45 +3,17 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
+  base: "/",
   server: {
-    port: 5173,
     proxy: {
-      // Local operator plane. Run it with:
-      //   SST_DB_PATH=... SST_MCP_TOKEN=... \
-      //   uv run --extra all python -m mcp_server.http --operator
-      // Proxying keeps the browser same-origin, so no CORS layer is needed on
-      // a plane that should only ever listen on loopback.
-      "/operator": {
-        target: process.env.VITE_OPERATOR_TARGET ?? "http://127.0.0.1:8137",
-        changeOrigin: true,
-      },
-      // `/world` is the World IR read plane — a different server from the
-      // operator plane, on its own port, with no write path at all.
-      //   uv run --extra all python scripts/run_world_explorer.py
       "/world": {
         target: process.env.VITE_WORLD_TARGET ?? "http://127.0.0.1:8139",
         changeOrigin: true,
       },
-      // `/construction` is the same server's second plane: one constructor
-      // run, read, plus the two routes that append a human verdict to a
-      // ledger beside it. Same port, same bearer.
-      "/construction": {
-        target: process.env.VITE_WORLD_TARGET ?? "http://127.0.0.1:8139",
-        changeOrigin: true,
-      },
-      // `/graph` is the read-only map plane the ambient canvas reads.
-      "/graph": {
-        target: process.env.VITE_OPERATOR_TARGET ?? "http://127.0.0.1:8137",
-        changeOrigin: true,
-      },
     },
   },
-  optimizeDeps: {
-    // layout-wasm ships its own workers / wasm assets — don't prebundle it.
-    exclude: ["@antv/layout-wasm"],
-  },
-  worker: {
-    // layout-wasm workers import split WASM/JS chunks; IIFE cannot code-split.
-    format: "es",
+  build: {
+    outDir: "../ontology_author/world/static",
+    emptyOutDir: true,
   },
 });

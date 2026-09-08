@@ -1,7 +1,7 @@
 /**
  * The `/world` read plane, typed.
  *
- * Every shape here is what `world_explorer.adapter` returns, named once so a
+ * Every shape here is what the World read adapter returns, named once so a
  * surface cannot invent a field the server does not send. Nothing writes:
  * there is no route to write to, and this file imports only `read`.
  */
@@ -43,6 +43,17 @@ export type WorldRelation = {
    * those onto BASE would hide the semantic seam the toggle exists to keep.
    */
   origins: string[];
+  /**
+   * WORLD or PURPOSE, from the admission sidecar — `null` where none was
+   * recorded.
+   *
+   * Not derivable from anything else here: a PURPOSE relation is an artefact
+   * of one purpose's bookkeeping, a WORLD relation is a claim about the world,
+   * and nothing about mode, arity or origin separates them. `null` means the
+   * world carries no admission document — never assume WORLD, which is the
+   * stronger claim.
+   */
+  scope: "WORLD" | "PURPOSE" | null;
   completeness: WorldCompleteness | null;
   derivation?: { state?: string; inputs: string[] } & Record<string, unknown>;
 };
@@ -57,8 +68,9 @@ export type WorldOverview = {
   stale: string[];
   /** Relations whose completeness receipt exists and is not COMPLETE. */
   incomplete: string[];
+  /** Null when no purpose is loaded — see `WorldDemand` for the id/revision. */
   demand: {
-    purpose: { id: string; revision: number; statement: string };
+    purpose: { id?: string; revision?: number; statement: string };
     obligations: number;
     demanded: number;
   } | null;
@@ -156,7 +168,7 @@ export type WorldDerivation = {
     sql: string;
     state: string;
     definition_revision: number;
-    last_run_view_revision: number | null;
+    last_run_world_revision: number | null;
     output_cardinality: number | null;
     last_error: string;
     /** Each input as it stood when the derivation last ran, beside now. */
@@ -196,9 +208,17 @@ export type WorldSupport = {
   }[];
 };
 
+/**
+ * The unresolved frontier recorded for a World purpose.
+ *
+ * `rule` is optional because a purpose is prose plus construction state, not a
+ * separate obligation compiler.
+ * `requirements` is the relation-level summary of what the purpose asked for,
+ * alongside any unresolved tuples.
+ */
 export type WorldDemand = {
-  purpose: { id: string; revision: number; statement: string };
-  rule: string;
+  purpose: { id?: string; revision?: number; statement: string };
+  rule: string | null;
   demanded: number;
   obligations: {
     relation: string;
@@ -206,6 +226,18 @@ export type WorldDemand = {
     demanded_by: Record<string, unknown>;
     state: "ASSERTED" | "UNRESOLVED";
     assertion_id: string | null;
+    /** The failure tuple itself, where unresolvedness is world state. */
+    record_id?: string;
+    /** Why it is unresolved, where the constructor said so. Not a role value. */
+    reason?: string | null;
+    grounding_ref?: string | null;
+  }[];
+  requirements?: {
+    name: string;
+    kind: string;
+    relation: string | null;
+    note: string;
+    failures: number;
   }[];
 };
 
@@ -213,10 +245,40 @@ export const worldApi = {
   overview: () => read<WorldOverview>("/world/overview"),
   schema: () =>
     read<{ relations: WorldRelation[] }>("/world/schema").then((r) => r.relations),
+  /**
+   * The referent directory — bounded, and it says when it is short.
+   *
+   * The canvas holds this and filters it as you type, which is right until the
+   * world is large enough that opening the explorer costs a payload nobody
+   * asked for. Past the plane's ceiling `truncated` is true and find has to ask
+   * the plane instead of the array in front of it.
+   */
   referents: () =>
-    read<{ referents: { id: string; label: string | null }[] }>(
-      "/world/referents",
-    ).then((r) => r.referents),
+    read<{
+      referents: { id: string; label: string | null }[];
+      total: number;
+      truncated: boolean;
+    }>("/world/referents"),
+  /**
+   * Ask the plane for referents matching a substring.
+   *
+   * The counterpart to a short directory. Results are candidates — the plane
+   * matched a substring, which is not a claim that any of them is the thing
+   * you meant.
+   */
+  search: (query: string, limit = 10) =>
+    read<{
+      results: { kind: string; id: string; label: string | null }[];
+    }>(
+      `/world/search?q=${encodeURIComponent(query)}&limit=${limit}`,
+    ).then((r) => r.results),
+  /** Labels for ids the directory did not carry. A lookup, not a search. */
+  labels: (ids: string[]) =>
+    ids.length
+      ? read<{ labels: Record<string, string | null> }>(
+          `/world/labels?ids=${ids.map(encodeURIComponent).join(",")}`,
+        ).then((r) => r.labels)
+      : Promise.resolve({} as Record<string, string | null>),
   referent: (id: string) =>
     read<WorldReferent>(`/world/referent?id=${encodeURIComponent(id)}`),
   expand: (id: string, relation: string) =>

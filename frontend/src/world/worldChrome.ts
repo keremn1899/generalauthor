@@ -1,12 +1,12 @@
 /**
- * The World shell's own tokens, in one place so the page and the lab cannot
+ * The World shell's own tokens, in one place so the page has one source of
  * drift.
  *
- * The lab is not a copy of the World page — it renders the real canvases, the
+ * The World page renders the real canvases, the
  * real tables and the real reader panels against fixtures. The one thing it
  * could not import was the shell itself: the chrome palette, the matter
  * tokens, the focus override and the motion spine were an inline object in
- * `WorldPage`, so the lab held a second one. A design surface whose chrome
+ * `WorldPage`, so there is no second design surface. Chrome
  * disagrees with the product's is worse than no design surface, because it
  * reports a look the product does not have.
  *
@@ -46,7 +46,7 @@ export const TABLES_WIDTH_DEFAULT = 360;
 export type WorldShellOptions = {
   /** Vocabulary focus: the chrome tokens *become* the focus palette. */
   focus?: boolean;
-  /** The spine to emit. The lab passes a scaled one; the product does not. */
+  /** The spine to emit for the inspector. */
   motion?: MotionPlans;
 };
 
@@ -91,19 +91,32 @@ export function worldShellStyle(
  *
  * Both surfaces frame marks against this, so both have to agree about what a
  * closed dock still takes.
+ *
+ * Covering, not open — the same distinction the bands make in
+ * the shell styles, and it took the same correction. This used to read
+ * `focus ? FOCUS_PAD : ...` on both sides, on the reasoning that a focus room
+ * is the whole window. Only the left dock is actually withdrawn by focus, and
+ * even that is undone on the world's default screen, where the vocabulary is
+ * what the surface *is* and TABLES stays as the way onto the field. So focus
+ * framed the ring against a window while an opaque 360px drawer stood on it,
+ * and the left third of the vocabulary was drawn underneath.
+ *
+ * `unfielded` is that default screen. It only matters while `focus` is set.
  */
 export function worldCameraInsets(dock: {
   focus?: boolean;
+  unfielded?: boolean;
   tablesOpen: boolean;
   tablesWidth: number;
   readerOpen: boolean;
   readerWidth: number;
 }) {
+  const tablesShown = !dock.focus || Boolean(dock.unfielded);
   return {
-    left: dock.focus
-      ? FOCUS_PAD
-      : (dock.tablesOpen ? dock.tablesWidth : TABLES_HANDLE_RESERVE) + FOCUS_PAD,
-    right: dock.focus ? FOCUS_PAD : (dock.readerOpen ? dock.readerWidth : 0) + FOCUS_PAD,
+    left: tablesShown
+      ? (dock.tablesOpen ? dock.tablesWidth : TABLES_HANDLE_RESERVE) + FOCUS_PAD
+      : FOCUS_PAD,
+    right: (dock.readerOpen ? dock.readerWidth : 0) + FOCUS_PAD,
     top: FOCUS_PAD,
     bottom: FOCUS_PAD,
   };

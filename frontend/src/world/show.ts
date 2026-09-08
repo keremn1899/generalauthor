@@ -95,9 +95,13 @@ export function assertionShown(
 /**
  * Turn on every layer a relation occupies.
  *
- * SHOW hides what nobody asked for. Expanding a relation, or placing a row of
- * it, is asking — so the layer comes on rather than the marks landing in a
- * working set that draws nothing.
+ * SHOW hides what nobody asked for, and asking for one thing is not asking for
+ * a layer. Placing a named row, or opening a named relation, is a request for
+ * *that mark* and nothing else would arrive, so the layer comes on. Expanding
+ * through a relation is a request for a neighborhood: the referents land and
+ * are drawn whatever the filter says, and the tuple that carried them stays
+ * hidden until someone turns its layer back on. A filter that a side effect
+ * can switch off is not a filter.
  */
 export function reveal(relation: WorldRelation, show: ShowState): ShowState {
   const next = { ...show };

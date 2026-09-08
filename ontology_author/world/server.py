@@ -10,7 +10,6 @@ import re
 import threading
 import webbrowser
 from concurrent.futures import ThreadPoolExecutor
-from importlib.resources import files
 from pathlib import Path
 from typing import Any, Callable
 
@@ -36,14 +35,15 @@ class WorldSession:
 
 
 def _asset(name: str) -> str:
-    return files("ontology_author.world").joinpath("static", name).read_text(encoding="utf-8")
+    return (Path(__file__).with_name("static") / name).read_text(encoding="utf-8")
 
 
 def build_app(world: Path | str, *, token: str | None = None):
     from starlette.applications import Starlette
     from starlette.requests import Request
-    from starlette.responses import HTMLResponse, JSONResponse, PlainTextResponse
-    from starlette.routing import Route
+    from starlette.responses import HTMLResponse, JSONResponse
+    from starlette.routing import Mount, Route
+    from starlette.staticfiles import StaticFiles
 
     session = WorldSession(world)
 
@@ -83,7 +83,20 @@ def build_app(world: Path | str, *, token: str | None = None):
         return {"relations": await session.call(lambda adapter: adapter.schema())}
 
     async def referents(_request):
-        return {"referents": await session.call(lambda adapter: adapter.referents())}
+        referents = await session.call(lambda adapter: adapter.referents())
+        return {
+            "referents": referents,
+            "total": len(referents),
+            "truncated": False,
+        }
+
+    async def labels(request):
+        ids = [item for item in request.query_params.get("ids", "").split(",") if item]
+        return {
+            "labels": await session.call(
+                lambda adapter: adapter.labels(ids)
+            )
+        }
 
     async def search(request):
         return {"results": await session.call(lambda adapter: adapter.search(
@@ -134,12 +147,6 @@ def build_app(world: Path | str, *, token: str | None = None):
     async def index(_request):
         return HTMLResponse(_asset("index.html"))
 
-    async def app_js(_request):
-        return PlainTextResponse(_asset("app.js"), media_type="text/javascript")
-
-    async def style_css(_request):
-        return PlainTextResponse(_asset("style.css"), media_type="text/css")
-
     @contextlib.asynccontextmanager
     async def lifespan(_app):
         try:
@@ -149,11 +156,15 @@ def build_app(world: Path | str, *, token: str | None = None):
 
     routes = [
         Route("/", index),
-        Route("/world-static/app.js", app_js),
-        Route("/world-static/style.css", style_css),
+        Mount(
+            "/assets",
+            app=StaticFiles(directory=Path(__file__).with_name("static") / "assets"),
+            name="assets",
+        ),
         Route("/world/overview", guard(overview)),
         Route("/world/schema", guard(schema)),
         Route("/world/referents", guard(referents)),
+        Route("/world/labels", guard(labels)),
         Route("/world/search", guard(search)),
         Route("/world/referent", guard(referent)),
         Route("/world/expand", guard(expand)),

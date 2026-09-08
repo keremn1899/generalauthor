@@ -15,6 +15,13 @@
  * plate rides out to the station on that new angle. The names occupy an arc
  * instead of a point.
  *
+ * Arc is not always enough. A ring of names spends a fixed budget — 2π — at a
+ * rate the station sets, and at the resting station that budget is gone by
+ * about five names, whatever order they are put in. So a fan that still has
+ * names on top of each other spends the other resource and pushes its stations
+ * outward, each stroke capped by its own half-filament. `planSpread` carries
+ * the measurements and the property that costs.
+ *
  * Four properties keep it a spread rather than a rearrangement, and all four
  * are the product canvas's, ported whole:
  *
@@ -55,6 +62,27 @@ import {
 import type { MotionPlan, MotionPlans } from "../styles/motion";
 
 type Point = { x: number; y: number };
+
+/**
+ * How far along the fan one plate is allowed to reach.
+ *
+ * A name only collides with strokes near it in the circular order, and the
+ * pairs are what make the solve quadratic, so pairs further apart than this
+ * are not considered. Six is well past the widest name any of these worlds
+ * carries at its station.
+ */
+const SPREAD_REACH_SEATS = 6;
+
+/**
+ * How hard, and how many times, the fan is allowed to push its names outward.
+ *
+ * A step of a quarter and six rounds reaches just under four times the resting
+ * station, which is far more headroom than any stroke's half-filament ceiling
+ * will actually grant. The rounds are cheap — a solve is tens of microseconds
+ * — and are only spent while names are still overlapping.
+ */
+const SPREAD_PUSH_STEP = 1.25;
+const SPREAD_PUSH_ROUNDS = 6;
 
 /**
  * Never more than this, whatever the plates ask: past it the fan is a fiction.
@@ -116,27 +144,46 @@ type Spoke = {
 };
 
 /**
- * How far apart two adjacent strokes have to stand.
+ * Do two plates, placed on these bearings, actually overlap?
  *
- * Not a constant, because the thing being separated is not a stroke — it is a
- * plate, and a plate is a wide, short, *unrotated* box. Two names stacked one
- * above the other clear at a shallow angle; the same two names side by side
- * need four times as much, and a single number has to be wrong for one of
- * those cases.
+ * An exact test, and it can be exact because a plate is an axis-aligned box:
+ * `labelAutoRotate` is false, so a name at eleven o'clock is the same
+ * rectangle as a name at four. Two boxes miss each other when they miss on
+ * either axis, which is one comparison per axis and no trigonometry beyond
+ * placing the centres.
+ */
+function platesOverlap(
+  angleA: number,
+  angleB: number,
+  a: Spoke,
+  b: Spoke,
+): boolean {
+  const dx = Math.cos(angleB) * b.station - Math.cos(angleA) * a.station;
+  const dy = Math.sin(angleB) * b.station - Math.sin(angleA) * a.station;
+  return (
+    Math.abs(dx) < a.halfWidth + b.halfWidth &&
+    Math.abs(dy) < a.halfHeight + b.halfHeight
+  );
+}
+
+/**
+ * The least arc between two adjacent strokes that clears their plates.
  *
- * So the question is asked of the two stations themselves rather than of an
- * idealised arc through them. They rarely sit at the same radius — the station
- * is capped against each filament's own length, so a stroke to a near
- * neighbour carries its name closer in — and on an arc that assumption is the
- * whole answer: it puts the separation where the geometry does not. Measuring
- * the offset that is actually there, and asking which axis could clear it,
- * costs a cosine and is true of the drawing.
+ * This used to be a *step* rather than a bound — it answered "open this pair
+ * by a bit more than they are open now", scaled from the gap they currently
+ * held, and forty-eight passes of that converged on the arc that clears. Read
+ * as a constraint instead, which is what an exact solve needs, it badly
+ * under-asks: two names sitting exactly on top of each other hold almost no
+ * gap, so a proportional step off that gap is almost nothing, and the solver
+ * is told a pile is nearly fine.
  *
- * Zero means *these two are already readable* — not that they are touching.
- * The floor applies to a pair that has to move, so a demand is never answered
- * with a nudge too small to see; the cap applies because a plate wide enough
- * to want more than `SPREAD_MAX_ARC` cannot be fixed by fanning, and trying
- * would draw a neighbour somewhere it is not.
+ * So this searches for the bound directly. The pair is opened symmetrically
+ * about where it sits — the plates keep their own stations, which is what
+ * makes the answer depend on *where* on the circle the pair is — and the
+ * first arc that clears is refined by bisection. Coarse scan first rather than
+ * bisecting from the start, because an axis-aligned box against another at a
+ * different radius is not perfectly monotone in the arc, and a scan cannot
+ * step over the crossing the way a bisection can.
  */
 function requiredArc(
   angleA: number,
@@ -144,109 +191,251 @@ function requiredArc(
   a: Spoke,
   b: Spoke,
 ): number {
-  const dx = Math.cos(angleB) * b.station - Math.cos(angleA) * a.station;
-  const dy = Math.sin(angleB) * b.station - Math.sin(angleA) * a.station;
-  const apart = Math.hypot(dx, dy);
-  if (!(apart > 0.001)) {
-    // Exactly coincident, so there is no offset to measure and no direction to
-    // measure it along. Ask the plates instead: the arc that puts this much
-    // clearance between two boxes at this radius is the clearance over the
-    // radius, which is the same small-angle statement the branch below makes
-    // once there is a direction to make it in.
-    const station = Math.max(1, (a.station + b.station) / 2);
-    return Math.min(SPREAD_MAX_ARC, (a.halfWidth + b.halfWidth) / station);
+  // Deliberately not short-circuited on "these two are clear already". The
+  // answer is what this pair *needs*, not what it currently has: a gap the
+  // solve is told is free to close to nothing is a gap the solve will close.
+  const middle = (angleA + angleB) / 2;
+  const clears = (arc: number) =>
+    !platesOverlap(middle - arc / 2, middle + arc / 2, a, b);
+
+  const STEPS = 48;
+  let found = -1;
+  let previous = 0;
+  for (let step = 1; step <= STEPS; step += 1) {
+    const arc = (SPREAD_MAX_ARC * step) / STEPS;
+    if (clears(arc)) {
+      found = arc;
+      break;
+    }
+    previous = arc;
   }
-  const alongX = Math.abs(dx) / apart;
-  const alongY = Math.abs(dy) / apart;
-  const byWidth =
-    alongX > 0.05 ? (a.halfWidth + b.halfWidth) / alongX : Infinity;
-  const byHeight =
-    alongY > 0.05 ? (a.halfHeight + b.halfHeight) / alongY : Infinity;
-  // Either axis clearing is enough: two boxes that miss each other sideways
-  // are readable whether or not they also miss each other vertically.
-  const needed = Math.min(byWidth, byHeight);
-  if (!Number.isFinite(needed) || apart >= needed) return 0;
-  let gap = angleB - angleA;
-  if (gap < 0) gap += Math.PI * 2;
-  /**
-   * Distance grows with the gap, near enough proportionally over the small
-   * corrections a pass makes, so this is the step — and the relaxation is what
-   * makes it exact. `needed / apart` is barely over 1 for a pair that almost
-   * clears, which is the whole point: they are asked to open by almost
-   * nothing.
-   *
-   * Scaling a gap cannot open one that is already closed, though, and two
-   * neighbours can lie on the same bearing at different distances: their
-   * plates are stationed at different radii, so they are genuinely apart and
-   * genuinely overlapping, with no angle between them to scale. That pair gets
-   * the small-angle clearance instead, purely to break it out of the
-   * collinear case — one iteration later there is a gap to measure and the
-   * proportional form takes over, so the arc it settles at is still the least
-   * one that clears.
-   */
-  const station = Math.max(1, (a.station + b.station) / 2);
-  const step =
-    gap > 0.02 ? gap * (needed / apart) : (a.halfWidth + b.halfWidth) / station;
-  return Math.min(SPREAD_MAX_ARC, step);
+  // Nothing inside the cap clears them. The cap is the answer: past it the fan
+  // is a fiction, and `crowded` is what reports that it did not fit.
+  if (found < 0) return SPREAD_MAX_ARC;
+
+  let low = previous;
+  let high = found;
+  for (let refine = 0; refine < 12; refine += 1) {
+    const mid = (low + high) / 2;
+    if (clears(mid)) high = mid;
+    else low = mid;
+  }
+  return high;
 }
 
 /**
- * Local angular spacing: keep circular order, push neighbours apart by what
- * their plates need, then clamp each stroke so a bundle fans in place rather
- * than eating the circle.
+ * Isotonic regression, in place of forty-eight passes of shoving.
+ *
+ * The general problem here is point-feature label placement, and it is
+ * NP-hard — Marks & Shieber (1991); the standard empirical comparison of
+ * heuristics for it is Christensen, Marks & Shieber (1995). What saves this
+ * particular fan is that two of the freedoms that make the general problem
+ * hard were already given up by the design above: every plate sits on a circle
+ * around one held mark, and **circular order is kept**. With position reduced
+ * to one number per label and the order fixed, what is left is
+ *
+ *     minimise  Σ (yᵢ − xᵢ)²   subject to   yᵢ₊₁ − yᵢ ≥ gᵢ
+ *
+ * — move every name as little as possible, while giving each adjacent pair the
+ * arc its plates actually need. Substituting out the cumulative gaps,
+ * zᵢ = yᵢ − Σⱼ<ᵢ gⱼ, turns those constraints into `z` non-decreasing, which is
+ * isotonic regression: solved **exactly**, in one linear pass, by
+ * pool-adjacent-violators. No iteration count, no tuning, and the same answer
+ * every time.
+ *
+ * What that buys over the relaxation it replaces is not speed, though it is
+ * also faster — it is that the previous loop had no answer to "did it work".
+ * It took forty-eight passes and shipped whatever it was holding when it ran
+ * out, which on a crowded mark was still a pile. This either returns the
+ * provably minimal fan that clears every pair, or reports that no fan can
+ * (`crowded`), and those are the only two outcomes.
+ *
+ * Two wrinkles the textbook version does not have, both handled here:
+ *
+ * **The gaps depend on the answer.** Plates are axis-aligned, so a pair needs
+ * its widths at twelve o'clock and its heights at three, and `requiredArc`
+ * measures at the angles the pair currently holds. So the exact solve is run a
+ * few times, each recomputing gaps from the solution before it. Unlike the old
+ * loop, every pass is exact *given its gaps* rather than one nudge toward
+ * being exact, so this converges in two or three rather than tens.
+ *
+ * **The circle has no first element.** Isotonic regression wants a line. The
+ * seam is cut at the pair with the most room to spare, because that is the
+ * join the solve is least likely to want to move across.
  */
-function spreadAngles(spokes: Spoke[], maxDeflect: number): number[] {
+function spreadAngles(
+  spokes: Spoke[],
+  maxDeflect: number,
+): { angles: number[]; crowded: boolean; wanted: number; collisions: number } {
   const count = spokes.length;
-  const result = spokes.map((spoke) => spoke.angle);
-  if (count < 2) return result;
+  const angles = spokes.map((spoke) => spoke.angle);
+  if (count < 2) return { angles, crowded: false, wanted: 0, collisions: 0 };
+
   const order = spokes
     .map((spoke, index) => ({ angle: wrapAngle(spoke.angle), index }))
     .sort((a, b) => a.angle - b.angle);
-  const current = order.map((entry) => entry.angle);
+  const at = order.map((entry) => entry.angle);
+  const of = (seat: number) => spokes[order[seat].index];
+
   /**
-   * Relaxation, not a closed form: each pass asks every adjacent pair how much
-   * arc its plates need *at the angles they now hold*, then re-clamps every
-   * stroke to its own bearing, and the two constraints settle against each
-   * other.
+   * The arc each join has to hold — including for pairs that are not joined.
    *
-   * Every pair's push is collected before any of them is applied. Applying
-   * them one at a time — the product canvas does, and can, because a single
-   * small arc for every pair is symmetric — means the pair processed last
-   * closes the gap the pair processed first had just opened, and a demand that
-   * depends on *direction* is not symmetric: the two pairs want different
-   * arcs, so the pass ends wherever it happened to stop rather than where the
-   * plates asked to be.
+   * Constraining only neighbours is the obvious thing and it is wrong: a long
+   * name spans several seats, so it collides with the stroke two or three
+   * along while every adjacent gap is satisfied. That is why the fan used to
+   * report itself feasible and still read as a pile.
+   *
+   * A pair that is `d` seats apart is handled by asking each of the `d` joins
+   * between them for `R / d`: the run between them then sums to at least `R`,
+   * whatever the solve does with the individual joins. Conservative — the pair
+   * might have been cleared by one wide join and several narrow — but a
+   * constraint that can only be too strong never lets a collision through, and
+   * an evenly opened run is what the eye reads as a fan anyway.
+   *
+   * Spans are cut off at `SPREAD_REACH_SEATS`. A plate has to be absurd to
+   * reach further than that, and the pair count is what makes this quadratic.
    */
-  const push = new Array<number>(count).fill(0);
-  for (let iter = 0; iter < 48; iter += 1) {
-    push.fill(0);
-    for (let i = 0; i < count; i += 1) {
-      const next = (i + 1) % count;
-      let gap = current[next] - current[i];
-      if (next === 0) gap += Math.PI * 2;
-      const minDelta = requiredArc(
-        current[i],
-        current[i] + gap,
-        spokes[order[i].index],
-        spokes[order[next].index],
-      );
-      if (gap >= minDelta) continue;
-      const need = (minDelta - gap) / 2;
-      push[i] -= need;
-      push[next] += need;
+  const gapsAt = (held: number[]) => {
+    const out = new Array<number>(count).fill(0);
+    const reach = Math.min(SPREAD_REACH_SEATS, count - 1);
+    for (let seat = 0; seat < count; seat += 1) {
+      for (let span = 1; span <= reach; span += 1) {
+        const far = (seat + span) % count;
+        const share =
+          requiredArc(held[seat], held[far], of(seat), of(far)) / span;
+        for (let step = 0; step < span; step += 1) {
+          const join = (seat + step) % count;
+          if (share > out[join]) out[join] = share;
+        }
+      }
     }
-    for (let i = 0; i < count; i += 1) current[i] += push[i];
-    for (let i = 0; i < count; i += 1) {
-      const original = order[i].angle;
-      const delta = Math.max(
-        -maxDeflect,
-        Math.min(maxDeflect, wrapAngle(current[i] - original)),
-      );
-      current[i] = original + delta;
+    return out;
+  };
+
+  let held = [...at];
+  let gaps = gapsAt(held);
+
+  for (let pass = 0; pass < 3; pass += 1) {
+    gaps = gapsAt(held);
+    // The seam: the join with the most room to spare, so the solve is cut
+    // where it is least likely to have wanted to reach across.
+    let seam = 0;
+    let best = -Infinity;
+    for (let seat = 0; seat < count; seat += 1) {
+      const next = (seat + 1) % count;
+      let apart = held[next] - held[seat];
+      if (next === 0) apart += Math.PI * 2;
+      const slack = apart - gaps[seat];
+      if (slack > best) {
+        best = slack;
+        seam = seat;
+      }
+    }
+    // Unrolled from just after the seam, into one increasing run.
+    const seats: number[] = [];
+    for (let step = 1; step <= count; step += 1) {
+      seats.push((seam + step) % count);
+    }
+    const desired: number[] = [];
+    let running = held[seats[0]];
+    desired.push(running);
+    for (let i = 1; i < count; i += 1) {
+      let step = held[seats[i]] - held[seats[i - 1]];
+      while (step < 0) step += Math.PI * 2;
+      running += step;
+      desired.push(running);
+    }
+    const between = seats.slice(0, -1).map((seat) => gaps[seat]);
+    const solved = separate(desired, between);
+    for (let i = 0; i < count; i += 1) held[seats[i]] = solved[i];
+  }
+
+  /**
+   * Whether any fan on this circle could have worked.
+   *
+   * Two ways it could not. The plates may want more arc than a circle has, in
+   * which case no arrangement of them clears — this is the honest form of "the
+   * mark is too crowded to name everything at once". Or the solve may have
+   * asked a stroke to leave its true bearing by more than `SPREAD_MAX_DEFLECT`
+   * allows, which is the clamp refusing to tell a bigger lie about where a
+   * neighbour lies than the fan is worth.
+   *
+   * Either way the clamped fan below is still the best available and is still
+   * drawn — reporting is not refusing.
+   */
+  const wanted = gaps.reduce((sum, gap) => sum + gap, 0);
+  let worst = 0;
+  for (let seat = 0; seat < count; seat += 1) {
+    worst = Math.max(worst, Math.abs(wrapAngle(held[seat] - at[seat])));
+  }
+  const crowded = wanted > Math.PI * 2 || worst > maxDeflect;
+
+  for (let seat = 0; seat < count; seat += 1) {
+    const original = at[seat];
+    const delta = Math.max(
+      -maxDeflect,
+      Math.min(maxDeflect, wrapAngle(held[seat] - original)),
+    );
+    angles[order[seat].index] = original + delta;
+  }
+
+  /**
+   * What is left over, counted rather than inferred.
+   *
+   * `crowded` above is a diagnosis — the demand exceeded the circle, or the
+   * clamp refused the solution. This is the outcome: pairs still sitting on
+   * each other at the angles actually returned, after the clamp had its say.
+   * The caller needs the outcome, because that is what it can spend more
+   * radius on.
+   */
+  let collisions = 0;
+  for (let i = 0; i < count; i += 1) {
+    for (let j = i + 1; j < count; j += 1) {
+      if (platesOverlap(angles[i], angles[j], spokes[i], spokes[j])) {
+        collisions += 1;
+      }
     }
   }
-  for (let i = 0; i < count; i += 1) result[order[i].index] = current[i];
-  return result;
+  return { angles, crowded, wanted, collisions };
+}
+
+/**
+ * Positions as near their desired ones as the required gaps allow, exactly.
+ *
+ * `gaps[i]` is the minimum `y[i + 1] - y[i]`. Subtracting the running total of
+ * them leaves a plain non-decreasing fit, and pool-adjacent-violators is that
+ * fit: push each value on, and while the block behind it sits higher, merge
+ * the two and let them share their mean. Every merged block is a run of names
+ * that ended up evenly spaced because they could not all have what they
+ * wanted — which is the right answer and is what the eye reads as a fan.
+ */
+function separate(desired: number[], gaps: number[]): number[] {
+  const running: number[] = [0];
+  for (let i = 0; i < gaps.length; i += 1) running.push(running[i] + gaps[i]);
+
+  const sums: number[] = [];
+  const sizes: number[] = [];
+  for (let i = 0; i < desired.length; i += 1) {
+    sums.push(desired[i] - running[i]);
+    sizes.push(1);
+    while (
+      sums.length > 1 &&
+      sums[sums.length - 2] / sizes[sizes.length - 2] >
+        sums[sums.length - 1] / sizes[sizes.length - 1]
+    ) {
+      const sum = sums.pop()!;
+      const size = sizes.pop()!;
+      sums[sums.length - 1] += sum;
+      sizes[sizes.length - 1] += size;
+    }
+  }
+
+  const out: number[] = [];
+  for (let block = 0; block < sums.length; block += 1) {
+    const mean = sums[block] / sizes[block];
+    for (let k = 0; k < sizes[block]; k += 1) out.push(mean + running[out.length]);
+  }
+  return out;
 }
 
 /* ------------------------------------------------------------------ *
@@ -338,6 +527,8 @@ export function planSpread(
   graph: Graph,
   heldId: string,
   params: MarkParams,
+  /** Out-param: whether no fan on this circle could have cleared every pair. */
+  report?: { crowded: boolean },
 ): Map<string, FanWaypoint> {
   const out = new Map<string, FanWaypoint>();
   const held = positionOf(graph, heldId);
@@ -359,6 +550,14 @@ export function planSpread(
       heldRadius: number;
       /** The widest name this stroke will carry, which is what has to clear. */
       plate: number;
+      /**
+       * The furthest out this stroke's plate may ever stand.
+       *
+       * Half its own filament — past the midpoint a name would cross to the
+       * other mark's side and start naming the wrong end, which is the same
+       * rule `bondLabelAlong` holds a resting plate to.
+       */
+      ceiling: number;
     }
   >();
   for (const edge of graph.getRelatedEdgesData(heldId)) {
@@ -391,6 +590,7 @@ export function planSpread(
       along: Math.min(BOND_LABEL_ALONG_PX, filament / 2),
       heldRadius,
       plate,
+      ceiling: filament / 2,
     });
   }
   /**
@@ -405,7 +605,7 @@ export function planSpread(
   const keys = [...groups.keys()].filter((key) => groups.get(key)!.plate > 0);
   if (keys.length < 2) return out;
 
-  const spread = spreadAngles(
+  const spokesOf = () =>
     keys.map((key) => {
       const group = groups.get(key)!;
       return {
@@ -414,9 +614,69 @@ export function planSpread(
         halfHeight: (params.chipHeight + BOND_LABEL_STACK_GAP) / 2,
         station: group.heldRadius + group.along,
       };
-    }),
-    SPREAD_MAX_DEFLECT,
-  );
+    });
+
+  let solved = spreadAngles(spokesOf(), SPREAD_MAX_DEFLECT);
+
+  /**
+   * When the circle has no room, give the fan a bigger circle.
+   *
+   * The arc a plate needs is its width over its radius, so a ring of names is
+   * a fixed budget — 2π — being spent at a rate the station sets. Held at
+   * `BOND_LABEL_ALONG_PX` that budget runs out at about five names. Measured
+   * over random fans at the resting station: three strokes cleared completely
+   * in 88% of cases, five in 73%, eight in 39%, twelve in 9% — and the
+   * deflection clamp bound in every trial. Relaxing the clamp is not the fix
+   * either; at that station an unlimited clamp still only reaches 54% at eight
+   * strokes, because the demand exceeds the circle rather than being badly
+   * distributed around it. The same sweep at a station of 160px clears 93% at
+   * eight and 77% at twelve with the clamp untouched.
+   *
+   * So radius is the resource, and this spends it against the thing actually
+   * being asked for — pairs still overlapping — rather than against a proxy.
+   * Each round pushes every station out a step, re-solves, and keeps whichever
+   * round left the fewest names on top of each other. It stops the moment none
+   * are, so the ordinary two- or three-stroke mark pays for exactly one solve.
+   * Each stroke is still capped by its own half-filament, so a name never
+   * crosses to the far mark's side and a short stroke simply cannot help.
+   *
+   * **This gives up "the spread moves a name sideways and never outward",**
+   * which the header above claimed and which was true while the fan was
+   * angular only. It is given up deliberately: a name that stays at its
+   * resting distance and cannot be read has kept a property and lost its job.
+   * The far end still never moves, circular order is still kept, and letting
+   * go still puts every stroke back on the line it was drawn as.
+   */
+  let best = solved;
+  let bestAlong = keys.map((key) => groups.get(key)!.along);
+  for (let round = 0; round < SPREAD_PUSH_ROUNDS && best.collisions > 0; round += 1) {
+    let moved = false;
+    for (const key of keys) {
+      const group = groups.get(key)!;
+      const reach = Math.min(group.ceiling, group.along * SPREAD_PUSH_STEP);
+      if (reach > group.along + 0.5) {
+        group.along = reach;
+        moved = true;
+      }
+    }
+    // Every stroke is against its own ceiling. More radius is not on offer.
+    if (!moved) break;
+    solved = spreadAngles(spokesOf(), SPREAD_MAX_DEFLECT);
+    if (solved.collisions < best.collisions) {
+      best = solved;
+      bestAlong = keys.map((key) => groups.get(key)!.along);
+    }
+  }
+  keys.forEach((key, i) => {
+    groups.get(key)!.along = bestAlong[i];
+  });
+  solved = best;
+
+  const { angles: spread } = solved;
+  // What the reader is told is what is true of the drawing in front of them:
+  // some of these names are still on top of each other. Not the arc-budget
+  // diagnosis, which can be pessimistic about a fan the radius went on to fix.
+  if (report) report.crowded = solved.collisions > 0;
   for (let i = 0; i < keys.length; i += 1) {
     const group = groups.get(keys[i])!;
     const angle = spread[i];
@@ -441,7 +701,12 @@ export function planSpread(
 export type SpreadField = {
   /** State what is held. `null` puts every stroke back on its chord. */
   commit: (heldId: string | null) => void;
-  /** A pointer owns the field: drop the fan until it lets go. */
+  /**
+   * A pointer owns the field: retract the fan until it lets go.
+   *
+   * Retract, not drop — this is the spread run backwards, and it is on the
+   * pointer's time rather than instant. See `relax`.
+   */
   suspend: () => void;
   dispose: () => void;
 };
@@ -452,6 +717,18 @@ export function createSpreadField(options: {
   motion: () => MotionPlans;
   enabled: () => boolean;
   reduced: () => boolean;
+  /**
+   * Said when the fan could not clear every name on the mark being held.
+   *
+   * The solver already knows — it counts what is left overlapping — and until
+   * this the answer was computed and dropped, which meant a mark with nine
+   * bonds put two names on top of each other and nothing accounted for it.
+   * Reported rather than drawn: it is a fact about the drawing in front of
+   * this person right now, not a property of any claim, so it takes no mark
+   * and no colour. Called on every commit, `false` included, so the condition
+   * leaves when the reading does.
+   */
+  crowded?: (crowded: boolean) => void;
 }): SpreadField {
   const { graph } = options;
   let frame = 0;
@@ -507,6 +784,27 @@ export function createSpreadField(options: {
     if (!graph.destroyed) clearFilamentFans(graph);
   };
 
+  /**
+   * Letting go of the fan, on the same two curves that opened it.
+   *
+   * `suspend` used to be `snapOff` — instant — and that was defensible while it
+   * fired on `dragstart`, where the fan's job was to be gone before the mark
+   * started moving. It fires on *hold* now, so the collapse is something a
+   * person watches, and an instant collapse against an eased spread reads as
+   * two different mechanisms rather than one gesture reversed.
+   *
+   * `commit(null)` already is the animated collapse: nothing is held, so every
+   * standing stroke is aimed at zero, and `aim` picks `absorb` for a value
+   * falling — the time reverse of the `emit` that opened it, which is what
+   * `styles/motion.ts` means by the pair. The geometry stays in `targets`
+   * while the amounts run down, so the strokes retract along the arcs they
+   * fanned out on instead of cutting to their chords.
+   *
+   * `snapOff` stays for the two cases that are not a gesture: disposal, and a
+   * field whose spread has been switched off entirely.
+   */
+  const relax = () => commit(null);
+
   const tick = (now: number) => {
     frame = 0;
     let running = false;
@@ -557,10 +855,12 @@ export function createSpreadField(options: {
       if (amounts.size || targets.size || standing.size) snapOff();
       return;
     }
+    const report = { crowded: false };
     const next =
       heldId && standingNode(graph, heldId)
-        ? planSpread(graph, heldId, options.params())
+        ? planSpread(graph, heldId, options.params(), report)
         : new Map<string, FanWaypoint>();
+    options.crowded?.(report.crowded);
     standing.clear();
     for (const [id, waypoint] of next) {
       standing.add(id);
@@ -575,5 +875,18 @@ export function createSpreadField(options: {
     if (!frame && anims.size) frame = requestAnimationFrame(tick);
   };
 
-  return { commit, suspend: snapOff, dispose: forget };
+  return { commit, suspend: relax, dispose: forget };
 }
+
+/* ------------------------------------------------------------------ *
+ * Checkable from outside
+ * ------------------------------------------------------------------ *
+ *
+ * The fan is a solver, and a solver is worth nothing that has not been run
+ * against cases nobody drew by hand. These three are exported for that and for
+ * nothing else — no surface calls them. They were a `window.__worldSpread`
+ * hook first, which meant the only way to check the fan was to have a browser
+ * attached to a running plane; as exports the same check is a script.
+ */
+export { spreadAngles, requiredArc, platesOverlap };
+export type { Spoke };

@@ -137,3 +137,32 @@ export function readField(world: string, revision: number): WorkingSet | null {
     return null;
   }
 }
+
+/**
+ * Whether this browser is holding a field at all — a hint, read at mount.
+ *
+ * The surface has to choose what to paint before it knows which world it is
+ * opening: the world's id and revision arrive with the overview, one network
+ * round trip later, and the real restore cannot happen until then. Painting
+ * the wrong screen for that half second is what a person sees as the surface
+ * flipping on its own — the ground going dark and then light again while they
+ * watch.
+ *
+ * So this answers the only question the first paint needs: *is there a field
+ * to come back to?* It does not say which, and it decides nothing. `readField`
+ * is still the authority, keyed by world and revision, and still refuses a
+ * field written for another revision — this only chooses which screen is
+ * showing while that runs, and a wrong guess costs exactly the flip it was
+ * meant to save.
+ */
+export function holdsField(): boolean {
+  try {
+    for (let index = 0; index < window.localStorage.length; index += 1) {
+      const key = window.localStorage.key(index);
+      if (key?.startsWith(`${STORAGE_PREFIX}:`)) return true;
+    }
+  } catch {
+    // No storage to read is the same answer as no field in it.
+  }
+  return false;
+}

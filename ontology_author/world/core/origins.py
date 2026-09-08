@@ -1,6 +1,6 @@
 """Construction-origin axis used by the experimental harness.
 
-This is not TaskView's ASSERTED/DERIVED bookkeeping.  It classifies how a live
+This is separate from ASSERTED/DERIVED assertion bookkeeping. It classifies how a live
 semantic tuple entered the world so frontier size can be computed mechanically.
 """
 
