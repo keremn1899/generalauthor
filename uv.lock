@@ -261,80 +261,6 @@ wheels = [
 ]
 
 [[package]]
-name = "graphauthor"
-version = "0.1.0"
-source = { editable = "." }
-dependencies = [
-    { name = "httpx" },
-    { name = "pydantic" },
-    { name = "python-dotenv" },
-    { name = "pyyaml" },
-    { name = "real-ladybug" },
-    { name = "requests" },
-]
-
-[package.optional-dependencies]
-all = [
-    { name = "beautifulsoup4" },
-    { name = "cursor-sdk" },
-    { name = "mcp" },
-    { name = "pypdf" },
-    { name = "starlette" },
-    { name = "uvicorn" },
-]
-construct = [
-    { name = "beautifulsoup4" },
-    { name = "pypdf" },
-]
-cursor = [
-    { name = "beautifulsoup4" },
-    { name = "cursor-sdk" },
-    { name = "mcp" },
-    { name = "pypdf" },
-]
-dev = [
-    { name = "cursor-sdk" },
-    { name = "pytest" },
-]
-http = [
-    { name = "mcp" },
-    { name = "starlette" },
-    { name = "uvicorn" },
-]
-mcp = [
-    { name = "mcp" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "beautifulsoup4", marker = "extra == 'all'", specifier = ">=4.12.0" },
-    { name = "beautifulsoup4", marker = "extra == 'construct'", specifier = ">=4.12.0" },
-    { name = "beautifulsoup4", marker = "extra == 'cursor'", specifier = ">=4.12.0" },
-    { name = "cursor-sdk", marker = "extra == 'all'", specifier = ">=1.0.30" },
-    { name = "cursor-sdk", marker = "extra == 'cursor'", specifier = ">=1.0.30" },
-    { name = "cursor-sdk", marker = "extra == 'dev'", specifier = ">=1.0.30" },
-    { name = "httpx", specifier = ">=0.27.0" },
-    { name = "mcp", marker = "extra == 'all'", specifier = ">=1.0,<2" },
-    { name = "mcp", marker = "extra == 'cursor'", specifier = ">=1.0,<2" },
-    { name = "mcp", marker = "extra == 'http'", specifier = ">=1.0,<2" },
-    { name = "mcp", marker = "extra == 'mcp'", specifier = ">=1.0,<2" },
-    { name = "pydantic", specifier = ">=2.0" },
-    { name = "pypdf", marker = "extra == 'all'", specifier = ">=5.0" },
-    { name = "pypdf", marker = "extra == 'construct'", specifier = ">=5.0" },
-    { name = "pypdf", marker = "extra == 'cursor'", specifier = ">=5.0" },
-    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.0.0" },
-    { name = "python-dotenv", specifier = ">=1.0.0" },
-    { name = "pyyaml", specifier = ">=6.0" },
-    { name = "real-ladybug", specifier = ">=0.15.0,<0.16" },
-    { name = "requests", specifier = ">=2.31.0" },
-    { name = "starlette", marker = "extra == 'all'", specifier = ">=0.37,<1" },
-    { name = "starlette", marker = "extra == 'http'", specifier = ">=0.37,<1" },
-    { name = "uvicorn", marker = "extra == 'all'", specifier = ">=0.29" },
-    { name = "uvicorn", marker = "extra == 'http'", specifier = ">=0.29" },
-]
-provides-extras = ["mcp", "http", "construct", "cursor", "dev", "all"]
-
-[[package]]
 name = "h11"
 version = "0.16.0"
 source = { registry = "https://pypi.org/simple" }
@@ -449,6 +375,152 @@ sdist = { url = "https://files.pythonhosted.org/packages/b5/48/0bb26fdfe7ac16875
 wheels = [
     { url = "https://files.pythonhosted.org/packages/0b/04/d6b4fb82eefe9e81807aabca1ac98f460ae0883974b83a997aaa20c52545/mcp-1.29.1-py3-none-any.whl", hash = "sha256:b6310eeb59153300c4ab8b9aec4c52f4819a2d6a8e429eb43d908bed7c783648", size = 224653, upload-time = "2026-08-24T18:30:39.573Z" },
 ]
+
+[[package]]
+name = "ontology-author"
+version = "0.1.0"
+source = { editable = "." }
+dependencies = [
+    { name = "starlette" },
+    { name = "uvicorn" },
+]
+
+[package.optional-dependencies]
+all = [
+    { name = "beautifulsoup4" },
+    { name = "cursor-sdk" },
+    { name = "httpx" },
+    { name = "mcp" },
+    { name = "pydantic" },
+    { name = "pypdf" },
+    { name = "python-dotenv" },
+    { name = "pyyaml" },
+    { name = "real-ladybug" },
+    { name = "requests" },
+    { name = "starlette" },
+    { name = "uvicorn" },
+]
+construct = [
+    { name = "beautifulsoup4" },
+    { name = "pypdf" },
+]
+cursor = [
+    { name = "beautifulsoup4" },
+    { name = "cursor-sdk" },
+    { name = "httpx" },
+    { name = "mcp" },
+    { name = "pydantic" },
+    { name = "pypdf" },
+    { name = "python-dotenv" },
+    { name = "pyyaml" },
+    { name = "real-ladybug" },
+    { name = "requests" },
+]
+dev = [
+    { name = "cursor-sdk" },
+    { name = "httpx" },
+    { name = "pydantic" },
+    { name = "pytest" },
+    { name = "python-dotenv" },
+    { name = "pyyaml" },
+    { name = "real-ladybug" },
+    { name = "requests" },
+]
+graph = [
+    { name = "httpx" },
+    { name = "pydantic" },
+    { name = "python-dotenv" },
+    { name = "pyyaml" },
+    { name = "real-ladybug" },
+    { name = "requests" },
+]
+http = [
+    { name = "httpx" },
+    { name = "mcp" },
+    { name = "pydantic" },
+    { name = "python-dotenv" },
+    { name = "pyyaml" },
+    { name = "real-ladybug" },
+    { name = "requests" },
+    { name = "starlette" },
+    { name = "uvicorn" },
+]
+mcp = [
+    { name = "httpx" },
+    { name = "mcp" },
+    { name = "pydantic" },
+    { name = "python-dotenv" },
+    { name = "pyyaml" },
+    { name = "real-ladybug" },
+    { name = "requests" },
+]
+world = [
+    { name = "starlette" },
+    { name = "uvicorn" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "beautifulsoup4", marker = "extra == 'all'", specifier = ">=4.12.0" },
+    { name = "beautifulsoup4", marker = "extra == 'construct'", specifier = ">=4.12.0" },
+    { name = "beautifulsoup4", marker = "extra == 'cursor'", specifier = ">=4.12.0" },
+    { name = "cursor-sdk", marker = "extra == 'all'", specifier = ">=1.0.30" },
+    { name = "cursor-sdk", marker = "extra == 'cursor'", specifier = ">=1.0.30" },
+    { name = "cursor-sdk", marker = "extra == 'dev'", specifier = ">=1.0.30" },
+    { name = "httpx", marker = "extra == 'all'", specifier = ">=0.27.0" },
+    { name = "httpx", marker = "extra == 'cursor'", specifier = ">=0.27.0" },
+    { name = "httpx", marker = "extra == 'dev'", specifier = ">=0.27.0" },
+    { name = "httpx", marker = "extra == 'graph'", specifier = ">=0.27.0" },
+    { name = "httpx", marker = "extra == 'http'", specifier = ">=0.27.0" },
+    { name = "httpx", marker = "extra == 'mcp'", specifier = ">=0.27.0" },
+    { name = "mcp", marker = "extra == 'all'", specifier = ">=1.0,<2" },
+    { name = "mcp", marker = "extra == 'cursor'", specifier = ">=1.0,<2" },
+    { name = "mcp", marker = "extra == 'http'", specifier = ">=1.0,<2" },
+    { name = "mcp", marker = "extra == 'mcp'", specifier = ">=1.0,<2" },
+    { name = "pydantic", marker = "extra == 'all'", specifier = ">=2.0" },
+    { name = "pydantic", marker = "extra == 'cursor'", specifier = ">=2.0" },
+    { name = "pydantic", marker = "extra == 'dev'", specifier = ">=2.0" },
+    { name = "pydantic", marker = "extra == 'graph'", specifier = ">=2.0" },
+    { name = "pydantic", marker = "extra == 'http'", specifier = ">=2.0" },
+    { name = "pydantic", marker = "extra == 'mcp'", specifier = ">=2.0" },
+    { name = "pypdf", marker = "extra == 'all'", specifier = ">=5.0" },
+    { name = "pypdf", marker = "extra == 'construct'", specifier = ">=5.0" },
+    { name = "pypdf", marker = "extra == 'cursor'", specifier = ">=5.0" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.0.0" },
+    { name = "python-dotenv", marker = "extra == 'all'", specifier = ">=1.0.0" },
+    { name = "python-dotenv", marker = "extra == 'cursor'", specifier = ">=1.0.0" },
+    { name = "python-dotenv", marker = "extra == 'dev'", specifier = ">=1.0.0" },
+    { name = "python-dotenv", marker = "extra == 'graph'", specifier = ">=1.0.0" },
+    { name = "python-dotenv", marker = "extra == 'http'", specifier = ">=1.0.0" },
+    { name = "python-dotenv", marker = "extra == 'mcp'", specifier = ">=1.0.0" },
+    { name = "pyyaml", marker = "extra == 'all'", specifier = ">=6.0" },
+    { name = "pyyaml", marker = "extra == 'cursor'", specifier = ">=6.0" },
+    { name = "pyyaml", marker = "extra == 'dev'", specifier = ">=6.0" },
+    { name = "pyyaml", marker = "extra == 'graph'", specifier = ">=6.0" },
+    { name = "pyyaml", marker = "extra == 'http'", specifier = ">=6.0" },
+    { name = "pyyaml", marker = "extra == 'mcp'", specifier = ">=6.0" },
+    { name = "real-ladybug", marker = "extra == 'all'", specifier = ">=0.15.0,<0.16" },
+    { name = "real-ladybug", marker = "extra == 'cursor'", specifier = ">=0.15.0,<0.16" },
+    { name = "real-ladybug", marker = "extra == 'dev'", specifier = ">=0.15.0,<0.16" },
+    { name = "real-ladybug", marker = "extra == 'graph'", specifier = ">=0.15.0,<0.16" },
+    { name = "real-ladybug", marker = "extra == 'http'", specifier = ">=0.15.0,<0.16" },
+    { name = "real-ladybug", marker = "extra == 'mcp'", specifier = ">=0.15.0,<0.16" },
+    { name = "requests", marker = "extra == 'all'", specifier = ">=2.31.0" },
+    { name = "requests", marker = "extra == 'cursor'", specifier = ">=2.31.0" },
+    { name = "requests", marker = "extra == 'dev'", specifier = ">=2.31.0" },
+    { name = "requests", marker = "extra == 'graph'", specifier = ">=2.31.0" },
+    { name = "requests", marker = "extra == 'http'", specifier = ">=2.31.0" },
+    { name = "requests", marker = "extra == 'mcp'", specifier = ">=2.31.0" },
+    { name = "starlette", specifier = ">=0.37,<1" },
+    { name = "starlette", marker = "extra == 'all'", specifier = ">=0.37,<1" },
+    { name = "starlette", marker = "extra == 'http'", specifier = ">=0.37,<1" },
+    { name = "starlette", marker = "extra == 'world'", specifier = ">=0.37,<1" },
+    { name = "uvicorn", specifier = ">=0.29" },
+    { name = "uvicorn", marker = "extra == 'all'", specifier = ">=0.29" },
+    { name = "uvicorn", marker = "extra == 'http'", specifier = ">=0.29" },
+    { name = "uvicorn", marker = "extra == 'world'", specifier = ">=0.29" },
+]
+provides-extras = ["world", "graph", "mcp", "http", "construct", "cursor", "dev", "all"]
 
 [[package]]
 name = "packaging"

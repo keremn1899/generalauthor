@@ -1,15 +1,15 @@
-# Releasing Graphauthor
+# Releasing Ontology Author
 
-The user-facing distribution is the `graphauthor` package on PyPI. Users
+The user-facing distribution is the `ontology-author` package on PyPI. Users
 install it with:
 
 ```bash
-uv tool install 'graphauthor[cursor]'
+uv tool install ontology-author
 ```
 
 ## One-time publisher setup
 
-1. Create the `graphauthor` project on TestPyPI, then configure the repository
+1. Create the `ontology-author` project on TestPyPI, then configure the repository
    as a trusted publisher for it.
 2. Repeat for PyPI, with the GitHub Actions environment named `pypi`.
 3. In GitHub, require approval for the `pypi` environment.
@@ -28,10 +28,11 @@ or long-lived upload token is stored in this repository. See the
 5. In a clean shell, verify the public install:
 
    ```bash
-   uv tool install 'graphauthor[cursor]'
+   uv tool install ontology-author
    mkdir smoke-project && cd smoke-project
-   graphauthor attach --client cursor
+   author attach cursor
    ```
 
-The published wheel must include the `mcp_server`, `source_pipeline`, and
-`scripts` packages; the packaging test protects the command surface.
+The released wheel must include `ontology_author.world`, its bundled inspector
+assets, and the `taskview` store. The legacy graph packages remain available
+through their explicit legacy entrypoints.

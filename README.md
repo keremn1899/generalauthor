@@ -1,52 +1,80 @@
-# Graphauthor
+# Ontology Author
 
-Graphauthor is a local, source-cited graph context layer for agents.
+Ontology Author lets coding agents construct and maintain purpose-fit
+ontologies from the evidence in your workspace.
 
-You supply sources. An agent writes a normal Python program that authors a
-graph for that work. Graphauthor prepares the sources, checks the program's
-output mechanically, stores the graph, and lets agents traverse it exactly.
+The resulting ontology is a **World**: grounded, programmable semantic state
+available through SQLite, Python, and a local inspector.
 
-It is not a better general search engine. The point is reuse: once identities
-and relationships are accepted, an agent can walk them instead of reconstructing
-them from the sources on every task.
+## World quickstart
 
-## Construction
-
-There is one construction model:
-
-```
-sources
-  -> workbook/atoms.jsonl          optional prepared view
-  -> workbook/build.py             written and run by the agent
-  -> workbook/out/encoding.json    durable program output
-  -> workbook/out/traversals.json  optional named traversals
-  -> validate + materialize        host-owned, mechanical
-  -> graph.lbug + sidecars
-```
-
-The agent owns `build.py`. Graphauthor does not write or run it. The host
-checks only what it can know mechanically: unique ids, real edge endpoints,
-valid structural types, and provenance to admitted source units.
+Install the World runtime and its local inspector once:
 
 ```bash
-uv tool install --editable '.[cursor]'
-cd /path/to/any-existing-project
-graphauthor attach --client cursor
-
-graphauthor-workbook prepare --workbook .graphauthor --source docs/page.html
-graphauthor-workbook validate --workbook .graphauthor --encoding .graphauthor/out/encoding.json
-graphauthor-workbook materialize --workbook .graphauthor --encoding .graphauthor/out/encoding.json --out .graphauthor/graph.lbug
+uv tool install ontology-author
 ```
 
-This installs the current checkout for development and evaluation. The package
-is not published to PyPI yet. After the first PyPI release, users will instead
-install it by name:
+From an existing project, attach the concise World capability to the agent
+harness you use:
 
 ```bash
-uv tool install 'graphauthor[cursor]'
+author attach cursor
+# or: author attach codex
+# or: author attach claude
 ```
 
-## Traversal
+Then talk normally to the attached agent, for example:
+
+```text
+Build a World for understanding customer support entitlements in this repository.
+```
+
+The agent chooses or confirms a World name, creates `.worlds/<name>/`, stores
+the purpose and construction program there, and rebuilds as the conversation
+develops. The sealed bundle is `.worlds/<name>/world/`.
+
+Useful implementation primitives are:
+
+```bash
+author create support-entitlements
+author rebuild support-entitlements
+author open
+```
+
+`open` starts the local read-only API and bundled inspection page. No Node,
+npm, Vite, MCP server, or second manually launched backend is required.
+SQLite and Python remain direct computation surfaces:
+
+```bash
+sqlite3 .worlds/support-entitlements/world/world.sqlite
+```
+
+```python
+from ontology_author.world import Project
+
+world = Project(".worlds/support-entitlements").open_world()
+try:
+    rows = world.query_semantic("SELECT * FROM some_relation")
+finally:
+    world.close()
+```
+
+The World bundle is portable for semantic consumption. Project evidence is
+kept outside it: the evidence is needed for provenance verification and the
+World's construction directory plus evidence are needed for reconstruction.
+
+See [`docs/AGENT_CLIENTS.md`](docs/AGENT_CLIENTS.md) for native attachment
+details.
+
+## Legacy graph product
+
+The older Ladybug graph/workbook/MCP product remains in the repository for
+compatibility and historical work. Its explicit entrypoints are
+`graphauthor-graph`, `graphauthor-mcp`, `graphauthor-workbook`, and the
+`mcp_server/`, `source_pipeline/`, and graph frontend surfaces. It is not the
+default World workflow.
+
+### Legacy graph traversal
 
 Retrieval does not call a model. Exact lookup stays exact. Search returns
 candidates; it does not prove absence.
@@ -78,9 +106,8 @@ version.
 }
 ```
 
-For installation and setup across Cursor, Claude Code, and Codex, see the
-[agent-client guide](docs/AGENT_CLIENTS.md). The Cursor-specific workflow is in
-[the Cursor guide](docs/CURSOR_GUIDE.md). Point `SST_DB_PATH` at a materialized
+For legacy graph installation and setup, see [the Cursor guide](docs/CURSOR_GUIDE.md).
+Point `SST_DB_PATH` at a materialized
 `graph.lbug`, and have the agent call `orient` first.
 
 ```bash

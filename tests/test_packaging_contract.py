@@ -46,6 +46,8 @@ ALLOWED_BASE = {
     "httpx",
     # graph.md is the user-owned semantic contract read by the base MCP server.
     "pyyaml",
+    "starlette",
+    "uvicorn",
 }
 
 #: Must never be base. Each is genuinely needed by something, and that
@@ -65,7 +67,7 @@ def _pyproject() -> dict:
     return tomllib.loads(PYPROJECT.read_text(encoding="utf-8"))
 
 
-def test_base_install_carries_only_what_reading_a_graph_needs():
+def test_base_install_carries_only_what_the_public_product_needs():
     base = {_name(d) for d in _pyproject()["project"]["dependencies"]}
     extra = base - {n.lower() for n in ALLOWED_BASE}
     assert not extra, (

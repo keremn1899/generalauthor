@@ -1,0 +1,16 @@
+"""Thin World IR wrap over the existing TaskView store.
+
+Not a second calculus. See CONSTITUTION.md.
+"""
+
+from ontology_author.world.core.kernel import SemanticWorld
+from ontology_author.world.core.origins import ConstructionOrigin, OriginMetadataError
+from ontology_author.world.core.source import AssertionGrounding, SourceObservation
+
+__all__ = [
+    "AssertionGrounding",
+    "ConstructionOrigin",
+    "OriginMetadataError",
+    "SemanticWorld",
+    "SourceObservation",
+]

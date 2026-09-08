@@ -1,6 +1,7 @@
-# Graphauthor with Cursor
+# Legacy Graphauthor graph product with Cursor
 
-Graphauthor is a local tool for Cursor Agent. The user supplies source files
+This documents the historical Graphauthor graph/MCP product, not Ontology
+Author's World workflow. Graphauthor is a local tool for Cursor Agent. The user supplies source files
 and an outcome; the agent creates the graph-building program and then uses the
 graph through MCP. Users do not need to hand-author a schema, `encoding.json`,
 or graph query.
