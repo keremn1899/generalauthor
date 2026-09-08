@@ -1,57 +1,61 @@
-/** A deterministic square mesh. Only the permanent world ID seeds the weave. */
-export function worldIconSvg(worldId: string, mode: "light" | "dark" = "light"): string {
-  let state = 2166136261;
-  for (const byte of new TextEncoder().encode(`world-mesh-v3:${worldId}`)) {
-    state = Math.imul(state ^ byte, 16777619) >>> 0;
+/** Generate a tile from the world ID. There is no catalogue of motifs. */
+export function worldIconPattern(worldId: string) {
+  let hash = 2166136261;
+  for (const byte of new TextEncoder().encode(`world-mesh-v5:${worldId}`)) {
+    hash = Math.imul(hash ^ byte, 16777619) >>> 0;
   }
   const random = () => {
-    state += 0x6d2b79f5;
-    let n = Math.imul(state ^ (state >>> 15), 1 | state);
+    hash = (hash + 0x6d2b79f5) >>> 0;
+    let n = Math.imul(hash ^ (hash >>> 15), 1 | hash);
     n ^= n + Math.imul(n ^ (n >>> 7), 61 | n);
     return ((n ^ (n >>> 14)) >>> 0) / 4294967296;
   };
-
-  // The 5 × 5 square lattice is shared by every world. Variation comes from
-  // regional density: each 2 × 2 block receives zero, one, or two diagonals
-  // per cell, so the silhouette stays geometric while the interior rhythm
-  // changes.
-  const points = Array.from({ length: 25 }, (_, index) => ({
-    x: 3 + (index % 5) * 6.5,
-    y: 3 + Math.floor(index / 5) * 6.5,
-  }));
-  const edges: [number, number][] = [];
-  for (let index = 0; index < 25; index += 1) {
-    if (index % 5 < 4) edges.push([index, index + 1]);
-    if (index < 20) edges.push([index, index + 5]);
+  const cells = Array.from({ length: 9 }, (_, index) => index);
+  for (let i = cells.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(random() * (i + 1));
+    [cells[i], cells[j]] = [cells[j], cells[i]];
   }
-
-  // Region levels are deliberately quantized. A hash chooses a density field,
-  // not a cloud of independently jittered points.
-  const regionLevels = Array.from({ length: 4 }, () => random());
-  for (let row = 0; row < 4; row += 1) {
-    for (let column = 0; column < 4; column += 1) {
-      const level = regionLevels[Math.floor(row / 2) * 2 + Math.floor(column / 2)];
-      const topLeft = row * 5 + column;
-      const topRight = topLeft + 1;
-      const bottomLeft = topLeft + 5;
-      const bottomRight = bottomLeft + 1;
-      const density = level + (random() - 0.5) * 0.18;
-      if (density > 0.42) edges.push([topLeft, bottomRight]);
-      if (density > 0.76) edges.push([topRight, bottomLeft]);
-    }
+  // Three diagonals per tile keeps the amount of ink consistent. The other
+  // six cells stay open; the shared lattice joins every diagonal endpoint.
+  const tile = Array<number>(9).fill(0);
+  for (const index of cells.slice(0, 4)) {
+    const diagonal = random() < 0.5 ? 1 : -1;
+    // Keep the existing seed sequence and mirror choices: this revision
+    // removes one stroke from each tile without changing its other strokes.
+    if (index !== cells[3]) tile[index] = diagonal;
   }
+  return { tile, mirrorX: random() < 0.5, mirrorY: random() < 0.5 };
+}
 
+/** A generated 3 × 3 tile repeats twice in each direction on a 6 × 6 mesh. */
+export function worldIconSvg(worldId: string, mode: "light" | "dark" = "light"): string {
+  const pattern = worldIconPattern(worldId);
   const ink = mode === "dark" ? "#fff" : "#000";
   const paper = mode === "dark" ? "#000" : "#fff";
-  const lines = edges
-    .map(([from, to]) =>
-      `<path d="M${points[from].x} ${points[from].y}L${points[to].x} ${points[to].y}"/>`,
-    )
-    .join("");
-  const knots = points
-    .map(({ x, y }) => `<circle cx="${x}" cy="${y}" r="0.82"/>`)
-    .join("");
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="${paper}"/><g stroke="${ink}" stroke-width="1.05" stroke-linecap="round">${lines}</g><g fill="${ink}">${knots}</g></svg>`;
+  const at = (n: number) => Number((2 + n * 28 / 6).toFixed(4));
+  const paths: string[] = [];
+  for (let i = 0; i <= 6; i += 1) {
+    paths.push(`M${at(i)} 2V30`, `M2 ${at(i)}H30`);
+  }
+  for (let row = 0; row < 6; row += 1) {
+    for (let column = 0; column < 6; column += 1) {
+      const flipX = pattern.mirrorX && column >= 3;
+      const flipY = pattern.mirrorY && row >= 3;
+      const x = flipX ? 2 - column % 3 : column % 3;
+      const y = flipY ? 2 - row % 3 : row % 3;
+      const diagonal = pattern.tile[y * 3 + x];
+      if (!diagonal) continue;
+      const rising = (diagonal === 1) !== (flipX !== flipY);
+      paths.push(`M${at(column)} ${at(row + (rising ? 1 : 0))}L${at(column + 1)} ${at(row + (rising ? 0 : 1))}`);
+    }
+  }
+  const knots: string[] = [];
+  for (let row = 0; row <= 6; row += 1) {
+    for (let column = 0; column <= 6; column += 1) {
+      knots.push(`<circle cx="${at(column)}" cy="${at(row)}" r="0.42"/>`);
+    }
+  }
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="${paper}"/><path d="${paths.join("")}" fill="none" stroke="${ink}" stroke-width="0.48" stroke-linecap="butt"/><g fill="${ink}">${knots.join("")}</g></svg>`;
 }
 
 export function worldIconUrl(worldId: string, mode: "light" | "dark" = "light") {

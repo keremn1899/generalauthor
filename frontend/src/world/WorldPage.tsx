@@ -38,6 +38,7 @@ import {
 } from "../api/world";
 import { type ThemeMode } from "../styles/graphDna";
 import { useWorldIcon } from "./useWorldIcon";
+import { useBrowserTheme } from "./useBrowserTheme";
 import {
   DEFAULT_MOTION_PLANS,
   still,
@@ -111,16 +112,6 @@ import "./WorldReader.css";
 import "./WorldCanvas.css";
 import "./WorldOverlay.css";
 import "./worldOverlayChrome.css";
-
-export function readStoredWorldTheme(): ThemeMode {
-  try {
-    return localStorage.getItem("ontology-author.productTheme") === "dark"
-      ? "dark"
-      : "light";
-  } catch {
-    return "light";
-  }
-}
 
 export function conditionOf(
   stale: boolean,
@@ -795,11 +786,12 @@ function linkedRelationFromHash(): string | null {
 
 export function WorldPage() {
   const motion = DEFAULT_MOTION_PLANS;
-  const [localMode, setLocalMode] = useState<ThemeMode>(readStoredWorldTheme);
-  const mode = localMode;
+  const browserMode = useBrowserTheme();
+  const [localMode, setLocalMode] = useState<ThemeMode | null>(null);
+  const mode = localMode ?? browserMode;
   const [motionReady, setMotionReady] = useState(false);
   const [overview, setOverview] = useState<WorldOverview | null>(null);
-  useWorldIcon(overview?.world_id, mode);
+  useWorldIcon(overview?.world_id);
   const [relations, setRelations] = useState<WorldRelation[]>([]);
   const [directory, setDirectory] = useState<Directory>([]);
   /**
@@ -972,14 +964,6 @@ export function WorldPage() {
     const frame = requestAnimationFrame(() => setMotionReady(true));
     return () => cancelAnimationFrame(frame);
   }, []);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem("ontology-author.productTheme", mode);
-    } catch {
-      /* private mode */
-    }
-  }, [mode]);
 
   /**
    * Put back the field this browser last held for this world.
@@ -1697,12 +1681,30 @@ export function WorldPage() {
     >
       <header className={chromeClass("product-shell__top")}>
         <div className="product-shell__bar">
-          <span className="product-shell__workspace">
-            {overview?.world_id ?? "world"}
+          <span
+            className="product-shell__workspace"
+            title="World identifier and current revision"
+            aria-label={
+              overview
+                ? `World ${overview.world_id}, revision ${overview.revision}`
+                : "World"
+            }
+          >
+            {overview ? `${overview.world_id} · rev ${overview.revision}` : "world"}
           </span>
-          <span className="product-shell__local">
-            {overview ? `rev ${overview.revision}` : ""}
-          </span>
+          <div className="product-shell__utils">
+            <button
+              type="button"
+              className="product-shell__theme"
+              onClick={() => {
+                const next = mode === "light" ? "dark" : "light";
+                setLocalMode(next);
+              }}
+              aria-label={`Use ${mode === "light" ? "dark" : "light"} appearance`}
+            >
+              {mode === "light" ? "dark" : "light"}
+            </button>
+          </div>
           {onField ? (
             <button
               type="button"
@@ -1719,19 +1721,6 @@ export function WorldPage() {
               </span>
             </button>
           ) : null}
-          <div className="product-shell__utils">
-            <button
-              type="button"
-              className="product-shell__theme"
-              onClick={() => {
-                const next = mode === "light" ? "dark" : "light";
-                setLocalMode(next);
-              }}
-              aria-label={`Use ${mode === "light" ? "dark" : "light"} appearance`}
-            >
-              {mode === "light" ? "dark" : "light"}
-            </button>
-          </div>
         </div>
       </header>
 
@@ -2157,13 +2146,14 @@ export function WorldPage() {
               role="group"
               aria-label="Arrange the field"
             >
-              <button
+              {/* Withheld for now; retain the control and arrangement handler. */}
+              {false && <button
                 type="button"
                 onClick={onSeparate}
                 title="Push apart only what is sitting on top of something else"
               >
                 separate
-              </button>
+              </button>}
               {arrangeUndo ? (
                 <button
                   type="button"

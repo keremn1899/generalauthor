@@ -42,7 +42,7 @@ import { relax, type RelaxBody, type RelaxLink } from "./relax";
  * your head, which is the only reason to be looking at a graph rather than a
  * table.
  */
-export const MAX_FIELD_NODES = 150;
+export const MAX_FIELD_NODES = 100;
 
 /** Where new matter lands relative to what it came from. */
 const RING_RADIUS = 190;

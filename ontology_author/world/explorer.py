@@ -672,6 +672,7 @@ class WorldExplorerAdapter:
         order: str | None = None,
         descending: bool = False,
         subject: str | None = None,
+        search: str | None = None,
     ) -> dict[str, Any]:
         """One page of a relation's extension, ordered in SQL.
 
@@ -716,6 +717,18 @@ class WorldExplorerAdapter:
             predicate = " OR ".join(f'"{role.column}" = ?' for role in referent_roles)
             where = f" WHERE ({predicate})"
             subject_values = [subject] * len(referent_roles)
+            total = self._store.query(
+                f'SELECT COUNT(*) AS n FROM "{relation}"{where}', subject_values
+            )[0]["n"]
+
+        if search and search.strip():
+            # Literal substring search across every role, before paging/counting.
+            predicate = " OR ".join(
+                f'instr(lower(CAST("{role.column}" AS TEXT)), lower(?)) > 0'
+                for role in roles
+            ) or "0"
+            where += (" AND " if where else " WHERE ") + f"({predicate})"
+            subject_values.extend([search.strip()] * len(roles))
             total = self._store.query(
                 f'SELECT COUNT(*) AS n FROM "{relation}"{where}', subject_values
             )[0]["n"]

@@ -211,3 +211,18 @@ def test_failed_rebuild_leaves_world_byte_stable(tmp_path):
     result = rebuild(workspace)
     assert not result.succeeded
     assert (workspace / "world" / "world.sqlite").read_bytes() == before
+
+
+def test_table_search_filters_before_paging_and_combines_with_subject(tmp_path):
+    workspace = _world(tmp_path, "table-search")
+    assert rebuild(workspace).succeeded
+    with WorldExplorerAdapter(workspace / "world" / "world.sqlite") as explorer:
+        result = explorer.rows("account", search="  LTD  ", limit=1, offset=1)
+        assert result["total"] == 2
+        assert len(result["rows"]) == 1
+        assert explorer.rows("account", search="acme")["total"] == 1
+        assert explorer.rows("account", search="acme", subject="account:A2")["total"] == 0
+        assert explorer.rows("account", search="A1", subject="account:A1")["total"] == 1
+        assert explorer.rows("account", search="%_")["total"] == 0
+        assert explorer.rows("account", search="' OR 1=1 --")["total"] == 0
+        assert explorer.rows("account", search="   ")["total"] == 2

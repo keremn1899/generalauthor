@@ -26,12 +26,12 @@
  * nothing here is allowed to read as a rejection.
  */
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { WorldDemand, WorldRelation } from "../api/world";
 import { still } from "../styles/motion";
 import { ProblemNotice } from "./ProblemNotice";
 import { useRowWindow } from "./rowWindow";
-import { TableBar, type TableChrome } from "./tableChrome";
+import { TableBar, TableSearch, type TableChrome } from "./tableChrome";
 
 const ROW_HEIGHT = 26;
 const OVERSCAN = 8;
@@ -59,6 +59,7 @@ export function FrontierTable({
   chrome: TableChrome;
   onFocus: (obligation: Obligation) => void;
 }) {
+  const [query, setQuery] = useState("");
   const [resolved, setResolved] = useState(false);
 
   const all = useMemo<Obligation[]>(
@@ -74,8 +75,9 @@ export function FrontierTable({
     [demand],
   );
   const rows = useMemo(
-    () => (resolved ? all : all.filter((item) => item.state === "UNRESOLVED")),
-    [all, resolved],
+    () => (resolved ? all : all.filter((item) => item.state === "UNRESOLVED"))
+      .filter((item) => JSON.stringify(item).toLowerCase().includes(query.trim().toLowerCase())),
+    [all, resolved, query],
   );
   /** Whether this frontier has a resolved half at all — see the toggle. */
   const movable = useMemo(
@@ -85,6 +87,8 @@ export function FrontierTable({
   const open = all.filter((item) => item.state === "UNRESOLVED").length;
 
   const window_ = useRowWindow(rows.length, ROW_HEIGHT, OVERSCAN);
+  const { reset } = window_;
+  useEffect(reset, [query, resolved, reset]);
   const order = useMemo(
     () => new Map(relations.map((item) => [item.name, item.roles.map((role) => role.name)])),
     [relations],
@@ -125,6 +129,9 @@ export function FrontierTable({
         </button>
         ) : null}
       </TableBar>
+      <TableSearch value={query} onChange={setQuery} label="Search obligations" />
+
+      {query && !rows.length ? <p className="table__empty">No obligations match this search.</p> : null}
 
       <Asked
         requirements={demand?.requirements ?? []}

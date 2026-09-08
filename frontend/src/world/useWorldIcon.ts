@@ -1,7 +1,9 @@
 import { useEffect } from "react";
 import { worldIconUrl } from "./worldIcon";
+import { useBrowserTheme } from "./useBrowserTheme";
 
-export function useWorldIcon(worldId: string | undefined, mode: "light" | "dark") {
+export function useWorldIcon(worldId: string | undefined) {
+  const mode = useBrowserTheme();
   useEffect(() => {
     const icon = document.createElement("link");
     icon.rel = "icon";

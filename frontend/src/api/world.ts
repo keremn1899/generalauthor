@@ -288,6 +288,7 @@ export const worldApi = {
   rows: (
     relation: string,
     options: {
+      search?: string;
       limit?: number;
       offset?: number;
       order?: string | null;
@@ -304,6 +305,7 @@ export const worldApi = {
     // Ordering is the database's, not the page's: a client-side sort would only
     // ever reach the rows already fetched, which for a windowed table is a
     // handful out of thousands.
+    if (options.search) query.set("search", options.search);
     if (options.order) query.set("order", options.order);
     if (options.desc) query.set("desc", "1");
     if (options.subject) query.set("subject", options.subject);

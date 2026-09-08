@@ -682,7 +682,8 @@
   overflow: hidden;
 }
 
-.table__subjects button {
+.table__subjects button,
+.table__search button {
   flex: 0 0 auto;
   white-space: nowrap;
 }
@@ -705,7 +706,8 @@
   font-variant-numeric: tabular-nums;
 }
 
-.table__bar button {
+.table__bar button,
+.table__search button {
   padding: 3px 9px;
   font: inherit;
   font-size: var(--type-label);
@@ -716,6 +718,7 @@
 }
 
 .table__bar button:hover,
+.table__search button:hover,
 .table__bar button[aria-pressed="true"] {
   color: var(--ink);
 }
@@ -1069,7 +1072,7 @@
 /* The guide characters are the only thing on this surface that has to line up
    column for column, so they are the only thing set in a monospace. */
 .deriv__rule {
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-family: var(--font-mono);
   font-size: var(--type-label);
   color: var(--rule-strong, var(--ink-muted));
   white-space: pre;
@@ -1135,7 +1138,7 @@
   padding: 10px 12px;
   border-bottom: 1px solid var(--rule);
   background: var(--canvas);
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-family: var(--font-mono);
   font-size: var(--type-label);
   line-height: 1.6;
   color: var(--ink);
@@ -1478,3 +1481,41 @@ button.change__row:hover .change__name {
   gap: 12px;
   padding-top: 8px;
 }
+
+/* Table controls stay readable at either dock width. */
+.table__search, .table__filters {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 7px 12px;
+  border-bottom: 1px solid var(--rule);
+  flex-shrink: 0;
+}
+.table__search input {
+  flex: 1;
+  min-width: 100px;
+  width: 0;
+  padding: 5px 7px;
+  border: 1px solid var(--rule);
+  background: var(--canvas);
+  color: var(--ink);
+  font: inherit;
+}
+.table__filters select {
+  font: inherit;
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  padding: 4px 6px;
+}
+.table__filters label { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.table__filters > span { color: var(--ink-muted); font-variant-numeric: tabular-nums; }
+.table__empty { margin: 0; padding: 12px; color: var(--ink-muted); }
+.table__search input:focus-visible, .table__search button:focus-visible,
+.table__filters select:focus-visible, .table__row:focus-visible {
+  outline: 1px solid var(--ink);
+  outline-offset: -1px;
+}
+
+.table__row[data-placeable="false"] { cursor: default; }

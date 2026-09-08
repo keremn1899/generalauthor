@@ -33,7 +33,7 @@ import { still } from "../styles/motion";
 import { ProblemNotice } from "./ProblemNotice";
 import { useRowWindow } from "./rowWindow";
 import { shortenIdentifier, useTableWidth } from "./tableWidth";
-import { TableBar, type TableChrome } from "./tableChrome";
+import { TableBar, TableSearch, type TableChrome } from "./tableChrome";
 
 /** Fixed, because a windowed table needs to know where a row is without asking. */
 const ROW_HEIGHT = 26;
@@ -71,6 +71,12 @@ export function RelationTable({
   onDerivation: () => void;
   chrome: TableChrome;
 }) {
+  const [query, setQuery] = useState("");
+  const [search, setSearch] = useState("");
+  useEffect(() => {
+    const timer = setTimeout(() => setSearch(query.trim()), 200);
+    return () => clearTimeout(timer);
+  }, [query]);
   const [order, setOrder] = useState<Order>(null);
   const [total, setTotal] = useState(subject ? 0 : relation.count);
   const [roles, setRoles] = useState<WorldRole[]>(relation.roles);
@@ -96,7 +102,7 @@ export function RelationTable({
    * scrolled to. A response is stale only when the thing it is a page of has
    * changed, which is exactly this key.
    */
-  const buffer = `${relation.name}\u0000${subject?.id ?? ""}\u0000${order?.role ?? ""}\u0000${order?.desc ?? false}`;
+  const buffer = `${search}\u0000${relation.name}\u0000${subject?.id ?? ""}\u0000${order?.role ?? ""}\u0000${order?.desc ?? false}`;
   const bufferRef = useRef(buffer);
   const live = useRef(true);
   useEffect(() => {
@@ -112,6 +118,7 @@ export function RelationTable({
     bufferRef.current = buffer;
     asked.current = new Set();
     setPages(new Map());
+    setTotal(0);
     setProblem(null);
     reset();
   }, [buffer, reset]);
@@ -135,6 +142,7 @@ export function RelationTable({
       asked.current.add(page);
       worldApi
         .rows(relation.name, {
+          search,
           limit: PAGE,
           offset: page * PAGE,
           order: order?.role ?? null,
@@ -155,13 +163,15 @@ export function RelationTable({
           setProblem(failure.message);
         });
     }
-  }, [relation.name, subject, order, buffer, first, last, total]);
+  }, [relation.name, subject, order, search, buffer, first, last, total]);
 
   const rowAt = useCallback(
     (index: number): WorldTuple | null =>
       pages.get(Math.floor(index / PAGE))?.[index % PAGE] ?? null,
     [pages],
   );
+
+  const placeable = roles.some((role) => role.referent);
 
   const columns = useMemo(
     () => `${roles.map(() => "minmax(0, 1fr)").join(" ")} 84px`,
@@ -207,6 +217,9 @@ export function RelationTable({
           dependencies
         </button>
       </TableBar>
+      <TableSearch value={query} onChange={setQuery} label="Search table values" />
+      {!problem && pages.has(0) && total === 0 ?
+        <p className="table__empty">{search ? "No rows match this search." : "This table has no rows."}</p> : null}
 
       <div className="table__head" style={{ gridTemplateColumns: columns }}>
         {roles.map((role) => (
@@ -250,7 +263,17 @@ export function RelationTable({
                   height: ROW_HEIGHT,
                   gridTemplateColumns: columns,
                 }}
-                onClick={tuple ? () => onFocus(roles, tuple) : undefined}
+                data-placeable={placeable}
+                role={tuple && placeable ? "button" : undefined}
+                tabIndex={tuple && placeable ? 0 : undefined}
+                title={placeable ? "Place on field" : "No referents to place on the field"}
+                onKeyDown={(event) => {
+                  if (tuple && placeable && (event.key === "Enter" || event.key === " ")) {
+                    event.preventDefault();
+                    onFocus(roles, tuple);
+                  }
+                }}
+                onClick={tuple && placeable ? () => onFocus(roles, tuple) : undefined}
               >
                 {tuple
                   ? roles.map((role) => (

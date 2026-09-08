@@ -4,6 +4,11 @@
  * CSS:  font-family: var(--font-sans) | var(--font-mono)
  *  JS/G6: FONT_SANS_FAMILY | FONT_MONO_FAMILY
  *
+ * Usage rule: Jost for controls, prose, names, statuses, and numeric counts
+ * (use tabular-nums when numbers need alignment). Mono for code, raw technical
+ * identifiers/paths, and diagrams whose characters must align. Small size or
+ * secondary emphasis alone is never a reason to switch families.
+ *
  * Mono is a trial against Jost. Flip `FONT_MONO` to another loaded id, or
  * pick one in Settings → This screen. Loaded faces: dm, plex, space.
  */

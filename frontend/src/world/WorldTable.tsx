@@ -13,13 +13,16 @@
  * which is different from, and must not be drawn as, WORLD.
  */
 
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { WorldOverview, WorldRelation } from "../api/world";
 import { still } from "../styles/motion";
 import { useRowWindow } from "./rowWindow";
 import { chipKind } from "./schemaGraph";
-import { TableBar, type TableChrome } from "./tableChrome";
+import { TableBar, TableSearch, type TableChrome } from "./tableChrome";
 import { useTableWidth, type TableWidth } from "./tableWidth";
+
+// Retained for a future placement-filter control; currently unwired.
+const PLACEMENT_FILTER_ENABLED = false;
 
 const ROW_HEIGHT = 26;
 const OVERSCAN = 8;
@@ -87,11 +90,21 @@ export function WorldTable({
   chrome: TableChrome;
   onOpen: (name: string) => void;
 }) {
+  const [query, setQuery] = useState("");
+  const [placement, setPlacement] = useState("all");
+  // Placement needs a referent to anchor to (workingSet.place).
+  const rows = useMemo(() => relations.filter((item) => {
+    const placeable = item.roles.some((role) => role.referent);
+    return (!PLACEMENT_FILTER_ENABLED || placement === "all" || placeable === (placement === "placeable"))
+      && item.name.toLowerCase().includes(query.trim().toLowerCase());
+  }), [relations, query, placement]);
   const frame = useRef<HTMLElement>(null);
   const width = useTableWidth(frame);
   const columns = COLUMNS[width];
   const heading = HEADINGS[width];
-  const window_ = useRowWindow(relations.length, ROW_HEIGHT, OVERSCAN);
+  const window_ = useRowWindow(rows.length, ROW_HEIGHT, OVERSCAN);
+  const { reset } = window_;
+  useEffect(reset, [query, reset]);
   const meta = useMemo(() => {
     if (!overview) return "Reading world";
     const bits = [
@@ -111,6 +124,17 @@ export function WorldTable({
       data-width={width}
     >
       <TableBar chrome={chrome} meta={meta} />
+      <TableSearch value={query} onChange={setQuery} label="Search relations" />
+      {PLACEMENT_FILTER_ENABLED && <div className="table__filters">
+        <label>Field placement <select aria-label="Field placement" value={placement}
+          onChange={(event) => setPlacement(event.target.value)}>
+          <option value="all">All relations</option>
+          <option value="placeable">Can place on field</option>
+          <option value="other">Cannot place on field</option>
+        </select></label>
+        <span role="status">{rows.length} of {relations.length}</span>
+      </div>}
+      {!rows.length ? <p className="table__empty">No relations match this search.</p> : null}
       <div className="table__head" style={{ gridTemplateColumns: columns }}>
         <span>relation</span>
         <span title="tuples">{heading.count}</span>
@@ -130,10 +154,10 @@ export function WorldTable({
       >
         <div
           className="table__spacer"
-          style={{ height: relations.length * ROW_HEIGHT }}
+          style={{ height: rows.length * ROW_HEIGHT }}
         >
           {window_.indices.map((index) => {
-            const item = relations[index];
+            const item = rows[index];
             if (!item) return null;
             return (
               <div
@@ -145,6 +169,14 @@ export function WorldTable({
                   top: index * ROW_HEIGHT,
                   height: ROW_HEIGHT,
                   gridTemplateColumns: columns,
+                }}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    onOpen(item.name);
+                  }
                 }}
                 onClick={() => onOpen(item.name)}
               >

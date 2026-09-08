@@ -78,3 +78,22 @@ export function TableBar({
     </header>
   );
 }
+
+/** Search is local to the table subject, independent of the global finder. */
+export function TableSearch({ value, onChange, label }: {
+  value: string;
+  onChange: (value: string) => void;
+  label: string;
+}) {
+  return <div className="table__search">
+    <input type="search" aria-label={label} placeholder={label} value={value}
+      onChange={(event) => onChange(event.target.value)}
+      onKeyDown={(event) => {
+        if (event.key === "Escape" && value) {
+          event.stopPropagation();
+          onChange("");
+        }
+      }} />
+    {value ? <button type="button" onClick={() => onChange("")}>clear search</button> : null}
+  </div>;
+}

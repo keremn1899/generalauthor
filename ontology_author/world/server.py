@@ -117,6 +117,7 @@ def build_app(world: Path | str, *, token: str | None = None):
             required(request, "relation"),
             limit=integer(request, "limit", 200),
             offset=integer(request, "offset", 0),
+            search=request.query_params.get("search") or None,
             order=request.query_params.get("order") or None,
             descending=request.query_params.get("desc") in ("1", "true", "yes"),
             subject=request.query_params.get("subject") or None,
