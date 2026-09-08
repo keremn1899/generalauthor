@@ -51,7 +51,7 @@ The package is not yet published to PyPI. Install the current repository
 checkout with [uv](https://docs.astral.sh/uv/):
 
 ```bash
-git clone https://github.com/keremn1899/generalauthor.git ontology-author
+git clone https://github.com/keremnv/ontology-author.git
 cd ontology-author
 uv tool install .
 ```
