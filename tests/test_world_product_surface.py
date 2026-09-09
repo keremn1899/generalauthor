@@ -7,6 +7,8 @@ import re
 import sqlite3
 from pathlib import Path
 
+from importlib.resources import files
+
 from ontology_author.world.cli import attach
 from ontology_author.world import Project
 from ontology_author.world.explorer import WorldExplorerAdapter
@@ -183,6 +185,7 @@ def test_create_does_not_generate_per_world_contract_or_sources(tmp_path):
     workspace = tmp_path / ".worlds" / "notes"
     create(workspace)
     assert workspace.is_dir()
+    assert not (workspace / "construction.py").exists()
     assert not (workspace / "CONSTRUCT.md").exists()
     assert not (workspace / "sources").exists()
 
@@ -226,3 +229,111 @@ def test_table_search_filters_before_paging_and_combines_with_subject(tmp_path):
         assert explorer.rows("account", search="%_")["total"] == 0
         assert explorer.rows("account", search="' OR 1=1 --")["total"] == 0
         assert explorer.rows("account", search="   ")["total"] == 2
+
+
+def _canonical_capability() -> str:
+    return files("ontology_author.world").joinpath("CAPABILITY.md").read_text(encoding="utf-8")
+
+
+def test_attached_capability_exposes_construction_surface_without_package_inspection(tmp_path):
+    canonical = _canonical_capability()
+    result = attach(tmp_path, ["all"])
+    copies = {
+        tmp_path / ".cursor/rules/ontology-author.mdc": canonical,
+        tmp_path / ".claude/skills/ontology-author/SKILL.md": canonical,
+        tmp_path / ".codex/skills/ontology-author/SKILL.md": canonical,
+    }
+    assert result["attached"] == ["cursor", "claude", "codex"]
+    for path, body in copies.items():
+        attached = path.read_text(encoding="utf-8")
+        assert body in attached
+        for token in (
+            "def construct(source, world, purpose)",
+            "does not currently",
+            "generate `construction.py`",
+            "construction.py",
+            "Role",
+            "RoleType",
+            "RelationMode",
+            "ConstructionOrigin",
+            "AssertionGrounding",
+            "SourceObservation",
+            "Completeness",
+            "CompletenessStatus",
+            "world.add_referent",
+            "world.declare_relation",
+            "world.assert_tuple",
+            "world.register_derivation",
+            "world.rerun",
+            "source.rows",
+            "source.read_text",
+            "source.fields",
+            "source.profile",
+            "source.distinct_values",
+            "source.join",
+            "source.grounding",
+            "purpose.unresolved",
+            "purpose.require_*",
+            "WORLD BASE",
+            "SOURCE grounding",
+            "PURPOSE-scoped",
+        ):
+            assert token in attached
+        assert "ontology_author.world.core" not in attached
+        assert "ontology_author.world.runtime" not in attached
+
+
+def test_capability_example_constructs_from_the_documented_namespace(tmp_path):
+    blocks = re.findall(r"```python\n(.*?)```", _canonical_capability(), re.S)
+    examples = [
+        block
+        for block in blocks
+        if "def construct(source, world, purpose)" in block and "source.grounding" in block
+    ]
+    assert len(examples) == 1
+    example = examples[0]
+    assert "def construct(source, world, purpose)" in example
+    assert "import " not in example
+
+    (tmp_path / "accounts.csv").write_text(
+        "account_code,legal_name\nA1,Acme Ltd\n", encoding="utf-8"
+    )
+    workspace = create(tmp_path / ".worlds" / "capability-example")
+    (workspace / "construction.py").write_text(example, encoding="utf-8")
+    result = rebuild(workspace)
+    assert result.succeeded, result.errors
+
+    world = Project(workspace).open_world()
+    try:
+        rows = world.relation_rows("account")
+        assert rows == [
+            {
+                "account": "account:A1",
+                "account_code": "A1",
+                "legal_name": "Acme Ltd",
+            }
+        ]
+        failures = world.relation_rows("purpose_requirement_failure")
+        assert any(row["requirement_id"] == "legal_identity" for row in failures)
+    finally:
+        world.close()
+
+
+def test_construction_namespace_includes_documented_authoring_vocabulary(tmp_path):
+    workspace = create(tmp_path / ".worlds" / "namespace")
+    (workspace / "construction.py").write_text(
+        """def construct(source, world, purpose):
+    names = (
+        Role, RoleType, RelationMode, ConstructionOrigin,
+        AssertionGrounding, SourceObservation, Completeness, CompletenessStatus,
+    )
+    assert all(name is not None for name in names)
+    RoleType.REFERENT
+    RelationMode.DERIVED
+    ConstructionOrigin.MECHANICAL
+    CompletenessStatus.COMPLETE
+""",
+        encoding="utf-8",
+    )
+    result = rebuild(workspace)
+    assert result.succeeded, result.errors

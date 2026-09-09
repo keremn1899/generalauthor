@@ -10,7 +10,13 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from ontology_author.world.core.model import RelationMode, Role, RoleType
+from ontology_author.world.core.model import (
+    Completeness,
+    CompletenessStatus,
+    RelationMode,
+    Role,
+    RoleType,
+)
 
 from ontology_author.world.core.origins import ConstructionOrigin
 from ontology_author.world.core.source import AssertionGrounding, SourceObservation
@@ -138,6 +144,8 @@ def _construction_namespace(source: Source, world: ConstructionWorld, purpose: P
         "ConstructionOrigin": ConstructionOrigin,
         "AssertionGrounding": AssertionGrounding,
         "SourceObservation": SourceObservation,
+        "Completeness": Completeness,
+        "CompletenessStatus": CompletenessStatus,
         "GroundingError": GroundingError,
         "ConstructionError": ConstructionError,
     }

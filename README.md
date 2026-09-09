@@ -346,6 +346,11 @@ Capable intelligence lives in the host coding agent. The semantic kernel
 constrains durable output; consumers remain free to query and compute over the
 resulting World.
 
+Current product constraints are recorded in
+[`docs/FOUNDATIONS.md`](docs/FOUNDATIONS.md). Research hypotheses and staged
+experiments live in [`docs/RESEARCH_DIRECTION.md`](docs/RESEARCH_DIRECTION.md)
+and are not product specification.
+
 ## What Ontology Author is not
 
 Ontology Author is not primarily a visual ontology editor, workflow engine,

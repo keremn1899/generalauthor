@@ -38,6 +38,10 @@ Build the frontend before building a release wheel. The frontend production
 build is copied into `ontology_author/world/static/` and is the only inspector
 served by `author open`.
 
+Current product constraints: `docs/FOUNDATIONS.md`.
+Research hypotheses and staged experiments: `docs/RESEARCH_DIRECTION.md`.
+The research note is not product specification.
+
 Research and historical material is preserved outside the public tree. Do not
 reintroduce graph, workbook, MCP, model-provider, or experiment dependencies
 into the installed product without an explicit product decision.

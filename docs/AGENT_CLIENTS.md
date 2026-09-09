@@ -61,6 +61,7 @@ ontology_author/world/CAPABILITY.md
 ```
 
 The contract tells the agent what a sealed World is, where named Worlds
-live, which grounding invariant is hard, and how to use ordinary filesystem,
-shell, Python, and SQLite access. It intentionally leaves the construction
-conversation open-ended.
+live, the `construction.py` entrypoint and injected authoring surface, which
+grounding invariant is hard, and how to use ordinary filesystem, shell,
+Python, and SQLite access. It documents the mechanical construction interface.
+It does not prescribe how the agent should conceptualize the domain.
